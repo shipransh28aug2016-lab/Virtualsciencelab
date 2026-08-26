@@ -89,8 +89,9 @@ export function init() { return { t: 0, jaw: 0, gripped: false }; }
 export function step(state, inputs, dt) {
   const s = { ...state };
   s.t += dt;
-  const target = (typeof objectOf === 'function' ? (objectOf(inputs)?.trueMm ?? 0) : (inputs.trueMm ?? 0)) / 1000;
-  s.jaw += (target - s.jaw) * Math.min(1, dt * 6);
+  // trueDimension is in cm; the jaws open to it.
+  const target = (trueDimension(inputs) ?? 0) / 100;
+  s.jaw += (target - s.jaw) * Math.min(1, dt * 1.9);
   s.gripped = Math.abs(target - s.jaw) < 1e-5;
   return s;
 }

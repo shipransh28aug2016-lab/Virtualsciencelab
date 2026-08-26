@@ -36,8 +36,39 @@ export function validate(inputs) {
   if (!wiredCorrectly(inputs)) warnings.push({ field: 'ammeterMode', code: 'WRONG_WIRING', message: 'The meters are not wired the standard way.', why: 'An ammeter must carry the full circuit current (series) and a voltmeter must sample the wire\'s own voltage (parallel). Any other arrangement measures the wrong thing.', fix: 'Connect the ammeter in series and the voltmeter in parallel with the wire.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, current: 0, voltage: 0, tempRise: 0, settled: false }; }
+/**
+ * The circuit carrying current.
+ *
+ * Meters do not answer instantly, and the wire does not stay cold: the
+ * current warms it, its resistance creeps up with temperature, and the
+ * reading drifts down -- which is exactly why readings are taken quickly
+ * and the key is opened between them. Wiring the meters the wrong way
+ * round (ammeter in parallel, voltmeter in series) passes no useful
+ * current at all, and the model says so rather than quietly reading on.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  if (!wiredCorrectly(inputs)) {
+    s.current += (0 - s.current) * Math.min(1, dt * 5);
+    s.voltage += (0 - s.voltage) * Math.min(1, dt * 5);
+    s.tempRise = Math.max(0, s.tempRise - dt * 4);
+    s.settled = Math.abs(s.current) < 1e-4;
+    return s;
+  }
+  // Joule heating raises the wire's temperature and so its resistance.
+  const R0 = resistanceOhm(inputs);
+  const R = R0 * (1 + 0.00004 * s.tempRise);
+  const target = circuitCurrent(inputs) * (R0 / R);
+  s.current += (target - s.current) * Math.min(1, dt * 4);
+  s.voltage += (s.current * R - s.voltage) * Math.min(1, dt * 4);
+  // Heating towards a steady state where loss balances input.
+  const equilibrium = s.current * s.current * R * 26;
+  s.tempRise += (equilibrium - s.tempRise) * Math.min(1, dt * 0.35);
+  s.settled = Math.abs(target - s.current) < Math.max(1e-4, Math.abs(target) * 0.004);
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   if (!wiredCorrectly(inputs)) return null;

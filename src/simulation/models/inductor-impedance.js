@@ -37,8 +37,28 @@ export function validate(inputs) {
   if (overRange(inputs)) warnings.push({ field: 'ammeter', code: 'OVER_RANGE', message: 'The current exceeds this ammeter\'s range.', why: 'A current above the meter\'s full-scale value pins the needle and can damage the movement.', fix: 'Use an ammeter of a larger range, or reduce the voltage.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, current: 0, opposition: 0, phase: 0, pinned: false }; }
+/**
+ * A coil on DC and on AC.
+ *
+ * On DC only its resistance opposes the current. On AC the inductive
+ * reactance 2(pi)fL joins it in quadrature, so the same coil at the same
+ * voltage passes far less current -- and inserting an iron core, which
+ * multiplies L, chokes it further. That contrast is the whole activity, so
+ * the meter is driven from it and eased to the reading the way a real
+ * moving-iron movement responds.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const target = currentA(inputs);
+  s.opposition = oppositionOhm(inputs);
+  s.current += (target - s.current) * Math.min(1, dt * 4.5);
+  s.pinned = overRange(inputs);
+  // Phase of the supply, for drawing the AC waveform.
+  s.phase = inputs.supply === 'dc' ? 0 : (s.phase + dt * Math.min(12, inputs.frequencyHz * 0.12)) % (Math.PI * 2);
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   if (overRange(inputs)) return null;

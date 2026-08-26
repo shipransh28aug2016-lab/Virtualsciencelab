@@ -80,8 +80,8 @@ export function init() { return { t: 0, thimble: 0, spindle: 0, gripped: false }
 export function step(state, inputs, dt) {
   const s = { ...state };
   s.t += dt;
-  const target = (typeof objectOf === 'function' ? (objectOf(inputs)?.trueMm ?? 0) : (inputs.trueMm ?? 0));
-  s.spindle += (target - s.spindle) * Math.min(1, dt * 5);
+  const target = specimenOf(inputs)?.trueMm ?? inputs.thimble ?? 0;
+  s.spindle += (target - s.spindle) * Math.min(1, dt * 1.6);
   s.thimble = (s.spindle % 0.5) / 0.5;
   s.gripped = Math.abs(target - s.spindle) < 1e-4;
   return s;

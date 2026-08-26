@@ -30,8 +30,8 @@ export function init() { return { t: 0, aligned: 0 }; }
 export function step(state, inputs, dt) {
   const s = { ...state };
   s.t += dt;
-  const target = inputs.lengthCm ?? inputs.reading ?? 0;
-  s.aligned += (target - s.aligned) * Math.min(1, dt * 8);
+  const target = objectOf(inputs)?.trueCm ?? inputs.lengthCm ?? 0;
+  s.aligned += (target - s.aligned) * Math.min(1, dt * 1.5);
   return s;
 }
 

@@ -40,21 +40,25 @@ export function validate(inputs) {
 }
 export function init() { return { t: 0, tilt: 0, balanced: false, net: 0 }; }
 /**
- * The metre rule on its knife edge. The net moment about the pivot tilts
- * the rule until the moments balance; a rule that simply sits level
- * whatever is hung on it teaches nothing, so the imbalance is shown as
- * the tilt it actually produces.
+ * The metre rule on its knife edge.
+ *
+ * The rule tilts under whichever moment is the larger, and comes to rest
+ * horizontal only when they are equal. Reading the moments off the model's
+ * own quantities matters: an earlier version invented left/right mass and
+ * arm fields this model does not have, so both moments came out equal from
+ * undefined and the rule sat level whatever the student did with it.
  */
 export function step(state, inputs, dt) {
   const s = { ...state };
   s.t += dt;
-  const L = (inputs.leftMassG ?? 50) * (inputs.leftArmCm ?? 20);
-  const R = (inputs.rightMassG ?? 50) * (inputs.rightArmCm ?? 20);
-  s.net = R - L;
-  s.balanced = Math.abs(s.net) < Math.max(1, (L + R) * 0.004);
+  const anticlockwise = bodyOf(inputs).trueG * d1(inputs);   // unknown body
+  const clockwise = knownG(inputs) * d2(inputs);             // known mass
+  s.net = clockwise - anticlockwise;
+  s.balanced = balanced(inputs);
   // Tilt saturates: a real rule comes to rest against the bench.
-  const target = Math.max(-0.32, Math.min(0.32, s.net / Math.max(1, (L + R) * 0.6)));
-  s.tilt += (target - s.tilt) * Math.min(1, dt * 3.4);
+  const scale = Math.max(1, (clockwise + anticlockwise) * 0.35);
+  const target = s.balanced ? 0 : Math.max(-0.3, Math.min(0.3, s.net / scale));
+  s.tilt += (target - s.tilt) * Math.min(1, dt * 3.2);
   return s;
 }
 

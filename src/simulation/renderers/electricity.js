@@ -11,16 +11,36 @@ const BENCH_Y = 420;
 
 export function resistivity(ctx, w, h, state, inputs) {
   const th = theme();
-  const y = h / 2;
-  ctx.save(); ctx.strokeStyle = th.ink; ctx.lineWidth = 1.6;
-  ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(w - 60, y); ctx.moveTo(60, y); ctx.lineTo(60, y - 60); ctx.lineTo(w - 60, y - 60); ctx.lineTo(w - 60, y); ctx.stroke();
-  ctx.restore();
-  drawResistor(ctx, w / 2, y, 70, { label: `${(inputs.wire || 'constantan')} wire` });
-  drawCell(ctx, 100, y - 60, { label: 'Cell' });
-  drawKey(ctx, 160, y - 60, true);
-  drawDial(ctx, w - 100, y - 60, 34, (state?.current ?? 0) / 1.5, { label: 'Ammeter', zeroCentre: false });
-  drawDial(ctx, w / 2, y + 60, 34, (state?.voltage ?? 0) / 6, { label: 'Voltmeter (parallel)' });
-  label(ctx, 220, y - 60, 'Rheostat', { anchor: 'above' });
+  const y = 280, x0 = 90, x1 = 690;
+  const ok = inputs?.ammeterMode === 'series' && inputs?.voltmeterMode === 'parallel';
+  const I = state?.current ?? 0;
+
+  // Circuit loop, with charge carriers drifting when current flows.
+  drawWireRect(ctx, x0, y - 140, x1, y, { current: ok ? clamp(I * 2.2, 0, 3) : 0 });
+
+  /* The wire under test, warming as it carries current. Its resistance
+     creeps up with temperature, which is why readings are taken quickly --
+     so the wire is shown getting hot rather than that being a footnote. */
+  const warm = clamp((state?.tempRise ?? 0) / 40, 0, 1);
+  drawResistor(ctx, (x0 + x1) / 2, y, 120, {
+    label: `${inputs?.wire || 'constantan'} wire · l = ${(inputs?.lengthCm ?? 100).toFixed(0)} cm, d = ${(inputs?.diameterMm ?? 0.4).toFixed(2)} mm`,
+    power: warm,
+  });
+
+  drawCell(ctx, x0, y - 70, { label: `Cell ${(inputs?.emf ?? 3).toFixed(1)} V` });
+  drawKey(ctx, x0 + 130, y - 140, true);
+  drawResistor(ctx, x0 + 290, y - 140, 70, { label: 'Rheostat' });
+
+  drawDial(ctx, x1, y - 70, 42, clamp(I / 1.5, 0, 1),
+    { label: `Ammeter (${inputs?.ammeterMode || 'series'})`, unit: 'A' });
+  drawDial(ctx, (x0 + x1) / 2, y + 110, 42, clamp((state?.voltage ?? 0) / 6, 0, 1),
+    { label: `Voltmeter (${inputs?.voltmeterMode || 'parallel'})`, unit: 'V' });
+
+  label(ctx, (x0 + x1) / 2, y - 200,
+    !ok ? 'WRONG WIRING — an ammeter goes in series, a voltmeter in parallel'
+      : `I = ${I.toFixed(3)} A · V = ${(state?.voltage ?? 0).toFixed(3)} V · V/I = ${I > 1e-3 ? (state.voltage / I).toFixed(2) : '—'} Ω` +
+        (warm > 0.15 ? `  (wire +${(state?.tempRise ?? 0).toFixed(0)} °C — take the reading quickly)` : ''),
+    { anchor: 'above', bold: true, color: !ok ? '#c02626' : warm > 0.4 ? '#8a5a00' : undefined });
 }
 
 export function metreBridge(ctx, w, h, state, inputs) {
@@ -80,13 +100,80 @@ export function galvanometer(ctx, w, h, state, inputs) {
 
 export function inductorImpedance(ctx, w, h, state, inputs) {
   const th = theme();
-  const cx = w / 2, cy = h / 2;
-  ctx.save(); ctx.strokeStyle = th.metal; ctx.lineWidth = 3;
-  for (let i = 0; i < 8; i++) { ctx.beginPath(); ctx.arc(cx - 60 + i * 16, cy, 12, Math.PI, 0); ctx.stroke(); }
+  const cx = 380, cy = 240;
+  const ac = inputs?.supply === 'ac';
+  const iron = inputs?.core === 'iron';
+
+  // The coil, wound on its former, with the core actually in it or not.
+  ctx.save();
+  if (iron) {
+    const g = ctx.createLinearGradient(0, cy - 14, 0, cy + 14);
+    g.addColorStop(0, '#8b93a3'); g.addColorStop(0.4, '#cfd6e0'); g.addColorStop(1, '#4d5462');
+    ctx.fillStyle = g;
+    ctx.fillRect(cx - 150, cy - 13, 300, 26);
+  }
+  ctx.strokeStyle = shade('#c07a3a', 0.1); ctx.lineWidth = 5; ctx.lineCap = 'round';
+  for (let i = 0; i < 12; i++) {
+    ctx.beginPath();
+    ctx.ellipse(cx - 110 + i * 20, cy, 10, 30, 0, Math.PI * 0.86, Math.PI * 2.14);
+    ctx.stroke();
+  }
   ctx.restore();
-  label(ctx, cx, cy + 14, `Coil (${inputs?.core || 'air'} core)`, { anchor: 'below' });
-  drawDial(ctx, 90, h - 50, 30, (state?.currentA ?? 0) / 2, { label: 'Ammeter' });
-  drawDial(ctx, w - 90, h - 50, 30, (state?.voltageV ?? 0) / 12, { label: `Voltmeter (${inputs?.supply === 'ac' ? 'AC' : 'DC'})` });
+  label(ctx, cx, cy + 38, iron ? 'Coil with soft-iron core' : 'Coil, air core', { anchor: 'below' });
+  I_apparatus(cx, cy);
+
+  /* An iron core multiplies the inductance, so on AC it chokes the
+     current -- the demonstration this activity exists for. Showing the
+     field concentrating in the core is what makes that believable. */
+  if (ac) {
+    ctx.save();
+    const k = iron ? 1 : 0.4;
+    ctx.strokeStyle = rgba(th.accent, 0.35 * k);
+    ctx.lineWidth = 1.4;
+    for (let i = 1; i <= 3; i++) {
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, 150 + i * 26, 30 + i * 20, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.restore();
+    label(ctx, cx + 230, cy - 60, iron ? 'Flux concentrated in the core' : 'Flux mostly in air',
+      { anchor: 'right', size: 11, color: th.accent });
+  }
+
+  // Circuit.
+  drawWireRect(ctx, cx - 260, cy - 150, cx + 260, cy + 150,
+    { current: ac ? 0 : clamp((state?.current ?? 0) * 2, 0, 3) });
+  drawCell(ctx, cx - 260, cy, { label: `${ac ? 'AC' : 'DC'} supply · ${(inputs?.voltageV ?? 6).toFixed(1)} V` });
+  drawKey(ctx, cx - 120, cy - 150, true);
+
+  const range = { a10: 10, a5: 5, a2: 2 }[inputs?.ammeter] || 5;
+  drawDial(ctx, cx + 260, cy, 42, clamp((state?.current ?? 0) / range, 0, 1),
+    { label: `Ammeter (0–${range} A)`, unit: 'A' });
+
+  // The supply waveform — flat for DC, sinusoidal for AC.
+  ctx.save();
+  ctx.strokeStyle = rgba('#c02626', 0.85); ctx.lineWidth = 1.8;
+  ctx.beginPath();
+  for (let i = 0; i <= 80; i++) {
+    const f = i / 80;
+    const xx = cx - 120 + f * 240;
+    const yy = cy - 200 - (ac ? Math.sin(f * Math.PI * 4 + (state?.phase ?? 0)) * 22 : 0);
+    i === 0 ? ctx.moveTo(xx, yy) : ctx.lineTo(xx, yy);
+  }
+  ctx.stroke();
+  ctx.restore();
+  label(ctx, cx - 126, cy - 200, ac ? `AC ${inputs?.frequencyHz ?? 50} Hz` : 'DC', { anchor: 'left', size: 11 });
+
+  label(ctx, cx, cy - 240,
+    state?.pinned ? 'OVER RANGE — the needle is pinned, use a larger ammeter'
+      : ac ? `Opposition = √(R² + (2πfL)²) = ${(state?.opposition ?? 0).toFixed(2)} Ω · I = ${(state?.current ?? 0).toFixed(3)} A`
+        : `On DC only R opposes: ${(state?.opposition ?? 0).toFixed(2)} Ω · I = ${(state?.current ?? 0).toFixed(3)} A`,
+    { anchor: 'above', bold: true, color: state?.pinned ? '#c02626' : undefined });
+}
+
+/** Register the coil so the pointer can name it. */
+function I_apparatus(cx, cy) {
+  noteBounds(cx - 170, cy - 46, 340, 92);
 }
 
 export function multimeter(ctx, w, h, state, inputs) {

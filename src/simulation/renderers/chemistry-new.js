@@ -113,12 +113,24 @@ export function electronicBalance(ctx, w, h, state, inputs) {
      while it does. Showing "----" until it is stable is the habit the
      experiment is trying to build. */
   const settled = !!state?.settled;
+  const dp = inputs?.balance === 'digital3' ? 3 : 2;
   const shown = settled
-    ? `${(state?.displayG ?? inputs?.containerMassG ?? 0).toFixed(inputs?.balance === 'digital3' ? 3 : 2)} g`
-    : '- - - - -';
+    ? `${((state?.displayG ?? 0) + (state?.drift ?? 0)).toFixed(dp)} g`
+    : `${(state?.displayG ?? 0).toFixed(dp)}`;
   drawDigitalReadout(ctx, cx - 78, cy + 4, 156, 44, shown,
     { label: 'Electronic top-pan balance', size: 19, color: settled ? '#7CFC9A' : '#5f8f6f' });
-  label(ctx, cx, cy + 92, settled ? 'Stable — record the mass' : 'Waiting for the reading to stabilise…',
+  // The stability mark a real balance shows before a reading may be taken.
+  if (settled) {
+    ctx.save();
+    ctx.fillStyle = '#7CFC9A';
+    ctx.font = '700 13px system-ui, sans-serif';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText('g', cx + 58, cy + 26);
+    ctx.restore();
+  }
+  label(ctx, cx, cy + 92,
+    settled ? 'Stable — record the mass'
+      : 'Waiting for the reading to stabilise…',
     { anchor: 'below', bold: true, color: settled ? '#0d7a52' : '#8a5a00' });
 }
 

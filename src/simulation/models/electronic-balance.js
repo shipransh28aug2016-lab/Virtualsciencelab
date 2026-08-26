@@ -45,9 +45,14 @@ export function step(state, inputs, dt) {
   const s = { ...state };
   s.t += dt;
   const target = grossMassG(inputs);
-  s.displayG = (s.displayG ?? 0) + (target - (s.displayG ?? 0)) * Math.min(1, dt * 3.4);
-  // Residual hunting in the last digit until the pan comes to rest.
-  s.settled = Math.abs(target - s.displayG) < (inputs.balance === 'digital3' ? 5e-4 : 5e-3);
+  s.displayG = (s.displayG ?? 0) + (target - (s.displayG ?? 0)) * Math.min(1, dt * 2.2);
+  /* Air currents over an unshielded pan keep the last digit hunting by a
+     count or two -- which is why a balance is read with the draught shield
+     closed, and why "wait for the stability mark" is drilled into every
+     student. */
+  const lc = inputs.balance === 'digital3' ? 0.001 : 0.01;
+  s.drift = inputs.shieldClosed === false ? Math.sin(s.t * 5.1) * lc : 0;
+  s.settled = Math.abs(target - s.displayG) < lc * 0.5;
   return s;
 }
 

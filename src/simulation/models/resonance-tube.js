@@ -61,8 +61,9 @@ export function step(state, inputs, dt) {
   const near = nearestResonance(inputs, s.levelCm);
   const miss = Math.abs(near?.missCm ?? 99);
   // A sharp resonance: a centimetre off and it is markedly quieter.
-  s.loudness = 1 / (1 + (miss / 1.1) ** 2);
-  s.resonant = s.loudness > 0.72;
+  // A floor: the column always responds a little, resonance makes it loud.
+  s.loudness = 0.1 + 0.9 / (1 + (miss / 1.1) ** 2);
+  s.resonant = s.loudness > 0.75;
   s.phase = (s.phase + dt * 9) % (Math.PI * 2);
   return s;
 }

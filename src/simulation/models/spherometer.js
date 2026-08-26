@@ -61,8 +61,9 @@ export function init() { return { t: 0, screw: 0, contact: false }; }
 export function step(state, inputs, dt) {
   const s = { ...state };
   s.t += dt;
-  const target = inputs.screwTurns ?? state.screw ?? 0;
-  s.screw += (target - s.screw) * Math.min(1, dt * 8);
+  // The screw is driven down until the central leg just touches the surface.
+  const target = (trueSagittaMm(inputs) ?? 0) / 0.5;
+  s.screw += (target - s.screw) * Math.min(1, dt * 1.7);
   s.contact = Math.abs(target - s.screw) < 0.002;
   return s;
 }
