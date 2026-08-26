@@ -1,0 +1,473 @@
+{
+  "id": "XII-CHE-C03",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "C",
+    "categoryTitle": "Thermochemistry",
+    "assessmentComponent": "Content Based Experiment",
+    "serial": 3,
+    "unit": "Unit III: Chemical Thermodynamics",
+    "chapter": "Chapter-4: Chemical Thermodynamics",
+    "topic": "Enthalpy of mixing and intermolecular forces",
+    "subtopic": "Hydrogen bonding, negative deviation from Raoult’s law",
+    "practical": "Determination of enthalpy change during interaction (Hydrogen bond formation) between Acetone and Chloroform.",
+    "learningObjectives": [
+      "Be able to measure the temperature change when acetone and chloroform are mixed",
+      "Be able to calculate the enthalpy change of mixing per mole of mixture",
+      "Be able to show that the heat evolved is greatest at equimolar composition",
+      "Be able to relate the heat evolved to hydrogen bonding between the two molecules"
+    ],
+    "competencies": [
+      "Performing a standard laboratory operation and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, CATEGORY C, Experiment 3 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Enthalpy change on mixing acetone and chloroform",
+  "shortTitle": "Acetone and chloroform",
+  "objective": [
+    "To measure the temperature change when acetone and chloroform are mixed.",
+    "To calculate the enthalpy change of mixing per mole of mixture.",
+    "To show that the heat evolved is greatest at equimolar composition.",
+    "To relate the heat evolved to hydrogen bonding between the two molecules."
+  ],
+  "theory": {
+    "statement": "Acetone and chloroform each form only weak interactions with themselves, but a chloroform molecule can donate its single hydrogen to the carbonyl oxygen of acetone, forming a hydrogen bond that neither liquid can form alone. Making these new bonds releases energy, so mixing the two is EXOTHERMIC and the temperature rises. Because each bond needs one molecule of each kind, the number of bonds formed is greatest when the two are present in equal numbers, and the heat evolved is largest at equimolar composition, falling to zero at either pure liquid. The same interaction is what makes this pair show a large negative deviation from Raoult’s law and form a maximum-boiling azeotrope.",
+    "keyEquations": [
+      "q = m·c·ΔT for the mixture",
+      "ΔH(mixing) = −q / total moles of mixture",
+      "The heat effect varies as x(1 − x), greatest at x = 0.5",
+      "Hydrogen bond: Cl₃C–H ··· O=C(CH₃)₂"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Polystyrene cup calorimeter with lid",
+      "why": "Polystyrene conducts heat badly, so nearly all the heat stays in the liquid where the thermometer can detect it."
+    },
+    {
+      "name": "Thermometer reading to 0.1 °C",
+      "why": "The whole result rests on a temperature difference of a few degrees, so the least count limits the accuracy directly."
+    },
+    {
+      "name": "Stirrer",
+      "why": "The liquid must be at one uniform temperature before the maximum is read."
+    },
+    {
+      "name": "Measuring cylinder",
+      "why": "The mass of liquid is taken from its volume, so the volume must be measured accurately."
+    },
+    {
+      "name": "Stoppered measuring cylinders",
+      "why": "Both liquids are volatile, so they must be kept covered or the evaporation cools them and spoils the reading."
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "mode",
+      "label": "Experiment",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "mixing",
+      "options": [
+        "mixing"
+      ]
+    },
+    {
+      "id": "acetoneFraction",
+      "label": "Acetone fraction",
+      "symbol": "x",
+      "unit": "",
+      "type": "independent",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.5
+    },
+    {
+      "id": "waterCm3",
+      "label": "Total volume",
+      "symbol": "V",
+      "unit": "cm³",
+      "type": "control",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "default": 100
+    },
+    {
+      "id": "calorimeter",
+      "label": "Calorimeter",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "polystyrene",
+      "options": [
+        "polystyrene",
+        "vacuum",
+        "glass"
+      ]
+    },
+    {
+      "id": "correctForCalorimeter",
+      "label": "Correct for water equivalent",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "scale",
+      "label": "Thermometer",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "t01",
+      "options": [
+        "t1",
+        "t05",
+        "t01"
+      ]
+    },
+    {
+      "id": "enthalpy",
+      "label": "Enthalpy of mixing",
+      "symbol": "ΔH",
+      "unit": "kJ mol⁻¹",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    "Work in a fume cupboard: both liquids are volatile and their vapours are harmful.",
+    "Measure the required volume of chloroform into the calorimeter and record its temperature.",
+    "Measure the corresponding volume of acetone and bring it to the same temperature.",
+    "Mix the two quickly, replace the lid and stir.",
+    "Record the maximum temperature reached.",
+    "Calculate ΔH per mole of mixture.",
+    "Repeat at several compositions and find where the heat evolved is greatest."
+  ],
+  "simulation": {
+    "model": "calorimetry",
+    "renderer": "calorimetry",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "acetoneFraction",
+        "label": "Acetone fraction",
+        "widget": "slider"
+      },
+      {
+        "var": "waterCm3",
+        "label": "Total volume",
+        "widget": "slider"
+      },
+      {
+        "var": "calorimeter",
+        "label": "Calorimeter",
+        "widget": "segmented",
+        "options": [
+          "polystyrene",
+          "vacuum",
+          "glass"
+        ]
+      },
+      {
+        "var": "correctForCalorimeter",
+        "label": "Correct for water equivalent",
+        "widget": "switch"
+      },
+      {
+        "var": "scale",
+        "label": "Thermometer",
+        "widget": "segmented",
+        "options": [
+          "t1",
+          "t05",
+          "t01"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record ΔT",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "system",
+        "label": "Composition"
+      },
+      {
+        "key": "initialC",
+        "label": "Initial T",
+        "unit": "°C",
+        "decimals": 1
+      },
+      {
+        "key": "finalC",
+        "label": "Final T",
+        "unit": "°C",
+        "decimals": 1
+      },
+      {
+        "key": "deltaC",
+        "label": "ΔT",
+        "unit": "°C",
+        "decimals": 2
+      },
+      {
+        "key": "moles",
+        "label": "Total moles",
+        "unit": "mol",
+        "decimals": 3
+      },
+      {
+        "key": "enthalpyKJ",
+        "label": "ΔH",
+        "unit": "kJ mol⁻¹",
+        "decimals": 3
+      }
+    ],
+    "graph": null,
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Find ΔT for each composition.",
+      "Compute q = m·c·ΔT for the mixture plus the water equivalent.",
+      "Find the total moles of acetone and chloroform present.",
+      "Compute ΔH = −q / total moles.",
+      "Plot ΔH against the mole fraction of acetone and locate the maximum."
+    ],
+    "resultKeys": [
+      "meanKJ",
+      "peakAtEquimolar"
+    ]
+  },
+  "expectedResult": {
+    "statement": "Mixing acetone and chloroform is exothermic and the temperature rises. The heat evolved is greatest when the two are present in roughly equal numbers of molecules, around −1.9 kJ per mole of mixture at equimolar composition, and falls away towards zero at either pure liquid. This is direct evidence for a hydrogen bond formed between unlike molecules, and it explains the negative deviation from Raoult’s law that this pair shows.",
+    "value": -1.9,
+    "unit": "kJ mol⁻¹",
+    "tolerancePct": 25
+  },
+  "safety": [
+    "Chloroform is toxic and a suspected carcinogen: work only in a fume cupboard.",
+    "Acetone is highly flammable; keep it well away from any naked flame.",
+    "Keep both liquids stoppered when not in use, since evaporation both cools them and fills the room with vapour.",
+    "Do not pour either liquid down the sink; use the halogenated waste container for chloroform."
+  ],
+  "sourcesOfError": [
+    "Letting either liquid evaporate before mixing, which cools it and masks the rise.",
+    "Working at only one composition, so the maximum at equimolar is never found.",
+    "Ignoring the water equivalent of the calorimeter.",
+    "Using volumes rather than moles when computing the composition, since the two have very different molar volumes.",
+    "Leaving the calorimeter open, so the volatile mixture cools by evaporation during the reading."
+  ],
+  "viva": [
+    {
+      "question": "Why does mixing acetone and chloroform release heat?",
+      "expectedConcept": "A hydrogen bond forms between the chloroform hydrogen and the acetone carbonyl oxygen, and bond formation releases energy.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "New intermolecular bonds are formed.",
+      "commonMisconception": "That a chemical reaction takes place between them."
+    },
+    {
+      "question": "Why is the effect greatest at equimolar composition?",
+      "expectedConcept": "Each hydrogen bond needs one molecule of each kind, so the number of possible pairs is greatest when both are equally abundant.",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "Pairwise interaction maximised at x = 0.5.",
+      "commonMisconception": "That more of the more reactive component always gives more heat."
+    },
+    {
+      "question": "What kind of deviation from Raoult’s law does this pair show?",
+      "expectedConcept": "A negative deviation, because the unlike molecules attract each other more strongly than the like ones do.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Stronger unlike interactions give negative deviation.",
+      "commonMisconception": "That exothermic mixing gives a positive deviation."
+    },
+    {
+      "question": "What type of azeotrope does this mixture form?",
+      "expectedConcept": "A maximum-boiling azeotrope, since the stronger attraction lowers the vapour pressure.",
+      "difficulty": "hard",
+      "bloom": "Apply",
+      "answerLogic": "Negative deviation goes with a maximum-boiling azeotrope.",
+      "commonMisconception": "That all azeotropes are minimum boiling."
+    },
+    {
+      "question": "Why must this experiment be done in a fume cupboard?",
+      "expectedConcept": "Chloroform is toxic and volatile, and acetone is highly flammable.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Toxic and flammable vapours.",
+      "commonMisconception": "That a fume cupboard is only needed for reactions that produce gas."
+    },
+    {
+      "question": "Why is the heat effect here so much smaller than for neutralisation?",
+      "expectedConcept": "An intermolecular hydrogen bond is far weaker than the covalent O–H bond formed in neutralisation.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Intermolecular against covalent bond energies.",
+      "commonMisconception": "That the experiment must have gone wrong."
+    },
+    {
+      "question": "Why is a polystyrene cup used rather than a glass beaker?",
+      "expectedConcept": "Polystyrene has a low thermal conductivity and a small water equivalent, so little heat is lost to the vessel or the room.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Insulation and low heat capacity.",
+      "commonMisconception": "That glass is better because it is a laboratory material."
+    },
+    {
+      "question": "What is the water equivalent of a calorimeter?",
+      "expectedConcept": "The mass of water that would absorb the same heat as the calorimeter for the same temperature rise.",
+      "difficulty": "medium",
+      "bloom": "Remember",
+      "answerLogic": "An equivalent mass of water.",
+      "commonMisconception": "That it is the mass of water actually in the calorimeter."
+    },
+    {
+      "question": "What happens to your answer if you ignore the water equivalent?",
+      "expectedConcept": "You divide by too small a mass, so the magnitude of the enthalpy comes out too small.",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "The vessel absorbs heat that is then unaccounted for.",
+      "commonMisconception": "That the error cancels out."
+    },
+    {
+      "question": "Why is the specific heat capacity of the solution taken as that of water?",
+      "expectedConcept": "The solutions are dilute, so their heat capacity differs from water by far less than the other experimental errors.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "A justified approximation for dilute solutions.",
+      "commonMisconception": "That the two are exactly equal."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Mixing acetone and chloroform is:",
+        "options": [
+          "Endothermic",
+          "Exothermic",
+          "Athermic",
+          "Explosive"
+        ],
+        "answer": 1,
+        "feedback": "A hydrogen bond forms between unlike molecules, and bond formation releases energy."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The hydrogen bond here forms between:",
+        "options": [
+          "Two acetone molecules",
+          "Two chloroform molecules",
+          "Chloroform H and acetone O",
+          "Acetone H and chloroform Cl"
+        ],
+        "answer": 2,
+        "feedback": "Chloroform has one hydrogen made acidic by three chlorines; acetone has a carbonyl oxygen to accept it."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Take readings at several compositions, not just one.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Include a composition near equal mole fractions.",
+        "check": "rows>=3"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "The heat evolved on mixing is greatest when the mole fraction of acetone is about:",
+        "options": [
+          "0.1",
+          "0.5",
+          "0.9",
+          "1.0"
+        ],
+        "answer": 1,
+        "feedback": "Each bond needs one molecule of each kind, so pairing is maximised at equal mole fractions."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "This mixture shows:",
+        "options": [
+          "Positive deviation from Raoult’s law",
+          "Negative deviation from Raoult’s law",
+          "Ideal behaviour",
+          "No vapour pressure"
+        ],
+        "answer": 1,
+        "feedback": "Unlike molecules attract more strongly than like ones, lowering the vapour pressure below the ideal value."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "q = m·c·ΔT for the mixture",
+    "assumptions": [
+      "q = m·c·ΔT for the mixture",
+      "ΔH(mixing) = −q / total moles of mixture",
+      "The heat effect varies as x(1 − x), greatest at x = 0.5",
+      "Hydrogen bond: Cl₃C–H ··· O=C(CH₃)₂"
+    ],
+    "validRange": "Mixing acetone and chloroform is exothermic and the temperature rises. The heat ",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Letting either liquid evaporate before mixing, which cools it and masks the rise.",
+      "Working at only one composition, so the maximum at equimolar is never found.",
+      "Ignoring the water equivalent of the calorimeter.",
+      "Using volumes rather than moles when computing the composition, since the two have very different molar volumes."
+    ],
+    "expectedBehaviour": [
+      "Mixing acetone and chloroform is exothermic and the temperature rises. The heat evolved is greatest when the two are present in roughly equal numbers of molecules, around −1.9 kJ per mole of mixture at equimolar composition, and falls away towards zero at either pure liquid. This is direct evidence for a hydrogen bond formed between unlike molecules, and it explains the negative deviation from Raoult’s law that this pair shows."
+    ],
+    "testFile": "tests/batch16.test.js"
+  }
+}

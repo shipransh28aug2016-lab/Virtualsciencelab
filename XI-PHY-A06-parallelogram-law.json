@@ -1,0 +1,197 @@
+{
+  "id": "XI-PHY-A06",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 6,
+    "unit": "Unit II: Kinematics",
+    "chapter": "Chapter-3: Motion in a Plane",
+    "topic": "Scalar and vector quantities; position and displacement vectors, general vectors and their notations; equality of vectors, multiplication of vectors by a real number; addition and subtraction of vectors, definition of unit vector; resolution of a vector in a plane, rectangular components",
+    "subtopic": "Parallelogram law of vector addition; equilibrium of three concurrent forces; determination of an unknown force as the resultant of two known forces",
+    "practical": "To find the weight of a given body using parallelogram law of vectors.",
+    "learningObjectives": [
+      "State and apply the parallelogram law of vector addition to forces",
+      "Set up three concurrent forces in equilibrium on a Gravesand apparatus",
+      "Recognise that the resultant of two known forces balances the unknown weight",
+      "Measure the angle between the two known forces and compute the resultant",
+      "Determine the weight of an unknown body without weighing it directly",
+      "Identify the conditions under which no equilibrium is possible"
+    ],
+    "competencies": [
+      "Applying vector addition to a physical system rather than to arrows on paper",
+      "Recognising equilibrium as the vanishing of a vector sum",
+      "Predicting when a configuration is physically impossible using the triangle inequality",
+      "Choosing experimental settings that minimise the sensitivity of the result to angle error"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Experiment 6 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Weight of a body by the parallelogram law of vectors",
+  "shortTitle": "Parallelogram law",
+  "objective": [
+    "To find the weight of a given body using the parallelogram law of vectors.",
+    "To verify that the resultant of two known forces balances the unknown weight.",
+    "To study how the angle between the two known forces changes as the weights are altered."
+  ],
+  "theory": {
+    "statement": "On a Gravesand apparatus, three strings are tied at a common knot. Two pass over pulleys and carry known weights P and Q; the third hangs vertically and carries the body of unknown weight S. The knot settles at the position where the three forces balance. Since the three forces are in equilibrium, the resultant of P and Q must be equal in magnitude and opposite in direction to S.",
+    "derivationNote": "The parallelogram law states that if two forces acting at a point are represented in magnitude and direction by the two adjacent sides of a parallelogram, their resultant is represented by the diagonal through that point. For forces P and Q with an angle θ between them, the diagonal has length R = √(P² + Q² + 2PQ cos θ). At equilibrium the third force must be equal and opposite to this resultant, so S = R. Equivalently, the three forces form a closed triangle, which gives the same result by the cosine rule. This closed-triangle picture also shows immediately when no equilibrium is possible: a triangle can only be drawn if each side is no longer than the sum of the other two. So the knot can find a resting position only if S ≤ P + Q and S ≥ |P − Q|. Notice that the student does not choose θ. Hanging the three weights determines it, and the apparatus finds its own equilibrium.",
+    "keyEquations": [
+      "R = √(P² + Q² + 2PQ·cos θ)",
+      "At equilibrium, S = R",
+      "tan α = Q sin θ / (P + Q cos θ), the direction of the resultant",
+      "Equilibrium exists only if |P − Q| ≤ S ≤ P + Q",
+      "Weight in newton = (gram-weight / 1000) × g"
+    ]
+  },
+  "apparatus": [
+    { "name": "Gravesand apparatus", "spec": "vertical drawing board with two pulleys at the top corners", "why": "Holds the board vertical and carries the two pulleys over which the known weights hang" },
+    { "name": "Two pulleys", "spec": "low friction, clamped at the upper corners", "why": "Change the direction of the known forces without changing their magnitude" },
+    { "name": "Slotted weights and hangers", "spec": "50 to 250 gwt", "why": "Provide the two known forces P and Q" },
+    { "name": "Unknown body", "spec": "with a hook", "why": "The body whose weight is to be determined" },
+    { "name": "Thin strong thread", "spec": "three lengths, tied at a common knot", "why": "Transmits the three forces to a single point, making them concurrent" },
+    { "name": "Drawing paper, pins, protractor and scale", "spec": "", "why": "Mark the directions of the three strings and measure the angle between them" },
+    { "name": "Plumb line", "spec": "", "why": "Checks that the board is vertical, so that the unknown weight really acts along the third string" }
+  ],
+  "materials": [],
+  "variables": [
+    { "id": "pGwt", "label": "Weight P", "symbol": "P", "unit": "gwt", "type": "independent", "min": 50, "max": 250, "step": 10, "default": 100 },
+    { "id": "qGwt", "label": "Weight Q", "symbol": "Q", "unit": "gwt", "type": "independent", "min": 50, "max": 250, "step": 10, "default": 100 },
+    { "id": "body", "label": "Unknown body", "symbol": "S", "unit": "", "type": "control", "default": "s1", "options": ["s1", "s2", "s3"] },
+    { "id": "pulley", "label": "Pulleys", "symbol": "", "unit": "", "type": "control", "default": "good", "options": ["good", "stiff"] },
+    { "id": "resultantGwt", "label": "Resultant", "symbol": "R", "unit": "gwt", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Set the board vertical with a plumb line and check that both pulleys turn freely.", "checkpoint": false },
+    { "step": 2, "text": "Tie three threads to a common knot. Pass two over the pulleys and attach hangers; hang the unknown body from the third.", "checkpoint": false },
+    { "step": 3, "text": "Add weights P and Q to the two hangers so that the knot rests near the middle of the paper, clear of the board.", "checkpoint": true, "expects": "pGwt" },
+    { "step": 4, "text": "Tap the board gently so the knot settles at its true equilibrium position rather than being held by pulley friction.", "checkpoint": true, "expects": "qGwt" },
+    { "step": 5, "text": "Mark the directions of all three threads with pins, and note the values of P and Q.", "checkpoint": false },
+    { "step": 6, "text": "Take the paper off the board, join the marks, and measure the angle θ between the directions of P and Q with a protractor.", "checkpoint": true, "expects": "record" },
+    { "step": 7, "text": "Repeat with at least three different pairs of values of P and Q, so the check is independent each time.", "checkpoint": true, "expects": "rows>=3" },
+    { "step": 8, "text": "Calculate the resultant for each set and take the mean; this is the weight of the body.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "parallelogram-law",
+    "renderer": "parallelogram-law",
+    "fps": 60,
+    "controls": [
+      { "var": "pGwt", "widget": "slider" },
+      { "var": "qGwt", "widget": "slider" },
+      { "var": "body", "widget": "segmented", "options": ["s1", "s2", "s3"] },
+      { "var": "pulley", "widget": "segmented", "options": ["good", "stiff"] }
+    ],
+    "actions": [
+      { "id": "record", "label": "Record at equilibrium", "primary": true },
+      { "id": "reset", "label": "Reset" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "trial", "label": "Trial", "unit": "", "decimals": 0 },
+      { "key": "pGwt", "label": "P", "unit": "gwt", "decimals": 0 },
+      { "key": "qGwt", "label": "Q", "unit": "gwt", "decimals": 0 },
+      { "key": "thetaDeg", "label": "Angle θ", "unit": "°", "decimals": 1 },
+      { "key": "resultantGwt", "label": "Resultant R", "unit": "gwt", "decimals": 1 },
+      { "key": "weightN", "label": "Weight", "unit": "N", "decimals": 3 }
+    ],
+    "graph": { "x": "thetaDeg", "y": "resultantGwt", "xLabel": "Angle between P and Q (degree)", "yLabel": "Resultant R (gwt)", "throughOrigin": false },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "For each set, note P, Q and the measured angle θ",
+      "R = √(P² + Q² + 2PQ cos θ)",
+      "The mean of R over the trials is the weight of the body in gram-weight",
+      "Weight in newton = (R / 1000) × g",
+      "Compare with the value expected from the closed force triangle"
+    ],
+    "resultKeys": ["meanResultant", "weightN", "meanAngle"]
+  },
+  "expectedResult": {
+    "quantity": "Weight of the body",
+    "symbol": "S",
+    "value": 152,
+    "tolerance": 6,
+    "unit": "gwt",
+    "secondary": { "quantity": "Weight in newton", "value": 1.488, "tolerance": 0.06, "unit": "N" },
+    "statement": "The resultant of the two known forces comes out at about 152 gram-weight, that is about 1.49 N, whatever pair of values of P and Q is used. This is the weight of the body, found without ever placing it on a balance, and the agreement between independent settings is what verifies the parallelogram law."
+  },
+  "safety": [
+    "Clamp the pulleys and the board firmly; a falling weight hanger can injure a foot.",
+    "Keep feet and hands from under the hanging weights.",
+    "Do not load the threads beyond their breaking strength — a snapping thread flings the weights sideways.",
+    "Make sure the board is stable and cannot topple forward when the weights are added.",
+    "Add weights gently rather than dropping them onto the hanger."
+  ],
+  "sourcesOfError": [
+    "Friction at the pulleys means the tension differs slightly from the weight hung, and the knot can rest anywhere within a small region.",
+    "The knot may touch the board, adding a normal reaction so that the three forces are no longer in equilibrium.",
+    "The board may not be exactly vertical, so the unknown weight does not act along the third string.",
+    "Marking the string directions with pins and joining the marks introduces an angular error.",
+    "The weight of the hangers may be forgotten in the values of P and Q.",
+    "A narrow angle between P and Q makes the diagonal poorly determined, magnifying any angular error."
+  ],
+  "viva": [
+    { "question": "State the parallelogram law of vector addition.", "expectedConcept": "If two vectors acting at a point are represented in magnitude and direction by the two adjacent sides of a parallelogram drawn from that point, then their resultant is represented in magnitude and direction by the diagonal of the parallelogram passing through the same point.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "The standard statement.", "commonMisconception": "Stating it for the other diagonal, which represents the difference." },
+    { "question": "Why does the resultant of P and Q equal the weight of the body?", "expectedConcept": "Because the three forces are in equilibrium at the knot, so their vector sum is zero. The resultant of P and Q must therefore be equal in magnitude and opposite in direction to the third force, which is the weight of the body.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Equilibrium means the vector sum vanishes.", "commonMisconception": "Thinking the resultant simply adds to the weight." },
+    { "question": "What is the purpose of the pulleys?", "expectedConcept": "They change the direction of the forces without changing their magnitude, so that the weights can hang vertically while pulling the knot along a slanting direction. An ideal pulley is frictionless, so the tension is the same throughout the string.", "difficulty": "easy", "bloom": "Understand", "answerLogic": "Redirect force, preserve magnitude.", "commonMisconception": "Believing a pulley multiplies the force." },
+    { "question": "Why must the knot hang clear of the board?", "expectedConcept": "If the knot touches the board, the board exerts a normal reaction on it. There would then be four forces acting instead of three, and the resultant of P and Q would no longer balance the weight alone, so the calculation would be wrong.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "An extra contact force spoils the three-force equilibrium.", "commonMisconception": "Thinking that touching the board merely adds a little friction." },
+    { "question": "What happens if the unknown weight is greater than P + Q?", "expectedConcept": "No equilibrium is possible and the knot is simply dragged down. Three forces can balance only if none exceeds the sum of the other two, which is the condition for the force triangle to close.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Triangle inequality on the three forces.", "commonMisconception": "Expecting the knot to settle at some very low position instead." },
+    { "question": "Why should the angle between P and Q not be too small?", "expectedConcept": "With a narrow angle the parallelogram is long and thin, and its diagonal changes very little when the sides are moved. A small error in measuring the directions then produces a large error in the calculated resultant, so the result is unreliable.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "The resultant becomes insensitive to angle, so error is magnified.", "commonMisconception": "Assuming any angle serves equally well." },
+    { "question": "How is the tension in a string related to the weight hanging from it, over a pulley?", "expectedConcept": "For an ideal frictionless pulley and a light string, the tension is the same all along the string and equals the weight hung on the end, including the weight of the hanger itself. With a stiff pulley, friction makes the two tensions differ.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Ideal pulley preserves tension.", "commonMisconception": "Forgetting to include the hanger in P and Q." },
+    { "question": "Why is the board tapped gently before the readings are marked?", "expectedConcept": "Pulley friction lets the knot come to rest anywhere within a small range rather than at the true equilibrium point. Tapping supplies a small disturbance that lets it settle at the correct position.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Overcomes static friction at the pulleys.", "commonMisconception": "Thinking tapping is to test whether the knot is secure." },
+    { "question": "What is the relation between the parallelogram law and the triangle law of vector addition?", "expectedConcept": "They are equivalent. The triangle law states that if two vectors are represented by two sides of a triangle taken in order, the third side taken in the opposite order gives their resultant. The triangle is simply half of the parallelogram.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "The triangle is half the parallelogram.", "commonMisconception": "Treating them as two independent laws." },
+    { "question": "If P = Q, what can you say about the direction of the resultant?", "expectedConcept": "The resultant bisects the angle between them, by symmetry. In this experiment it must be vertical, so the two strings make equal angles with the vertical.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Symmetry when the two forces are equal.", "commonMisconception": "Thinking the resultant is always vertical regardless of P and Q — it is, but only because the third force is the weight." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "The resultant of two forces P and Q with angle θ between them is:", "options": ["P + Q", "√(P² + Q² + 2PQ cos θ)", "√(P² + Q² − 2PQ cos θ)", "PQ cos θ"], "answer": 1, "feedback": "The diagonal of the parallelogram: R = √(P² + Q² + 2PQ cos θ). The minus sign belongs to the other diagonal, the difference." },
+      { "id": "pre2", "type": "mcq", "question": "Three concurrent forces are in equilibrium. Their vector sum is:", "options": ["Maximum", "Zero", "Equal to the largest force", "Undefined"], "answer": 1, "feedback": "Equilibrium of concurrent forces means the vector sum is zero, so the force triangle closes." },
+      { "id": "pre3", "type": "mcq", "question": "If P = 100 gwt, Q = 100 gwt and the body weighs 250 gwt, the knot will:", "options": ["Rest in the middle", "Be dragged down, since 250 > P + Q", "Rise to the top", "Rest against one pulley"], "answer": 1, "feedback": "No triangle can be drawn with sides 100, 100 and 250, so no equilibrium is possible." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Record the equilibrium for at least three settings.", "check": "rows>=3" },
+      { "id": "dur2", "type": "task", "question": "Use different values of P and Q between readings.", "check": "settingsVaried" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the weight of body S₁ in gram-weight.", "answer": 152, "tolerance": 8, "feedback": "The resultant comes to about 152 gwt for every combination of P and Q." },
+      { "id": "post2", "type": "numeric", "question": "Express that weight in newton.", "answer": 1.488, "tolerance": 0.08, "feedback": "(152/1000) × 9.792 = 1.49 N." },
+      { "id": "post3", "type": "mcq", "question": "You changed P and Q and the calculated resultant stayed the same. This shows that:", "options": ["The apparatus is faulty", "The resultant depends only on the unknown weight it balances", "The angle does not matter", "P and Q were not really changed"], "answer": 1, "feedback": "At equilibrium the resultant must always equal the weight of the body, whatever P, Q and θ are. That invariance is exactly what verifies the law." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "R = √(P² + Q² + 2PQ cos θ); at equilibrium S = R; equilibrium requires |P − Q| ≤ S ≤ P + Q",
+    "assumptions": [
+      "The pulleys are frictionless, so tension equals the weight hung",
+      "The strings are light and inextensible",
+      "The board is vertical and the knot hangs clear of it",
+      "The three forces act at a single point",
+      "The weight of the hangers is included in P and Q"
+    ],
+    "validRange": "P and Q 50 to 250 gwt; unknown 40 to 300 gwt; angle between P and Q 30° to 150°",
+    "unitSystem": "Forces as gram-weight, converted to newton; angles in degrees",
+    "edgeCases": [
+      "S greater than P + Q gives no equilibrium at all",
+      "S less than |P − Q| pulls the knot into a pulley",
+      "A very narrow angle makes the diagonal poorly determined",
+      "Stiff pulleys let the knot rest over a range of positions",
+      "The knot touching the board adds a fourth force"
+    ],
+    "expectedBehaviour": [
+      "The computed resultant equals the true weight of the body for every valid P and Q",
+      "With P = Q, S = 2P cos(θ/2), so a heavier body closes the angle between P and Q",
+      "With P = Q the two strings make equal angles with the vertical",
+      "The model refuses a reading when no equilibrium is geometrically possible"
+    ],
+    "testFile": "tests/batch7.test.js"
+  }
+}

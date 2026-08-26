@@ -1,0 +1,616 @@
+{
+  "id": "XI-PHY-B07",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 7,
+    "unit": "Unit VII: Properties of Bulk Matter",
+    "chapter": "Chapter-10: Thermal Properties of Matter",
+    "topic": "Heat, temperature, thermal expansion; specific heat capacity, calorimetry; change of state, latent heat capacity; heat transfer, conduction, convection and radiation",
+    "subtopic": "Principle of calorimetry; method of mixtures; water equivalent of a calorimeter",
+    "practical": "To determine specific heat capacity of a given solid by method of mixtures.",
+    "learningObjectives": [
+      "State the principle of calorimetry and apply it to a mixture",
+      "Determine the water equivalent of a calorimeter and explain why it is needed",
+      "Measure the initial and final temperatures of the water and the solid",
+      "Calculate the specific heat capacity from the heat balance equation",
+      "Explain how a slow transfer of the hot solid affects the result",
+      "Show that the specific heat capacity is a property of the material, independent of the mass used"
+    ],
+    "competencies": [
+      "Applying conservation of energy to a closed thermal system",
+      "Identifying every body that participates in a heat exchange, not just the obvious ones",
+      "Predicting the direction in which a neglected term shifts a result",
+      "Distinguishing an extensive quantity, heat, from an intensive one, specific heat capacity"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 7 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Specific heat capacity of a solid by the method of mixtures",
+  "shortTitle": "Specific heat",
+  "objective": [
+    "To determine the specific heat capacity of a given solid by the method of mixtures.",
+    "To apply the principle of calorimetry, including the water equivalent of the calorimeter.",
+    "To examine how heat lost during the transfer affects the result."
+  ],
+  "theory": {
+    "statement": "When two bodies at different temperatures are mixed in an insulated vessel, heat flows from the hotter to the colder until both reach a common temperature. If no heat escapes to the surroundings, the heat lost by the hot body is exactly equal to the heat gained by the cold body and by the vessel containing it. This is the principle of calorimetry, and it is a statement of the conservation of energy.",
+    "derivationNote": "A solid of mass m_s and specific heat capacity c_s is heated to T_s and dropped into water of mass m_w at T_w held in a calorimeter of mass m_c and specific heat capacity c_c. If the mixture settles at T_f, then heat lost by the solid = m_s c_s (T_s − T_f), and heat gained = (m_w c_w + m_c c_c)(T_f − T_w). Equating the two gives c_s = (m_w c_w + m_c c_c)(T_f − T_w) / [m_s (T_s − T_f)]. The product m_c c_c is called the water equivalent of the calorimeter, W: it is the mass of water that would absorb the same heat for the same rise in temperature, W = m_c c_c / c_w. The calorimeter and stirrer warm up along with the water, and that heat also came from the solid. Because the term sits in the numerator, leaving it out under-estimates the heat received and so gives a specific heat capacity that is too low. Two practical effects work the other way and both lower the final temperature: heat radiated by the solid while it is being carried from the heater, and heat lost by the calorimeter to the room during mixing. Both make the calculated value too small, which is why the transfer must be quick and the calorimeter insulated.",
+    "keyEquations": [
+      "Heat lost by solid = heat gained by water and calorimeter",
+      "m_s c_s (T_s − T_f) = (m_w c_w + m_c c_c)(T_f − T_w)",
+      "c_s = (m_w c_w + m_c c_c)(T_f − T_w) / [m_s (T_s − T_f)]",
+      "Water equivalent W = m_c c_c / c_w",
+      "c_water = 4186 J/kg/K = 1 cal/g/°C"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Calorimeter with stirrer and lid",
+      "spec": "copper or aluminium, of known mass",
+      "why": "Holds the water; its own heat capacity must be included as the water equivalent"
+    },
+    {
+      "name": "Wooden insulating box",
+      "spec": "with felt or cotton packing",
+      "why": "Reduces the heat exchanged with the room while the mixture settles"
+    },
+    {
+      "name": "Solid under test",
+      "spec": "metal block or shot with a thread attached, 50 to 200 g",
+      "why": "The body whose specific heat capacity is to be found"
+    },
+    {
+      "name": "Steam heater or hot water bath",
+      "spec": "with a thermometer",
+      "why": "Heats the solid to a known, steady temperature"
+    },
+    {
+      "name": "Two thermometers",
+      "spec": "least count 0.5 °C or better",
+      "why": "One reads the temperature of the heated solid, the other the water in the calorimeter"
+    },
+    {
+      "name": "Physical balance and weight box",
+      "spec": "least count 10 mg",
+      "why": "Weighs the calorimeter, the water and the solid"
+    },
+    {
+      "name": "Water",
+      "spec": "at room temperature",
+      "why": "The cold body that receives the heat"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "solid",
+      "label": "Solid under test",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "copper",
+      "options": [
+        "copper",
+        "aluminium",
+        "brass",
+        "lead"
+      ]
+    },
+    {
+      "id": "calorimeter",
+      "label": "Calorimeter",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "copper",
+      "options": [
+        "copper",
+        "aluminium"
+      ]
+    },
+    {
+      "id": "solidMassG",
+      "label": "Mass of solid",
+      "symbol": "m_s",
+      "unit": "g",
+      "type": "independent",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "default": 100
+    },
+    {
+      "id": "waterMassG",
+      "label": "Mass of water",
+      "symbol": "m_w",
+      "unit": "g",
+      "type": "independent",
+      "min": 80,
+      "max": 200,
+      "step": 10,
+      "default": 150
+    },
+    {
+      "id": "solidTempC",
+      "label": "Temperature of hot solid",
+      "symbol": "T_s",
+      "unit": "°C",
+      "type": "independent",
+      "min": 50,
+      "max": 100,
+      "step": 1,
+      "default": 95
+    },
+    {
+      "id": "waterTempC",
+      "label": "Temperature of water",
+      "symbol": "T_w",
+      "unit": "°C",
+      "type": "independent",
+      "min": 15,
+      "max": 60,
+      "step": 1,
+      "default": 25
+    },
+    {
+      "id": "transfer",
+      "label": "Transfer of the solid",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "quick",
+      "options": [
+        "quick",
+        "slow"
+      ]
+    },
+    {
+      "id": "includeWaterEquivalent",
+      "label": "Include water equivalent",
+      "symbol": "W",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "specificHeat",
+      "label": "Specific heat capacity",
+      "symbol": "c",
+      "unit": "J/kg/K",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Weigh the empty calorimeter with its stirrer, and note the mass.",
+      "checkpoint": true,
+      "expects": "calorimeter"
+    },
+    {
+      "step": 2,
+      "text": "Fill the calorimeter about two-thirds with water at room temperature and weigh it again to find the mass of water.",
+      "checkpoint": true,
+      "expects": "waterMassG"
+    },
+    {
+      "step": 3,
+      "text": "Place the calorimeter in the insulating box and record the steady temperature of the water.",
+      "checkpoint": true,
+      "expects": "waterTempC"
+    },
+    {
+      "step": 4,
+      "text": "Weigh the solid, tie it with a thread and suspend it in the steam heater. Leave it until its temperature is steady.",
+      "checkpoint": true,
+      "expects": "solidMassG"
+    },
+    {
+      "step": 5,
+      "text": "Record the temperature of the hot solid.",
+      "checkpoint": true,
+      "expects": "solidTempC"
+    },
+    {
+      "step": 6,
+      "text": "Transfer the solid quickly into the calorimeter, taking care not to splash any water out.",
+      "checkpoint": false
+    },
+    {
+      "step": 7,
+      "text": "Stir gently and watch the thermometer. Record the highest steady temperature reached by the mixture.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 8,
+      "text": "Repeat the whole experiment at least three times, varying the mass of the solid.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 9,
+      "text": "Calculate the water equivalent of the calorimeter and hence the specific heat capacity of the solid.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "specific-heat",
+    "renderer": "specific-heat",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "solidMassG",
+        "widget": "slider"
+      },
+      {
+        "var": "waterMassG",
+        "widget": "slider"
+      },
+      {
+        "var": "solidTempC",
+        "widget": "slider"
+      },
+      {
+        "var": "waterTempC",
+        "widget": "slider"
+      },
+      {
+        "var": "solid",
+        "widget": "segmented",
+        "options": [
+          "copper",
+          "aluminium",
+          "brass",
+          "lead"
+        ]
+      },
+      {
+        "var": "calorimeter",
+        "widget": "segmented",
+        "options": [
+          "copper",
+          "aluminium"
+        ]
+      },
+      {
+        "var": "transfer",
+        "widget": "segmented",
+        "options": [
+          "quick",
+          "slow"
+        ]
+      },
+      {
+        "var": "includeWaterEquivalent",
+        "widget": "switch"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Mix and record",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "solidMassG",
+        "label": "Mass m_s",
+        "unit": "g",
+        "decimals": 0
+      },
+      {
+        "key": "waterMassG",
+        "label": "Mass m_w",
+        "unit": "g",
+        "decimals": 0
+      },
+      {
+        "key": "solidTempC",
+        "label": "T_s",
+        "unit": "°C",
+        "decimals": 1
+      },
+      {
+        "key": "waterTempC",
+        "label": "T_w",
+        "unit": "°C",
+        "decimals": 1
+      },
+      {
+        "key": "finalTempC",
+        "label": "T_f",
+        "unit": "°C",
+        "decimals": 1
+      },
+      {
+        "key": "riseC",
+        "label": "Rise",
+        "unit": "°C",
+        "decimals": 1
+      },
+      {
+        "key": "specificHeat",
+        "label": "c",
+        "unit": "J/kg/K",
+        "decimals": 0
+      }
+    ],
+    "graph": {
+      "x": "trial",
+      "y": "specificHeat",
+      "xLabel": "Trial number",
+      "yLabel": "Specific heat capacity c (J/kg/K)",
+      "throughOrigin": false
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Water equivalent of the calorimeter W = m_c c_c / c_w",
+      "Heat gained = (m_w c_w + m_c c_c)(T_f − T_w)",
+      "Heat lost by the solid = m_s c_s (T_s − T_f)",
+      "Equate the two and solve: c_s = (m_w c_w + m_c c_c)(T_f − T_w) / [m_s (T_s − T_f)]",
+      "Take the mean over the trials",
+      "Convert if required: 1 cal/g/°C = 4186 J/kg/K"
+    ],
+    "resultKeys": [
+      "specificHeat",
+      "waterEquivalentG",
+      "meanRise"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Specific heat capacity of copper",
+    "symbol": "c",
+    "value": 385,
+    "tolerance": 30,
+    "unit": "J/kg/K",
+    "secondary": {
+      "quantity": "In cal/g/°C",
+      "value": 0.092,
+      "tolerance": 0.008,
+      "unit": "cal/g/°C"
+    },
+    "statement": "Copper heated to about 95 °C and mixed with 150 g of water at 25 °C raises the mixture to about 29 °C, giving a specific heat capacity of about 385 J/kg/K, or 0.092 cal/g/°C. The value is unchanged when the mass of the solid is varied, confirming that specific heat capacity is a property of the material rather than of the sample."
+  },
+  "safety": [
+    "The solid comes out of the steam heater at nearly 100 °C — always lift it by its thread, never with bare fingers.",
+    "Steam scalds more severely than boiling water; keep hands clear of the mouth of the heater.",
+    "Lower the hot solid gently into the calorimeter so that no hot water splashes out.",
+    "Do not let the thermometer bulb rest against the base of the calorimeter, and never use the thermometer as a stirrer.",
+    "Allow the apparatus to cool before dismantling it."
+  ],
+  "sourcesOfError": [
+    "Heat is radiated by the solid while it is being transferred from the heater to the calorimeter.",
+    "Heat is exchanged with the surroundings while the mixture is settling, even inside an insulating box.",
+    "The thermometer and stirrer also absorb a little heat, which is usually neglected.",
+    "The highest steady temperature may be missed if the mixture is not stirred or is read too late.",
+    "Water splashed out during the transfer changes the mass of water actually taking part.",
+    "The solid may not have reached the temperature of the steam heater before being transferred."
+  ],
+  "viva": [
+    {
+      "question": "State the principle of calorimetry.",
+      "expectedConcept": "When bodies at different temperatures are mixed, and no heat is lost to the surroundings, the heat lost by the hotter bodies equals the heat gained by the colder ones. It is a statement of the conservation of energy applied to heat.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Heat lost = heat gained.",
+      "commonMisconception": "Stating that the temperatures are equal without mentioning the heat balance."
+    },
+    {
+      "question": "Define specific heat capacity and give its SI unit.",
+      "expectedConcept": "It is the quantity of heat required to raise the temperature of unit mass of a substance by one degree. Its SI unit is the joule per kilogram per kelvin, J/kg/K.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Heat per unit mass per unit temperature rise.",
+      "commonMisconception": "Confusing it with heat capacity, which is for the whole body rather than unit mass."
+    },
+    {
+      "question": "What is the water equivalent of a calorimeter?",
+      "expectedConcept": "It is the mass of water that would absorb the same amount of heat as the calorimeter for the same rise in temperature. It equals m_c c_c / c_w and allows the calorimeter to be treated simply as extra water.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "W = m_c c_c / c_w.",
+      "commonMisconception": "Thinking it is the mass of water the calorimeter can hold."
+    },
+    {
+      "question": "A student forgets the water equivalent of the calorimeter. Is the result too high or too low?",
+      "expectedConcept": "Too low. The calorimeter also absorbed heat from the solid, so the total heat received was greater than that taken by the water alone. Omitting that term under-counts the heat the solid gave up, and since the term is in the numerator of the expression for c_s, the calculated specific heat capacity comes out smaller than the true value.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "The term sits in the numerator, so dropping it reduces c.",
+      "commonMisconception": "Guessing 'too high' without tracing which part of the fraction the term belongs to."
+    },
+    {
+      "question": "Why must the solid be transferred quickly?",
+      "expectedConcept": "While it is in the air the hot solid radiates heat away, so it enters the water cooler than the temperature recorded at the heater. The final temperature is then lower than it should be, and the calculated specific heat capacity comes out too small.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Heat lost in transit lowers T_f.",
+      "commonMisconception": "Thinking the delay matters only because the water might cool."
+    },
+    {
+      "question": "Why is the calorimeter usually made of copper?",
+      "expectedConcept": "Copper has a low specific heat capacity, so the calorimeter itself absorbs relatively little heat and its water equivalent is small. It is also a good conductor, so the whole vessel and its contents reach a uniform temperature quickly.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Low specific heat and high conductivity.",
+      "commonMisconception": "Saying it is chosen because copper does not rust."
+    },
+    {
+      "question": "Why is the calorimeter placed inside a wooden box packed with felt?",
+      "expectedConcept": "To reduce heat exchange with the surroundings. Wood and felt are poor conductors and the trapped air suppresses convection, so the assumption that no heat escapes is much closer to being true.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Insulation makes the closed-system assumption valid.",
+      "commonMisconception": "Thinking the box is only to prevent the calorimeter being knocked over."
+    },
+    {
+      "question": "Water has an unusually high specific heat capacity. Give one consequence.",
+      "expectedConcept": "It takes a great deal of heat to warm water and it releases a great deal on cooling, so water is an excellent coolant and heat store — used in car radiators and central heating. On a large scale it moderates the climate of coastal regions, which have smaller temperature swings than inland areas.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Large c means large heat storage per degree.",
+      "commonMisconception": "Confusing the effect with the latent heat of vaporisation."
+    },
+    {
+      "question": "Would the calculated specific heat capacity change if you used twice as much of the solid?",
+      "expectedConcept": "No. Specific heat capacity is an intensive property of the material. Using more of the solid gives a larger temperature rise, but the extra mass appears in the denominator of the formula and cancels the effect exactly.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "c is intensive; m_s appears in the denominator.",
+      "commonMisconception": "Expecting a bigger sample to give a bigger specific heat."
+    },
+    {
+      "question": "Why should the final temperature be the highest steady reading, not simply the reading after a fixed time?",
+      "expectedConcept": "The mixture takes a little while to reach thermal equilibrium, and after that it begins to cool towards room temperature. The highest steady value is the closest approach to the true equilibrium temperature; reading too early gives a value that is too low, and reading too late catches the mixture already cooling.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Equilibrium is at the peak, before ambient cooling takes over.",
+      "commonMisconception": "Believing the temperature simply rises and then stays constant indefinitely."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The specific heat capacity of water is:",
+        "options": [
+          "386 J/kg/K",
+          "4186 J/kg/K",
+          "2260 J/kg/K",
+          "897 J/kg/K"
+        ],
+        "answer": 1,
+        "feedback": "4186 J/kg/K, equivalently 1 cal/g/°C — unusually high, which is why water is such a good coolant."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "In the method of mixtures, the final temperature of the mixture always lies:",
+        "options": [
+          "Above the temperature of the hot solid",
+          "Below the temperature of the cold water",
+          "Between the two initial temperatures",
+          "Exactly halfway between them"
+        ],
+        "answer": 2,
+        "feedback": "Heat flows from hot to cold until they meet somewhere in between. It is only halfway if the two thermal capacities happen to be equal."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "The water equivalent of a calorimeter of mass m_c and specific heat c_c is:",
+        "options": [
+          "m_c c_c",
+          "m_c c_c / c_w",
+          "c_w / m_c c_c",
+          "m_c / c_c"
+        ],
+        "answer": 1,
+        "feedback": "W = m_c c_c / c_w — the mass of water that would absorb the same heat for the same temperature rise."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Complete at least three mixings.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Vary the mass of the solid between trials to show that c does not depend on it.",
+        "check": "massVaried"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the specific heat capacity of copper in J/kg/K.",
+        "answer": 385,
+        "tolerance": 40,
+        "feedback": "About 385 J/kg/K for copper."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "Express that value in cal/g/°C.",
+        "answer": 0.092,
+        "tolerance": 0.012,
+        "feedback": "385 / 4186 = 0.092 cal/g/°C."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "You transferred the hot solid slowly and your value came out low. Why?",
+        "options": [
+          "The water evaporated",
+          "The solid radiated heat on the way, so it entered cooler and T_f was lower",
+          "The balance was wrong",
+          "The calorimeter absorbed no heat"
+        ],
+        "answer": 1,
+        "feedback": "Heat lost in transit means the solid delivered less heat than the recorded T_s implies, so the final temperature and the calculated c are both too low."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "m_s c_s (T_s − T_f) = (m_w c_w + m_c c_c)(T_f − T_w); W = m_c c_c / c_w",
+    "assumptions": [
+      "No heat is lost to the surroundings, or the loss is corrected for",
+      "The solid is transferred quickly and is fully immersed",
+      "The mixture is stirred to a single uniform final temperature",
+      "The solid does not react with or dissolve in the water",
+      "The heat absorbed by the thermometer is negligible"
+    ],
+    "validRange": "Solid 50 to 200 g at 60–100 °C; water 100 to 200 g at 20–30 °C; calorimeter 50 to 120 g",
+    "unitSystem": "Masses in gram, temperatures in °C, specific heat in J/kg/K and cal/g/°C",
+    "edgeCases": [
+      "Ignoring the water equivalent under-counts the heat received and gives c too low",
+      "A slow transfer lowers T_f and gives c too low",
+      "Too much water gives a rise the thermometer cannot resolve",
+      "A solid barely hotter than the water gives almost no rise",
+      "A solid colder than the water gives no reading at all"
+    ],
+    "expectedBehaviour": [
+      "c recovers the accepted value for all four solids to within a few percent",
+      "The final temperature always lies between T_w and T_s",
+      "c is unchanged when the mass of the solid is varied",
+      "Switching off the water equivalent visibly lowers the result"
+    ],
+    "testFile": "tests/batch8.test.js"
+  }
+}

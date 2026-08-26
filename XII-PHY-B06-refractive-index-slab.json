@@ -1,0 +1,192 @@
+{
+  "id": "XII-PHY-B06",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 6,
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-9: Ray Optics and Optical Instruments",
+    "topic": "Refraction of light, total internal reflection and optical fibres, refraction at spherical surfaces, lenses, refraction through a prism",
+    "subtopic": "Refractive index of glass from real and apparent depth using a travelling microscope",
+    "practical": "To determine refractive index of a glass slab using a travelling microscope.",
+    "learningObjectives": [
+      "Use a travelling microscope and read its vernier to 0.001 cm",
+      "Focus in turn on a mark, on the same mark seen through the slab, and on the slab's top surface",
+      "Recognise that refraction makes the mark appear to rise",
+      "Calculate the refractive index as the ratio of real to apparent thickness",
+      "Distinguish crown glass from flint glass by the value obtained",
+      "Explain why the apparent shift depends on the refractive index but not on the viewing distance for normal viewing"
+    ],
+    "competencies": [
+      "Precise use of a vernier instrument",
+      "Understanding an everyday optical illusion in quantitative terms",
+      "Recognising that a ratio of two lengths can be dimensionless",
+      "Judging when a measurement is limited by the instrument's least count"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 6 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Refractive index of a glass slab using a travelling microscope",
+  "shortTitle": "Refractive Index — Slab",
+  "objective": [
+    "To determine the refractive index of the material of a glass slab.",
+    "To measure real and apparent thickness with a travelling microscope.",
+    "To compare crown glass with flint glass."
+  ],
+  "theory": {
+    "statement": "A mark viewed through a glass slab appears to be raised. The refractive index of the glass is the ratio of the real thickness of the slab to the apparent thickness.",
+    "derivationNote": "Light leaving the mark travels up through the glass and refracts away from the normal as it enters the air. To an eye looking down from above, the emergent rays appear to come from a point higher than the mark itself, so the mark seems to have risen. For near-normal viewing the geometry gives the simple result that the ratio of real depth to apparent depth equals the refractive index of the medium.\n\nIn practice three readings are taken with a travelling microscope. First the microscope is focused on an ink mark on the paper, and the vernier read. Then the slab is placed over the mark and the microscope is raised until the mark, now seen through the glass, is again in focus; the difference between these two readings is the apparent shift. Finally the microscope is raised further and focused on a speck of lycopodium powder dusted on the top surface of the slab, which gives the real thickness. Then\n\n    μ = real thickness / apparent thickness = t / (t − shift)\n\nFor crown glass, μ is about 1.5, so a mark appears to rise by one third of the thickness of the slab. Flint glass has a higher refractive index and produces a larger shift, which is why the two can be told apart by this measurement alone.",
+    "keyEquations": [
+      "μ = real depth / apparent depth",
+      "apparent thickness = real thickness / μ",
+      "shift = real thickness × (1 − 1/μ)",
+      "For crown glass μ ≈ 1.5, so the shift is about t/3",
+      "Refractive index is dimensionless"
+    ]
+  },
+  "apparatus": [
+    { "name": "Travelling microscope", "spec": "vernier least count 0.001 cm", "why": "Measures small vertical distances precisely by focusing at each level" },
+    { "name": "Glass slab", "spec": "crown or flint, a few millimetres thick", "why": "The specimen whose refractive index is to be found" },
+    { "name": "Lycopodium powder", "spec": "a light dusting", "why": "Gives the otherwise featureless top surface of the slab something to focus on" },
+    { "name": "Ink mark on white paper", "spec": "a fine cross", "why": "The object viewed through the glass" },
+    { "name": "Adjustable stand and levelling screws", "spec": "", "why": "Keeps the microscope vertical so the readings are true heights" },
+    { "name": "Reading lens", "spec": "", "why": "For reading the vernier scale without parallax" }
+  ],
+  "materials": [],
+  "variables": [
+    { "id": "slab", "label": "Glass slab", "symbol": "", "unit": "", "type": "independent", "default": "s6", "options": ["s6", "s10", "s8f"] },
+    { "id": "method", "label": "Method", "symbol": "", "unit": "", "type": "control", "default": "slab", "options": ["slab"] },
+    { "id": "microscopeLC", "label": "Microscope least count", "symbol": "L.C.", "unit": "cm", "type": "controlled", "min": 0.001, "max": 0.01, "step": 0.001, "default": 0.001 },
+    { "id": "mu", "label": "Refractive index", "symbol": "μ", "unit": "", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Level the base and check that the microscope moves truly vertically.", "checkpoint": false },
+    { "step": 2, "text": "Find the vernier constant of the travelling microscope.", "checkpoint": true, "expects": "microscopeLC" },
+    { "step": 3, "text": "Make a fine ink cross on a sheet of white paper and place it under the microscope.", "checkpoint": false },
+    { "step": 4, "text": "Focus sharply on the cross and record the vernier reading. This is the first reading.", "checkpoint": true, "expects": "slab" },
+    { "step": 5, "text": "Place the glass slab over the cross. The cross now appears raised; raise the microscope until it is sharp again and record the second reading.", "checkpoint": false },
+    { "step": 6, "text": "Dust a little lycopodium powder on the top of the slab, focus on the powder and record the third reading.", "checkpoint": true, "expects": "record" },
+    { "step": 7, "text": "Repeat the whole set of three readings at least twice more at different points on the slab.", "checkpoint": true, "expects": "rows>=3" },
+    { "step": 8, "text": "Real thickness is the third reading minus the first; apparent thickness is the third minus the second.", "checkpoint": false },
+    { "step": 9, "text": "Calculate μ for each set and take the mean.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "refractive-index",
+    "renderer": "refractive-index",
+    "fps": 45,
+    "controls": [
+      { "var": "slab", "widget": "segmented", "options": ["s6", "s10", "s8f"] },
+      { "var": "microscopeLC", "widget": "slider" }
+    ],
+    "actions": [
+      { "id": "record", "label": "Record the three readings", "primary": true },
+      { "id": "reset", "label": "Reset" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "trial", "label": "No.", "unit": "", "decimals": 0 },
+      { "key": "markAlone", "label": "Mark alone", "unit": "cm", "decimals": 3 },
+      { "key": "markThroughSlab", "label": "Mark through slab", "unit": "cm", "decimals": 3 },
+      { "key": "slabTop", "label": "Top of slab", "unit": "cm", "decimals": 3 },
+      { "key": "realThicknessCm", "label": "Real", "unit": "cm", "decimals": 3 },
+      { "key": "apparentThicknessCm", "label": "Apparent", "unit": "cm", "decimals": 3 },
+      { "key": "mu", "label": "μ", "unit": "", "decimals": 4 }
+    ],
+    "graph": { "x": "trial", "y": "mu", "xLabel": "Reading number", "yLabel": "Refractive index μ", "throughOrigin": false },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Real thickness = (top of slab) − (mark alone)",
+      "Apparent thickness = (top of slab) − (mark seen through the slab)",
+      "μ = real thickness / apparent thickness for each set",
+      "Take the mean of the values of μ",
+      "Compare with the accepted value for the glass supplied"
+    ],
+    "resultKeys": ["refractiveIndex", "accepted", "percentError"]
+  },
+  "expectedResult": {
+    "quantity": "Refractive index of the glass",
+    "symbol": "μ",
+    "value": 1.5,
+    "tolerance": 0.06,
+    "unit": "",
+    "secondary": { "quantity": "Apparent rise of the mark, as a fraction of the thickness", "value": 0.333, "tolerance": 0.03, "unit": "" },
+    "statement": "The refractive index of the crown glass slab is about 1.50, so a mark viewed through it appears to rise by about one third of the thickness of the slab. The flint glass slab gives a larger value, close to 1.62."
+  },
+  "safety": [
+    "Glass slabs chip easily and the edges can be sharp. Handle them by the faces and report any chipped slab.",
+    "Do not force the microscope's focusing screw; the objective can be driven into the slab and both are easily damaged.",
+    "Lycopodium powder is fine and easily inhaled. Use only a light dusting and do not blow it about.",
+    "Keep the microscope's optics clean and never touch the lenses with fingers."
+  ],
+  "sourcesOfError": [
+    "Backlash in the focusing screw, so readings differ depending on the direction of approach.",
+    "The microscope not being truly vertical, so the measured distances are not true thicknesses.",
+    "Judging sharpest focus by eye, which is subjective.",
+    "The slab's faces not being exactly parallel, so the thickness varies across it.",
+    "Parallax while reading the vernier scale.",
+    "Viewing appreciably away from the normal, which invalidates the simple real-over-apparent formula."
+  ],
+  "viva": [
+    { "question": "Define refractive index.", "expectedConcept": "The refractive index of a medium is the ratio of the speed of light in vacuum to the speed of light in that medium. Equivalently, from Snell's law, it is the ratio of the sine of the angle of incidence to the sine of the angle of refraction when light passes from vacuum into it.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Either definition, correctly stated.", "commonMisconception": "Describing it as the amount of bending without reference to a ratio." },
+    { "question": "Why does a mark appear raised when seen through a glass slab?", "expectedConcept": "Rays from the mark refract away from the normal on leaving the glass. Traced backwards, the emergent rays appear to diverge from a point higher than the mark, so the eye locates a virtual image above the true position.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Refraction on emergence plus backward projection.", "commonMisconception": "Attributing the effect to magnification by the glass." },
+    { "question": "Why is lycopodium powder sprinkled on the slab?", "expectedConcept": "A clean glass surface has nothing to focus on; the microscope would look straight through it. A light dusting of powder gives the top surface visible detail, so the third reading can be taken at the correct level.", "difficulty": "easy", "bloom": "Apply", "answerLogic": "Provides a focusable feature on a featureless surface.", "commonMisconception": "Thinking it changes the optics of the slab." },
+    { "question": "Is refractive index a dimensionless quantity?", "expectedConcept": "Yes. It is a ratio of two speeds, or equivalently of two lengths, so all units cancel and it is a pure number with no unit.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Ratio, hence dimensionless.", "commonMisconception": "Attaching units such as cm to it." },
+    { "question": "Does the apparent shift depend on how thick the slab is?", "expectedConcept": "Yes. The shift equals the thickness multiplied by (1 − 1/μ), so a thicker slab of the same glass gives a proportionally larger shift. The refractive index calculated from the ratio, however, is the same for any thickness.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "Shift scales with t, μ does not.", "commonMisconception": "Expecting a thicker slab to give a different refractive index." },
+    { "question": "Why must the mark be viewed nearly normally?", "expectedConcept": "The simple result that μ equals real depth over apparent depth is only valid for paraxial, near-normal viewing. At larger angles the emergent rays no longer appear to come from a single point and the apparent depth depends on the viewing angle, so the formula fails.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "The formula is a paraxial approximation.", "commonMisconception": "Believing the shift is independent of viewing angle." },
+    { "question": "How would you distinguish crown glass from flint glass with this apparatus?", "expectedConcept": "By the value of the refractive index. Crown glass gives about 1.5 while flint gives about 1.62, so for the same thickness the flint slab produces a noticeably larger apparent rise.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Different μ, hence different shift.", "commonMisconception": "Trying to judge by appearance or weight." },
+    { "question": "Why is a travelling microscope used rather than a scale?", "expectedConcept": "The distances involved are only a few millimetres and the differences between them a fraction of a millimetre. A travelling microscope reads to 0.001 cm through its vernier, whereas a metre scale reads only to 0.1 cm, which would make the result meaningless.", "difficulty": "medium", "bloom": "Evaluate", "answerLogic": "Least count matched to the size of the quantity.", "commonMisconception": "Thinking the microscope is needed for magnification of the image rather than precision of position." },
+    { "question": "Does the refractive index depend on the colour of the light?", "expectedConcept": "Yes. Refractive index decreases with increasing wavelength, so violet light is refracted more than red. This is dispersion, and it is why a prism spreads white light into a spectrum. Values are usually quoted for the sodium yellow line.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Dispersion; μ varies with wavelength.", "commonMisconception": "Treating refractive index as a single fixed number for a material." },
+    { "question": "A pool looks shallower than it is. Explain using this experiment.", "expectedConcept": "It is exactly the same effect. Light from the bottom refracts away from the normal on leaving the water, so the bottom appears raised and the apparent depth is the real depth divided by 1.33. A pool 2 m deep looks about 1.5 m deep, which is why it is dangerous to judge depth by eye.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Same real-over-apparent relation with μ = 1.33.", "commonMisconception": "Attributing the effect to surface ripples." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "Refractive index equals:", "options": ["Apparent depth / real depth", "Real depth / apparent depth", "Real depth × apparent depth", "Real depth − apparent depth"], "answer": 1, "feedback": "μ = real / apparent, which is always greater than 1 for a denser medium." },
+      { "id": "pre2", "type": "mcq", "question": "For crown glass of μ = 1.5, a mark appears to rise by:", "options": ["Half the thickness", "One third of the thickness", "Twice the thickness", "It does not rise"], "answer": 1, "feedback": "shift = t(1 − 1/1.5) = t/3." },
+      { "id": "pre3", "type": "mcq", "question": "The unit of refractive index is:", "options": ["cm", "dioptre", "It has no unit", "cm⁻¹"], "answer": 2, "feedback": "It is a ratio of two like quantities, so it is dimensionless." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Record at least three complete sets of readings.", "check": "rows>=3" },
+      { "id": "dur2", "type": "task", "question": "Keep the microscope least count unchanged during a set.", "check": "volumeConstant" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the refractive index of the crown glass slab.", "answer": 1.5, "tolerance": 0.08, "feedback": "Crown glass is about 1.50." },
+      { "id": "post2", "type": "mcq", "question": "The flint glass slab gave a larger value than crown glass because:", "options": ["It was thicker", "Its refractive index is higher, so it bends light more", "The microscope was mis-set", "It was dirtier"], "answer": 1, "feedback": "Flint glass genuinely has a higher refractive index, close to 1.62." },
+      { "id": "post3", "type": "mcq", "question": "If you doubled the thickness of the slab, the calculated μ would:", "options": ["Double", "Halve", "Stay the same", "Become zero"], "answer": 2, "feedback": "Both real and apparent thickness double, so their ratio is unchanged. μ is a property of the material." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "μ = real thickness / apparent thickness = t/(t − shift)",
+    "assumptions": [
+      "Viewing is near normal, so the paraxial result applies",
+      "The faces of the slab are plane and parallel",
+      "The microscope moves truly vertically",
+      "Readings are free of backlash in the focusing screw"
+    ],
+    "validRange": "Slab thickness 3 to 12 mm; refractive index 1.4 to 1.7",
+    "unitSystem": "Distances in cm; refractive index dimensionless",
+    "edgeCases": [
+      "Refractive index can never be less than 1 for glass",
+      "A thicker slab gives a larger shift but the same μ",
+      "Oblique viewing breaks the real-over-apparent formula",
+      "Least count limits the precision to about the third decimal place"
+    ],
+    "expectedBehaviour": [
+      "Crown glass gives about 1.50 and flint about 1.62",
+      "The mark always appears raised, never lowered",
+      "The shift is one third of the thickness for μ = 1.5",
+      "The value obtained is independent of the slab thickness"
+    ],
+    "testFile": "tests/batch6.test.js"
+  }
+}

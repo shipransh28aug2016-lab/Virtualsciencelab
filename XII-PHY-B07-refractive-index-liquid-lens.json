@@ -1,0 +1,549 @@
+{
+  "id": "XII-PHY-B07",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 7,
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-9: Ray Optics and Optical Instruments",
+    "topic": "Refraction of light, total internal reflection and optical fibres, refraction at spherical surfaces, lenses, refraction through a prism",
+    "subtopic": "Refractive index of a liquid using a convex lens and a plane mirror",
+    "practical": "To find the refractive index of a liquid using convex lens and plane mirror.",
+    "learningObjectives": [
+      "Locate the focus of a convex lens by the self-coincidence method with a plane mirror",
+      "Form a plano-concave liquid lens by placing a few drops under the convex lens",
+      "Measure the focal length of the combination and deduce that of the liquid lens",
+      "Apply the lens maker’s formula to a plano-concave lens to obtain μ",
+      "Explain why adding the liquid always lengthens the focal length",
+      "Compare the value obtained with the accepted refractive index of the liquid"
+    ],
+    "competencies": [
+      "Using self-coincidence to locate a focus",
+      "Combining thin lenses in contact",
+      "Applying the lens maker’s formula to a plano surface",
+      "Reasoning about which of two combined lenses dominates"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 7 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Refractive index of a liquid using a convex lens and a plane mirror",
+  "shortTitle": "Refractive Index — Liquid Lens",
+  "objective": [
+    "To find the refractive index of a given transparent liquid.",
+    "To use the self-coincidence method to measure focal lengths.",
+    "To understand the plano-concave liquid lens formed under a convex lens."
+  ],
+  "theory": {
+    "statement": "A few drops of liquid trapped between a convex lens and a plane mirror form a plano-concave liquid lens. From the focal lengths of the convex lens alone and of the combination, the focal length of the liquid lens follows, and from it the refractive index of the liquid.",
+    "derivationNote": "A convex lens is placed on a plane mirror and an optical needle is held above it. When the needle is at the focus of the lens, rays from its tip emerge parallel, strike the mirror normally, and retrace their path to form an image at the needle itself. Adjusting the needle until its tip and the tip of its image coincide with no parallax therefore locates the focus directly, and that height is f₁.\n\nA few drops of the liquid are then placed on the mirror and the convex lens set on top. The liquid fills the gap between the curved lower face of the lens and the flat mirror, so it forms a lens with one concave face (matching the lens) and one plane face: a plano-concave liquid lens, which is diverging. The two lenses are in contact, so the combination has\n\n    1/F = 1/f₁ + 1/f₂\n\nRepeating the self-coincidence measurement gives F, and hence 1/f₂ = 1/F − 1/f₁. Because the liquid lens is diverging, f₂ is negative and F is always LONGER than f₁; if a student obtains a shorter combination something has gone wrong.\n\nFinally the lens maker’s formula is applied to the liquid lens. One surface is plane, so its radius is infinite and the formula reduces to 1/f₂ = −(μ − 1)/R, where R is the radius of curvature of the lower face of the convex lens. Rearranged, μ = 1 + R/|f₂|.",
+    "keyEquations": [
+      "Self-coincidence locates the focus: needle height = f",
+      "1/F = 1/f₁ + 1/f₂ for lenses in contact",
+      "1/f₂ = 1/F − 1/f₁, and f₂ is negative",
+      "Plano-concave: 1/f₂ = −(μ − 1)/R",
+      "μ = 1 + R/|f₂|"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Convex lens",
+      "spec": "focal length about 20 cm, radius of the lower face known",
+      "why": "Forms the converging half of the combination; its radius enters the calculation"
+    },
+    {
+      "name": "Plane mirror",
+      "spec": "front-silvered if possible",
+      "why": "Returns parallel light along its own path, which is what makes self-coincidence work"
+    },
+    {
+      "name": "Optical needle",
+      "spec": "mounted in a clamp on a stand",
+      "why": "The object whose image is brought into coincidence with it"
+    },
+    {
+      "name": "Transparent liquid",
+      "spec": "water, glycerine, kerosene or turpentine",
+      "why": "The specimen whose refractive index is required"
+    },
+    {
+      "name": "Iron stand with clamp",
+      "spec": "",
+      "why": "Holds the needle horizontally above the lens and allows fine height adjustment"
+    },
+    {
+      "name": "Plumb line and half-metre scale",
+      "spec": "least count 0.1 cm",
+      "why": "Measures the vertical height of the needle above the lens and the mirror"
+    },
+    {
+      "name": "Spherometer",
+      "spec": "",
+      "why": "Measures the radius of curvature of the lower surface of the convex lens"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "liquid",
+      "label": "Liquid",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "water",
+      "options": [
+        "water",
+        "glycerine",
+        "kerosene",
+        "turpentine"
+      ]
+    },
+    {
+      "id": "lens",
+      "label": "Convex lens",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "L20",
+      "options": [
+        "L20",
+        "L15"
+      ]
+    },
+    {
+      "id": "method",
+      "label": "Method",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "liquidLens",
+      "options": [
+        "liquidLens"
+      ]
+    },
+    {
+      "id": "layerThin",
+      "label": "Only a few drops used",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "benchLC",
+      "label": "Scale least count",
+      "symbol": "L.C.",
+      "unit": "cm",
+      "type": "controlled",
+      "min": 0.1,
+      "max": 0.5,
+      "step": 0.1,
+      "default": 0.1
+    },
+    {
+      "id": "mu",
+      "label": "Refractive index",
+      "symbol": "μ",
+      "unit": "",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Measure the radius of curvature of the lower face of the convex lens with a spherometer.",
+      "checkpoint": false
+    },
+    {
+      "step": 2,
+      "text": "Place the plane mirror on the base of the stand and set the convex lens on it.",
+      "checkpoint": true,
+      "expects": "lens"
+    },
+    {
+      "step": 3,
+      "text": "Clamp the optical needle horizontally above the lens, roughly at its focal length.",
+      "checkpoint": false
+    },
+    {
+      "step": 4,
+      "text": "Move the needle up and down until its tip and the tip of its inverted image coincide with no parallax. Measure this height: it is f₁.",
+      "checkpoint": false
+    },
+    {
+      "step": 5,
+      "text": "Lift the lens, put a few drops of the liquid on the mirror, and replace the lens gently so the liquid spreads into a thin layer.",
+      "checkpoint": true,
+      "expects": "liquid"
+    },
+    {
+      "step": 6,
+      "text": "Repeat the self-coincidence adjustment and measure the new height: this is F for the combination.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 7,
+      "text": "Take at least three sets of readings.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 8,
+      "text": "Calculate f₂ from 1/f₂ = 1/F − 1/f₁. It must come out negative.",
+      "checkpoint": false
+    },
+    {
+      "step": 9,
+      "text": "Calculate μ = 1 + R/|f₂| and compare with the accepted value.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "refractive-index",
+    "renderer": "refractive-index",
+    "fps": 45,
+    "controls": [
+      {
+        "var": "liquid",
+        "widget": "segmented",
+        "options": [
+          "water",
+          "glycerine",
+          "kerosene",
+          "turpentine"
+        ]
+      },
+      {
+        "var": "lens",
+        "widget": "segmented",
+        "options": [
+          "L20",
+          "L15"
+        ]
+      },
+      {
+        "var": "layerThin",
+        "widget": "switch"
+      },
+      {
+        "var": "benchLC",
+        "widget": "slider"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record f₁ and F",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "No.",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "lensFocalCm",
+        "label": "f₁ (lens alone)",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "combinationFocalCm",
+        "label": "F (with liquid)",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "liquidLensFocalCm",
+        "label": "f₂ (liquid lens)",
+        "unit": "cm",
+        "decimals": 2
+      },
+      {
+        "key": "radiusCm",
+        "label": "R",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "mu",
+        "label": "μ",
+        "unit": "",
+        "decimals": 4
+      }
+    ],
+    "graph": {
+      "x": "trial",
+      "y": "mu",
+      "xLabel": "Reading number",
+      "yLabel": "Refractive index μ",
+      "throughOrigin": false
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "f₁ from self-coincidence with the lens alone",
+      "F from self-coincidence with the liquid layer in place",
+      "1/f₂ = 1/F − 1/f₁, giving a negative f₂",
+      "μ = 1 + R/|f₂| using the spherometer value of R",
+      "Mean μ over all sets and comparison with the accepted value"
+    ],
+    "resultKeys": [
+      "refractiveIndex",
+      "accepted",
+      "percentError"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Refractive index of the liquid",
+    "symbol": "μ",
+    "value": 1.333,
+    "tolerance": 0.05,
+    "unit": "",
+    "secondary": {
+      "quantity": "Focal length of the liquid lens",
+      "value": -61.9,
+      "tolerance": 8,
+      "unit": "cm"
+    },
+    "statement": "The refractive index of water by this method is about 1.33. The combination is always weaker than the convex lens alone, because the liquid forms a diverging plano-concave lens; a denser liquid gives a stronger liquid lens and hence a shorter f₂."
+  },
+  "safety": [
+    "Do not use the convex lens to focus sunlight; it can burn and can damage the eye.",
+    "Wipe up spilt liquid at once. Kerosene and turpentine are flammable and must be kept away from flames.",
+    "Work in a ventilated room when using volatile liquids, and wash your hands afterwards.",
+    "Handle the lens and mirror by their edges; a lens dropped on a mirror will break both.",
+    "Do not press the lens down hard on the liquid; the film should form under its own weight."
+  ],
+  "sourcesOfError": [
+    "Using too much liquid, so the layer is not thin compared with the radius of curvature.",
+    "Air bubbles trapped in the liquid film.",
+    "Parallax not removed tip to tip when judging coincidence.",
+    "Error in the spherometer value of R, which enters μ directly.",
+    "The liquid evaporating or spreading during a long set of readings.",
+    "The needle not being exactly above the centre of the lens."
+  ],
+  "viva": [
+    {
+      "question": "Why does the needle placed at the focus give an image coinciding with itself?",
+      "expectedConcept": "Rays from a point at the focus emerge from the lens parallel to the axis. They strike the plane mirror normally and are reflected straight back along the same path, so they pass through the lens again and converge to the original point. Object and image therefore coincide.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Parallel emergence plus normal incidence on a plane mirror.",
+      "commonMisconception": "Thinking coincidence happens at the centre of curvature as with a mirror."
+    },
+    {
+      "question": "What kind of lens does the liquid form?",
+      "expectedConcept": "A plano-concave lens. Its upper surface matches the curved lower face of the convex lens, so it is concave, while its lower surface rests on the flat mirror and is plane. Being thinner at the centre, it is diverging.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Plano-concave, hence diverging.",
+      "commonMisconception": "Assuming the liquid forms a converging lens because the glass lens is convex."
+    },
+    {
+      "question": "Why must the focal length of the combination be greater than that of the lens alone?",
+      "expectedConcept": "The liquid lens is diverging, so it has negative power. Powers add for lenses in contact, so adding a negative power reduces the total power and therefore lengthens the focal length. A shorter combination would be physically impossible here.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Powers add; a negative power weakens the combination.",
+      "commonMisconception": "Expecting two lenses together always to be stronger."
+    },
+    {
+      "question": "Why does the lens maker’s formula simplify for the liquid lens?",
+      "expectedConcept": "One face of the liquid lens is flat, so its radius of curvature is infinite and the corresponding term 1/R vanishes. The formula reduces to 1/f₂ = −(μ − 1)/R, where R is the radius of the curved face.",
+      "difficulty": "hard",
+      "bloom": "Apply",
+      "answerLogic": "Infinite radius kills one term.",
+      "commonMisconception": "Trying to use two finite radii for a plano surface."
+    },
+    {
+      "question": "Why should only a few drops of liquid be used?",
+      "expectedConcept": "The method assumes the liquid layer is thin, so that the two lenses can be treated as being in contact and the simple addition of powers applies. A thick layer behaves as a lens with its own appreciable thickness and the formula no longer holds.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Thin-layer assumption behind lenses in contact.",
+      "commonMisconception": "Thinking more liquid gives a clearer effect."
+    },
+    {
+      "question": "How would the result change with glycerine instead of water?",
+      "expectedConcept": "Glycerine has a higher refractive index, about 1.47, so it forms a stronger diverging lens with a shorter focal length. The combination is therefore weaker still and F comes out longer than with water.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Larger μ gives shorter |f₂| and longer F.",
+      "commonMisconception": "Expecting no change because the glass lens is unchanged."
+    },
+    {
+      "question": "Why is a plane mirror used rather than a concave one?",
+      "expectedConcept": "The method depends on parallel light being returned along its own path, and only a plane mirror does that for a parallel beam at normal incidence. A concave mirror would converge the light and the coincidence would occur at a quite different position, invalidating the simple result.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "A plane mirror retro-reflects a normal parallel beam.",
+      "commonMisconception": "Believing any mirror would do."
+    },
+    {
+      "question": "What is meant by the power of a lens, and what is the power of the liquid lens here?",
+      "expectedConcept": "Power is the reciprocal of the focal length in metres, in dioptre. The liquid lens has a negative power, of the order of −1.6 D for water with this lens, because it is diverging.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "P = 1/f(m), negative for the liquid lens.",
+      "commonMisconception": "Giving a positive power."
+    },
+    {
+      "question": "Would this method work with an opaque liquid such as milk?",
+      "expectedConcept": "No. Light must pass through the liquid layer for the combination to act as a lens at all. An opaque or strongly coloured liquid would absorb or scatter the light, and no image could be formed.",
+      "difficulty": "easy",
+      "bloom": "Evaluate",
+      "answerLogic": "The method requires transparency.",
+      "commonMisconception": "Assuming any liquid can be measured this way."
+    },
+    {
+      "question": "Does the refractive index you obtain depend on which convex lens you used?",
+      "expectedConcept": "No. The convex lens and its radius appear in the working, but they cancel in the sense that μ is a property of the liquid alone. Using a different lens changes f₁, F and R together, and the calculated μ must come out the same.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Result is a property of the specimen.",
+      "commonMisconception": "Expecting the apparatus to influence the answer."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The liquid trapped under the convex lens forms a lens that is:",
+        "options": [
+          "Bi-convex, converging",
+          "Plano-concave, diverging",
+          "Plano-convex, converging",
+          "Bi-concave, converging"
+        ],
+        "answer": 1,
+        "feedback": "It matches the curved lens above and the flat mirror below, so it is plano-concave and therefore diverging."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "Adding the liquid makes the focal length of the combination:",
+        "options": [
+          "Shorter",
+          "Longer",
+          "Unchanged",
+          "Zero"
+        ],
+        "answer": 1,
+        "feedback": "A diverging lens has negative power, so the combination is weaker and F is longer than f₁."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "When the needle tip coincides with its image, the needle is at the:",
+        "options": [
+          "Centre of curvature",
+          "Focus of the lens",
+          "Surface of the mirror",
+          "Optical centre"
+        ],
+        "answer": 1,
+        "feedback": "Rays then emerge parallel, hit the mirror normally, and retrace their path."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record at least three complete sets of readings.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Keep the microscope least count unchanged during a set.",
+        "check": "volumeConstant"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the refractive index of water you obtained.",
+        "answer": 1.333,
+        "tolerance": 0.07,
+        "feedback": "Water is about 1.33."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "Your value of f₂ came out negative. This shows the liquid lens is:",
+        "options": [
+          "Converging",
+          "Diverging",
+          "Plane",
+          "Faulty"
+        ],
+        "answer": 1,
+        "feedback": "A negative focal length is the defining property of a diverging lens."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Using too much liquid would:",
+        "options": [
+          "Make no difference",
+          "Break the thin-layer assumption and distort the result",
+          "Improve accuracy",
+          "Change the lens radius"
+        ],
+        "answer": 1,
+        "feedback": "The lenses can only be treated as being in contact while the layer is thin."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "1/F = 1/f₁ + 1/f₂; 1/f₂ = −(μ − 1)/R; μ = 1 + R/|f₂|",
+    "assumptions": [
+      "The liquid layer is thin, so the lenses are effectively in contact",
+      "Thin-lens, paraxial theory applies",
+      "The plane mirror returns parallel light along its own path",
+      "R for the lower face of the convex lens is known accurately"
+    ],
+    "validRange": "Liquids of refractive index 1.30 to 1.60; convex lens f = 15 to 20 cm",
+    "unitSystem": "Distances in cm; refractive index dimensionless",
+    "edgeCases": [
+      "A thick liquid layer breaks the contact assumption — warned",
+      "The combination must always be weaker than the lens alone — blocked otherwise",
+      "An opaque liquid cannot be measured at all",
+      "A denser liquid gives a shorter liquid-lens focal length"
+    ],
+    "expectedBehaviour": [
+      "Water gives about 1.33 and glycerine about 1.47",
+      "f₂ is always negative",
+      "F is always greater than f₁",
+      "The result does not depend on which convex lens is used"
+    ],
+    "testFile": "tests/batch6.test.js"
+  }
+}

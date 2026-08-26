@@ -1,0 +1,560 @@
+{
+  "id": "XII-PHY-ACT-A3",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 3,
+    "kind": "activity",
+    "unit": "Unit III: Current Electricity",
+    "chapter": "Chapter-3: Current Electricity",
+    "topic": "Electric current, flow of electric charges in a metallic conductor, drift velocity, mobility and their relation with electric current; Ohm’s law, V-I characteristics, electrical resistivity and conductivity, temperature dependence of resistance, internal resistance of a cell, potential difference and emf of a cell, combination of cells, Kirchhoff’s rules, Wheatstone bridge",
+    "subtopic": "Domestic wiring: lamps in parallel, switch and fuse in the live conductor, earthing of metal casings",
+    "practical": "To assemble a household circuit comprising three bulbs, three (on/off) switches, a fuse and a power source.",
+    "learningObjectives": [
+      "Be able to connect three lamps in parallel so that each receives the full supply voltage",
+      "Be able to give each lamp its own switch, placed in the live conductor",
+      "Be able to fit a fuse of suitable rating in the live conductor",
+      "Be able to understand why a circuit that appears to work may still be unsafe"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Activity 3 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Assembling a household circuit with three bulbs, switches, a fuse and a supply",
+  "shortTitle": "Household circuit",
+  "objective": [
+    "To connect three lamps in parallel so that each receives the full supply voltage.",
+    "To give each lamp its own switch, placed in the live conductor.",
+    "To fit a fuse of suitable rating in the live conductor.",
+    "To understand why a circuit that appears to work may still be unsafe."
+  ],
+  "theory": {
+    "statement": "Domestic wiring follows a few rules that are not matters of convenience but of safety. Lamps go in parallel so that each receives the full mains voltage and can be switched on its own. The switch and the fuse both go in the live conductor, so that opening either one isolates the appliance from the live supply. Metal casings are earthed. A circuit that breaks any of these rules may still light the lamps perfectly, which is exactly what makes the mistakes dangerous.",
+    "derivationNote": "Connect the three lamps in parallel and each has the full 220 V across it, so each dissipates its rated power and the total current is the sum of the three. Connect them in series instead and the supply is shared: each lamp gets a third of the voltage, and since P = V²/R a third of the voltage gives a ninth of the power, so the lamps barely glow. Worse, a series string is one path, so a single failed lamp extinguishes all three. The placement of the switch is subtler. A switch in the neutral conductor still breaks the circuit, so the lamp goes out and everything looks normal, but the holder remains connected to the live conductor through the lamp filament. Anyone changing that bulb can complete a path to earth through their own body. The same argument applies to the fuse: a fuse in the neutral will melt on a fault, but melting it leaves the appliance still connected to the live supply. Finally, the earth conductor connects the metal casing to earth, so that a live wire touching the casing sends a large current to earth and blows the fuse at once, instead of leaving the casing at mains potential waiting for someone to touch it.",
+    "keyEquations": [
+      "Lamp resistance at its working temperature: R = V²/P",
+      "In parallel: each lamp has the full supply voltage, I_total = ΣI",
+      "In series: each lamp has V/3, so P falls to a NINTH of its rating",
+      "Fuse rating must exceed the working current but stay below the fault current"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Three lamps in holders",
+      "spec": "40 W, 60 W or 100 W at 220 V",
+      "why": "The loads of the circuit; their rating fixes the working current"
+    },
+    {
+      "name": "Three on/off switches",
+      "spec": "single pole",
+      "why": "One per lamp, so each can be operated independently"
+    },
+    {
+      "name": "Fuse and fuse carrier",
+      "spec": "1 to 15 A ratings available",
+      "why": "The deliberate weak point that protects the cable from a fault current"
+    },
+    {
+      "name": "Power source",
+      "spec": "220 V supply board with live, neutral and earth",
+      "why": "Supplies the circuit; the three conductors must be distinguished"
+    },
+    {
+      "name": "Earth conductor",
+      "spec": "",
+      "why": "Connects the metal casing to earth so a fault blows the fuse instead of electrifying the casing"
+    },
+    {
+      "name": "Connecting wire and a screwdriver",
+      "spec": "insulated",
+      "why": "For making and checking the connections"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "lamp",
+      "label": "Lamps",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "w60",
+      "options": [
+        "w40",
+        "w60",
+        "w100"
+      ]
+    },
+    {
+      "id": "wiring",
+      "label": "Lamp wiring",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "parallel",
+      "options": [
+        "parallel",
+        "series"
+      ]
+    },
+    {
+      "id": "switches",
+      "label": "Switches",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "eachLive",
+      "options": [
+        "eachLive",
+        "eachNeutral",
+        "oneCommon"
+      ]
+    },
+    {
+      "id": "fuse",
+      "label": "Fuse position",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "live",
+      "options": [
+        "live",
+        "neutral",
+        "none"
+      ]
+    },
+    {
+      "id": "earthing",
+      "label": "Earthing",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "earthed",
+      "options": [
+        "earthed",
+        "unearthed"
+      ]
+    },
+    {
+      "id": "fuseRatingA",
+      "label": "Fuse rating",
+      "symbol": "",
+      "unit": "A",
+      "type": "independent",
+      "min": 1,
+      "max": 15,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "id": "assembly",
+      "label": "Assembly verdict",
+      "symbol": "",
+      "unit": "",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Identify the live, neutral and earth conductors of the supply before connecting anything.",
+      "checkpoint": true,
+      "expects": "earthing"
+    },
+    {
+      "step": 2,
+      "text": "Connect the three lamps in parallel, so that each one has the full supply voltage across it.",
+      "checkpoint": true,
+      "expects": "wiring"
+    },
+    {
+      "step": 3,
+      "text": "Put a switch in the LIVE conductor feeding each lamp, so that switching off isolates that holder from the live supply.",
+      "checkpoint": true,
+      "expects": "switches"
+    },
+    {
+      "step": 4,
+      "text": "Fit the fuse in the live conductor, ahead of the switches. Choose a rating comfortably above the working current."
+    },
+    {
+      "step": 5,
+      "text": "Connect the earth conductor to the metal casing."
+    },
+    {
+      "step": 6,
+      "text": "Record this assembly, then deliberately try a wrong one — a switch in the neutral, or the lamps in series — and record that too.",
+      "checkpoint": true
+    },
+    {
+      "step": 7,
+      "text": "Compare them. Note carefully which wrong assemblies still light the lamps, because those are the dangerous ones."
+    }
+  ],
+  "simulation": {
+    "model": "household-circuit",
+    "renderer": "household-circuit",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "fuseRatingA",
+        "widget": "slider"
+      },
+      {
+        "var": "wiring",
+        "widget": "segmented",
+        "options": [
+          "parallel",
+          "series"
+        ]
+      },
+      {
+        "var": "switches",
+        "widget": "segmented",
+        "options": [
+          "eachLive",
+          "eachNeutral",
+          "oneCommon"
+        ]
+      },
+      {
+        "var": "fuse",
+        "widget": "segmented",
+        "options": [
+          "live",
+          "neutral",
+          "none"
+        ]
+      },
+      {
+        "var": "earthing",
+        "widget": "segmented",
+        "options": [
+          "earthed",
+          "unearthed"
+        ]
+      },
+      {
+        "var": "lamp",
+        "widget": "segmented",
+        "options": [
+          "w40",
+          "w60",
+          "w100"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record this assembly",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Assembly",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "wiring",
+        "label": "Lamp wiring",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "switches",
+        "label": "Switches",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "fuse",
+        "label": "Fuse",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "voltagePerLamp",
+        "label": "V per lamp",
+        "unit": "V",
+        "decimals": 1
+      },
+      {
+        "key": "powerPerLamp",
+        "label": "P per lamp",
+        "unit": "W",
+        "decimals": 1
+      },
+      {
+        "key": "totalCurrent",
+        "label": "Total current",
+        "unit": "A",
+        "decimals": 2
+      }
+    ],
+    "graph": null,
+    "minRows": 2
+  },
+  "calculations": {
+    "steps": [
+      "Find the resistance of one lamp from its rating: R = V²/P",
+      "For the parallel arrangement, each lamp has the full 220 V — compute its power and current",
+      "For the series arrangement, each lamp has 220/3 V — compute the power and compare",
+      "Add the three lamp currents to get the total current drawn from the supply",
+      "Choose the smallest standard fuse rating comfortably above that current",
+      "State, for each assembly recorded, whether it works and whether it is safe"
+    ],
+    "resultKeys": [
+      "voltagePerLamp",
+      "totalCurrent",
+      "recommendedFuseA"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Total current drawn by three 60 W lamps in parallel",
+    "symbol": "I",
+    "value": 0.82,
+    "tolerance": 0.05,
+    "unit": "A",
+    "secondary": {
+      "quantity": "Voltage across each lamp in parallel",
+      "value": 220,
+      "tolerance": 1,
+      "unit": "V"
+    },
+    "statement": "In parallel each 60 W lamp has the full 220 V across it and draws 0.27 A, so the three together draw about 0.82 A and a 3 A fuse is appropriate. In series each lamp receives only 73 V and dissipates about 6.7 W — a ninth of its rating — so all three glow dimly, and one failure extinguishes them all. A switch placed in the neutral still turns the lamps off but leaves the holders live: the circuit works and is unsafe."
+  },
+  "safety": [
+    "This is a 220 V circuit. On a real bench it must be assembled with the supply isolated and checked by the teacher before it is energised.",
+    "The switch and the fuse both belong in the LIVE conductor. In the neutral they appear to work while leaving the appliance live.",
+    "Never replace a fuse with wire or foil, or with a higher rating than the cable can carry.",
+    "Earth every metal casing.",
+    "Never change a lamp without switching off at the supply, whatever the wall switch shows."
+  ],
+  "sourcesOfError": [
+    "A switch wired into the neutral conductor: the lamp turns off, so the fault is invisible until someone is shocked.",
+    "A fuse fitted in the neutral, which blows without isolating the appliance from the live supply.",
+    "A fuse rated far above the working current, which never melts when it should.",
+    "Loose connections at the terminals, which heat and can start a fire.",
+    "The earth conductor left unconnected because the circuit works perfectly without it.",
+    "Lamps of different ratings assumed to draw the same current."
+  ],
+  "viva": [
+    {
+      "question": "Why are lamps in a house connected in parallel and not in series?",
+      "expectedConcept": "So that each lamp receives the full supply voltage and works at its rated brightness, and so that each can be switched independently. In series the voltage is shared, each lamp is dim, and a single failed lamp breaks the one path and extinguishes them all.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Parallel gives full voltage and independence.",
+      "commonMisconception": "Thinking series wiring saves electricity because the current is smaller."
+    },
+    {
+      "question": "Three 60 W lamps are wired in series across 220 V. What power does each dissipate?",
+      "expectedConcept": "About 6.7 W, a ninth of its rating. Each lamp has a third of the supply voltage, and since P = V²/R at fixed R, a third of the voltage gives a ninth of the power. The lamps glow dull orange rather than lighting the room.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "A third of V gives a ninth of P.",
+      "commonMisconception": "Assuming a third of the voltage means a third of the power."
+    },
+    {
+      "question": "Why must the switch be in the live wire and not the neutral?",
+      "expectedConcept": "Because a switch in the neutral still breaks the circuit and turns the lamp off, but leaves the lamp holder connected to the live conductor. Someone changing the bulb with the switch off can complete a path to earth through their own body. A switch in the live conductor isolates the holder from the supply.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "Only a live switch isolates the holder.",
+      "commonMisconception": "Thinking that because the lamp goes out, the circuit must be dead."
+    },
+    {
+      "question": "Why must the fuse also be in the live wire?",
+      "expectedConcept": "For the same reason. A fuse in the neutral will melt on a fault, but melting it leaves the appliance still connected to the live conductor, so everything in the circuit stays at mains potential even though nothing works. A fuse in the live conductor disconnects the supply.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "A neutral fuse blows without isolating the live supply.",
+      "commonMisconception": "Believing it does not matter which side of the circuit the fuse is in."
+    },
+    {
+      "question": "What is the function of the earth wire?",
+      "expectedConcept": "It connects the metal casing of an appliance to earth. If a live conductor works loose and touches the casing, a large current flows straight to earth and blows the fuse immediately, making the appliance safe. Without it the casing simply rises to mains potential and stays there until someone touches it.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Earth provides a low-resistance fault path that blows the fuse.",
+      "commonMisconception": "Thinking the earth wire carries current in normal operation."
+    },
+    {
+      "question": "How is a fuse rating chosen?",
+      "expectedConcept": "It must be above the normal working current, so the circuit can be used without nuisance blowing, and below the current the cable can safely carry, so a fault melts it before the cable overheats. For three 60 W lamps drawing 0.82 A, a 3 A fuse is the usual choice.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Above the working current, below the cable rating.",
+      "commonMisconception": "Choosing the largest available fuse so it never blows."
+    },
+    {
+      "question": "A student replaces a blown 3 A fuse with a piece of copper wire. What is wrong with that?",
+      "expectedConcept": "The copper wire will not melt at any current the circuit is likely to reach, so the protection is gone entirely. A short circuit then draws current limited only by the cable resistance, and the cable itself becomes the fuse — heating until the insulation burns.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "A wire link removes the protection completely.",
+      "commonMisconception": "Thinking the fuse is a nuisance rather than a safety device."
+    },
+    {
+      "question": "Why is a fuse called the weakest point of a circuit, and is that a defect?",
+      "expectedConcept": "It is deliberately made of a thin wire of low melting point so that it is the first thing to fail when the current is excessive. That is not a defect but the entire design: something has to fail first, and it is far better that it be a cheap replaceable link than the wiring inside a wall.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "A deliberate weak point protects everything else.",
+      "commonMisconception": "Regarding the fuse as a flaw in the circuit."
+    },
+    {
+      "question": "One lamp in a parallel household circuit fails. What happens to the others?",
+      "expectedConcept": "Nothing. Each lamp has its own path from live to neutral, so the failure of one does not interrupt the others. This is a major practical advantage of parallel wiring, and it is why a single blown bulb does not darken the house.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Parallel branches are independent.",
+      "commonMisconception": "Confusing this with a series fairy-light string where one failure kills all."
+    },
+    {
+      "question": "Which is more dangerous: a circuit that does not work, or one that works but is wired wrongly?",
+      "expectedConcept": "The one that works. A dead circuit gets investigated and repaired. A circuit with the switch in the neutral lights every lamp, passes every casual test, and gives no sign at all of the hazard until someone changes a bulb with the switch off and receives a shock. Faults that hide behind normal behaviour are the ones that hurt people.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "A working but unsafe circuit hides its own fault.",
+      "commonMisconception": "Judging a circuit correct because the lamps light."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Household lamps are connected in:",
+        "options": [
+          "Series",
+          "Parallel",
+          "Series-parallel",
+          "Either"
+        ],
+        "answer": 1,
+        "feedback": "Parallel gives each lamp the full voltage and independent switching."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The fuse and the switch should be connected in the:",
+        "options": [
+          "Neutral wire",
+          "Earth wire",
+          "Live wire",
+          "Either live or neutral"
+        ],
+        "answer": 2,
+        "feedback": "Only in the live conductor do they isolate the appliance from the supply."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "The earth wire is connected to:",
+        "options": [
+          "The filament of the lamp",
+          "The metal casing of the appliance",
+          "The neutral terminal",
+          "The switch"
+        ],
+        "answer": 1,
+        "feedback": "It gives a fault current a low-resistance path to earth, blowing the fuse."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record at least two different assemblies so they can be compared.",
+        "check": "rows>=2"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Try at least one wrong assembly and see whether the lamps still light.",
+        "check": "settled"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "What total current do three 60 W lamps in parallel draw from a 220 V supply, in A?",
+        "answer": 0.82,
+        "tolerance": 0.1,
+        "feedback": "Each draws 0.27 A, so the three together draw about 0.82 A."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "A switch wired in the neutral conductor is dangerous because:",
+        "options": [
+          "The lamp will not switch off",
+          "The lamp holder stays connected to the live wire",
+          "The fuse will blow",
+          "The lamp will be dim"
+        ],
+        "answer": 1,
+        "feedback": "The lamp goes out, but the holder remains live — the fault is invisible."
+      },
+      {
+        "id": "post3",
+        "type": "numeric",
+        "question": "In series, what power does each 60 W lamp dissipate on a 220 V supply, in W?",
+        "answer": 6.7,
+        "tolerance": 2,
+        "feedback": "A third of the voltage gives a ninth of the power: about 6.7 W."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Lamp resistance at its working temperature: R = V²/P",
+    "assumptions": [
+      "Lamp resistance at its working temperature: R = V²/P",
+      "In parallel: each lamp has the full supply voltage, I_total = ΣI",
+      "In series: each lamp has V/3, so P falls to a NINTH of its rating",
+      "Fuse rating must exceed the working current but stay below the fault current"
+    ],
+    "validRange": "In parallel each 60 W lamp has the full 220 V across it and draws 0.27 A, so the",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "A switch wired into the neutral conductor: the lamp turns off, so the fault is invisible until someone is shocked.",
+      "A fuse fitted in the neutral, which blows without isolating the appliance from the live supply.",
+      "A fuse rated far above the working current, which never melts when it should.",
+      "Loose connections at the terminals, which heat and can start a fire."
+    ],
+    "expectedBehaviour": [
+      "In parallel each 60 W lamp has the full 220 V across it and draws 0.27 A, so the three together draw about 0.82 A and a 3 A fuse is appropriate. In series each lamp receives only 73 V and dissipates about 6.7 W — a ninth of its rating — so all three glow dimly, and one failure extinguishes them all. A switch placed in the neutral still turns the lamps off but leaves the holders live: the circuit works and is unsafe."
+    ],
+    "testFile": "tests/batch12.test.js"
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "id": "XI-PHY-B02",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 2,
+    "unit": "Unit VII: Properties of Bulk Matter",
+    "chapter": "Chapter-8: Mechanical Properties of Solids",
+    "topic": "Elasticity, stress-strain relationship, Hooke's law",
+    "subtopic": "Force constant of a helical spring",
+    "practical": "To find the force constant of a helical spring by plotting a graph between load and extension.",
+    "learningObjectives": [
+      "Measure the extension produced in a helical spring by known loads",
+      "Plot a load-extension graph and verify Hooke's law",
+      "Determine the force constant of the spring from the slope of the graph",
+      "Identify the elastic limit beyond which the graph ceases to be a straight line"
+    ],
+    "competencies": [
+      "Accurate reading of a vertical scale against a pointer",
+      "Conversion of mass in gram to weight in newton",
+      "Graphical determination of a physical constant from a slope",
+      "Recognising the limit of validity of a physical law"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Force constant of a helical spring",
+  "shortTitle": "Helical Spring",
+  "objective": [
+    "To plot a graph between load and extension for a helical spring.",
+    "To verify Hooke's law within the elastic limit.",
+    "To find the force constant k of the spring from the slope."
+  ],
+  "theory": {
+    "statement": "Within the elastic limit the extension x produced in a spring is directly proportional to the applied load F. This is Hooke's law, F = kx, where k is the force constant of the spring — the force needed to produce unit extension.",
+    "derivationNote": "A graph of load F (in newton) against extension x (in metre) is a straight line through the origin whose slope is k in N·m⁻¹. Beyond the elastic limit the material yields, the graph bends and the spring no longer returns to its natural length.",
+    "keyEquations": ["F = k·x", "k = F/x = slope of the F-x graph", "F = m·g with m in kg and g = 9.79 m·s⁻²"]
+  },
+  "apparatus": [
+    { "name": "Helical spring", "spec": "steel or brass, with pointer", "why": "The specimen whose force constant is measured" },
+    { "name": "Rigid support and clamp", "spec": "iron stand", "why": "Holds the spring vertically without yielding" },
+    { "name": "Slotted weights", "spec": "50 g each with hanger", "why": "Applies a known, gradually increasing load" },
+    { "name": "Vertical metre scale", "spec": "least count 0.1 cm", "why": "Reads the pointer position before and after loading" },
+    { "name": "Pointer", "spec": "fine tip attached to the lower end", "why": "Marks the position of the spring's free end against the scale" }
+  ],
+  "materials": [],
+  "variables": [
+    { "id": "loadG", "label": "Load", "symbol": "m", "unit": "g", "type": "independent", "min": 0, "max": 600, "step": 25, "default": 100 },
+    { "id": "springType", "label": "Spring", "symbol": "", "unit": "", "type": "control", "options": ["steel", "brass", "stiff"], "default": "steel" },
+    { "id": "extensionCm", "label": "Extension", "symbol": "x", "unit": "cm", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Suspend the spring vertically from the rigid support and attach the pointer and hanger.", "checkpoint": false },
+    { "step": 2, "text": "With no load on the hanger, note the pointer reading on the vertical scale. This is the zero-load position.", "checkpoint": true, "expects": "zero" },
+    { "step": 3, "text": "Add a 50 g slotted weight, wait for the spring to come to rest, and read the new pointer position.", "checkpoint": true, "expects": "loadG" },
+    { "step": 4, "text": "Find the extension as the difference between the loaded and unloaded readings. Record it.", "checkpoint": true, "expects": "record" },
+    { "step": 5, "text": "Repeat, adding 50 g at a time, for at least five loads, staying within the elastic limit.", "checkpoint": true, "expects": "rows>=5" },
+    { "step": 6, "text": "Unload in the same steps and note the readings again to check for elastic after-effect.", "checkpoint": false },
+    { "step": 7, "text": "Plot load in newton on the y-axis against extension in metre on the x-axis and draw the best-fit line.", "checkpoint": false },
+    { "step": 8, "text": "Compute the slope of the line; this is the force constant k in N·m⁻¹.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "helical-spring",
+    "renderer": "helical-spring",
+    "fps": 60,
+    "controls": [
+      { "var": "loadG", "widget": "slider" },
+      { "var": "springType", "widget": "segmented", "options": ["steel", "brass", "stiff"] }
+    ],
+    "actions": [
+      { "id": "record", "label": "Take reading", "primary": true },
+      { "id": "reset", "label": "Remove all loads" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "loadG", "label": "Load", "unit": "g", "decimals": 0 },
+      { "key": "loadN", "label": "F = mg", "unit": "N", "decimals": 3 },
+      { "key": "extensionCm", "label": "Extension", "unit": "cm", "decimals": 2 },
+      { "key": "extensionM", "label": "x", "unit": "m", "decimals": 4 }
+    ],
+    "graph": { "x": "extensionM", "y": "loadN", "xLabel": "Extension x (m)", "yLabel": "Load F (N)", "throughOrigin": true },
+    "minRows": 5
+  },
+  "calculations": {
+    "steps": ["Convert each load to newton: F = (m/1000) × 9.79", "Slope of the F-x graph = ΔF/Δx", "k = slope, in N·m⁻¹"],
+    "resultKeys": ["k", "r2"]
+  },
+  "expectedResult": {
+    "quantity": "Force constant of the spring",
+    "symbol": "k",
+    "value": 24.5,
+    "tolerance": 2.5,
+    "unit": "N·m⁻¹",
+    "statement": "The load-extension graph is a straight line through the origin, verifying Hooke's law. The slope gives the force constant of the given helical spring."
+  },
+  "safety": [
+    "Do not overload the spring beyond its elastic limit — it will be permanently deformed.",
+    "Stand clear of the hanging weights; a slipping weight can fall on the feet.",
+    "Add and remove weights gently so the spring does not oscillate violently.",
+    "Check that the clamp and stand are stable before loading."
+  ],
+  "sourcesOfError": [
+    "Parallax error while reading the pointer against the vertical scale.",
+    "Taking a reading before the spring has come to rest.",
+    "Elastic after-effect: the spring takes time to return to its original length after unloading.",
+    "The weight of the spring itself and of the hanger, which is not accounted for.",
+    "Loading beyond the elastic limit without noticing."
+  ],
+  "viva": [
+    { "question": "State Hooke's law.", "expectedConcept": "Within the elastic limit, stress is directly proportional to strain; for a spring, the extension is directly proportional to the applied force, F = kx.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Definition with the elastic-limit condition.", "commonMisconception": "Omitting the phrase 'within the elastic limit'." },
+    { "question": "What is the force constant of a spring and what is its SI unit?", "expectedConcept": "The force required to produce unit extension; SI unit newton per metre (N·m⁻¹).", "difficulty": "easy", "bloom": "Remember", "answerLogic": "k = F/x.", "commonMisconception": "Giving the unit as N/cm or as newton." },
+    { "question": "What does the slope of the load-extension graph represent?", "expectedConcept": "The slope of the load (N) versus extension (m) graph is the force constant k of the spring.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "From F = kx.", "commonMisconception": "Taking the reciprocal of the slope as k." },
+    { "question": "What is the elastic limit?", "expectedConcept": "The maximum stress up to which a body regains its original shape and size completely on removal of the deforming force.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Definition.", "commonMisconception": "Confusing it with the breaking point." },
+    { "question": "Two springs have force constants 10 N/m and 40 N/m. Which is stiffer and why?", "expectedConcept": "The 40 N/m spring, because a larger force is needed for the same extension; its load-extension graph is steeper.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "Larger k means greater stiffness.", "commonMisconception": "Thinking a larger k means the spring stretches more." },
+    { "question": "Why should the load be increased in small, equal steps?", "expectedConcept": "To obtain several evenly spread points for the graph and to detect the exact point at which the line begins to bend at the elastic limit.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "Graph quality and detection of yielding.", "commonMisconception": "Saying only that it is 'more accurate'." },
+    { "question": "What happens if you exceed the elastic limit?", "expectedConcept": "The spring is permanently deformed; the graph curves away from the straight line and the spring does not return to its original length when unloaded.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "Plastic deformation.", "commonMisconception": "Believing the spring simply breaks immediately." },
+    { "question": "If the same spring is cut into two equal halves, what is the force constant of each half?", "expectedConcept": "Each half has twice the force constant of the original spring, because for the same force each half extends only half as much.", "difficulty": "hard", "bloom": "Apply", "answerLogic": "k ∝ 1/(number of turns).", "commonMisconception": "Saying it halves." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "The SI unit of the force constant of a spring is:", "options": ["N", "N·m", "N·m⁻¹", "J"], "answer": 2, "feedback": "k = F/x, so the unit is newton per metre." },
+      { "id": "pre2", "type": "mcq", "question": "A load of 100 g exerts a force of about:", "options": ["0.98 N", "9.8 N", "100 N", "0.1 N"], "answer": 0, "feedback": "F = mg = 0.1 kg × 9.8 m·s⁻² ≈ 0.98 N." },
+      { "id": "pre3", "type": "mcq", "question": "Hooke's law holds only:", "options": ["At high temperature", "Within the elastic limit", "For metals only", "For small springs"], "answer": 1, "feedback": "Beyond the elastic limit the proportionality between load and extension breaks down." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Record at least five readings within the elastic limit.", "check": "rows>=5" },
+      { "id": "dur2", "type": "task", "question": "Note the zero-load pointer reading before adding any weight.", "check": "zeroTaken" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the force constant of the steel spring you obtained (N·m⁻¹).", "answer": 24.5, "tolerance": 3, "feedback": "The steel spring supplied has a force constant of about 24.5 N·m⁻¹." },
+      { "id": "post2", "type": "mcq", "question": "Your load-extension graph is a straight line through the origin. This shows that:", "options": ["Extension is independent of load", "Load is proportional to extension", "The spring has exceeded its elastic limit", "The spring is plastic"], "answer": 1, "feedback": "A straight line through the origin means direct proportionality, which is Hooke's law." },
+      { "id": "post3", "type": "mcq", "question": "If your graph bends at the top, the most likely reason is:", "options": ["The scale was misread", "The elastic limit was exceeded", "The spring was too cold", "The weights were too light"], "answer": 1, "feedback": "Bending at high loads is the signature of yielding beyond the elastic limit." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "F = kx; k = slope of load-extension graph",
+    "assumptions": ["Spring obeys Hooke's law below the elastic limit", "Mass of the spring is negligible", "Readings taken after the spring comes to rest", "g = 9.792 m·s⁻²"],
+    "validRange": "Load 0-450 g for the steel spring; 0-320 g brass; 0-600 g stiff",
+    "unitSystem": "SI; load entered in gram, extension read in cm, both converted for the graph",
+    "edgeCases": [
+      "Zero load must give zero extension",
+      "Load beyond the elastic limit adds a super-linear term",
+      "Load under 20 g gives an extension below the least count"
+    ],
+    "expectedBehaviour": [
+      "Extension directly proportional to load while elastic",
+      "Stiffer spring gives a steeper graph and a larger k",
+      "k recovered within 1% from simulated readings"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

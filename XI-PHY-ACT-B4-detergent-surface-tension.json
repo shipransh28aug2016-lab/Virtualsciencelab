@@ -1,0 +1,519 @@
+{
+  "id": "XI-PHY-ACT-B4",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 4,
+    "kind": "activity",
+    "unit": "Unit VII: Properties of Bulk Matter",
+    "chapter": "Chapter-9: Mechanical Properties of Fluids",
+    "topic": "Pressure due to a fluid column; Pascal’s law and its applications; effect of gravity on fluid pressure; viscosity, Stokes’ law, terminal velocity, streamline and turbulent flow, critical velocity, Bernoulli’s theorem and its applications; surface energy and surface tension, angle of contact, excess of pressure across a curved surface, application of surface tension ideas to drops, bubbles and capillary rise",
+    "subtopic": "Capillary rise as a measure of surface tension; the action of a surfactant; the critical micelle concentration",
+    "practical": "To study the effect of detergent on surface tension of water by observing capillary rise.",
+    "learningObjectives": [
+      "Be able to measure the surface tension of water by the rise in a capillary tube",
+      "Be able to study how adding a detergent changes that surface tension",
+      "Be able to show that beyond a certain concentration more detergent has no further effect"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Activity 4 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "The effect of a detergent on the surface tension of water",
+  "shortTitle": "Detergent and surface tension",
+  "objective": [
+    "To measure the surface tension of water by the rise in a capillary tube.",
+    "To study how adding a detergent changes that surface tension.",
+    "To show that beyond a certain concentration more detergent has no further effect."
+  ],
+  "theory": {
+    "statement": "Water climbs a narrow glass tube because it wets the glass. The surface pulls itself up the wall and drags the column with it, until the weight of the raised liquid balances the upward pull of the surface. Measuring how far it climbs therefore measures the surface tension. Adding a detergent lowers the surface tension sharply, and the column falls.",
+    "derivationNote": "The upward force is the surface tension acting round the circumference of the tube, resolved along the tube through the angle of contact. The downward force is the weight of the raised column. Equating them gives the surface tension as the radius times the height times the density times g, divided by twice the cosine of the angle of contact. For clean water on clean glass the angle of contact is essentially zero, so the cosine is one. A detergent is a surfactant: its molecules have a water-loving head and a water-hating tail, and they collect at the surface with the tails pointing out of the water. That arrangement makes it much cheaper in energy to create new surface, which is exactly what a lower surface tension means. But the surface can only hold so many molecules. Once it is completely packed, additional detergent has nowhere to go at the surface and instead clumps into micelles in the bulk of the liquid, so the surface tension stops falling. The concentration at which that happens is the critical micelle concentration, and it shows up as a distinct elbow in the graph. A greasy tube spoils the whole measurement, because it raises the angle of contact and reduces the rise for reasons that have nothing to do with the surface tension.",
+    "keyEquations": [
+      "Surface tension = radius times height times density times g, divided by twice the cosine of the contact angle",
+      "For clean water on clean glass the contact angle is nearly zero, so the cosine is one",
+      "Radius times height is constant for a given liquid, whatever the tube",
+      "Beyond the critical micelle concentration the surface tension stops falling"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Capillary tubes of several bores",
+      "spec": "radii from 0.2 to 0.8 mm, clean",
+      "why": "Tubes of different bore give different rises but must give the same surface tension"
+    },
+    {
+      "name": "Beaker and travelling microscope",
+      "spec": "least count 0.001 cm",
+      "why": "Measures the height of the column and the bore of the tube accurately"
+    },
+    {
+      "name": "Detergent solution of known strength",
+      "spec": "made up by dilution",
+      "why": "The concentration is the independent variable"
+    },
+    {
+      "name": "Clean water",
+      "spec": "distilled",
+      "why": "Gives the reference value of surface tension before any detergent is added"
+    },
+    {
+      "name": "Thermometer",
+      "spec": "least count 0.5 °C",
+      "why": "Surface tension falls with temperature, so every solution must be at the same temperature"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "tube",
+      "label": "Capillary tube",
+      "symbol": "r",
+      "unit": "",
+      "type": "control",
+      "default": "t035",
+      "options": [
+        "t02",
+        "t035",
+        "t05",
+        "t08"
+      ]
+    },
+    {
+      "id": "concentrationGPerL",
+      "label": "Detergent concentration",
+      "symbol": "c",
+      "unit": "g/L",
+      "type": "independent",
+      "min": 0,
+      "max": 0.4,
+      "step": 0.02,
+      "default": 0
+    },
+    {
+      "id": "tubeState",
+      "label": "Condition of the tube",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "clean",
+      "options": [
+        "clean",
+        "greasy"
+      ]
+    },
+    {
+      "id": "waterTempC",
+      "label": "Temperature",
+      "symbol": "T",
+      "unit": "°C",
+      "type": "control",
+      "min": 15,
+      "max": 50,
+      "step": 5,
+      "default": 25
+    },
+    {
+      "id": "surfaceTension",
+      "label": "Surface tension",
+      "symbol": "T",
+      "unit": "mN/m",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Clean the capillary tube thoroughly and rinse it; grease ruins the measurement.",
+      "checkpoint": true,
+      "expects": "tubeState"
+    },
+    {
+      "step": 2,
+      "text": "Dip the tube vertically into clean water and let the column settle.",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Measure the height of the column above the flat surface with the travelling microscope, and record it.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 4,
+      "text": "Measure the internal radius of the tube at the position of the meniscus.",
+      "checkpoint": false
+    },
+    {
+      "step": 5,
+      "text": "Add a small measured amount of detergent, stir, and measure the rise again.",
+      "checkpoint": true,
+      "expects": "concentrationGPerL"
+    },
+    {
+      "step": 6,
+      "text": "Repeat for increasing concentrations, keeping the temperature constant.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 7,
+      "text": "Calculate the surface tension for each solution.",
+      "checkpoint": false
+    },
+    {
+      "step": 8,
+      "text": "Plot surface tension against concentration and look for the point where the curve levels off.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "detergent-surface-tension",
+    "renderer": "detergent-surface-tension",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "concentrationGPerL",
+        "widget": "slider"
+      },
+      {
+        "var": "waterTempC",
+        "widget": "slider"
+      },
+      {
+        "var": "tube",
+        "widget": "segmented",
+        "options": [
+          "t02",
+          "t035",
+          "t05",
+          "t08"
+        ]
+      },
+      {
+        "var": "tubeState",
+        "widget": "segmented",
+        "options": [
+          "clean",
+          "greasy"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record the rise",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "concentrationGPerL",
+        "label": "Concentration",
+        "unit": "g/L",
+        "decimals": 3
+      },
+      {
+        "key": "radiusMm",
+        "label": "Radius r",
+        "unit": "mm",
+        "decimals": 2
+      },
+      {
+        "key": "riseMm",
+        "label": "Rise h",
+        "unit": "mm",
+        "decimals": 2
+      },
+      {
+        "key": "productMm2",
+        "label": "r × h",
+        "unit": "mm²",
+        "decimals": 3
+      },
+      {
+        "key": "surfaceTensionMNm",
+        "label": "Surface tension",
+        "unit": "mN/m",
+        "decimals": 2
+      }
+    ],
+    "graph": {
+      "x": "concentrationGPerL",
+      "y": "surfaceTensionMNm",
+      "xLabel": "Detergent concentration (g/L)",
+      "yLabel": "Surface tension (mN/m)",
+      "throughOrigin": false
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Surface tension = r times h times density times g, divided by 2",
+      "Calculate the surface tension for pure water first, as the reference",
+      "Repeat for each concentration of detergent",
+      "Plot surface tension against concentration",
+      "The concentration at which the curve flattens is the critical micelle concentration"
+    ],
+    "resultKeys": [
+      "surfaceTensionPure",
+      "drop",
+      "plateauSeen"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Surface tension of pure water at 25 °C",
+    "symbol": "T",
+    "value": 72,
+    "tolerance": 4,
+    "unit": "mN/m",
+    "secondary": {
+      "quantity": "Fall in surface tension with detergent",
+      "value": 57,
+      "tolerance": 12,
+      "unit": "%"
+    },
+    "statement": "Clean water gives a surface tension of about 72 mN/m. Adding detergent lowers it sharply, to around 31 mN/m, after which further detergent makes no difference because the surface is saturated. The product of radius and rise is the same for every tube, confirming the method."
+  },
+  "safety": [
+    "Handle capillary tubes carefully; they are thin glass and snap easily, leaving sharp points.",
+    "Do not use the mouth to draw liquid into a tube.",
+    "Detergent solution is an irritant: avoid contact with the eyes and wash hands afterwards.",
+    "Dispose of broken capillary tubing in the sharps bin, not the ordinary waste."
+  ],
+  "sourcesOfError": [
+    "A greasy tube raises the angle of contact and reduces the rise for reasons unrelated to surface tension.",
+    "The tube may not be uniform in bore at the position of the meniscus.",
+    "The bottom of the meniscus is difficult to judge against the scale.",
+    "The temperature may vary between solutions, and surface tension falls with temperature.",
+    "The detergent may not be fully mixed when the reading is taken.",
+    "The tube may not be exactly vertical, so the measured rise is not the true height."
+  ],
+  "viva": [
+    {
+      "question": "Why does water rise in a capillary tube?",
+      "expectedConcept": "Because water wets glass. The surface curves up the wall and the surface tension acting round the circumference pulls the column upwards, until the weight of the raised liquid balances that pull.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Surface tension pulls the wetting liquid up.",
+      "commonMisconception": "Thinking atmospheric pressure pushes the water up the tube."
+    },
+    {
+      "question": "How does the rise depend on the radius of the tube?",
+      "expectedConcept": "It is inversely proportional to the radius, so a narrower tube gives a greater rise. The product of radius and height is constant for a given liquid, which is a good check on the measurements.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Rise varies inversely with radius; r times h is constant.",
+      "commonMisconception": "Expecting a wider tube to hold a taller column because it holds more water."
+    },
+    {
+      "question": "What is a surfactant, and how does it lower surface tension?",
+      "expectedConcept": "A molecule with a water-loving head and a water-hating tail. Such molecules gather at the surface with their tails sticking out of the water, which makes it much less costly in energy to create new surface. Lower surface energy is precisely what a lower surface tension means.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Molecules collect at the surface and lower its energy.",
+      "commonMisconception": "Thinking the detergent makes the water heavier or thinner."
+    },
+    {
+      "question": "Why does the surface tension stop falling beyond a certain concentration?",
+      "expectedConcept": "Because the surface becomes completely packed with detergent molecules. Once there is no room left at the surface, extra detergent gathers into micelles in the bulk of the liquid instead, and has no further effect on the surface. That concentration is the critical micelle concentration.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "The surface saturates; extra detergent forms micelles.",
+      "commonMisconception": "Assuming more detergent always lowers the tension further."
+    },
+    {
+      "question": "Why must the capillary tube be scrupulously clean?",
+      "expectedConcept": "Grease raises the angle of contact from nearly zero to a large value, and the rise depends on the cosine of that angle. A greasy tube gives a much smaller rise, which if read as a change in surface tension gives a badly wrong answer even though the tension has not changed at all.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Grease changes the contact angle, not the tension.",
+      "commonMisconception": "Thinking a dirty tube merely makes the reading less precise."
+    },
+    {
+      "question": "What is the angle of contact?",
+      "expectedConcept": "The angle between the tangent to the liquid surface and the solid, measured inside the liquid. For water on clean glass it is nearly zero, so the liquid wets the glass and rises. For mercury on glass it is obtuse, so mercury does not wet the glass and is DEPRESSED in a capillary instead.",
+      "difficulty": "medium",
+      "bloom": "Remember",
+      "answerLogic": "Angle between liquid surface and solid, inside the liquid.",
+      "commonMisconception": "Thinking it is always zero for every liquid."
+    },
+    {
+      "question": "Why is soapy water better at cleaning than pure water?",
+      "expectedConcept": "Its lower surface tension lets it spread into the fine crevices of a fabric or a surface instead of beading up on it, so it can reach and lift the dirt. The same surfactant molecules also surround greasy particles and hold them in suspension.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Lower tension means better wetting.",
+      "commonMisconception": "Thinking soap dissolves dirt chemically."
+    },
+    {
+      "question": "How does surface tension vary with temperature?",
+      "expectedConcept": "It decreases as temperature rises, by roughly 0.15 mN/m per degree for water, and would fall to zero at the critical temperature. That is why every solution in this activity must be at the same temperature before comparing them.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "It falls with rising temperature.",
+      "commonMisconception": "Assuming it is a fixed property independent of conditions."
+    },
+    {
+      "question": "Why is the product of radius and rise a useful check?",
+      "expectedConcept": "Because for a given liquid at a given temperature that product should be the same for every tube. If four tubes of different bore give the same product, the measurements are consistent; if one is out, that tube is probably not clean or not uniform.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "An internal consistency check across tubes.",
+      "commonMisconception": "Believing each tube should give its own value of surface tension."
+    },
+    {
+      "question": "What happens to the rise if the tube is too short for the water to reach its natural height?",
+      "expectedConcept": "The water rises to the top and stops. It does not overflow: the meniscus simply flattens out, adopting a larger radius of curvature so that the reduced pull now balances the shorter column exactly.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "The meniscus flattens; no overflow occurs.",
+      "commonMisconception": "Expecting a fountain of water out of the top of the tube."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Water rises in a capillary tube because:",
+        "options": [
+          "Air pushes it up",
+          "It wets the glass and surface tension pulls it up",
+          "It is lighter than air",
+          "The tube is warm"
+        ],
+        "answer": 1,
+        "feedback": "The surface tension acting round the circumference lifts the column."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "Adding a detergent to water:",
+        "options": [
+          "Raises the surface tension",
+          "Lowers the surface tension",
+          "Leaves it unchanged",
+          "Makes it boil"
+        ],
+        "answer": 1,
+        "feedback": "A surfactant collects at the surface and lowers its energy."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "Beyond the critical micelle concentration, adding more detergent:",
+        "options": [
+          "Lowers the tension further",
+          "Has almost no further effect",
+          "Raises the tension",
+          "Makes the water freeze"
+        ],
+        "answer": 1,
+        "feedback": "The surface is saturated, and extra detergent forms micelles in the bulk."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Measure the rise for pure water and at least two concentrations.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Include a reading for pure water as the reference.",
+        "check": "pureIncluded"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the surface tension of pure water you obtained, in mN/m.",
+        "answer": 72,
+        "tolerance": 6,
+        "feedback": "About 72 mN/m at 25 °C."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "Your tube was greasy and gave a low rise. Reporting that as a lower surface tension is wrong because:",
+        "options": [
+          "The tension did change",
+          "Grease raises the angle of contact, which reduces the rise independently of the tension",
+          "Grease is heavier",
+          "The tube got narrower"
+        ],
+        "answer": 1,
+        "feedback": "The rise depends on cos of the contact angle; grease changes that, not the surface tension."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Four tubes of different bore should all give the same value of:",
+        "options": [
+          "Rise",
+          "Surface tension",
+          "Radius",
+          "Volume"
+        ],
+        "answer": 1,
+        "feedback": "The rise differs but the surface tension, and the product r times h, should agree."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Surface tension = radius times height times density times g, divided by twice the cosine of the contact angle",
+    "assumptions": [
+      "Surface tension = radius times height times density times g, divided by twice the cosine of the contact angle",
+      "For clean water on clean glass the contact angle is nearly zero, so the cosine is one",
+      "Radius times height is constant for a given liquid, whatever the tube",
+      "Beyond the critical micelle concentration the surface tension stops falling"
+    ],
+    "validRange": "Clean water gives a surface tension of about 72 mN/m. Adding detergent lowers it",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "A greasy tube raises the angle of contact and reduces the rise for reasons unrelated to surface tension.",
+      "The tube may not be uniform in bore at the position of the meniscus.",
+      "The bottom of the meniscus is difficult to judge against the scale.",
+      "The temperature may vary between solutions, and surface tension falls with temperature."
+    ],
+    "expectedBehaviour": [
+      "Clean water gives a surface tension of about 72 mN/m. Adding detergent lowers it sharply, to around 31 mN/m, after which further detergent makes no difference because the surface is saturated. The product of radius and rise is the same for every tube, confirming the method."
+    ],
+    "testFile": "tests/batch9.test.js"
+  }
+}

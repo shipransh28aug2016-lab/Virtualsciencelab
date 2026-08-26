@@ -1,0 +1,474 @@
+{
+  "id": "XII-PHY-ACT-B3",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 3,
+    "kind": "activity",
+    "unit": "Unit IX: Electronic Devices",
+    "chapter": "Chapter-14: Semiconductor Electronics",
+    "topic": "Photoconductivity and the light dependent resistor",
+    "learningObjectives": [
+      "Be able to measure how the resistance of an LDR changes as a lamp is moved away from it",
+      "Be able to combine the inverse-square law with the photoconductive power law",
+      "Be able to find the exponent γ of the cell from the slope of a log-log graph"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Activity 3 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Effect of the intensity of light on an LDR",
+  "shortTitle": "LDR and light intensity",
+  "objective": [
+    "To measure how the resistance of an LDR changes as a lamp is moved away from it.",
+    "To combine the inverse-square law with the photoconductive power law.",
+    "To find the exponent γ of the cell from the slope of a log-log graph."
+  ],
+  "theory": {
+    "statement": "The resistance of a cadmium-sulphide cell falls as the light on it rises, following R = A·E^(−γ), where E is the illuminance and γ is between about 0.7 and 0.9. The illuminance from a small lamp obeys the inverse-square law, E = I/d². Substituting gives R ∝ d^(2γ), so a graph of log R against log d is a straight line whose slope is 2γ. This is how γ can be found without ever measuring illuminance directly: the distance is the quantity a school laboratory can measure accurately, and the two power laws chain together to give the answer.",
+    "keyEquations": [
+      "Photoconductivity: absorbed photons free charge carriers, so resistance falls as light rises.",
+      "E = I/d² for a point source, so doubling the distance quarters the illuminance.",
+      "R = A·E^(−γ) gives R ∝ d^(2γ) once the two are combined.",
+      "The slope of log R against log d is 2γ, so γ is half the slope.",
+      "Ambient light adds to the illuminance and flattens the far end of the graph."
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "LDR (cadmium sulphide cell)",
+      "why": "The component under study; its resistance depends on the light falling on it."
+    },
+    {
+      "name": "Lamp on an optical bench",
+      "why": "A small source whose distance can be varied and measured."
+    },
+    {
+      "name": "Metre scale along the bench",
+      "why": "Distance is the independent variable and must be measured accurately."
+    },
+    {
+      "name": "Digital multimeter on the ohms range",
+      "why": "Reads the cell resistance without passing enough current to heat it."
+    },
+    {
+      "name": "Blackout screen",
+      "why": "Excludes room light, which would otherwise add to the illuminance and spoil the graph."
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "distanceCm",
+      "label": "Lamp distance",
+      "symbol": "d",
+      "unit": "cm",
+      "type": "independent",
+      "min": 10,
+      "max": 120,
+      "step": 1,
+      "default": 30
+    },
+    {
+      "id": "cell",
+      "label": "LDR",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "gl5528",
+      "options": [
+        "gl5528",
+        "gl5537",
+        "orp12"
+      ]
+    },
+    {
+      "id": "lamp",
+      "label": "Lamp",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "lamp40",
+      "options": [
+        "lamp40",
+        "lamp15",
+        "lamp90"
+      ]
+    },
+    {
+      "id": "room",
+      "label": "Room lighting",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "dark",
+      "options": [
+        "dark",
+        "dim",
+        "lit"
+      ]
+    },
+    {
+      "id": "scale",
+      "label": "Least count",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "o10",
+      "options": [
+        "o1",
+        "o10",
+        "o100"
+      ]
+    },
+    {
+      "id": "gamma",
+      "label": "Exponent",
+      "symbol": "γ",
+      "unit": "",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    "Mount the LDR facing the lamp along the bench, and black out the room.",
+    "Set the lamp at the nearest distance and allow the cell a few seconds to settle.",
+    "Read the resistance on the ohmmeter and record it against the distance.",
+    "Move the lamp outwards in steps, taking a reading at each position.",
+    "Cover a wide range of distance: the furthest should be at least three times the nearest.",
+    "Plot log R against log d, draw the best straight line, and take γ as half its slope."
+  ],
+  "simulation": {
+    "model": "ldr-intensity",
+    "renderer": "ldr-intensity",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "distanceCm",
+        "label": "Lamp distance (d)",
+        "widget": "slider",
+        "min": 10,
+        "max": 120,
+        "stepSize": 1,
+        "unit": "cm"
+      },
+      {
+        "var": "cell",
+        "label": "LDR",
+        "widget": "segmented",
+        "options": [
+          "gl5528",
+          "gl5537",
+          "orp12"
+        ]
+      },
+      {
+        "var": "lamp",
+        "label": "Lamp",
+        "widget": "segmented",
+        "options": [
+          "lamp40",
+          "lamp15",
+          "lamp90"
+        ]
+      },
+      {
+        "var": "room",
+        "label": "Room lighting",
+        "widget": "segmented",
+        "options": [
+          "dark",
+          "dim",
+          "lit"
+        ]
+      },
+      {
+        "var": "scale",
+        "label": "Least count",
+        "widget": "segmented",
+        "options": [
+          "o1",
+          "o10",
+          "o100"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record R and d",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Reading",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "distanceCm",
+        "label": "Distance d",
+        "unit": "cm",
+        "decimals": 0
+      },
+      {
+        "key": "resistanceOhm",
+        "label": "Resistance R",
+        "unit": "Ω",
+        "decimals": 0
+      },
+      {
+        "key": "logD",
+        "label": "log d",
+        "unit": "",
+        "decimals": 3
+      },
+      {
+        "key": "logR",
+        "label": "log R",
+        "unit": "",
+        "decimals": 3
+      }
+    ],
+    "graph": {
+      "xKey": "logD",
+      "yKey": "logR",
+      "xLabel": "log (d / cm)",
+      "yLabel": "log (R / Ω)"
+    },
+    "minRows": 5
+  },
+  "calculations": {
+    "steps": [
+      "For each reading compute log d and log R.",
+      "Plot log R on the vertical axis against log d on the horizontal.",
+      "Draw the best straight line and measure its slope.",
+      "The slope equals 2γ, so γ is half the slope.",
+      "Compare γ with the accepted range of 0.7 to 0.9 for cadmium sulphide."
+    ],
+    "resultKeys": [
+      "gamma",
+      "slope",
+      "percentError"
+    ]
+  },
+  "expectedResult": {
+    "statement": "The resistance rises steadily as the lamp is moved away, and a log-log plot is a straight line. Its slope is 2γ, giving γ between about 0.7 and 0.9 for a cadmium-sulphide cell. In a blacked-out room the fit is excellent. With the room lights on, the ambient illuminance adds to that from the lamp, the far end of the graph flattens, and the slope — and hence γ — comes out substantially too small even though the procedure was followed correctly.",
+    "value": 0.72,
+    "unit": "",
+    "tolerancePct": 25
+  },
+  "safety": [
+    "The lamp becomes hot: allow it to cool before moving it, and do not touch the envelope.",
+    "Do not look directly into the lamp at short distances.",
+    "Keep the mains lead clear of the hot lamp housing."
+  ],
+  "sourcesOfError": [
+    "Room light adding to the illuminance, which flattens the graph and lowers the fitted γ.",
+    "Using too narrow a range of distance, so the slope is poorly determined.",
+    "Working too close to the lamp, where a bulb of finite size is not a point source.",
+    "Not allowing the cell to settle: an LDR drifts for several seconds after a change in light.",
+    "Heating of the cell by the lamp, since CdS resistance falls by about 0.4 % per degree.",
+    "The cell not facing the lamp squarely, so the illuminance is reduced by a cosine factor."
+  ],
+  "viva": [
+    {
+      "question": "Why does the resistance of an LDR fall when light falls on it?",
+      "expectedConcept": "Photons with energy above the band gap free charge carriers, so conductivity rises.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Photons with energy above the band gap free charge carriers, so conductivity rises.",
+      "commonMisconception": "That the light heats the cell and that is why the resistance changes."
+    },
+    {
+      "question": "What is the relation between illuminance and distance from a small lamp?",
+      "expectedConcept": "The inverse-square law, E = I/d².",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "The inverse-square law, E = I/d².",
+      "commonMisconception": "That illuminance falls in proportion to the distance."
+    },
+    {
+      "question": "Why is log R plotted against log d rather than R against d?",
+      "expectedConcept": "A power law becomes a straight line on log-log axes, and the slope gives the exponent.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "A power law becomes a straight line on log-log axes, and the slope gives the exponent.",
+      "commonMisconception": "That the log axes are only for fitting large numbers on the page."
+    },
+    {
+      "question": "The slope of the log-log line is 1.44. What is γ?",
+      "expectedConcept": "0.72, since the slope is 2γ — one factor of γ from the cell and a factor of two from the inverse-square law.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "0.72, since the slope is 2γ — one factor of γ from the cell and a factor of two from the inverse-square law.",
+      "commonMisconception": "That the slope is γ itself."
+    },
+    {
+      "question": "Why does room light spoil the experiment?",
+      "expectedConcept": "The cell responds to the total illuminance; once ambient light dominates, moving the lamp changes little and the graph flattens.",
+      "difficulty": "hard",
+      "bloom": "Understand",
+      "answerLogic": "The cell responds to the total illuminance; once ambient light dominates, moving the lamp changes little and the graph flattens.",
+      "commonMisconception": "That a constant background simply shifts the line without changing its slope."
+    },
+    {
+      "question": "Would the error from room light make γ too large or too small?",
+      "expectedConcept": "Too small, because the far points lie above the true line and reduce the slope.",
+      "difficulty": "hard",
+      "bloom": "Understand",
+      "answerLogic": "Too small, because the far points lie above the true line and reduce the slope.",
+      "commonMisconception": "That a systematic error is equally likely either way."
+    },
+    {
+      "question": "Why must the lamp not be too close to the cell?",
+      "expectedConcept": "The inverse-square law assumes a point source; close up the filament has an appreciable size.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "The inverse-square law assumes a point source; close up the filament has an appreciable size.",
+      "commonMisconception": "That the law holds at all distances."
+    },
+    {
+      "question": "Why should the cell be allowed to settle before each reading?",
+      "expectedConcept": "An LDR has a slow and asymmetric response and drifts for seconds after a change in light.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "An LDR has a slow and asymmetric response and drifts for seconds after a change in light.",
+      "commonMisconception": "That the resistance changes instantaneously."
+    },
+    {
+      "question": "Give one practical use of an LDR.",
+      "expectedConcept": "Switching street lights at dusk, or automatic exposure control in a camera.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Switching street lights at dusk, or automatic exposure control in a camera.",
+      "commonMisconception": "That an LDR measures light precisely enough for a lux meter."
+    },
+    {
+      "question": "Why is an LDR poor for precise measurement of illuminance?",
+      "expectedConcept": "Its response is a slow power law that varies widely between cells and drifts with temperature.",
+      "difficulty": "hard",
+      "bloom": "Understand",
+      "answerLogic": "Its response is a slow power law that varies widely between cells and drifts with temperature.",
+      "commonMisconception": "That any component with a measurable response makes a good instrument."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "When the light on an LDR increases, its resistance:",
+        "options": [
+          "Rises",
+          "Falls",
+          "Stays the same",
+          "Becomes zero"
+        ],
+        "answer": 1,
+        "feedback": "Absorbed photons free charge carriers, so the cell conducts better."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "Doubling the distance from a point lamp changes the illuminance to:",
+        "options": [
+          "One half",
+          "One quarter",
+          "Twice",
+          "Unchanged"
+        ],
+        "answer": 1,
+        "feedback": "The inverse-square law: E = I/d²."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Take at least five readings across a wide range of lamp distance.",
+        "check": "rows>=5"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Make the furthest distance at least three times the nearest.",
+        "check": "rows>=5"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "The slope of log R against log d equals:",
+        "options": [
+          "γ",
+          "2γ",
+          "γ/2",
+          "1/γ"
+        ],
+        "answer": 1,
+        "feedback": "One factor of γ from the cell, and a factor of two from the inverse-square law."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "Room light left on during the experiment makes the fitted γ:",
+        "options": [
+          "Too large",
+          "Too small",
+          "Unchanged",
+          "Negative"
+        ],
+        "answer": 1,
+        "feedback": "Ambient light lifts the far points above the true line, which flattens the slope."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Photoconductivity: absorbed photons free charge carriers, so resistance falls as light rises.",
+    "assumptions": [
+      "Photoconductivity: absorbed photons free charge carriers, so resistance falls as light rises.",
+      "E = I/d² for a point source, so doubling the distance quarters the illuminance.",
+      "R = A·E^(−γ) gives R ∝ d^(2γ) once the two are combined.",
+      "The slope of log R against log d is 2γ, so γ is half the slope."
+    ],
+    "validRange": "The resistance rises steadily as the lamp is moved away, and a log-log plot is a",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Room light adding to the illuminance, which flattens the graph and lowers the fitted γ.",
+      "Using too narrow a range of distance, so the slope is poorly determined.",
+      "Working too close to the lamp, where a bulb of finite size is not a point source.",
+      "Not allowing the cell to settle: an LDR drifts for several seconds after a change in light."
+    ],
+    "expectedBehaviour": [
+      "The resistance rises steadily as the lamp is moved away, and a log-log plot is a straight line. Its slope is 2γ, giving γ between about 0.7 and 0.9 for a cadmium-sulphide cell. In a blacked-out room the fit is excellent. With the room lights on, the ambient illuminance adds to that from the lamp, the far end of the graph flattens, and the slope — and hence γ — comes out substantially too small even though the procedure was followed correctly."
+    ],
+    "testFile": "tests/batch14.test.js"
+  }
+}

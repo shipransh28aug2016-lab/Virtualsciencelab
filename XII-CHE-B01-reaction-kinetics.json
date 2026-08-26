@@ -1,0 +1,200 @@
+{
+  "id": "XII-CHE-B01",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "B",
+    "serial": 1,
+    "categoryTitle": "Chemical Kinetics",
+    "unit": "Unit 3: Chemical Kinetics",
+    "chapter": "Unit 3: Chemical Kinetics",
+    "topic": "Rate of a chemical reaction, factors influencing rate of reaction, temperature dependence of the rate of a reaction",
+    "subtopic": "Effect of concentration and temperature on reaction rate; order of reaction; activation energy",
+    "practical": "Effect of concentration and temperature on the rate of reaction between Sodium Thiosulphate and Hydrochloric acid.",
+    "assessmentComponent": "Content Based Experiment (06 marks)",
+    "learningObjectives": [
+      "Measure the time taken for a fixed amount of sulphur to obscure a mark, and use 1/t as a measure of reaction rate",
+      "Design a fair test in which only the concentration is varied while the total volume is kept constant",
+      "Show graphically that the rate is directly proportional to the thiosulphate concentration and deduce the order",
+      "Investigate the effect of temperature and show that the rate roughly doubles for every 10 degree rise",
+      "Determine the activation energy from an Arrhenius plot of ln(1/t) against 1/T"
+    ],
+    "competencies": [
+      "Controlling variables to construct a valid fair test",
+      "Accurate timing and recognition of a subjective end point",
+      "Graphical analysis: direct proportionality, log-log plots and the Arrhenius relationship",
+      "Interpreting the physical meaning of activation energy and collision theory",
+      "Evaluating the reliability of a subjective end point"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Classes XI-XII Curriculum 2026-27, PRACTICAL SYLLABUS, B. Chemical Kinetics, item 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Rate of reaction between sodium thiosulphate and hydrochloric acid",
+  "shortTitle": "Chemical Kinetics",
+  "objective": [
+    "To study the effect of concentration on the rate of reaction between sodium thiosulphate and hydrochloric acid.",
+    "To study the effect of temperature on the same reaction.",
+    "To determine the order with respect to thiosulphate and the activation energy of the reaction."
+  ],
+  "theory": {
+    "statement": "Sodium thiosulphate reacts with dilute hydrochloric acid to precipitate finely divided sulphur, which makes the mixture progressively more opaque. The time taken for a cross marked on paper beneath the flask to become invisible is measured. Since the same amount of sulphur is needed each time to hide the cross, the reciprocal of this time, 1/t, is directly proportional to the initial rate of reaction.",
+    "derivationNote": "Rate = k[Na2S2O3]^m[HCl]^n. With the acid in large excess its concentration is effectively constant, so Rate = k'[Na2S2O3]^m. A plot of 1/t against thiosulphate concentration that is a straight line through the origin shows that m = 1, so the reaction is first order in thiosulphate. The effect of temperature follows the Arrhenius equation k = A·exp(-Ea/RT). Taking logarithms gives ln k = ln A - Ea/RT, so a plot of ln(1/t) against 1/T is a straight line whose slope is -Ea/R, from which the activation energy is found.",
+    "keyEquations": [
+      "Na2S2O3(aq) + 2HCl(aq) → 2NaCl(aq) + SO2(g) + S(s) + H2O(l)",
+      "Rate ∝ 1/t",
+      "Rate = k[Na2S2O3]^m  (acid in excess)",
+      "k = A·e^(−Ea/RT)",
+      "ln k = ln A − Ea/RT, slope of ln k vs 1/T = −Ea/R"
+    ]
+  },
+  "apparatus": [
+    { "name": "Conical flasks", "spec": "100 mL, several", "why": "Hold the reaction mixture over the marked cross" },
+    { "name": "Measuring cylinders", "spec": "50 mL and 10 mL", "why": "Measure the volumes of thiosulphate, water and acid" },
+    { "name": "Stop clock", "spec": "least count 0.1 s", "why": "Times how long the cross takes to disappear" },
+    { "name": "Paper with a cross", "spec": "bold black cross on white paper", "why": "Provides the fixed visual end point" },
+    { "name": "Thermometer", "spec": "0-100 °C, least count 1 °C", "why": "Records the temperature of the mixture" },
+    { "name": "Water bath / beaker with warm water", "spec": "—", "why": "Warms the solutions for the temperature study" },
+    { "name": "Glass rod", "spec": "—", "why": "Stirs the mixture briefly on adding the acid" }
+  ],
+  "materials": [
+    { "name": "Sodium thiosulphate solution", "spec": "0.1 M Na2S2O3", "hazard": "Low hazard; irritant to eyes" },
+    { "name": "Hydrochloric acid", "spec": "1 M, dilute", "hazard": "Irritant; corrosive at higher concentration" },
+    { "name": "Distilled water", "spec": "for dilution", "hazard": "None" }
+  ],
+  "variables": [
+    { "id": "thioVolume", "label": "Sodium thiosulphate", "symbol": "V(S₂O₃²⁻)", "unit": "mL", "type": "independent", "min": 5, "max": 50, "step": 5, "default": 50 },
+    { "id": "waterVolume", "label": "Water added", "symbol": "V(H₂O)", "unit": "mL", "type": "control", "min": 0, "max": 45, "step": 5, "default": 0 },
+    { "id": "hclVolume", "label": "Hydrochloric acid", "symbol": "V(HCl)", "unit": "mL", "type": "control", "min": 5, "max": 10, "step": 1, "default": 5 },
+    { "id": "tempC", "label": "Temperature", "symbol": "T", "unit": "°C", "type": "independent", "min": 15, "max": 65, "step": 5, "default": 25 },
+    { "id": "time", "label": "Time for cross to vanish", "symbol": "t", "unit": "s", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Draw a bold cross on a piece of white paper and place a clean conical flask over it.", "checkpoint": false },
+    { "step": 2, "text": "Measure 50 mL of sodium thiosulphate solution into the flask using a measuring cylinder.", "checkpoint": true, "expects": "thioVolume" },
+    { "step": 3, "text": "For dilutions, replace part of the thiosulphate with water so that the TOTAL volume stays the same in every run. This keeps the depth of liquid above the cross constant.", "checkpoint": true, "expects": "constantVolume" },
+    { "step": 4, "text": "Note the temperature of the solution with a thermometer.", "checkpoint": true, "expects": "tempC" },
+    { "step": 5, "text": "Add 5 mL of dilute hydrochloric acid and start the stop clock at the same moment.", "checkpoint": false },
+    { "step": 6, "text": "Swirl once, then look down through the mouth of the flask at the cross.", "checkpoint": false },
+    { "step": 7, "text": "Stop the clock at the instant the cross is no longer visible and record the time.", "checkpoint": true, "expects": "record" },
+    { "step": 8, "text": "Wash the flask thoroughly and repeat with different thiosulphate concentrations, keeping the temperature constant.", "checkpoint": true, "expects": "rows>=4" },
+    { "step": 9, "text": "For the temperature study, keep the concentration constant and warm the thiosulphate in a water bath to different temperatures before adding the acid.", "checkpoint": false },
+    { "step": 10, "text": "Plot 1/t against concentration, and ln(1/t) against 1/T, and determine the order and the activation energy.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "reaction-kinetics",
+    "renderer": "reaction-kinetics",
+    "fps": 45,
+    "controls": [
+      { "var": "thioVolume", "widget": "slider" },
+      { "var": "waterVolume", "widget": "slider" },
+      { "var": "tempC", "widget": "slider" },
+      { "var": "hclVolume", "widget": "slider" }
+    ],
+    "actions": [
+      { "id": "start", "label": "Add acid & start clock", "primary": true },
+      { "id": "reset", "label": "Fresh flask" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "thioVolume", "label": "Na₂S₂O₃", "unit": "mL", "decimals": 0 },
+      { "key": "waterVolume", "label": "Water", "unit": "mL", "decimals": 0 },
+      { "key": "thioConc", "label": "[S₂O₃²⁻]", "unit": "M", "decimals": 4 },
+      { "key": "tempC", "label": "Temp", "unit": "°C", "decimals": 0 },
+      { "key": "time", "label": "Time t", "unit": "s", "decimals": 1 },
+      { "key": "rate", "label": "Rate = 1/t", "unit": "s⁻¹", "decimals": 5 }
+    ],
+    "graph": { "x": "thioConc", "y": "rate", "xLabel": "[Na₂S₂O₃] (mol/L)", "yLabel": "Rate = 1/t (s⁻¹)", "throughOrigin": true },
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "Effective concentration = (stock M × volume of thiosulphate) / total volume",
+      "Rate = 1/t",
+      "Order from the slope of ln(rate) against ln[concentration]",
+      "Arrhenius: slope of ln(1/t) against 1/T equals −Ea/R, so Ea = −slope × R"
+    ],
+    "resultKeys": ["order", "activationEnergy", "slope"]
+  },
+  "expectedResult": {
+    "quantity": "Order of reaction with respect to thiosulphate",
+    "symbol": "order",
+    "value": 1,
+    "tolerance": 0.25,
+    "unit": "",
+    "secondary": { "quantity": "Activation energy", "value": 48, "tolerance": 8, "unit": "kJ/mol" },
+    "statement": "The graph of 1/t against thiosulphate concentration is a straight line through the origin, showing that the reaction is first order in thiosulphate. The Arrhenius plot gives an activation energy of about 48 kJ per mole, and the rate approximately doubles for every 10 degree rise in temperature."
+  },
+  "safety": [
+    "Sulphur dioxide gas is evolved. Work in a well ventilated laboratory or a fume cupboard; the gas irritates the eyes and airways and is dangerous to asthmatics.",
+    "Dilute hydrochloric acid is an irritant. Wear eye protection and wash any splash with plenty of water.",
+    "When warming solutions use a water bath, never a naked flame directly under the reaction flask.",
+    "Wash the flask thoroughly between runs; leftover sulphur alters the next result.",
+    "Do not look down into the flask for long periods while sulphur dioxide is being released."
+  ],
+  "sourcesOfError": [
+    "Judging the exact moment the cross disappears is subjective and differs from person to person; the same observer should do every run.",
+    "Reaction time in starting and stopping the stop clock.",
+    "Temperature drifting during a run, especially for warmed solutions.",
+    "Not keeping the total volume constant, which changes the depth of liquid above the cross.",
+    "Using a flask that still contains sulphur from a previous run.",
+    "Varying the boldness of the cross or the lighting between runs."
+  ],
+  "viva": [
+    { "question": "Write the equation for the reaction between sodium thiosulphate and hydrochloric acid.", "expectedConcept": "Na2S2O3 + 2HCl → 2NaCl + SO2 + S + H2O. The finely divided sulphur produced is responsible for the turbidity.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Balanced equation with sulphur as the precipitate.", "commonMisconception": "Omitting the sulphur or the sulphur dioxide from the products." },
+    { "question": "Why is 1/t taken as a measure of the rate of reaction?", "expectedConcept": "The same quantity of sulphur is needed each time to obscure the cross, so the extent of reaction at the end point is fixed. Rate is amount of reaction divided by time, and since the amount is constant, the rate is inversely proportional to the time taken.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Fixed extent of reaction.", "commonMisconception": "Thinking 1/t is the actual rate in mol per litre per second rather than a quantity proportional to it." },
+    { "question": "Why must the total volume of the mixture be kept the same in every experiment?", "expectedConcept": "So that the depth of liquid through which the cross is viewed remains constant. If the volume changed, the amount of sulphur needed to hide the cross would change, and concentration would no longer be the only variable.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Fair test; control of variables.", "commonMisconception": "Believing only the concentration matters and the volume is irrelevant." },
+    { "question": "State the effect of temperature on the rate and explain it using collision theory.", "expectedConcept": "The rate increases with temperature, roughly doubling for every 10 degree rise. At a higher temperature the molecules move faster so collisions are more frequent, and more importantly a much larger fraction of molecules possesses energy equal to or greater than the activation energy, so a greater fraction of collisions is effective.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Fraction of molecules above Ea rises steeply.", "commonMisconception": "Attributing the whole increase to more frequent collisions, when the dominant factor is the increased fraction of molecules exceeding the activation energy." },
+    { "question": "What is activation energy?", "expectedConcept": "The minimum energy over and above the average energy of the reactants that colliding molecules must possess for the collision to lead to a reaction.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Definition.", "commonMisconception": "Confusing it with the enthalpy change of the reaction." },
+    { "question": "How is the order of a reaction determined from your graph?", "expectedConcept": "If a plot of 1/t against concentration is a straight line passing through the origin, the rate is directly proportional to concentration and the reaction is first order. More generally the slope of a plot of ln(rate) against ln(concentration) gives the order.", "difficulty": "hard", "bloom": "Apply", "answerLogic": "Log-log slope equals the order.", "commonMisconception": "Assuming order equals the stoichiometric coefficient in the balanced equation." },
+    { "question": "Why is the hydrochloric acid taken in excess?", "expectedConcept": "So that its concentration remains effectively constant during the reaction. The rate then depends only on the thiosulphate concentration, allowing the order with respect to thiosulphate to be found. This is the method of pseudo-order.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Pseudo-first-order conditions.", "commonMisconception": "Thinking the acid is in excess merely to ensure the reaction goes to completion." },
+    { "question": "Distinguish between order and molecularity of a reaction.", "expectedConcept": "Order is determined experimentally and is the sum of the powers of the concentration terms in the rate law; it may be fractional or zero. Molecularity is the number of species colliding in a single elementary step; it is always a whole number and cannot be zero or fractional.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Experimental versus mechanistic.", "commonMisconception": "Using the two terms interchangeably." },
+    { "question": "Why does the mixture turn milky?", "expectedConcept": "Colloidal sulphur is precipitated. Its finely divided particles scatter light, making the mixture turbid and eventually opaque so the cross cannot be seen.", "difficulty": "easy", "bloom": "Understand", "answerLogic": "Colloidal sulphur scatters light.", "commonMisconception": "Attributing the cloudiness to the sulphur dioxide gas." },
+    { "question": "What would happen to your result if a different student judged the end point?", "expectedConcept": "The end point is subjective, so a different observer may decide the cross has vanished at a slightly different degree of turbidity. This introduces a systematic difference in the times, which is why the same observer should perform all the runs.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "Systematic observer error.", "commonMisconception": "Assuming the end point is completely objective." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "The turbidity in this reaction is caused by:", "options": ["Sulphur dioxide gas", "Colloidal sulphur", "Sodium chloride", "Water vapour"], "answer": 1, "feedback": "Finely divided colloidal sulphur scatters light and obscures the cross." },
+      { "id": "pre2", "type": "mcq", "question": "To vary the concentration fairly, the volume of thiosulphate is reduced and:", "options": ["Nothing else is changed", "More acid is added", "Water is added to keep the total volume constant", "The flask is made smaller"], "answer": 2, "feedback": "Keeping the total volume constant keeps the depth of liquid above the cross the same." },
+      { "id": "pre3", "type": "mcq", "question": "A 10 degree rise in temperature typically changes the rate by a factor of about:", "options": ["1.1", "2", "10", "100"], "answer": 1, "feedback": "The rate roughly doubles for every 10 degree rise, because far more molecules exceed the activation energy." },
+      { "id": "pre4", "type": "mcq", "question": "In the Arrhenius plot, the slope of ln k against 1/T equals:", "options": ["Ea/R", "−Ea/R", "ln A", "−R/Ea"], "answer": 1, "feedback": "From ln k = ln A − Ea/RT the slope is −Ea/R." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Record at least four runs.", "check": "rows>=4" },
+      { "id": "dur2", "type": "task", "question": "Keep the total volume constant across the concentration series.", "check": "volumeConstant" },
+      { "id": "dur3", "type": "task", "question": "Carry out at least one run at a different temperature.", "check": "tempVaried" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the order of reaction with respect to thiosulphate that your graph gives.", "answer": 1, "tolerance": 0.3, "feedback": "A straight line through the origin for rate against concentration means first order." },
+      { "id": "post2", "type": "numeric", "question": "From your Arrhenius plot, state the activation energy in kJ/mol.", "answer": 48, "tolerance": 10, "feedback": "The accepted activation energy for this reaction is about 45 to 52 kJ/mol." },
+      { "id": "post3", "type": "mcq", "question": "Your plot of 1/t against concentration passes through the origin. This shows that:", "options": ["The reaction is zero order", "Rate is directly proportional to concentration", "Rate is independent of concentration", "The reaction is second order"], "answer": 1, "feedback": "A straight line through the origin means direct proportionality, so the order is one." },
+      { "id": "post4", "type": "mcq", "question": "The main reason the rate rises so steeply with temperature is that:", "options": ["Collisions become slightly more frequent", "A much larger fraction of molecules exceeds the activation energy", "The activation energy falls", "The concentration increases"], "answer": 1, "feedback": "Collision frequency rises only slightly, but the fraction of molecules with energy above Ea rises exponentially." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "Rate ∝ 1/t; Rate = k[S2O3]^m; k = A·e^(−Ea/RT); slope of ln k vs 1/T = −Ea/R",
+    "assumptions": ["Fixed amount of sulphur obscures the cross each time", "First order in thiosulphate under these conditions", "HCl in excess so its concentration is constant", "Constant temperature within a run", "Same observer and same cross throughout"],
+    "validRange": "[Na2S2O3] 0.02-0.20 M, [HCl] 0.5-2.0 M, temperature 20-60 °C",
+    "unitSystem": "Concentration mol/L, time s, temperature °C converted to K, Ea in kJ/mol",
+    "edgeCases": [
+      "Zero thiosulphate: no sulphur forms and the cross never disappears — blocked",
+      "Very dilute solutions give impractically long times — warned",
+      "Above 60 °C evaporation makes timing unreliable — warned",
+      "Changing volume without adding water breaks the fair test — warned with the exact correction"
+    ],
+    "expectedBehaviour": [
+      "Rate directly proportional to thiosulphate concentration (first order)",
+      "Rate roughly doubles for a 10 degree rise",
+      "Calibrated so the standard run takes about 40 s at 25 °C",
+      "Arrhenius plot recovers Ea within 15%"
+    ],
+    "testFile": "tests/chemistry.test.js"
+  }
+}

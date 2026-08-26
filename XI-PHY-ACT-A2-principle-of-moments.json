@@ -1,0 +1,536 @@
+{
+  "id": "XI-PHY-ACT-A2",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 2,
+    "kind": "activity",
+    "unit": "Unit V: Motion of System of Particles and Rigid Body",
+    "chapter": "Chapter-6: System of Particles and Rotational Motion",
+    "topic": "Centre of mass of a two-particle system, momentum conservation and centre of mass motion; moment of a force, torque, angular momentum, law of conservation of angular momentum; equilibrium of rigid bodies",
+    "subtopic": "Moment of a force about a pivot; principle of moments for a body in rotational equilibrium; centre of gravity",
+    "practical": "To determine mass of a given body using a metre scale by principle of moments.",
+    "learningObjectives": [
+      "Be able to determine the mass of a given body using a metre scale and the principle of moments",
+      "Be able to verify that at balance the anticlockwise moment equals the clockwise moment",
+      "Be able to show why the metre scale must first be balanced at its centre of gravity"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Activity 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Mass of a body by the principle of moments",
+  "shortTitle": "Principle of moments",
+  "objective": [
+    "To determine the mass of a given body using a metre scale and the principle of moments.",
+    "To verify that at balance the anticlockwise moment equals the clockwise moment.",
+    "To show why the metre scale must first be balanced at its centre of gravity."
+  ],
+  "theory": {
+    "statement": "A rigid body is in rotational equilibrium when the total anticlockwise moment about any point equals the total clockwise moment about that point. A metre scale balanced on a knife edge is such a body: hanging an unknown mass on one side and a known mass on the other, and adjusting until the scale is level, makes the two moments equal.",
+    "derivationNote": "The moment of a force about a pivot is the product of the force and the perpendicular distance from the pivot to its line of action. If an unknown mass m hangs at a distance d₁ on one side and a known mass M at d₂ on the other, then at balance m·g·d₁ = M·g·d₂. The g cancels, leaving m·d₁ = M·d₂ and hence m = M·d₂/d₁. The metre scale has weight of its own, acting at its centre of gravity. If the knife edge is placed exactly at that centre of gravity, the weight of the scale acts through the pivot and its moment is zero, which is why the bare scale must be balanced first. If the pivot were anywhere else, the moment of the scale itself would have to be included and the simple formula would no longer hold. Note also that this measures MASS without ever using the value of g, exactly as a beam balance does.",
+    "keyEquations": [
+      "Moment = force × perpendicular distance from the pivot",
+      "At balance: anticlockwise moment = clockwise moment",
+      "m·g·d₁ = M·g·d₂, so m = M·d₂/d₁",
+      "The weight of the scale has zero moment when the pivot is at its centre of gravity"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Metre scale",
+      "spec": "uniform, wooden, with a hole or groove for the knife edge",
+      "why": "The rigid body whose equilibrium is studied; also the ruler for the distances"
+    },
+    {
+      "name": "Knife edge on a stand",
+      "spec": "sharp, rigid",
+      "why": "Provides a well defined pivot with negligible friction"
+    },
+    {
+      "name": "Known masses",
+      "spec": "20 g, 50 g and 100 g from a weight box",
+      "why": "Provide the known moment against which the unknown is compared"
+    },
+    {
+      "name": "Unknown body",
+      "spec": "with a hook or a loop of thread",
+      "why": "The body whose mass is to be found"
+    },
+    {
+      "name": "Thread loops",
+      "spec": "light, of equal length",
+      "why": "Hang the masses; light loops add negligible moment of their own"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "body",
+      "label": "Unknown body",
+      "symbol": "m",
+      "unit": "",
+      "type": "control",
+      "default": "b1",
+      "options": [
+        "b1",
+        "b2",
+        "b3"
+      ]
+    },
+    {
+      "id": "known",
+      "label": "Known mass",
+      "symbol": "M",
+      "unit": "",
+      "type": "control",
+      "default": "m50",
+      "options": [
+        "m20",
+        "m50",
+        "m100"
+      ]
+    },
+    {
+      "id": "unknownPosCm",
+      "label": "Position of unknown",
+      "symbol": "",
+      "unit": "cm",
+      "type": "independent",
+      "min": 2,
+      "max": 48,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "id": "knownPosCm",
+      "label": "Position of known mass",
+      "symbol": "",
+      "unit": "cm",
+      "type": "independent",
+      "min": 52,
+      "max": 98,
+      "step": 0.5,
+      "default": 80
+    },
+    {
+      "id": "knifeEdgeCm",
+      "label": "Knife edge position",
+      "symbol": "",
+      "unit": "cm",
+      "type": "control",
+      "min": 40,
+      "max": 60,
+      "step": 1,
+      "default": 50
+    },
+    {
+      "id": "mass",
+      "label": "Mass of the body",
+      "symbol": "m",
+      "unit": "g",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Balance the bare metre scale on the knife edge and note the mark at which it balances. This is its centre of gravity.",
+      "checkpoint": true,
+      "expects": "knifeEdgeCm"
+    },
+    {
+      "step": 2,
+      "text": "Keep the knife edge at that mark for the whole experiment, so the weight of the scale exerts no moment.",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Suspend the unknown body from a thread loop on one side of the knife edge and note its position.",
+      "checkpoint": true,
+      "expects": "unknownPosCm"
+    },
+    {
+      "step": 4,
+      "text": "Suspend a known mass on the other side and slide it until the scale is horizontal again.",
+      "checkpoint": true,
+      "expects": "knownPosCm"
+    },
+    {
+      "step": 5,
+      "text": "When the scale is level, note the positions of both masses and calculate their distances from the knife edge.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 6,
+      "text": "Repeat with the unknown at a different distance, and again with a different known mass.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 7,
+      "text": "Calculate m = M·d₂/d₁ for each set of readings and take the mean.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "principle-of-moments",
+    "renderer": "principle-of-moments",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "knownPosCm",
+        "widget": "slider"
+      },
+      {
+        "var": "unknownPosCm",
+        "widget": "slider"
+      },
+      {
+        "var": "body",
+        "widget": "segmented",
+        "options": [
+          "b1",
+          "b2",
+          "b3"
+        ]
+      },
+      {
+        "var": "known",
+        "widget": "segmented",
+        "options": [
+          "m20",
+          "m50",
+          "m100"
+        ]
+      },
+      {
+        "var": "knifeEdgeCm",
+        "widget": "slider"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record at balance",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "knownMassG",
+        "label": "Known M",
+        "unit": "g",
+        "decimals": 0
+      },
+      {
+        "key": "d1",
+        "label": "d₁",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "d2",
+        "label": "d₂",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "momentUnknown",
+        "label": "m·d₁",
+        "unit": "g·cm",
+        "decimals": 0
+      },
+      {
+        "key": "momentKnown",
+        "label": "M·d₂",
+        "unit": "g·cm",
+        "decimals": 0
+      },
+      {
+        "key": "mass",
+        "label": "Mass m",
+        "unit": "g",
+        "decimals": 2
+      }
+    ],
+    "graph": {
+      "x": "d1",
+      "y": "d2",
+      "xLabel": "Distance of unknown d₁ (cm)",
+      "yLabel": "Distance of known d₂ (cm)",
+      "throughOrigin": true
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "d₁ = distance of the unknown mass from the knife edge",
+      "d₂ = distance of the known mass from the knife edge",
+      "At balance, m·d₁ = M·d₂",
+      "m = M·d₂/d₁",
+      "Take the mean of m over all the trials"
+    ],
+    "resultKeys": [
+      "mass",
+      "meanD1",
+      "meanD2"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Mass of body P",
+    "symbol": "m",
+    "value": 74.5,
+    "tolerance": 3,
+    "unit": "g",
+    "secondary": {
+      "quantity": "Percentage error",
+      "value": 0,
+      "tolerance": 4,
+      "unit": "%"
+    },
+    "statement": "Body P has a mass of about 74.5 g. The same value is obtained with different known masses and at different distances, which is what confirms the principle of moments rather than merely applying it once."
+  },
+  "safety": [
+    "Clamp the knife-edge stand firmly so that it cannot topple when the masses are hung.",
+    "Keep fingers clear beneath the hanging masses.",
+    "Support the metre scale while loading it; a scale that slips off the knife edge can break.",
+    "Handle the knife edge carefully — it is genuinely sharp."
+  ],
+  "sourcesOfError": [
+    "The knife edge not being exactly at the centre of gravity of the scale.",
+    "The metre scale bending slightly under heavy loads, so the distances are not truly horizontal.",
+    "Thread loops of unequal weight, or loops that slip along the scale.",
+    "Judging by eye when the scale is exactly horizontal.",
+    "Parallax when reading the positions against the scale markings.",
+    "Friction at the knife edge, which lets the scale rest slightly off balance."
+  ],
+  "viva": [
+    {
+      "question": "State the principle of moments.",
+      "expectedConcept": "When a body is in rotational equilibrium, the sum of the anticlockwise moments about any point equals the sum of the clockwise moments about that point.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Sum of moments balances.",
+      "commonMisconception": "Stating it as forces balancing rather than moments."
+    },
+    {
+      "question": "Define the moment of a force.",
+      "expectedConcept": "It is the product of the force and the perpendicular distance from the pivot to the line of action of the force. Its SI unit is the newton metre.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Force × perpendicular distance.",
+      "commonMisconception": "Using the distance to the point of application rather than the perpendicular distance."
+    },
+    {
+      "question": "Why must the metre scale be balanced at its centre of gravity first?",
+      "expectedConcept": "The scale has weight of its own, acting at its centre of gravity. If the knife edge is placed there, that weight acts through the pivot and its moment about the pivot is zero. Anywhere else it contributes an extra moment which would have to be included in the calculation.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "A force through the pivot has no moment.",
+      "commonMisconception": "Thinking the scale is weightless or that its weight always cancels."
+    },
+    {
+      "question": "Does the value of g affect your result?",
+      "expectedConcept": "No. The weights on both sides are proportional to g, so it cancels from m·g·d₁ = M·g·d₂. The method compares masses, not weights, and would give the same answer on the Moon.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "g cancels from both sides.",
+      "commonMisconception": "Assuming any experiment involving weight must depend on g."
+    },
+    {
+      "question": "What is the centre of gravity of a body?",
+      "expectedConcept": "The point at which the whole weight of the body may be taken to act. For a uniform metre scale it lies at the geometrical centre, near the 50 cm mark.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Point where total weight acts.",
+      "commonMisconception": "Confusing it with the centre of the pivot."
+    },
+    {
+      "question": "The unknown mass is moved further from the knife edge. What happens to the balancing position?",
+      "expectedConcept": "Its moment increases in proportion to the distance, so the known mass must also move further out to restore balance. The ratio d₂/d₁ stays the same, which is why the calculated mass is unchanged.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Both distances scale together.",
+      "commonMisconception": "Expecting a different value of m at a different distance."
+    },
+    {
+      "question": "Why is it better to repeat the experiment with a different known mass rather than simply repeating it?",
+      "expectedConcept": "Repeating with the same mass at the same place tests only the repeatability of the reading. Using a different known mass gives an independent determination, so agreement between them is genuine evidence that the principle holds.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Independent checks beat repeated ones.",
+      "commonMisconception": "Treating any three readings as three independent results."
+    },
+    {
+      "question": "What happens if the unknown mass is hung exactly at the knife edge?",
+      "expectedConcept": "Its line of action passes through the pivot, so its moment about the pivot is zero whatever its size. It cannot be balanced against anything and no measurement is possible.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Zero perpendicular distance means zero moment.",
+      "commonMisconception": "Thinking a heavy mass must always produce a turning effect."
+    },
+    {
+      "question": "Give two everyday applications of the principle of moments.",
+      "expectedConcept": "A see-saw, where a lighter child sits further from the pivot to balance a heavier one; a common beam balance; a crowbar or spanner, where a long handle gives a large moment for a small force; and the counterweight on a crane.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Levers and balances.",
+      "commonMisconception": "Describing them as examples of energy conservation instead."
+    },
+    {
+      "question": "Would this method work if the metre scale were not uniform?",
+      "expectedConcept": "Yes, provided the knife edge is placed at the point where the bare scale balances, which is its centre of gravity wherever that happens to be. That point need not be the 50 cm mark. What matters is that the weight of the scale acts through the pivot.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Balance the bare scale, wherever its CG lies.",
+      "commonMisconception": "Assuming the centre of gravity is always at the geometrical centre."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The moment of a force about a point is:",
+        "options": [
+          "Force × time",
+          "Force × perpendicular distance",
+          "Force / distance",
+          "Force × velocity"
+        ],
+        "answer": 1,
+        "feedback": "Moment = force × perpendicular distance from the pivot to the line of action."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "A body is in rotational equilibrium when:",
+        "options": [
+          "All forces are zero",
+          "Anticlockwise moments equal clockwise moments",
+          "It is at the centre of gravity",
+          "Its mass is uniform"
+        ],
+        "answer": 1,
+        "feedback": "The total anticlockwise moment must equal the total clockwise moment."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "The knife edge is placed at the centre of gravity of the scale so that:",
+        "options": [
+          "The scale looks neat",
+          "The weight of the scale exerts no moment",
+          "Friction is reduced",
+          "The masses hang vertically"
+        ],
+        "answer": 1,
+        "feedback": "A force acting through the pivot has zero perpendicular distance and so zero moment."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record at least three balanced readings.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Use more than one known mass, so the check is independent.",
+        "check": "variedKnown"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the mass of body P in gram.",
+        "answer": 74.5,
+        "tolerance": 4,
+        "feedback": "About 74.5 g from m = M·d₂/d₁."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "You moved the knife edge to the 45 cm mark and kept the same formula. Your result would be:",
+        "options": [
+          "Unchanged",
+          "Wrong, because the weight of the scale now has a moment",
+          "More accurate",
+          "Zero"
+        ],
+        "answer": 1,
+        "feedback": "Off the centre of gravity, the weight of the scale exerts its own moment which the simple formula ignores."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "The value of g does not appear in the final formula because:",
+        "options": [
+          "It is very small",
+          "It cancels from both sides of the moment equation",
+          "The masses are light",
+          "The scale is horizontal"
+        ],
+        "answer": 1,
+        "feedback": "m·g·d₁ = M·g·d₂, so g cancels and the method compares masses directly."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Moment = force × perpendicular distance from the pivot",
+    "assumptions": [
+      "Moment = force × perpendicular distance from the pivot",
+      "At balance: anticlockwise moment = clockwise moment",
+      "m·g·d₁ = M·g·d₂, so m = M·d₂/d₁",
+      "The weight of the scale has zero moment when the pivot is at its centre of gravity"
+    ],
+    "validRange": "Body P has a mass of about 74.5 g. The same value is obtained with different kno",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "The knife edge not being exactly at the centre of gravity of the scale.",
+      "The metre scale bending slightly under heavy loads, so the distances are not truly horizontal.",
+      "Thread loops of unequal weight, or loops that slip along the scale.",
+      "Judging by eye when the scale is exactly horizontal."
+    ],
+    "expectedBehaviour": [
+      "Body P has a mass of about 74.5 g. The same value is obtained with different known masses and at different distances, which is what confirms the principle of moments rather than merely applying it once."
+    ],
+    "testFile": "tests/batch9.test.js"
+  }
+}

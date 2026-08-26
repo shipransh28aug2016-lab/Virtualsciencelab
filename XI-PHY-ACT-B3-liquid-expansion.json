@@ -1,0 +1,550 @@
+{
+  "id": "XI-PHY-ACT-B3",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 3,
+    "kind": "activity",
+    "unit": "Unit VIII: Thermodynamics",
+    "chapter": "Chapter-10: Thermal Properties of Matter",
+    "topic": "Heat, temperature, thermal expansion; thermal expansion of solids, liquids and gases; specific heat capacity; calorimetry; change of state",
+    "subtopic": "Apparent and real expansion of a liquid; the expansion of the containing vessel",
+    "practical": "To note the change in level of liquid in a container on heating and interpret the observations.",
+    "learningObjectives": [
+      "Be able to observe the change in the level of a liquid in a flask as it is heated",
+      "Be able to explain why the level first falls and then rises",
+      "Be able to find the apparent expansivity of the liquid, and correct it for the expansion of the vessel"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Activity 3 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Change in the level of a liquid in a container on heating",
+  "shortTitle": "Liquid expansion",
+  "objective": [
+    "To observe the change in the level of a liquid in a flask as it is heated.",
+    "To explain why the level first falls and then rises.",
+    "To find the apparent expansivity of the liquid, and correct it for the expansion of the vessel."
+  ],
+  "theory": {
+    "statement": "A flask is filled to a mark and heated. The level does not simply rise: it dips first and then climbs. Explaining that dip, and correcting for it, is the whole of this activity.",
+    "derivationNote": "The glass of the flask is thin and sits directly in the heat, so it reaches a raised temperature within a second or two. The quarter litre of liquid behind it, heated only through that wall, takes minutes. At the very start, therefore, the vessel has expanded and the liquid has not: the same amount of liquid now occupies a larger flask, and the level in the stem FALLS. As the liquid warms it expands too, and because liquids expand ten to thirty times as much as glass it quickly overtakes the vessel and the level rises well past its starting point. What the stem shows at the end is not the real expansion of the liquid but the APPARENT expansion, which is the real expansion less the expansion of the vessel. To recover the real expansivity, the cubical expansivity of the glass must be added back. A student who forgets that correction reports a value that is systematically too small, by around a tenth for water in glass. Note that for a liquid of very large expansivity, such as ethanol, the dip may not be seen at all: the liquid outruns the vessel from the first instant.",
+    "keyEquations": [
+      "Change in volume = original volume times apparent expansivity times temperature rise",
+      "Apparent expansivity = real expansivity minus the expansivity of the vessel",
+      "The initial dip occurs because the vessel warms before the liquid does",
+      "A narrow stem magnifies a small change of volume into a large change of level"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Flask with a long graduated stem",
+      "spec": "about 250 cm³, stem of 2 mm bore",
+      "why": "The narrow stem turns a small change of volume into a readable change of level"
+    },
+    {
+      "name": "Water bath and burner",
+      "spec": "large beaker on a tripod",
+      "why": "Heats the flask evenly, without a flame playing on one spot"
+    },
+    {
+      "name": "Thermometer",
+      "spec": "least count 0.5 °C",
+      "why": "Measures the temperature of the liquid, which is the independent variable"
+    },
+    {
+      "name": "Millimetre scale on the stem",
+      "spec": "fixed alongside",
+      "why": "Reads the level of the liquid in the stem"
+    },
+    {
+      "name": "Liquids to compare",
+      "spec": "water, ethanol, glycerine",
+      "why": "Liquids of very different expansivity show how large the differences are"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "liquid",
+      "label": "Liquid",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "water",
+      "options": [
+        "water",
+        "alcohol",
+        "glycerine",
+        "mercury"
+      ]
+    },
+    {
+      "id": "vessel",
+      "label": "Vessel",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "glass",
+      "options": [
+        "glass",
+        "pyrex",
+        "steel"
+      ]
+    },
+    {
+      "id": "stem",
+      "label": "Stem bore",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "wide",
+      "options": [
+        "narrow",
+        "medium",
+        "wide"
+      ]
+    },
+    {
+      "id": "volumeCm3",
+      "label": "Volume of liquid",
+      "symbol": "V",
+      "unit": "cm³",
+      "type": "control",
+      "min": 100,
+      "max": 500,
+      "step": 50,
+      "default": 150
+    },
+    {
+      "id": "deltaTempC",
+      "label": "Temperature rise",
+      "symbol": "ΔT",
+      "unit": "°C",
+      "type": "independent",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "id": "correctForVessel",
+      "label": "Correct for the vessel",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "levelRiseMm",
+      "label": "Rise in level",
+      "symbol": "h",
+      "unit": "mm",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Fill the flask with the liquid exactly to the mark at the foot of the stem, at room temperature.",
+      "checkpoint": true,
+      "expects": "liquid"
+    },
+    {
+      "step": 2,
+      "text": "Fix a millimetre scale beside the stem and note the starting level.",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Stand the flask in the water bath and begin to heat gently.",
+      "checkpoint": false
+    },
+    {
+      "step": 4,
+      "text": "Watch the stem carefully during the first few seconds and note what the level does.",
+      "checkpoint": true,
+      "expects": "observeDip"
+    },
+    {
+      "step": 5,
+      "text": "Allow the whole to reach a steady temperature, then read the level and the thermometer.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 6,
+      "text": "Repeat for at least three different temperature rises.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 7,
+      "text": "Calculate the change in volume from the rise and the bore of the stem.",
+      "checkpoint": false
+    },
+    {
+      "step": 8,
+      "text": "Find the apparent expansivity, then add the expansivity of the vessel to obtain the real one.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "liquid-expansion",
+    "renderer": "liquid-expansion",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "deltaTempC",
+        "widget": "slider"
+      },
+      {
+        "var": "volumeCm3",
+        "widget": "slider"
+      },
+      {
+        "var": "liquid",
+        "widget": "segmented",
+        "options": [
+          "water",
+          "alcohol",
+          "glycerine",
+          "mercury"
+        ]
+      },
+      {
+        "var": "vessel",
+        "widget": "segmented",
+        "options": [
+          "glass",
+          "pyrex",
+          "steel"
+        ]
+      },
+      {
+        "var": "stem",
+        "widget": "segmented",
+        "options": [
+          "narrow",
+          "medium",
+          "wide"
+        ]
+      },
+      {
+        "var": "correctForVessel",
+        "widget": "switch"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record level",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "deltaTempC",
+        "label": "Temp rise",
+        "unit": "°C",
+        "decimals": 0
+      },
+      {
+        "key": "volumeCm3",
+        "label": "Volume",
+        "unit": "cm³",
+        "decimals": 0
+      },
+      {
+        "key": "levelRiseMm",
+        "label": "Rise",
+        "unit": "mm",
+        "decimals": 2
+      },
+      {
+        "key": "volumeChangeCm3",
+        "label": "Change in volume",
+        "unit": "cm³",
+        "decimals": 4
+      }
+    ],
+    "graph": {
+      "x": "deltaTempC",
+      "y": "levelRiseMm",
+      "xLabel": "Temperature rise (°C)",
+      "yLabel": "Rise in level (mm)",
+      "throughOrigin": true
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Change in volume = rise in level times the cross-sectional area of the stem",
+      "Plot the fractional change in volume against the temperature rise",
+      "The slope of that line is the APPARENT cubical expansivity",
+      "Add the cubical expansivity of the vessel to obtain the REAL expansivity",
+      "Compare with the accepted value for the liquid"
+    ],
+    "resultKeys": [
+      "gammaReported",
+      "gammaApparent",
+      "percentError"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Real cubical expansivity of water",
+    "symbol": "γ",
+    "value": 0.000207,
+    "tolerance": 0.00003,
+    "unit": "per K",
+    "secondary": {
+      "quantity": "Share of the result due to the vessel",
+      "value": 12.3,
+      "tolerance": 4,
+      "unit": "%"
+    },
+    "statement": "The level dips briefly as the flask expands before the water does, then rises steadily. The apparent expansivity found from the rise is about 1.8 parts in ten thousand per kelvin; adding the expansivity of the glass gives a real value of about 2.07 parts in ten thousand, which matches the accepted figure for water."
+  },
+  "safety": [
+    "Heat the flask in a water bath, never with a naked flame directly on the glass, which may crack it.",
+    "Ethanol is highly flammable: keep it well away from any flame and heat it only in a hot water bath.",
+    "Mercury is toxic. In a real laboratory it must be handled only in a fume cupboard, and any spill reported at once.",
+    "Do not seal the flask; trapped vapour can build up pressure and burst it.",
+    "Allow the apparatus to cool before dismantling."
+  ],
+  "sourcesOfError": [
+    "The liquid may not have reached the temperature shown by the thermometer when the reading is taken.",
+    "The stem may not be uniform in bore along its length.",
+    "Evaporation from an open stem slowly lowers the level during a long run.",
+    "Parallax in reading the meniscus against the scale.",
+    "Forgetting to correct for the expansion of the vessel understates the result.",
+    "The flask may not have been filled exactly to the mark at the starting temperature."
+  ],
+  "viva": [
+    {
+      "question": "Why does the level of the liquid fall at first when the flask is heated?",
+      "expectedConcept": "The glass of the flask is thin and reaches a raised temperature almost at once, while the bulk of the liquid behind it takes minutes to warm. For those first moments the vessel has expanded and the liquid has not, so the same liquid sits in a bigger flask and the level drops.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "The vessel warms before the liquid does.",
+      "commonMisconception": "Thinking the liquid contracts when first heated."
+    },
+    {
+      "question": "What is the difference between apparent and real expansion?",
+      "expectedConcept": "The apparent expansion is what the stem actually shows, which is the expansion of the liquid less that of the vessel holding it. The real expansion is the expansion of the liquid itself. They differ by the cubical expansivity of the vessel.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Apparent = real minus vessel.",
+      "commonMisconception": "Treating the two as the same quantity."
+    },
+    {
+      "question": "Which is greater, apparent or real expansivity?",
+      "expectedConcept": "The real expansivity is always the greater, because the vessel expands in the same direction and hides part of the liquid’s expansion. The apparent value is therefore always an underestimate.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Real is larger; the vessel hides part of it.",
+      "commonMisconception": "Assuming the vessel expansion adds to the reading."
+    },
+    {
+      "question": "Why is a narrow stem used?",
+      "expectedConcept": "To magnify the effect. A given change of volume spread over a narrow bore produces a long column, so a small expansion becomes a large and easily read change of level. That is also why a clinical thermometer has so fine a bore.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "A narrow bore magnifies the change.",
+      "commonMisconception": "Thinking a wide stem is easier to read."
+    },
+    {
+      "question": "By roughly how much do liquids expand compared with glass?",
+      "expectedConcept": "Ten to thirty times as much. Water expands about eight times as much as glass, ethanol over forty times. That is why the liquid quickly overtakes the vessel and the level rises well above its starting point.",
+      "difficulty": "medium",
+      "bloom": "Remember",
+      "answerLogic": "Liquids expand far more than solids.",
+      "commonMisconception": "Believing glass hardly expands at all, so no correction is needed."
+    },
+    {
+      "question": "What would you see with a liquid of very large expansivity such as ethanol?",
+      "expectedConcept": "No initial dip. Ethanol expands more than forty times as much as glass, so even while the flask is hot and the alcohol still cool, the liquid’s contribution already dominates and the level rises from the very first instant.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "A very expansive liquid outruns the vessel immediately.",
+      "commonMisconception": "Expecting every liquid to show the dip."
+    },
+    {
+      "question": "Why is the flask heated in a water bath rather than over a flame?",
+      "expectedConcept": "A flame heats one spot of the glass fiercely, which may crack the flask and certainly heats the liquid unevenly. A water bath surrounds the flask at one known temperature, so the liquid warms uniformly and the thermometer reading means something.",
+      "difficulty": "easy",
+      "bloom": "Apply",
+      "answerLogic": "Even heating at a known temperature.",
+      "commonMisconception": "Thinking the bath is only for safety."
+    },
+    {
+      "question": "What is the effect of forgetting the vessel correction?",
+      "expectedConcept": "The reported expansivity is too small, for water in glass by about a tenth. It is a systematic error: repeating the experiment will not reduce it, because every run makes the same omission.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "A systematic underestimate.",
+      "commonMisconception": "Assuming more repeats will average the error away."
+    },
+    {
+      "question": "Why must the flask be filled exactly to the mark at the starting temperature?",
+      "expectedConcept": "The calculation uses the original volume, and takes the rise as the change from that mark. If the flask were filled at a different temperature the starting volume would not be the one used in the arithmetic, and every reading would be shifted.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "The starting volume defines the calculation.",
+      "commonMisconception": "Thinking any convenient starting level will do."
+    },
+    {
+      "question": "Pyrex is used instead of ordinary glass. What difference does it make?",
+      "expectedConcept": "Pyrex has less than half the expansivity of ordinary glass, so it hides less of the liquid’s expansion and the apparent value comes closer to the real one. It also resists thermal shock, which is why it is used for glassware that is heated.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Lower vessel expansivity, smaller correction.",
+      "commonMisconception": "Thinking pyrex changes the expansivity of the liquid."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "On heating a filled flask, the liquid level first:",
+        "options": [
+          "Rises steadily",
+          "Falls briefly, then rises",
+          "Stays constant",
+          "Falls throughout"
+        ],
+        "answer": 1,
+        "feedback": "The vessel expands before the liquid does, so the level dips first."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "Apparent expansivity equals:",
+        "options": [
+          "Real expansivity plus vessel expansivity",
+          "Real expansivity minus vessel expansivity",
+          "Vessel expansivity alone",
+          "Twice the real expansivity"
+        ],
+        "answer": 1,
+        "feedback": "The expansion of the vessel hides part of that of the liquid."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "A narrow stem is used because it:",
+        "options": [
+          "Holds more liquid",
+          "Magnifies a small change of volume",
+          "Reduces evaporation",
+          "Is stronger"
+        ],
+        "answer": 1,
+        "feedback": "The same change of volume gives a longer column in a narrower bore."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record the level at three or more temperatures.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Watch the stem in the first few seconds and note the initial dip.",
+        "check": "dipObserved"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the real cubical expansivity of water, in units of ten to the minus four per kelvin.",
+        "answer": 2.07,
+        "tolerance": 0.4,
+        "feedback": "About 2.07 parts in ten thousand per kelvin, after correcting for the glass."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "You forgot to add the vessel expansivity. Your reported value is:",
+        "options": [
+          "Too large",
+          "Too small",
+          "Correct",
+          "Zero"
+        ],
+        "answer": 1,
+        "feedback": "The vessel hides part of the liquid expansion, so the uncorrected value is an underestimate."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "The initial dip in the level shows that:",
+        "options": [
+          "The liquid contracts on heating",
+          "The vessel warms and expands before the liquid does",
+          "The thermometer is faulty",
+          "The stem is blocked"
+        ],
+        "answer": 1,
+        "feedback": "The thin glass reaches temperature in seconds; the bulk liquid takes minutes."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Change in volume = original volume times apparent expansivity times temperature rise",
+    "assumptions": [
+      "Change in volume = original volume times apparent expansivity times temperature rise",
+      "Apparent expansivity = real expansivity minus the expansivity of the vessel",
+      "The initial dip occurs because the vessel warms before the liquid does",
+      "A narrow stem magnifies a small change of volume into a large change of level"
+    ],
+    "validRange": "The level dips briefly as the flask expands before the water does, then rises st",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "The liquid may not have reached the temperature shown by the thermometer when the reading is taken.",
+      "The stem may not be uniform in bore along its length.",
+      "Evaporation from an open stem slowly lowers the level during a long run.",
+      "Parallax in reading the meniscus against the scale."
+    ],
+    "expectedBehaviour": [
+      "The level dips briefly as the flask expands before the water does, then rises steadily. The apparent expansivity found from the rise is about 1.8 parts in ten thousand per kelvin; adding the expansivity of the glass gives a real value of about 2.07 parts in ten thousand, which matches the accepted figure for water."
+    ],
+    "testFile": "tests/batch9.test.js"
+  }
+}

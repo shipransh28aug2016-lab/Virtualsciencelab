@@ -1,0 +1,202 @@
+{
+  "id": "XI-CHE-E03",
+  "class": "XI",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "E",
+    "serial": 3,
+    "categoryTitle": "Quantitative Estimation",
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 6: Equilibrium — Acids, Bases and Salts",
+    "topic": "Ionization of acids and bases; acid-base neutralisation; volumetric analysis",
+    "subtopic": "Determination of the strength of an alkali by titration against a standard acid",
+    "practical": "Determination of strength of a given solution of Sodium hydroxide by titrating it against standard solution of Oxalic acid.",
+    "assessmentComponent": "Volumetric Analysis (08 marks)",
+    "learningObjectives": [
+      "Prepare and use a standard solution of oxalic acid of known normality",
+      "Perform a titration using a pipette, burette and conical flask with correct technique",
+      "Select the correct indicator for a weak acid versus strong base titration and justify the choice",
+      "Identify the end point as the first permanent colour change and obtain concordant readings",
+      "Apply the normality equation N1V1 = N2V2 to calculate the strength of the alkali in g/L"
+    ],
+    "competencies": [
+      "Accurate volumetric measurement and burette reading to the least count of 0.1 mL",
+      "Recognising the difference between the equivalence point and the end point",
+      "Reasoning from the pH at equivalence to the correct choice of indicator",
+      "Rejecting discordant readings and averaging concordant values",
+      "Stoichiometric calculation with normality and equivalent mass"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Classes XI-XII Curriculum 2026-27, PRACTICAL SYLLABUS, E. Quantitative Estimation, item 3 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Volumetric analysis: strength of NaOH by titration with oxalic acid",
+  "shortTitle": "Acid-Base Titration",
+  "objective": [
+    "To prepare a standard solution of oxalic acid.",
+    "To determine the strength of a given solution of sodium hydroxide by titrating it against the standard oxalic acid solution.",
+    "To express the result in normality, molarity and grams per litre."
+  ],
+  "theory": {
+    "statement": "Volumetric analysis depends on the fact that at the equivalence point the number of gram-equivalents of the acid equals the number of gram-equivalents of the base. If N1 and V1 are the normality and volume of one solution and N2 and V2 those of the other, then N1V1 = N2V2.",
+    "derivationNote": "Oxalic acid (H2C2O4·2H2O) is a primary standard: it is available in a pure, stable, crystalline form of exactly known composition, so its solution can be prepared by direct weighing. Its equivalent mass is 63 because it is dibasic (molar mass 126 divided by basicity 2). Sodium hydroxide is not a primary standard because it is hygroscopic and absorbs carbon dioxide, so its strength must be found by titration. Since oxalic acid is a WEAK acid and sodium hydroxide a STRONG base, the salt formed (sodium oxalate) hydrolyses and the solution at the equivalence point is basic, around pH 8.4. Phenolphthalein, which changes colour between pH 8.2 and 10.0, is therefore the correct indicator; methyl orange would change far too early.",
+    "keyEquations": [
+      "H2C2O4 + 2NaOH → Na2C2O4 + 2H2O",
+      "N1V1 = N2V2  (acid = base at the equivalence point)",
+      "Normality of NaOH = (N(acid) × V(acid)) / V(NaOH)",
+      "Strength (g/L) = Normality × Equivalent mass (NaOH = 40)",
+      "Equivalent mass of oxalic acid crystals = 126/2 = 63"
+    ]
+  },
+  "apparatus": [
+    { "name": "Burette", "spec": "50 mL, least count 0.1 mL", "why": "Delivers a measured, variable volume of the standard solution" },
+    { "name": "Pipette", "spec": "20 mL bulb pipette", "why": "Transfers an exact, fixed volume of the alkali into the flask" },
+    { "name": "Conical flask", "spec": "250 mL", "why": "Its shape allows swirling without splashing out the contents" },
+    { "name": "Burette stand with clamp", "spec": "iron", "why": "Holds the burette vertical and steady" },
+    { "name": "Funnel", "spec": "small glass", "why": "Fills the burette without spilling" },
+    { "name": "White glazed tile", "spec": "porcelain", "why": "Provides a white background so the first faint pink is visible" },
+    { "name": "Wash bottle", "spec": "distilled water", "why": "Rinses the sides of the flask so no reagent is left unreacted" },
+    { "name": "Volumetric flask", "spec": "100 mL or 250 mL", "why": "Prepares the standard solution to an exact volume" },
+    { "name": "Chemical balance and weight box", "spec": "least count 0.01 g", "why": "Weighs the oxalic acid crystals accurately" }
+  ],
+  "materials": [
+    { "name": "Oxalic acid crystals", "spec": "H2C2O4·2H2O, AR grade", "hazard": "Harmful if swallowed; irritant" },
+    { "name": "Sodium hydroxide solution", "spec": "approximately 0.1 N, strength unknown", "hazard": "Corrosive — causes severe burns" },
+    { "name": "Phenolphthalein indicator", "spec": "1% in ethanol", "hazard": "Flammable solution" },
+    { "name": "Distilled water", "spec": "—", "hazard": "None" }
+  ],
+  "variables": [
+    { "id": "titrantConc", "label": "Oxalic acid normality", "symbol": "N₁", "unit": "N", "type": "control", "min": 0.02, "max": 0.2, "step": 0.01, "default": 0.1 },
+    { "id": "analyteVolume", "label": "NaOH pipetted", "symbol": "V₂", "unit": "mL", "type": "control", "min": 5, "max": 25, "step": 5, "default": 20 },
+    { "id": "indicator", "label": "Indicator", "symbol": "", "unit": "", "type": "control", "options": ["phenolphthalein", "methylOrange"], "default": "phenolphthalein" },
+    { "id": "buretteVolume", "label": "Volume delivered", "symbol": "V₁", "unit": "mL", "type": "independent", "min": 0, "max": 50, "step": 0.1, "default": 0 },
+    { "id": "pH", "label": "pH of the mixture", "symbol": "pH", "unit": "", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Weigh out the calculated mass of oxalic acid crystals and dissolve them in distilled water in a volumetric flask to prepare the standard solution.", "checkpoint": false },
+    { "step": 2, "text": "Rinse the burette with the standard oxalic acid solution, then fill it and clamp it vertically. Remove any air bubble from the nozzle.", "checkpoint": false },
+    { "step": 3, "text": "Note the initial burette reading with the eye level with the lower meniscus to avoid parallax.", "checkpoint": true, "expects": "initialReading" },
+    { "step": 4, "text": "Rinse the pipette with the sodium hydroxide solution and transfer exactly 20 mL of it into a clean conical flask.", "checkpoint": true, "expects": "analyteVolume" },
+    { "step": 5, "text": "Add 2 to 3 drops of phenolphthalein to the flask. The solution turns pink because the alkali is basic.", "checkpoint": true, "expects": "indicator" },
+    { "step": 6, "text": "Run the acid in from the burette while swirling the flask continuously, keeping the flask on a white tile.", "checkpoint": false },
+    { "step": 7, "text": "As the pink colour begins to fade slowly, add the acid drop by drop until the pink JUST disappears and does not return on swirling. This is the end point.", "checkpoint": true, "expects": "endPoint" },
+    { "step": 8, "text": "Note the final burette reading. The difference gives the volume of acid used.", "checkpoint": true, "expects": "record" },
+    { "step": 9, "text": "Repeat the titration until at least two concordant readings, agreeing within 0.1 to 0.2 mL, are obtained.", "checkpoint": true, "expects": "rows>=3" },
+    { "step": 10, "text": "Calculate the normality of the sodium hydroxide using N1V1 = N2V2 and hence its strength in grams per litre.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "titration",
+    "renderer": "titration",
+    "fps": 45,
+    "controls": [
+      { "var": "buretteVolume", "widget": "slider" },
+      { "var": "indicator", "widget": "segmented", "options": ["phenolphthalein", "methylOrange"] },
+      { "var": "titrantConc", "widget": "slider" },
+      { "var": "analyteVolume", "widget": "slider" }
+    ],
+    "actions": [
+      { "id": "record", "label": "Record end point", "primary": true },
+      { "id": "reset", "label": "Refill burette" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "trial", "label": "Trial", "unit": "", "decimals": 0 },
+      { "key": "initialReading", "label": "Initial", "unit": "mL", "decimals": 1 },
+      { "key": "finalReading", "label": "Final", "unit": "mL", "decimals": 1 },
+      { "key": "volumeUsed", "label": "Volume used", "unit": "mL", "decimals": 1 },
+      { "key": "pHAtStop", "label": "pH at end point", "unit": "", "decimals": 2 }
+    ],
+    "graph": { "x": "trial", "y": "volumeUsed", "xLabel": "Trial number", "yLabel": "Volume of acid used (mL)", "throughOrigin": false },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Mean of the concordant titres = V1 mL",
+      "N(NaOH) = (N(acid) × V(acid)) / V(NaOH)",
+      "Strength in g/L = Normality × 40",
+      "Molarity = Normality / 1, since NaOH is monoacidic"
+    ],
+    "resultKeys": ["normality", "strength", "meanTitre"]
+  },
+  "expectedResult": {
+    "quantity": "Strength of the given sodium hydroxide solution",
+    "symbol": "strength",
+    "value": 3.92,
+    "tolerance": 0.3,
+    "unit": "g/L",
+    "secondary": { "quantity": "Normality of NaOH", "value": 0.098, "tolerance": 0.006, "unit": "N" },
+    "statement": "The given solution of sodium hydroxide has a normality of about 0.098 N, that is a strength of about 3.9 grams per litre."
+  },
+  "safety": [
+    "Sodium hydroxide is corrosive and causes severe burns. Wear eye protection and wash any splash immediately with plenty of water.",
+    "Never pipette any solution by mouth — always use a pipette filler.",
+    "Oxalic acid is poisonous if swallowed. Wash your hands after handling it.",
+    "Clamp the burette securely; a falling burette breaks and scatters glass and alkali.",
+    "Phenolphthalein solution is made up in ethanol and is flammable. Keep it away from flames."
+  ],
+  "sourcesOfError": [
+    "Parallax while reading the burette; the eye must be level with the lower meniscus.",
+    "An air bubble trapped in the burette nozzle, which escapes during the titration and adds an unmeasured volume.",
+    "Failing to rinse the burette and pipette with the solutions they are to contain, which dilutes them.",
+    "Overshooting the end point, so the pink colour is destroyed completely rather than just disappearing.",
+    "Not washing the sides of the conical flask, leaving some acid unreacted.",
+    "Using the wrong indicator, which changes colour away from the equivalence point."
+  ],
+  "viva": [
+    { "question": "What is a standard solution?", "expectedConcept": "A solution whose concentration is accurately known. It is prepared by dissolving an accurately weighed amount of a primary standard in a known volume of solvent.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Definition.", "commonMisconception": "Calling any prepared solution a standard solution." },
+    { "question": "Why is oxalic acid used as a primary standard but sodium hydroxide is not?", "expectedConcept": "Oxalic acid is available pure, is stable in air and has a definite composition, so its solution can be made by direct weighing. Sodium hydroxide is hygroscopic and absorbs carbon dioxide from the air, so its exact mass cannot be known by weighing.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Primary standard criteria.", "commonMisconception": "Thinking NaOH is excluded only because it is corrosive." },
+    { "question": "What is the equivalent mass of oxalic acid crystals and why?", "expectedConcept": "63. The molar mass of H2C2O4·2H2O is 126 and it is dibasic, so the equivalent mass is 126 divided by 2.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Equivalent mass = molar mass / basicity.", "commonMisconception": "Using 90 for anhydrous oxalic acid, or forgetting the two water molecules of crystallisation." },
+    { "question": "Why is phenolphthalein the correct indicator here, and not methyl orange?", "expectedConcept": "Oxalic acid is weak and sodium hydroxide is strong, so the salt formed hydrolyses and the equivalence point is on the basic side at about pH 8.4. Phenolphthalein changes between pH 8.2 and 10.0, which lies in the sharp part of the curve. Methyl orange changes at pH 3.1 to 4.4, far past the equivalence point, giving a much larger and wrong titre.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Match the indicator range to the pH at equivalence.", "commonMisconception": "Believing any indicator works because they all change colour." },
+    { "question": "Distinguish between the equivalence point and the end point.", "expectedConcept": "The equivalence point is the theoretical point at which chemically equivalent amounts of acid and base have reacted. The end point is the point at which the indicator changes colour, which is observed experimentally. A good indicator makes the two virtually coincide.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Theoretical versus observed.", "commonMisconception": "Treating the two terms as identical." },
+    { "question": "What are concordant readings?", "expectedConcept": "Two or more titre values that agree with each other within about 0.1 to 0.2 mL. Only concordant readings are averaged to calculate the result.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Reproducibility criterion.", "commonMisconception": "Averaging every reading including obvious outliers." },
+    { "question": "Why is the burette rinsed with the solution it will hold rather than with water?", "expectedConcept": "Any water left inside would dilute the standard solution and lower its effective concentration, so a larger volume would be needed and the result would be wrong.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "Dilution error.", "commonMisconception": "Thinking rinsing with distilled water is always the cleanest option." },
+    { "question": "Why must the conical flask NOT be rinsed with the alkali solution?", "expectedConcept": "The flask receives a measured volume from the pipette. Rinsing it with the alkali would leave extra alkali behind, so more than the intended amount would be present and the titre would be too high. The flask may be rinsed with distilled water only.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "Only the delivered volume should react.", "commonMisconception": "Rinsing every piece of glassware with the solution it will contact." },
+    { "question": "What is the effect of using a burette with an air bubble in the nozzle?", "expectedConcept": "When the bubble escapes during the titration it registers as delivered volume that never reached the flask, so the recorded titre is larger than the true value and the calculated strength is too high.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "Systematic volume error.", "commonMisconception": "Assuming a small bubble makes no measurable difference." },
+    { "question": "Define normality and how it differs from molarity.", "expectedConcept": "Normality is the number of gram-equivalents of solute per litre of solution, while molarity is the number of moles per litre. Normality equals molarity multiplied by the number of replaceable hydrogen ions or hydroxide ions, so for oxalic acid N = 2M, and for NaOH N = M.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "N = M × n-factor.", "commonMisconception": "Using normality and molarity interchangeably for a dibasic acid." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "The equivalent mass of oxalic acid crystals (H2C2O4·2H2O) is:", "options": ["126", "90", "63", "45"], "answer": 2, "feedback": "Molar mass 126 divided by basicity 2 gives 63." },
+      { "id": "pre2", "type": "mcq", "question": "For a titration of a weak acid against a strong base, the correct indicator is:", "options": ["Methyl orange", "Phenolphthalein", "Litmus", "Methyl red"], "answer": 1, "feedback": "The equivalence point is basic, so phenolphthalein (pH 8.2-10.0) is correct." },
+      { "id": "pre3", "type": "mcq", "question": "Sodium hydroxide cannot be used as a primary standard because it is:", "options": ["Too cheap", "Hygroscopic and absorbs CO2", "A weak base", "Coloured"], "answer": 1, "feedback": "It gains mass from moisture and carbon dioxide, so an accurate weighing is impossible." },
+      { "id": "pre4", "type": "mcq", "question": "The burette should be read:", "options": ["At the top of the meniscus", "With the eye level with the lower meniscus", "From above the burette", "From below the burette"], "answer": 1, "feedback": "Reading the lower meniscus at eye level avoids parallax error." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Perform at least three titrations.", "check": "rows>=3" },
+      { "id": "dur2", "type": "task", "question": "Obtain at least two concordant readings within 0.2 mL.", "check": "concordant" },
+      { "id": "dur3", "type": "task", "question": "Use the correct indicator for this pair of reagents.", "check": "correctIndicator" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the normality of the sodium hydroxide solution you obtained (N).", "answer": 0.098, "tolerance": 0.008, "feedback": "The supplied alkali is approximately 0.098 N." },
+      { "id": "post2", "type": "numeric", "question": "State its strength in grams per litre.", "answer": 3.92, "tolerance": 0.4, "feedback": "Strength = normality × 40 = about 3.9 g/L." },
+      { "id": "post3", "type": "mcq", "question": "At the equivalence point of this titration, the pH of the mixture is:", "options": ["Exactly 7", "Below 7 because oxalic acid is present", "Above 7 because the salt hydrolyses", "Exactly 14"], "answer": 2, "feedback": "Sodium oxalate is the salt of a weak acid and a strong base, so it hydrolyses to give a basic solution near pH 8.4." },
+      { "id": "post4", "type": "mcq", "question": "If you had used methyl orange, your calculated strength of NaOH would be:", "options": ["Unchanged", "Too high", "Too low", "Zero"], "answer": 1, "feedback": "Methyl orange changes long after the equivalence point, so a larger titre is recorded and the calculated normality comes out too high." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "N1V1 = N2V2; Strength (g/L) = Normality × Equivalent mass; pH solved from acid-base equilibrium",
+    "assumptions": ["Complete dissociation of NaOH", "Oxalic acid treated as a diprotic weak acid", "Unit activity coefficients", "298 K so Kw = 1.0e-14", "Volumes additive on mixing"],
+    "validRange": "Burette 0-50 mL, pipette 5-25 mL, concentrations 0.02-0.5 N",
+    "unitSystem": "Volumes in mL, concentration in N and M, strength in g/L",
+    "edgeCases": [
+      "Zero titrant added: pH is that of the alkali alone (about 13)",
+      "At equivalence the pH is basic (about 8.4), NOT 7",
+      "Overshooting gives a permanent deep pink and an invalid reading",
+      "Zero titrant concentration is blocked"
+    ],
+    "expectedBehaviour": [
+      "pH falls monotonically as acid is added",
+      "A sharp drop of more than 2.5 pH units across the end point",
+      "Halving the titrant concentration doubles the titre",
+      "Using methyl orange genuinely displaces the recorded titre"
+    ],
+    "testFile": "tests/chemistry.test.js"
+  }
+}

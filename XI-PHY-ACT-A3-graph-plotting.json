@@ -1,0 +1,524 @@
+{
+  "id": "XI-PHY-ACT-A3",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 3,
+    "kind": "activity",
+    "unit": "Unit I: Physical World and Measurement",
+    "chapter": "Chapter-1: Units and Measurements",
+    "topic": "Need for measurement: Units of measurement; systems of units; SI units, fundamental and derived units, significant figures. Accuracy and precision of measuring instruments, errors in measurement",
+    "subtopic": "Choice of axis scales; error bars; obtaining a slope from a best-fit line rather than from individual points",
+    "practical": "To plot a graph for a given set of data, with proper choice of scales and error bars.",
+    "learningObjectives": [
+      "Be able to plot a given set of data with a proper choice of scales for both axes",
+      "Be able to draw error bars representing the uncertainty in each reading",
+      "Be able to obtain the slope from the best-fit line and judge how well the line fits"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Activity 3 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Plotting a graph with proper scales and error bars",
+  "shortTitle": "Graph plotting",
+  "objective": [
+    "To plot a given set of data with a proper choice of scales for both axes.",
+    "To draw error bars representing the uncertainty in each reading.",
+    "To obtain the slope from the best-fit line and judge how well the line fits."
+  ],
+  "theory": {
+    "statement": "A graph turns a column of numbers into a picture of a relationship. Its value depends entirely on how it is drawn: the scales must spread the data across the paper, every point must be plotted, and each point must carry an error bar showing how uncertain it is. The slope is then read from the line drawn through the points, not from any two of them.",
+    "derivationNote": "Choosing a scale is a judgement, not a rule. If the scale is too coarse the points crowd into one corner, the error bars shrink to invisible ticks and the slope cannot be read accurately; if too fine, points fall off the paper. A good graph uses most of both axes. An error bar drawn through each point shows the range in which the true value probably lies, and a well fitting line passes through most of those bars. The slope is the ratio of the rise to the run taken from two widely separated points ON THE LINE, because the line already averages out the random scatter of every point; taking the slope from two DATA points throws that averaging away and inherits the full uncertainty of just those two. The intercept must be allowed to take whatever value the data gives, unless the physics itself demands that the line pass through the origin, as it does when no load means no extension.",
+    "keyEquations": [
+      "Slope = rise / run, read from the best-fit line",
+      "Error bar = plus or minus the uncertainty in that reading",
+      "A good fit passes within the error bars of most points",
+      "Force the origin only when zero on one axis must mean zero on the other"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Graph paper",
+      "spec": "millimetre ruled, A4",
+      "why": "The grid on which the data is plotted"
+    },
+    {
+      "name": "Sharp pencil and ruler",
+      "spec": "transparent ruler preferred",
+      "why": "A transparent ruler lets you see points on both sides while drawing the best-fit line"
+    },
+    {
+      "name": "Given data set",
+      "spec": "with the uncertainty of each reading stated",
+      "why": "The measurements to be plotted; the uncertainty sets the length of the error bars"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "dataset",
+      "label": "Data set",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "springLoad",
+      "options": [
+        "springLoad",
+        "pendulum",
+        "resistance",
+        "thermistor"
+      ]
+    },
+    {
+      "id": "yScale",
+      "label": "Axis scale",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "auto",
+      "options": [
+        "auto",
+        "coarse",
+        "veryCoarse"
+      ]
+    },
+    {
+      "id": "slopeMethod",
+      "label": "Slope taken",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "bestFit",
+      "options": [
+        "bestFit",
+        "twoPoints"
+      ]
+    },
+    {
+      "id": "forceThroughOrigin",
+      "label": "Force through origin",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "showErrorBars",
+      "label": "Show error bars",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "slope",
+      "label": "Slope of the line",
+      "symbol": "m",
+      "unit": "",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Study the given data and note the range of both the independent and the dependent variable.",
+      "checkpoint": true,
+      "expects": "dataset"
+    },
+    {
+      "step": 2,
+      "text": "Choose a scale for each axis so that the plotted points will spread across most of the graph paper.",
+      "checkpoint": true,
+      "expects": "yScale"
+    },
+    {
+      "step": 3,
+      "text": "Draw and label both axes, with the quantity and its unit on each.",
+      "checkpoint": false
+    },
+    {
+      "step": 4,
+      "text": "Plot every point, including any that look out of line.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 5,
+      "text": "Draw a vertical error bar through each point, of total length twice the stated uncertainty.",
+      "checkpoint": true,
+      "expects": "rows>=4"
+    },
+    {
+      "step": 6,
+      "text": "Draw the straight line that passes as near as possible to all the points, with roughly as many above as below.",
+      "checkpoint": false
+    },
+    {
+      "step": 7,
+      "text": "Choose two widely separated points ON THE LINE and read off the rise and the run to find the slope.",
+      "checkpoint": true,
+      "expects": "slopeMethod"
+    },
+    {
+      "step": 8,
+      "text": "State the slope with its unit, and comment on how many points the line passes within their error bars.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "graph-plotting",
+    "renderer": "graph-plotting",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "dataset",
+        "widget": "segmented",
+        "options": [
+          "springLoad",
+          "pendulum",
+          "resistance",
+          "thermistor"
+        ]
+      },
+      {
+        "var": "yScale",
+        "widget": "segmented",
+        "options": [
+          "auto",
+          "coarse",
+          "veryCoarse"
+        ]
+      },
+      {
+        "var": "slopeMethod",
+        "widget": "segmented",
+        "options": [
+          "bestFit",
+          "twoPoints"
+        ]
+      },
+      {
+        "var": "forceThroughOrigin",
+        "widget": "switch"
+      },
+      {
+        "var": "showErrorBars",
+        "widget": "switch"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Plot next point",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Point",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "x",
+        "label": "x",
+        "unit": "",
+        "decimals": 2
+      },
+      {
+        "key": "y",
+        "label": "y",
+        "unit": "",
+        "decimals": 3
+      },
+      {
+        "key": "errorBar",
+        "label": "Error",
+        "unit": "",
+        "decimals": 3
+      },
+      {
+        "key": "yMin",
+        "label": "y min",
+        "unit": "",
+        "decimals": 3
+      },
+      {
+        "key": "yMax",
+        "label": "y max",
+        "unit": "",
+        "decimals": 3
+      }
+    ],
+    "graph": {
+      "x": "x",
+      "y": "y",
+      "xLabel": "Independent variable",
+      "yLabel": "Dependent variable",
+      "throughOrigin": false
+    },
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "Choose scales so the data spans most of both axes",
+      "Plot every point and draw its error bar",
+      "Draw the best-fit straight line through the points",
+      "Slope = rise / run from two widely separated points on the LINE",
+      "Count how many points the line passes within their error bars"
+    ],
+    "resultKeys": [
+      "slope",
+      "r2",
+      "pointsWithinError"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Slope of the load-extension line",
+    "symbol": "m",
+    "value": 0.0182,
+    "tolerance": 0.002,
+    "unit": "cm/g",
+    "secondary": {
+      "quantity": "Points within their error bars",
+      "value": 6,
+      "tolerance": 2,
+      "unit": ""
+    },
+    "statement": "With a scale chosen to fill the paper, the six points lie close to a straight line through the origin of slope about 0.0182 cm per gram, and the line passes within the error bar of every point. Taking the slope from two data points instead of the line gives a slightly different answer that carries the full uncertainty of just those two readings."
+  },
+  "safety": [
+    "This activity uses no apparatus that can cause harm; the only care needed is with the sharpened pencil.",
+    "Work on a flat surface so the ruler does not slip while the line is drawn."
+  ],
+  "sourcesOfError": [
+    "A scale so coarse that the points occupy a small part of the paper, hiding the trend.",
+    "Omitting an inconvenient point instead of plotting it and investigating it.",
+    "Drawing the line through the first and last points rather than through all of them.",
+    "Reading the slope from two data points instead of from the drawn line.",
+    "Forcing the line through the origin when the data has a genuine intercept.",
+    "Error bars drawn to an arbitrary length rather than to the stated uncertainty."
+  ],
+  "viva": [
+    {
+      "question": "Why is a graph plotted at all, rather than just averaging the readings?",
+      "expectedConcept": "A graph shows the FORM of the relationship, not just a single number. It reveals whether the relation is linear, where it breaks down, and which points are anomalous. It also averages random error through the drawn line, which a simple mean of ratios cannot do as reliably.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Shows form, exposes outliers, averages scatter.",
+      "commonMisconception": "Treating a graph as decoration for a result already obtained."
+    },
+    {
+      "question": "What makes a choice of scale a good one?",
+      "expectedConcept": "The plotted points should spread over most of both axes, and the scale should use convenient divisions such as 1, 2 or 5 units per large square so intermediate values can be read easily. Cramming the data into a corner wastes the resolution of the paper.",
+      "difficulty": "easy",
+      "bloom": "Apply",
+      "answerLogic": "Fill the paper, use convenient divisions.",
+      "commonMisconception": "Always starting both axes at zero regardless of the data range."
+    },
+    {
+      "question": "What does an error bar represent?",
+      "expectedConcept": "The range within which the true value of that reading probably lies, given the uncertainty of the instrument and the method. A point with a long error bar is a less certain measurement.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Range of probable true values.",
+      "commonMisconception": "Thinking it shows the difference from the expected answer."
+    },
+    {
+      "question": "Why take the slope from the line rather than from two data points?",
+      "expectedConcept": "Every data point carries uncertainty. The line is drawn to pass as close as possible to all of them, so it averages that scatter out. Two data points carry their full individual uncertainties and ignore all the other readings entirely.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "The line averages; two points do not.",
+      "commonMisconception": "Believing the first and last points are the most reliable ones."
+    },
+    {
+      "question": "When should a line be forced through the origin?",
+      "expectedConcept": "Only when the physics requires that zero on one axis means zero on the other: no load, no extension; no length, no period. If the data shows a real intercept, forcing the origin tilts the line and biases the slope.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Physics decides, not convenience.",
+      "commonMisconception": "Forcing the origin because the line looks better that way."
+    },
+    {
+      "question": "One point lies well off the line. What should you do?",
+      "expectedConcept": "Plot it, and say so. Check whether it was misrecorded or taken under different conditions, and repeat that reading if possible. It must never simply be erased: an anomalous point may be the most informative measurement in the set.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Investigate, never delete.",
+      "commonMisconception": "Quietly dropping a point that spoils a straight line."
+    },
+    {
+      "question": "Why should the independent variable go on the x axis?",
+      "expectedConcept": "By convention the quantity the experimenter chooses and controls is plotted horizontally, and the quantity that responds is plotted vertically. It makes the slope the rate of change of the effect with respect to the cause.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Cause horizontal, effect vertical.",
+      "commonMisconception": "Choosing axes by which numbers are larger."
+    },
+    {
+      "question": "What are the units of the slope?",
+      "expectedConcept": "The unit of the y quantity divided by the unit of the x quantity. For extension in cm against load in g, the slope is in cm per gram. A slope is never a bare number unless both axes carry the same unit.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Units of y over units of x.",
+      "commonMisconception": "Quoting a slope with no unit at all."
+    },
+    {
+      "question": "How can you tell from the graph whether the fit is good?",
+      "expectedConcept": "A good line passes within the error bars of most points, with roughly as many points above the line as below, and no systematic curvature. If the points curve away consistently at one end, a straight line is the wrong model there.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Random residuals, within error bars.",
+      "commonMisconception": "Judging fit only by how close the nearest points are."
+    },
+    {
+      "question": "Your scale is five times too coarse. What is the practical consequence?",
+      "expectedConcept": "The points crowd into a small corner of the paper, so the triangle used to read the slope is small and both the rise and the run are read imprecisely. The error bars become almost invisible, and any curvature in the data is impossible to see.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Poor scale loses resolution and hides structure.",
+      "commonMisconception": "Thinking the scale affects only appearance, not the result."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The best-fit line should:",
+        "options": [
+          "Pass through the first and last points",
+          "Pass as near as possible to all the points",
+          "Pass through the origin always",
+          "Join the points dot to dot"
+        ],
+        "answer": 1,
+        "feedback": "It should pass close to all points, with roughly as many above as below."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "An error bar on a point shows:",
+        "options": [
+          "The mistake made",
+          "The range in which the true value probably lies",
+          "The distance from the line",
+          "The scale of the axis"
+        ],
+        "answer": 1,
+        "feedback": "It represents the uncertainty in that reading, not a blunder."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "A graph should be scaled so that:",
+        "options": [
+          "Both axes start at zero",
+          "The data fills most of the paper",
+          "The line is at 45 degrees",
+          "All points are in one corner"
+        ],
+        "answer": 1,
+        "feedback": "Spreading the data across the paper gives the best resolution for reading the slope."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Plot at least four points with their error bars.",
+        "check": "rows>=4"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Choose a scale that uses most of the graph area.",
+        "check": "goodScale"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the slope of the load-extension line, in cm per gram.",
+        "answer": 0.0182,
+        "tolerance": 0.003,
+        "feedback": "About 0.0182 cm/g from the best-fit line through the origin."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "You took the slope from two data points instead of the line. This is poor practice because:",
+        "options": [
+          "It is slower",
+          "Those two points carry their full uncertainty and the others are ignored",
+          "It always gives a negative slope",
+          "The units change"
+        ],
+        "answer": 1,
+        "feedback": "The drawn line averages the scatter of all the points; two points do not."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "A data set has a genuine non-zero intercept, but you forced the line through the origin. The slope will be:",
+        "options": [
+          "Correct",
+          "Biased",
+          "Zero",
+          "Negative"
+        ],
+        "answer": 1,
+        "feedback": "Forcing an origin the data does not support tilts the line and biases the slope."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Slope = rise / run, read from the best-fit line",
+    "assumptions": [
+      "Slope = rise / run, read from the best-fit line",
+      "Error bar = plus or minus the uncertainty in that reading",
+      "A good fit passes within the error bars of most points",
+      "Force the origin only when zero on one axis must mean zero on the other"
+    ],
+    "validRange": "With a scale chosen to fill the paper, the six points lie close to a straight li",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "A scale so coarse that the points occupy a small part of the paper, hiding the trend.",
+      "Omitting an inconvenient point instead of plotting it and investigating it.",
+      "Drawing the line through the first and last points rather than through all of them.",
+      "Reading the slope from two data points instead of from the drawn line."
+    ],
+    "expectedBehaviour": [
+      "With a scale chosen to fill the paper, the six points lie close to a straight line through the origin of slope about 0.0182 cm per gram, and the line passes within the error bar of every point. Taking the slope from two data points instead of the line gives a slightly different answer that carries the full uncertainty of just those two readings."
+    ],
+    "testFile": "tests/batch9.test.js"
+  }
+}

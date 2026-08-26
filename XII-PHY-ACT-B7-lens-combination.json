@@ -1,0 +1,546 @@
+{
+  "id": "XII-PHY-ACT-B7",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 7,
+    "kind": "activity",
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-9: Ray Optics and Optical Instruments",
+    "topic": "Reflection of light, spherical mirrors, mirror formula; refraction of light, total internal reflection and optical fibers, refraction at spherical surfaces, lenses, thin lens formula, lens maker’s formula; magnification, power of a lens, combination of thin lenses in contact; refraction of light through a prism",
+    "subtopic": "Combination of two thin lenses in contact; power of a lens; P = P₁ + P₂",
+    "practical": "To obtain a lens combination with the specified focal length by using two lenses from the given set of lenses.",
+    "learningObjectives": [
+      "Be able to calculate which pairs of lenses from a given set will give a specified focal length",
+      "Be able to assemble the chosen pair in contact and measure the focal length of the combination",
+      "Be able to verify that the powers of two lenses in contact simply add",
+      "Be able to observe how a concave lens weakens a converging combination"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Activity 7 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Obtaining a lens combination of specified focal length",
+  "shortTitle": "Lens combination",
+  "objective": [
+    "To calculate which pairs of lenses from a given set will give a specified focal length.",
+    "To assemble the chosen pair in contact and measure the focal length of the combination.",
+    "To verify that the powers of two lenses in contact simply add.",
+    "To observe how a concave lens weakens a converging combination."
+  ],
+  "theory": {
+    "statement": "Two thin lenses placed in contact behave as a single lens whose POWER is the sum of the two individual powers. This is why opticians work in dioptres rather than focal lengths: adding powers is arithmetic, whereas combining focal lengths means adding reciprocals. The rule makes it possible to design a combination of any specified strength from a box of ordinary lenses.",
+    "derivationNote": "Consider two thin lenses of focal lengths f₁ and f₂ in contact. An object placed in front of the first forms an image which acts as the object for the second, and because the lenses are in contact the image distance for the first is the object distance for the second. Applying the thin-lens formula to each in turn and eliminating the intermediate distance gives 1/F = 1/f₁ + 1/f₂, where F is the focal length of the combination. Since power is defined as P = 1/f with f in metres, this is simply P = P₁ + P₂. Two consequences drive the whole activity. First, two convex lenses in contact always give a combination STRONGER than either alone: the powers are both positive and add, so F is smaller than the smaller of the two focal lengths. Students often expect some kind of average, and it is not. Second, a concave lens has negative power, so adding one WEAKENS the combination — and if the concave lens is strong enough the pair diverges overall. This is how a long specified focal length is achieved from a box of short ones. The relation holds only for lenses in CONTACT: separated by a distance d it becomes 1/F = 1/f₁ + 1/f₂ − d/(f₁f₂), and the extra term always weakens a converging pair.",
+    "keyEquations": [
+      "In contact: 1/F = 1/f₁ + 1/f₂",
+      "In terms of power: P = P₁ + P₂, with P in dioptre and f in metres",
+      "Two convex lenses always give F smaller than either focal length",
+      "A concave lens has negative power and weakens the combination",
+      "Separated by d: 1/F = 1/f₁ + 1/f₂ − d/(f₁f₂)"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Set of lenses",
+      "spec": "convex +10, +15, +20, +30 cm; concave −20, −30 cm",
+      "why": "The box from which a pair must be chosen; focal lengths are marked on the mounts"
+    },
+    {
+      "name": "Lens holder taking two lenses",
+      "spec": "holds them in contact on a common axis",
+      "why": "The relation 1/F = 1/f₁ + 1/f₂ applies only to lenses in contact"
+    },
+    {
+      "name": "Optical bench with a metre scale",
+      "spec": "least count 0.1 to 0.5 cm",
+      "why": "Measures the focal length of the combination"
+    },
+    {
+      "name": "Distant object or an illuminated object and screen",
+      "spec": "",
+      "why": "Focusing a distant object gives the focal length of the combination directly"
+    },
+    {
+      "name": "Screen",
+      "spec": "white, on a sliding holder",
+      "why": "Catches the image so the focal length can be measured"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "lensA",
+      "label": "First lens",
+      "symbol": "f₁",
+      "unit": "",
+      "type": "independent",
+      "default": "c15",
+      "options": [
+        "c10",
+        "c15",
+        "c20",
+        "c30",
+        "d20",
+        "d30"
+      ]
+    },
+    {
+      "id": "lensB",
+      "label": "Second lens",
+      "symbol": "f₂",
+      "unit": "",
+      "type": "independent",
+      "default": "c20",
+      "options": [
+        "c10",
+        "c15",
+        "c20",
+        "c30",
+        "d20",
+        "d30"
+      ]
+    },
+    {
+      "id": "target",
+      "label": "Specified focal length",
+      "symbol": "F",
+      "unit": "",
+      "type": "control",
+      "default": "t857",
+      "options": [
+        "t6",
+        "t857",
+        "t12",
+        "t20",
+        "t60"
+      ]
+    },
+    {
+      "id": "scale",
+      "label": "Scale",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "s02",
+      "options": [
+        "s05",
+        "s02",
+        "s01"
+      ]
+    },
+    {
+      "id": "separationCm",
+      "label": "Separation",
+      "symbol": "d",
+      "unit": "cm",
+      "type": "independent",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "id": "combinedFocal",
+      "label": "Combined focal length",
+      "symbol": "F",
+      "unit": "cm",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Note the specified focal length and convert it to a power in dioptre.",
+      "checkpoint": true,
+      "expects": "target"
+    },
+    {
+      "step": 2,
+      "text": "Write down the power of every lens in the set, remembering that a concave lens has negative power."
+    },
+    {
+      "step": 3,
+      "text": "Find a pair whose powers add to the required value. This is arithmetic, not trial and error.",
+      "checkpoint": true,
+      "expects": "lensA"
+    },
+    {
+      "step": 4,
+      "text": "Mount the two chosen lenses in contact in one holder, on a common axis.",
+      "checkpoint": true,
+      "expects": "separationCm"
+    },
+    {
+      "step": 5,
+      "text": "Focus a distant object on the screen and measure the distance from the lenses to the screen: that is the focal length of the combination."
+    },
+    {
+      "step": 6,
+      "text": "Compare it with the specified value. Repeat with at least three different pairs so the addition rule can be checked."
+    },
+    {
+      "step": 7,
+      "text": "Try introducing a small gap between the lenses and note that the combination becomes weaker."
+    }
+  ],
+  "simulation": {
+    "model": "lens-combination",
+    "renderer": "lens-combination",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "separationCm",
+        "widget": "slider"
+      },
+      {
+        "var": "lensA",
+        "widget": "segmented",
+        "options": [
+          "c10",
+          "c15",
+          "c20",
+          "c30",
+          "d20",
+          "d30"
+        ]
+      },
+      {
+        "var": "lensB",
+        "widget": "segmented",
+        "options": [
+          "c10",
+          "c15",
+          "c20",
+          "c30",
+          "d20",
+          "d30"
+        ]
+      },
+      {
+        "var": "target",
+        "widget": "segmented",
+        "options": [
+          "t6",
+          "t857",
+          "t12",
+          "t20",
+          "t60"
+        ]
+      },
+      {
+        "var": "scale",
+        "widget": "segmented",
+        "options": [
+          "s05",
+          "s02",
+          "s01"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record this pair",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "lensA",
+        "label": "First lens",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "lensB",
+        "label": "Second lens",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "combinedFocalCm",
+        "label": "Combined F",
+        "unit": "cm",
+        "decimals": 2
+      },
+      {
+        "key": "combinedPowerD",
+        "label": "Combined power",
+        "unit": "D",
+        "decimals": 2
+      },
+      {
+        "key": "separationCm",
+        "label": "Separation d",
+        "unit": "cm",
+        "decimals": 0
+      }
+    ],
+    "graph": null,
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Convert the specified focal length into a power: P = 100/F with F in cm",
+      "List the power of each lens in the set, with a negative sign for concave",
+      "Find a pair whose powers add to the required total",
+      "Measure the focal length of the assembled combination",
+      "Check that 100/F measured equals P₁ + P₂ for every pair tried"
+    ],
+    "resultKeys": [
+      "bestFocal",
+      "found",
+      "powersAdd"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Focal length of the chosen combination",
+    "symbol": "F",
+    "value": 8.57,
+    "tolerance": 0.6,
+    "unit": "cm",
+    "secondary": {
+      "quantity": "Power of the combination",
+      "value": 11.67,
+      "tolerance": 0.8,
+      "unit": "D"
+    },
+    "statement": "A +15 cm and a +20 cm lens have powers of 6.67 D and 5.00 D, which add to 11.67 D — a combination of focal length 8.57 cm. Two convex lenses always give a combination stronger than either alone. To reach a LONGER focal length than any single lens in the set a concave lens must be included: +10 cm (10 D) with −20 cm (−5 D) gives 5 D, a focal length of 20 cm."
+  },
+  "safety": [
+    "Handle the lenses by their edges and place them on a soft cloth, never face down on the bench.",
+    "Do not force two lenses together in the holder; a lens under stress can crack.",
+    "Never use any lens or combination to focus sunlight.",
+    "Clean lenses only with proper lens tissue, since grit will scratch the surfaces permanently.",
+    "Report a chipped or cracked lens rather than continuing to use it."
+  ],
+  "sourcesOfError": [
+    "A gap between the lenses, so the contact formula no longer applies and the combination is weaker than calculated.",
+    "The lenses not sharing a common axis, which introduces aberration and blurs the image.",
+    "The marked focal lengths of the lenses being nominal values, accurate only to a few per cent.",
+    "Judging the point of sharpest focus by eye.",
+    "A distant object that is not distant enough, so the measured distance exceeds the true focal length.",
+    "Chromatic aberration in white light, giving a coloured fringe that makes the focus hard to judge."
+  ],
+  "viva": [
+    {
+      "question": "What is the relation for two thin lenses in contact?",
+      "expectedConcept": "1/F = 1/f₁ + 1/f₂, or equivalently P = P₁ + P₂ where power is the reciprocal of the focal length in metres. The powers simply add, which is why opticians use dioptres.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Powers add for lenses in contact.",
+      "commonMisconception": "Averaging the two focal lengths instead of adding the powers."
+    },
+    {
+      "question": "Why is the combination of two convex lenses always stronger than either alone?",
+      "expectedConcept": "Because both powers are positive, so their sum is larger than either. A larger power means a shorter focal length, so F is smaller than the smaller of f₁ and f₂ — the pair converges light more sharply than either lens on its own.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "Positive powers add, so F shrinks.",
+      "commonMisconception": "Expecting the combination to be somewhere between the two focal lengths."
+    },
+    {
+      "question": "How can a combination be made with a LONGER focal length than any lens in the set?",
+      "expectedConcept": "By including a concave lens. Its power is negative, so it subtracts from the total and weakens the combination. A +10 cm lens has a power of +10 D; adding a −20 cm lens of −5 D gives +5 D, which is a focal length of 20 cm — longer than either lens alone.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "A negative power lengthens the combined focal length.",
+      "commonMisconception": "Believing only convex lenses can be combined usefully."
+    },
+    {
+      "question": "What is the power of a lens, and in what unit is it measured?",
+      "expectedConcept": "The power is the reciprocal of the focal length in metres, P = 1/f, measured in dioptre. A converging lens has positive power and a diverging lens negative. A +2 D lens has a focal length of half a metre.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "P = 1/f with f in metres, unit the dioptre.",
+      "commonMisconception": "Using the focal length in centimetres and getting a power a hundred times too small."
+    },
+    {
+      "question": "Two lenses of +5 D and −5 D are placed in contact. What is the result?",
+      "expectedConcept": "A combination of zero power. The two cancel exactly, so 1/F = 0 and the focal length is infinite. Optically the pair behaves as a plane sheet of glass: parallel light enters and parallel light leaves, and no image is formed at any finite distance.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Equal and opposite powers cancel completely.",
+      "commonMisconception": "Expecting the stronger lens to dominate rather than exact cancellation."
+    },
+    {
+      "question": "Why must the lenses be in contact for the simple relation to hold?",
+      "expectedConcept": "Because the derivation assumes the image formed by the first lens is at the same place as the object for the second. Once the lenses are separated by a distance d that is no longer true, and the relation gains a correction term: 1/F = 1/f₁ + 1/f₂ − d/(f₁f₂).",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "Separation adds a −d/(f₁f₂) term.",
+      "commonMisconception": "Assuming a small gap is negligible in all circumstances."
+    },
+    {
+      "question": "Does a small separation make a converging combination stronger or weaker?",
+      "expectedConcept": "Weaker. For two converging lenses f₁ and f₂ are both positive, so the correction term −d/(f₁f₂) is negative and reduces the total power. The focal length of the combination therefore increases as the gap opens.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "The correction term is negative for two convex lenses.",
+      "commonMisconception": "Expecting a gap to have no effect, or to strengthen the pair."
+    },
+    {
+      "question": "Why is the dioptre a more convenient unit than the focal length in practice?",
+      "expectedConcept": "Because powers add directly. An optician combining a spectacle lens with a contact lens, or a designer stacking elements, can simply sum the dioptres. Working in focal lengths would mean adding reciprocals at every step, which is far more error-prone.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Addition beats adding reciprocals.",
+      "commonMisconception": "Regarding the dioptre as merely an alternative name for focal length."
+    },
+    {
+      "question": "Why might your measured focal length differ from the calculated one?",
+      "expectedConcept": "The marked focal lengths of the lenses are nominal, usually good to only a few per cent. Beyond that, the lenses may not be perfectly in contact, the object may not be far enough away to count as at infinity, and the point of sharpest focus is judged by eye. Each of these pushes the measured value slightly high.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Nominal focal lengths, imperfect contact, finite object distance.",
+      "commonMisconception": "Blaming the discrepancy entirely on reading error."
+    },
+    {
+      "question": "How is this principle used in a practical instrument?",
+      "expectedConcept": "An achromatic doublet cements a convex crown lens to a concave flint lens. The powers are chosen so that the combination converges overall while the dispersions of the two glasses cancel, so the different colours come to a common focus. Almost every quality objective lens is built this way.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "The achromatic doublet combines convex and concave elements.",
+      "commonMisconception": "Assuming a concave element in a lens system must be a design compromise."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "For two thin lenses in contact, the powers:",
+        "options": [
+          "Multiply",
+          "Add",
+          "Subtract",
+          "Average"
+        ],
+        "answer": 1,
+        "feedback": "P = P₁ + P₂ is the whole basis of the activity."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "Two convex lenses in contact give a combination whose focal length is:",
+        "options": [
+          "Longer than both",
+          "Between the two",
+          "Shorter than both",
+          "Equal to their average"
+        ],
+        "answer": 2,
+        "feedback": "Both powers are positive, so the total power is larger and F is smaller."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "A lens of focal length −20 cm has a power of:",
+        "options": [
+          "+5 D",
+          "−5 D",
+          "+0.05 D",
+          "−0.05 D"
+        ],
+        "answer": 1,
+        "feedback": "P = 1/f with f = −0.20 m gives −5 D."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Try at least three different pairs of lenses.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Put the lenses in contact before measuring.",
+        "check": "settled"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the focal length of the combination you obtained, in cm.",
+        "answer": 8.57,
+        "tolerance": 1.2,
+        "feedback": "A +15 and a +20 lens give 8.57 cm."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "What is the power of that combination, in dioptre?",
+        "answer": 11.67,
+        "tolerance": 1.5,
+        "feedback": "6.67 D + 5.00 D = 11.67 D."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Introducing a gap between two convex lenses makes the combination:",
+        "options": [
+          "Stronger",
+          "Weaker",
+          "Unchanged",
+          "Diverging"
+        ],
+        "answer": 1,
+        "feedback": "The −d/(f₁f₂) term reduces the total power."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "In contact: 1/F = 1/f₁ + 1/f₂",
+    "assumptions": [
+      "In contact: 1/F = 1/f₁ + 1/f₂",
+      "In terms of power: P = P₁ + P₂, with P in dioptre and f in metres",
+      "Two convex lenses always give F smaller than either focal length",
+      "A concave lens has negative power and weakens the combination"
+    ],
+    "validRange": "A +15 cm and a +20 cm lens have powers of 6.67 D and 5.00 D, which add to 11.67 ",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "A gap between the lenses, so the contact formula no longer applies and the combination is weaker than calculated.",
+      "The lenses not sharing a common axis, which introduces aberration and blurs the image.",
+      "The marked focal lengths of the lenses being nominal values, accurate only to a few per cent.",
+      "Judging the point of sharpest focus by eye."
+    ],
+    "expectedBehaviour": [
+      "A +15 cm and a +20 cm lens have powers of 6.67 D and 5.00 D, which add to 11.67 D — a combination of focal length 8.57 cm. Two convex lenses always give a combination stronger than either alone. To reach a LONGER focal length than any single lens in the set a concave lens must be included: +10 cm (10 D) with −20 cm (−5 D) gives 5 D, a focal length of 20 cm."
+    ],
+    "testFile": "tests/batch13.test.js"
+  }
+}

@@ -1,0 +1,548 @@
+{
+  "id": "XII-PHY-ACT-A6",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 6,
+    "kind": "activity",
+    "unit": "Unit III: Current Electricity",
+    "chapter": "Chapter-3: Current Electricity",
+    "topic": "Electric current, flow of electric charges in a metallic conductor, drift velocity, mobility and their relation with electric current; Ohm’s law, V-I characteristics, electrical resistivity and conductivity, temperature dependence of resistance, internal resistance of a cell, potential difference and emf of a cell, combination of cells, Kirchhoff’s rules, Wheatstone bridge",
+    "subtopic": "Diagnosing a wrongly connected circuit from the behaviour of its meters, and correcting both the circuit and its diagram",
+    "practical": "To draw the diagram of a given open circuit comprising at least a battery, resistor/rheostat, key, ammeter and voltmeter. Mark the components that are not connected in proper order and correct the circuit and also the circuit diagram.",
+    "learningObjectives": [
+      "Be able to examine a circuit that has been connected wrongly and observe what its meters do",
+      "Be able to identify, from those symptoms alone, which component is out of place",
+      "Be able to mark the fault on the circuit diagram and draw the corrected diagram",
+      "Be able to confirm the diagnosis by correcting the circuit and seeing sensible readings return"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Activity 6 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Finding and correcting the fault in a given open circuit",
+  "shortTitle": "Circuit fault-finding",
+  "objective": [
+    "To examine a circuit that has been connected wrongly and observe what its meters do.",
+    "To identify, from those symptoms alone, which component is out of place.",
+    "To mark the fault on the circuit diagram and draw the corrected diagram.",
+    "To confirm the diagnosis by correcting the circuit and seeing sensible readings return."
+  ],
+  "theory": {
+    "statement": "Every wrong connection has its own signature. An ammeter in the wrong place shorts the circuit; a voltmeter in the wrong place stops it; a reversed cell drives both needles backwards; a broken lead gives nothing at all. Because each fault behaves differently, a circuit can be diagnosed without dismantling it, simply by closing the key, watching the two meters, and moving the slider. That is the skill this activity examines: reading a circuit by its symptoms.",
+    "derivationNote": "The diagnosis rests on the resistances involved. An ammeter has a resistance of about a tenth of an ohm; placed across a 22 Ω resistor it carries essentially all of the current, so the ammeter reads a large value while the voltmeter across the same points reads only a few tens of millivolt. A voltmeter has a resistance of about ten kilohm; placed in the main path it reduces the current to a few hundred microampere, so the ammeter reads practically zero while the voltmeter reads almost the full supply. A reversed cell leaves the magnitudes untouched and reverses the direction, so both needles go backwards. A wire bridging the key leaves the circuit permanently live, which is invisible until the key is OPENED and the readings fail to fall to zero — that is the discriminating test for this fault. A rheostat across its full track gives entirely sensible readings that simply never change when the slider is moved. A broken lead gives zero on both meters with the key closed, which resembles an open key; opening and closing the key distinguishes them.",
+    "keyEquations": [
+      "Ammeter across the load: the load is bypassed through about 0.1 Ω, so I is large and V is tiny",
+      "Voltmeter in the path: about 10 kΩ enters the circuit, so I ≈ 0 and V ≈ the supply",
+      "Reversed cell: magnitudes unchanged, both needles driven backwards",
+      "Shorted key: readings do not fall to zero when the key is opened",
+      "Broken lead: both meters read zero with the key closed"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Six pre-wired circuit boards",
+      "spec": "each carrying one planted fault",
+      "why": "The circuits to be diagnosed; each behaves differently"
+    },
+    {
+      "name": "Battery",
+      "spec": "3 V",
+      "why": "The source in each circuit"
+    },
+    {
+      "name": "Resistor and rheostat",
+      "spec": "22 Ω and 0 to 20 Ω sliding",
+      "why": "The load and the means of varying the current"
+    },
+    {
+      "name": "Ammeter and voltmeter",
+      "spec": "centre-zero movement, so a reversal is visible",
+      "why": "The two instruments whose behaviour carries the diagnosis"
+    },
+    {
+      "name": "One-way key",
+      "spec": "",
+      "why": "Opening it is the test that identifies a shorted key"
+    },
+    {
+      "name": "Pencil, ruler and paper",
+      "spec": "",
+      "why": "The activity requires the faulty diagram to be drawn, marked and corrected"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "board",
+      "label": "Circuit board",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "board1",
+      "options": [
+        "board1",
+        "board2",
+        "board3",
+        "board4",
+        "board5",
+        "board6"
+      ]
+    },
+    {
+      "id": "diagnosis",
+      "label": "Your diagnosis",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "none",
+      "options": [
+        "none",
+        "ammeterParallel",
+        "voltmeterSeries",
+        "cellReversed",
+        "keyShorted",
+        "rheostatFull",
+        "openLead"
+      ]
+    },
+    {
+      "id": "keyPosition",
+      "label": "Key",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "closed",
+      "options": [
+        "closed",
+        "open"
+      ]
+    },
+    {
+      "id": "corrected",
+      "label": "Correct the circuit",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": false
+    },
+    {
+      "id": "sliderPct",
+      "label": "Rheostat slider",
+      "symbol": "",
+      "unit": "%",
+      "type": "independent",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 40
+    },
+    {
+      "id": "faultFound",
+      "label": "Fault identified",
+      "symbol": "",
+      "unit": "",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Draw the circuit exactly as you find it on the board, using the standard symbols.",
+      "checkpoint": true,
+      "expects": "board"
+    },
+    {
+      "step": 2,
+      "text": "Close the key and observe BOTH meters. Note the size of each reading and whether either needle goes backwards.",
+      "checkpoint": true,
+      "expects": "keyPosition"
+    },
+    {
+      "step": 3,
+      "text": "Move the rheostat slider from one end to the other and watch whether the readings change at all."
+    },
+    {
+      "step": 4,
+      "text": "Open the key. If the readings do not fall to zero, the key is bridged by a wire.",
+      "checkpoint": true
+    },
+    {
+      "step": 5,
+      "text": "From these symptoms alone, decide which component is connected wrongly and record your diagnosis.",
+      "checkpoint": true,
+      "expects": "diagnosis"
+    },
+    {
+      "step": 6,
+      "text": "Mark the fault on your diagram and draw the corrected diagram beside it."
+    },
+    {
+      "step": 7,
+      "text": "Move to the next board. Work through at least three, since one correct answer could be a guess."
+    }
+  ],
+  "simulation": {
+    "model": "circuit-fault",
+    "renderer": "circuit-fault",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "sliderPct",
+        "widget": "slider"
+      },
+      {
+        "var": "board",
+        "widget": "segmented",
+        "options": [
+          "board1",
+          "board2",
+          "board3",
+          "board4",
+          "board5",
+          "board6"
+        ]
+      },
+      {
+        "var": "diagnosis",
+        "widget": "segmented",
+        "options": [
+          "none",
+          "ammeterParallel",
+          "voltmeterSeries",
+          "cellReversed",
+          "keyShorted",
+          "rheostatFull",
+          "openLead"
+        ]
+      },
+      {
+        "var": "keyPosition",
+        "widget": "segmented",
+        "options": [
+          "closed",
+          "open"
+        ]
+      },
+      {
+        "var": "corrected",
+        "widget": "switch"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record diagnosis",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Attempt",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "board",
+        "label": "Board",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "ammeterReading",
+        "label": "Ammeter",
+        "unit": "A",
+        "decimals": 3
+      },
+      {
+        "key": "voltmeterReading",
+        "label": "Voltmeter",
+        "unit": "V",
+        "decimals": 2
+      },
+      {
+        "key": "diagnosis",
+        "label": "Your diagnosis",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "actualFault",
+        "label": "Actual fault",
+        "unit": "",
+        "decimals": 0
+      }
+    ],
+    "graph": null,
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "For each board, tabulate what the ammeter and the voltmeter do",
+      "Note whether the readings change when the slider is moved",
+      "Note whether the readings fall to zero when the key is opened",
+      "Match the pattern of symptoms to the component that must be out of place",
+      "Mark the fault on the diagram and redraw the circuit correctly"
+    ],
+    "resultKeys": [
+      "boardsExamined",
+      "correctCount",
+      "faultsIdentified"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Faults correctly identified",
+    "symbol": "",
+    "value": 3,
+    "tolerance": 1,
+    "unit": "boards",
+    "secondary": {
+      "quantity": "Diagnostic accuracy",
+      "value": 100,
+      "tolerance": 35,
+      "unit": "%"
+    },
+    "statement": "Each board carries a different fault and each produces its own symptom: a large current with almost no voltage means the ammeter is across the load; no current with nearly the full supply on the voltmeter means the voltmeter is in the path; both needles backwards means the cell is reversed; readings that survive opening the key mean the key is bridged; sensible readings that never change mean the rheostat is across its full track; and zero on both meters means a broken lead."
+  },
+  "safety": [
+    "These are low-voltage circuits, but the diagnostic habits matter: examine and reason before altering anything.",
+    "Do not correct a fault before you have identified it. Repairing a circuit by trial and error teaches nothing and destroys the evidence.",
+    "Open the key between observations so the cells are not run down.",
+    "Do not force a needle that is driven backwards; open the key and correct the polarity.",
+    "Report a component that is hot to the touch rather than continuing to use it."
+  ],
+  "sourcesOfError": [
+    "Guessing the fault instead of reading it from the symptoms.",
+    "Failing to open the key, and so missing a shorted key entirely.",
+    "Failing to move the slider, and so missing a wrongly wired rheostat, whose readings look perfectly normal.",
+    "Confusing a broken lead with an open key, since both give zero on both meters.",
+    "Correcting the circuit before recording what it did, which destroys the evidence for the diagnosis.",
+    "Drawing the corrected diagram rather than the faulty one, when the activity asks for both."
+  ],
+  "viva": [
+    {
+      "question": "The ammeter reads a large current and the voltmeter reads almost nothing. What is wrong?",
+      "expectedConcept": "The ammeter has been connected across the load. Its resistance is about a tenth of an ohm, so it bypasses the resistor and carries nearly all the current; with the load effectively short-circuited there is almost no potential difference across it for the voltmeter to read.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "Large I with tiny V means the load is bypassed.",
+      "commonMisconception": "Concluding the resistor has failed short."
+    },
+    {
+      "question": "No current flows, yet the voltmeter reads nearly the full supply voltage. What is wrong?",
+      "expectedConcept": "The voltmeter is in the main path. Its ten kilohm resistance chokes the current to a few hundred microampere, and since almost the whole circuit resistance is now the meter itself, almost the whole supply voltage appears across it.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "No current with full voltage means the voltmeter is in series.",
+      "commonMisconception": "Thinking the circuit is open, which would give no voltmeter reading at all."
+    },
+    {
+      "question": "How would you detect a wire bridging the key?",
+      "expectedConcept": "Open the key. In a sound circuit both meters fall to zero at once; if the readings continue unchanged, the current has another path around the key. This is the only test that reveals this fault, because with the key closed the circuit behaves entirely normally.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Open the key and see whether anything changes.",
+      "commonMisconception": "Assuming a circuit that works correctly with the key closed must be correctly wired."
+    },
+    {
+      "question": "Both meters read zero with the key closed. Give two possible causes and say how to distinguish them.",
+      "expectedConcept": "Either a lead is broken or the key itself is not making contact. Examine the key first: if its contacts close properly and the readings stay at zero, the break is elsewhere in the loop, and a continuity test on each lead in turn will find it.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "Zero everywhere means the loop is open somewhere.",
+      "commonMisconception": "Assuming a flat cell, which would give a small reading rather than exactly zero."
+    },
+    {
+      "question": "The readings are sensible but nothing changes when the slider is moved. What is wrong?",
+      "expectedConcept": "The rheostat is connected across its two end terminals, so its full resistance is permanently in circuit and the sliding contact is not part of the path. It has become a fixed resistor. This fault is easy to miss precisely because every reading looks reasonable.",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "Sensible but unvarying readings point at the rheostat.",
+      "commonMisconception": "Concluding the rheostat is broken rather than wrongly connected."
+    },
+    {
+      "question": "Both needles are driven backwards. What is wrong, and why does it matter?",
+      "expectedConcept": "The cell is connected the wrong way round, so the current flows through both meters in the reverse direction. It matters because a moving-coil needle forced back against its stop can be bent, and because no reading can be taken at all until the polarity is corrected.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Reversed current reverses the deflection.",
+      "commonMisconception": "Thinking the meters are simply faulty."
+    },
+    {
+      "question": "Why must the fault be identified before the circuit is corrected?",
+      "expectedConcept": "Because the activity assesses the diagnosis, not the repair. Correcting connections at random until the meters look right destroys the evidence and demonstrates nothing about understanding the circuit. In any case a fault that is not understood is likely to be made again.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Diagnosis first, repair second.",
+      "commonMisconception": "Regarding a working circuit as proof that the fault was understood."
+    },
+    {
+      "question": "Why is a centre-zero meter useful in this activity?",
+      "expectedConcept": "Because it shows the DIRECTION of the current as well as its size. With an ordinary meter a reversed connection simply pins the needle at the left-hand stop and looks like a zero reading; with a centre-zero movement the needle swings visibly to the wrong side and the reversal is unmistakable.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "It makes a reversal visible rather than ambiguous.",
+      "commonMisconception": "Thinking centre-zero meters are merely a different scale."
+    },
+    {
+      "question": "Which of these faults is the hardest to find, and why?",
+      "expectedConcept": "The rheostat wired across its full track. Every other fault announces itself: the readings are absurdly large, absurdly small, backwards, or absent. This one gives perfectly plausible values that would pass unnoticed unless the slider is deliberately moved and the meters watched while it moves.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "The fault that looks normal is the hardest to find.",
+      "commonMisconception": "Assuming the most damaging fault is also the most difficult to detect."
+    },
+    {
+      "question": "What does this activity teach that assembling a correct circuit does not?",
+      "expectedConcept": "That a circuit must be read as well as built. Assembly rewards following a diagram; diagnosis requires reasoning backwards from behaviour to cause, which is the skill actually needed when apparatus does not work as expected — in an examination, or anywhere else.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Reasoning from symptom back to cause.",
+      "commonMisconception": "Treating fault-finding as a lesser exercise than assembly."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "An ammeter connected across a resistor will cause:",
+        "options": [
+          "No current to flow",
+          "A very large current to flow",
+          "The voltmeter to read the supply",
+          "The needle to go backwards"
+        ],
+        "answer": 1,
+        "feedback": "Its low resistance bypasses the load and nearly short-circuits the supply."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "A voltmeter connected in the main path will cause:",
+        "options": [
+          "A very large current",
+          "Almost no current",
+          "The cell to reverse",
+          "The fuse to blow"
+        ],
+        "answer": 1,
+        "feedback": "Its very high resistance chokes the current to a few hundred microampere."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "To detect a wire bridging the key, you should:",
+        "options": [
+          "Move the rheostat slider",
+          "Open the key and watch the meters",
+          "Reverse the cell",
+          "Change the resistor"
+        ],
+        "answer": 1,
+        "feedback": "If the readings do not fall to zero, current has a path around the key."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Examine at least three different boards.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Observe the meters with the key closed before naming a fault.",
+        "check": "settled"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "A large ammeter reading with almost no voltmeter reading indicates:",
+        "options": [
+          "A broken lead",
+          "The ammeter is across the load",
+          "The voltmeter is in series",
+          "The cell is reversed"
+        ],
+        "answer": 1,
+        "feedback": "The ammeter bypasses the resistor through a tenth of an ohm."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "Readings that do not fall to zero when the key is opened indicate:",
+        "options": [
+          "A flat cell",
+          "A shorted key",
+          "A reversed cell",
+          "A broken lead"
+        ],
+        "answer": 1,
+        "feedback": "The current has found a path around the key."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Sensible readings that never change as the slider moves indicate:",
+        "options": [
+          "A shorted key",
+          "The rheostat is across its full track",
+          "The ammeter is in parallel",
+          "A broken lead"
+        ],
+        "answer": 1,
+        "feedback": "Across both end terminals it is a fixed resistor and the slider does nothing."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Ammeter across the load: the load is bypassed through about 0.1 Ω, so I is large and V is tiny",
+    "assumptions": [
+      "Ammeter across the load: the load is bypassed through about 0.1 Ω, so I is large and V is tiny",
+      "Voltmeter in the path: about 10 kΩ enters the circuit, so I ≈ 0 and V ≈ the supply",
+      "Reversed cell: magnitudes unchanged, both needles driven backwards",
+      "Shorted key: readings do not fall to zero when the key is opened"
+    ],
+    "validRange": "Each board carries a different fault and each produces its own symptom: a large ",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Guessing the fault instead of reading it from the symptoms.",
+      "Failing to open the key, and so missing a shorted key entirely.",
+      "Failing to move the slider, and so missing a wrongly wired rheostat, whose readings look perfectly normal.",
+      "Confusing a broken lead with an open key, since both give zero on both meters."
+    ],
+    "expectedBehaviour": [
+      "Each board carries a different fault and each produces its own symptom: a large current with almost no voltage means the ammeter is across the load; no current with nearly the full supply on the voltmeter means the voltmeter is in the path; both needles backwards means the cell is reversed; readings that survive opening the key mean the key is bridged; sensible readings that never change mean the rheostat is across its full track; and zero on both meters means a broken lead."
+    ],
+    "testFile": "tests/batch12.test.js"
+  }
+}

@@ -1,0 +1,459 @@
+{
+  "id": "XII-CHE-A01",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "A",
+    "categoryTitle": "Surface Chemistry",
+    "assessmentComponent": "Content Based Experiment",
+    "serial": 1,
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Chapter-5: Surface Chemistry",
+    "topic": "Colloidal state, types of colloids, preparation and properties of sols",
+    "subtopic": "Tyndall effect, coagulation, Hardy-Schulze rule",
+    "practical": "Preparation of one lyophilic and one lyophobic sol. Lyophilic sol - starch, egg albumin and gum. Lyophobic sol - aluminium hydroxide, ferric hydroxide, arsenous sulphide.",
+    "learningObjectives": [
+      "Be able to prepare a lyophilic sol and a lyophobic sol by standard methods",
+      "Be able to show that both scatter a beam of light, and so are colloidal",
+      "Be able to compare how the two classes behave when an electrolyte is added",
+      "Be able to find the coagulation value of different electrolytes and relate it to the charge on the active ion"
+    ],
+    "competencies": [
+      "Performing a standard laboratory operation and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, CATEGORY A, Experiment 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Preparation of a lyophilic and a lyophobic sol",
+  "shortTitle": "Lyophilic and lyophobic sols",
+  "objective": [
+    "To prepare a lyophilic sol and a lyophobic sol by standard methods.",
+    "To show that both scatter a beam of light, and so are colloidal.",
+    "To compare how the two classes behave when an electrolyte is added.",
+    "To find the coagulation value of different electrolytes and relate it to the charge on the active ion."
+  ],
+  "theory": {
+    "statement": "A colloid has particles between about 1 and 1000 nanometre, large enough to scatter light but too small to settle. Both classes of sol therefore show the Tyndall effect. They differ in what keeps them dispersed. A LYOPHOBIC sol such as ferric hydroxide is stabilised only by the electric charge its particles carry, so adding an electrolyte neutralises that charge and the sol coagulates. The minimum concentration of electrolyte, in millimole per litre, that just brings about coagulation is the COAGULATION VALUE. A LYOPHILIC sol such as starch carries a sheath of solvent as well as a charge, so a small amount of electrolyte does nothing at all and a large concentration is needed to salt it out. The Hardy-Schulze rule states that the coagulating power of an ion rises steeply with its charge, so the coagulation value falls steeply. Crucially it is the ion of charge OPPOSITE to the sol that acts: a negative sol is coagulated by cations, a positive sol by anions.",
+    "keyEquations": [
+      "Coagulation value = minimum millimole of electrolyte per litre of sol that just coagulates it",
+      "Coagulating power ∝ 1 / (coagulation value)",
+      "Hardy-Schulze: coagulating power rises steeply with the charge on the active ion",
+      "For As₂S₃ (negative): NaCl 51, BaCl₂ 0.69, AlCl₃ 0.093 millimole per litre",
+      "For Fe(OH)₃ (positive): KCl 103, K₂SO₄ 0.215, K₃[Fe(CN)₆] 0.096 millimole per litre"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Beakers and conical flasks",
+      "why": "To prepare and hold the sols during and after formation."
+    },
+    {
+      "name": "Bunsen burner with wire gauze",
+      "why": "Ferric hydroxide sol is made by adding FeCl₃ to BOILING water; the temperature is part of the method."
+    },
+    {
+      "name": "Burette or graduated pipette",
+      "why": "The coagulation value is a minimum concentration, so the electrolyte must be added in measured amounts."
+    },
+    {
+      "name": "Torch or laser pointer",
+      "why": "To pass a narrow beam through the sol and look for the Tyndall cone from the side."
+    },
+    {
+      "name": "Test tubes and stand",
+      "why": "To hold equal volumes of sol while different electrolytes are compared."
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "sol",
+      "label": "Sol",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "ferric",
+      "options": [
+        "ferric",
+        "arsenous",
+        "aluminium",
+        "starch",
+        "gum",
+        "albumin"
+      ]
+    },
+    {
+      "id": "electrolyte",
+      "label": "Electrolyte",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "k3fecn6",
+      "options": [
+        "nacl",
+        "bacl2",
+        "alcl3",
+        "kcl",
+        "k2so4",
+        "k3fecn6"
+      ]
+    },
+    {
+      "id": "test",
+      "label": "Test",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "tyndall",
+      "options": [
+        "tyndall",
+        "coagulate"
+      ]
+    },
+    {
+      "id": "concentrationMm",
+      "label": "Electrolyte added",
+      "symbol": "c",
+      "unit": "mM",
+      "type": "independent",
+      "min": 0,
+      "max": 120,
+      "step": 0.001,
+      "default": 1
+    },
+    {
+      "id": "coagulationValue",
+      "label": "Coagulation value",
+      "symbol": "",
+      "unit": "",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    "Prepare the ferric hydroxide sol by adding boiling ferric chloride solution drop by drop into boiling distilled water until the liquid is deep red-brown.",
+    "Prepare the starch sol by adding starch paste to boiling water and boiling for about ten minutes.",
+    "Pass a narrow beam of light through each sol and look at it from the side. Record whether a bright cone is visible.",
+    "Take equal volumes of the lyophobic sol into several test tubes.",
+    "Add one electrolyte drop by drop with stirring until the first permanent turbidity appears, and note the concentration.",
+    "Repeat with electrolytes whose active ion carries a different charge.",
+    "Repeat the same additions on the lyophilic sol and record that it does not coagulate."
+  ],
+  "simulation": {
+    "model": "sol-preparation",
+    "renderer": "sol-preparation",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "sol",
+        "label": "Sol",
+        "widget": "segmented",
+        "options": [
+          "ferric",
+          "arsenous",
+          "aluminium",
+          "starch",
+          "gum",
+          "albumin"
+        ]
+      },
+      {
+        "var": "test",
+        "label": "Test",
+        "widget": "segmented",
+        "options": [
+          "tyndall",
+          "coagulate"
+        ]
+      },
+      {
+        "var": "electrolyte",
+        "label": "Electrolyte",
+        "widget": "segmented",
+        "options": [
+          "nacl",
+          "bacl2",
+          "alcl3",
+          "kcl",
+          "k2so4",
+          "k3fecn6"
+        ]
+      },
+      {
+        "var": "concentrationMm",
+        "label": "Electrolyte added",
+        "widget": "slider"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record observation",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Obs",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "sol",
+        "label": "Sol"
+      },
+      {
+        "key": "solType",
+        "label": "Type"
+      },
+      {
+        "key": "test",
+        "label": "Test"
+      },
+      {
+        "key": "electrolyte",
+        "label": "Electrolyte"
+      },
+      {
+        "key": "coagulationMm",
+        "label": "Coagulation value",
+        "unit": "mM",
+        "decimals": 3
+      },
+      {
+        "key": "observation",
+        "label": "Observation"
+      }
+    ],
+    "graph": null,
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Note that both sols scatter light, confirming that both are colloidal.",
+      "For each electrolyte, record the least concentration that just caused coagulation.",
+      "Identify the active ion: the one whose charge is opposite to that of the sol.",
+      "Arrange the coagulation values in order of the charge on the active ion.",
+      "Take the ratio of the largest to the smallest to show how steeply coagulating power rises with charge."
+    ],
+    "resultKeys": [
+      "mostEffective",
+      "powerRatio"
+    ]
+  },
+  "expectedResult": {
+    "statement": "Both sols show a bright Tyndall cone, so both are colloidal. The lyophobic sol coagulates on adding a small amount of a suitable electrolyte, while the lyophilic sol is unaffected. For ferric hydroxide, which is positively charged, the anion does the coagulating and the values fall from about 103 millimole per litre for KCl to 0.215 for K₂SO₄ and 0.096 for K₃[Fe(CN)₆] — a thousandfold rise in coagulating power for a change of only two units of charge.",
+    "value": null,
+    "unit": null,
+    "tolerancePct": null
+  },
+  "safety": [
+    "Arsenous sulphide sol and hydrogen sulphide are highly toxic; this preparation must be done in a fume cupboard if attempted at all.",
+    "Boiling ferric chloride spits: add it drop by drop and keep the face away from the mouth of the flask.",
+    "Wear eye protection throughout; hot solutions and glassware are used.",
+    "Wash hands after handling any of the sols."
+  ],
+  "sourcesOfError": [
+    "Judging the endpoint after the turbidity has become obvious rather than at the FIRST permanent cloudiness, which overestimates the coagulation value.",
+    "Adding the electrolyte too quickly, so that local excess coagulates the sol before mixing is complete.",
+    "Applying the Hardy-Schulze rule to the wrong ion: it is the ion of charge opposite to the sol that acts.",
+    "Using a sol that has aged and already partly coagulated on standing.",
+    "Failing to use equal volumes of sol in each test tube, so the values cannot be compared."
+  ],
+  "viva": [
+    {
+      "question": "What is the Tyndall effect and why does it happen?",
+      "expectedConcept": "Colloidal particles are comparable in size to the wavelength of light, so they scatter it and the beam becomes visible from the side.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Scattering by particles of colloidal dimensions.",
+      "commonMisconception": "That a true solution also shows a Tyndall cone."
+    },
+    {
+      "question": "What is the difference between a lyophilic and a lyophobic sol?",
+      "expectedConcept": "A lyophilic sol has a strong affinity for the solvent and carries a solvent sheath, so it is reversible and stable; a lyophobic sol is stabilised only by charge and is irreversible.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Solvent affinity is the distinguishing feature.",
+      "commonMisconception": "That the difference is only one of particle size."
+    },
+    {
+      "question": "Define coagulation value.",
+      "expectedConcept": "The minimum concentration of an electrolyte, in millimole per litre, needed to just coagulate a sol.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "A minimum concentration, not an amount.",
+      "commonMisconception": "That it is the total volume of electrolyte added."
+    },
+    {
+      "question": "State the Hardy-Schulze rule.",
+      "expectedConcept": "The greater the charge on the ion of sign opposite to the sol, the greater its coagulating power.",
+      "difficulty": "medium",
+      "bloom": "Remember",
+      "answerLogic": "Charge on the active ion governs coagulating power.",
+      "commonMisconception": "That the size or concentration of the ion is what matters."
+    },
+    {
+      "question": "Ferric hydroxide sol is positive. Which ion coagulates it?",
+      "expectedConcept": "The anion. So K₃[Fe(CN)₆] is far more effective than KCl even though both have potassium as the cation.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Opposite charge to the sol.",
+      "commonMisconception": "Applying the rule to the cation out of habit."
+    },
+    {
+      "question": "Why is a lyophilic sol not coagulated by a small amount of electrolyte?",
+      "expectedConcept": "Its particles carry a sheath of solvent as well as a charge; neutralising the charge alone leaves the sheath intact.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "Two stabilising mechanisms rather than one.",
+      "commonMisconception": "That a lyophilic sol carries no charge at all."
+    },
+    {
+      "question": "Why is ferric chloride added to BOILING water?",
+      "expectedConcept": "Hydrolysis to ferric hydroxide is favoured at high temperature; in cold water the salt simply dissolves and no sol forms.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Hydrolysis needs the heat.",
+      "commonMisconception": "That the boiling is only to speed dissolution."
+    },
+    {
+      "question": "What is the origin of the charge on a lyophobic sol particle?",
+      "expectedConcept": "Preferential adsorption of ions from the medium onto the particle surface.",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "Selective adsorption of a common ion.",
+      "commonMisconception": "That the particles are intrinsically charged."
+    },
+    {
+      "question": "What happens if a lyophilic sol is added to a lyophobic one?",
+      "expectedConcept": "The lyophilic sol acts as a protective colloid, coating the particles and raising the coagulation value sharply.",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "Protection by a lyophilic colloid.",
+      "commonMisconception": "That mixing two sols always coagulates both."
+    },
+    {
+      "question": "Why must the endpoint be taken at the first permanent turbidity?",
+      "expectedConcept": "The coagulation value is defined as the MINIMUM concentration that coagulates; a later reading measures an excess, not the value.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "It is a minimum by definition.",
+      "commonMisconception": "That a clearer endpoint gives a better result."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "A colloidal sol can be distinguished from a true solution by:",
+        "options": [
+          "Its colour",
+          "The Tyndall effect",
+          "Its taste",
+          "Filtering it"
+        ],
+        "answer": 1,
+        "feedback": "Colloidal particles scatter light; the dissolved particles of a true solution do not."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "A lyophobic sol is stabilised mainly by:",
+        "options": [
+          "A solvent sheath",
+          "The charge on its particles",
+          "Its high viscosity",
+          "Its temperature"
+        ],
+        "answer": 1,
+        "feedback": "Charge alone, which is why an electrolyte destroys it so easily."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Show the Tyndall effect on both a lyophilic and a lyophobic sol.",
+        "check": "rows>=2"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Find the coagulation value with at least two electrolytes of different active-ion charge.",
+        "check": "rows>=3"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "For a NEGATIVE sol, the most effective coagulant among these is:",
+        "options": [
+          "NaCl",
+          "BaCl₂",
+          "AlCl₂₃",
+          "AlCl₃"
+        ],
+        "answer": 3,
+        "feedback": "Al³⁺ carries three positive charges, so by Hardy-Schulze it is the most powerful coagulant for a negative sol."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "A large coagulation value means the electrolyte is:",
+        "options": [
+          "A powerful coagulant",
+          "A weak coagulant",
+          "A protective colloid",
+          "An emulsifier"
+        ],
+        "answer": 1,
+        "feedback": "Coagulating power is the reciprocal of the coagulation value, so a large value means a weak coagulant."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Coagulation value = minimum millimole of electrolyte per litre of sol that just coagulates it",
+    "assumptions": [
+      "Coagulation value = minimum millimole of electrolyte per litre of sol that just coagulates it",
+      "Coagulating power ∝ 1 / (coagulation value)",
+      "Hardy-Schulze: coagulating power rises steeply with the charge on the active ion",
+      "For As₂S₃ (negative): NaCl 51, BaCl₂ 0.69, AlCl₃ 0.093 millimole per litre"
+    ],
+    "validRange": "Both sols show a bright Tyndall cone, so both are colloidal. The lyophobic sol c",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Judging the endpoint after the turbidity has become obvious rather than at the FIRST permanent cloudiness, which overestimates the coagulation value.",
+      "Adding the electrolyte too quickly, so that local excess coagulates the sol before mixing is complete.",
+      "Applying the Hardy-Schulze rule to the wrong ion: it is the ion of charge opposite to the sol that acts.",
+      "Using a sol that has aged and already partly coagulated on standing."
+    ],
+    "expectedBehaviour": [
+      "Both sols show a bright Tyndall cone, so both are colloidal. The lyophobic sol coagulates on adding a small amount of a suitable electrolyte, while the lyophilic sol is unaffected. For ferric hydroxide, which is positively charged, the anion does the coagulating and the values fall from about 103 millimole per litre for KCl to 0.215 for K₂SO₄ and 0.096 for K₃[Fe(CN)₆] — a thousandfold rise in coagulating power for a change of only two units of charge."
+    ],
+    "testFile": "tests/batch15.test.js"
+  }
+}

@@ -1,0 +1,508 @@
+{
+  "id": "XII-CHE-A02",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "A",
+    "categoryTitle": "Surface Chemistry",
+    "assessmentComponent": "Content Based Experiment",
+    "serial": 2,
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Chapter-5: Surface Chemistry",
+    "topic": "Purification of colloids",
+    "subtopic": "Dialysis, electrodialysis, ultrafiltration",
+    "practical": "Dialysis of sol-prepared in (a) above.",
+    "learningObjectives": [
+      "Be able to purify a sol by removing the electrolyte left over from its preparation",
+      "Be able to follow the fall in electrolyte concentration with time",
+      "Be able to show that the removal is first order, and to find the time constant from a graph",
+      "Be able to show that dialysis stalls if the outer water is not changed"
+    ],
+    "competencies": [
+      "Performing a standard laboratory operation and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, CATEGORY A, Experiment 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Dialysis of a sol",
+  "shortTitle": "Dialysis",
+  "objective": [
+    "To purify a sol by removing the electrolyte left over from its preparation.",
+    "To follow the fall in electrolyte concentration with time.",
+    "To show that the removal is first order, and to find the time constant from a graph.",
+    "To show that dialysis stalls if the outer water is not changed."
+  ],
+  "theory": {
+    "statement": "A sol prepared by hydrolysis or precipitation always carries excess electrolyte, and that electrolyte must be removed before the sol can be used or studied. Dialysis separates by SIZE: a parchment or cellophane membrane has pores that pass ions and small molecules freely but hold back every colloidal particle. When the sol is placed in a bag suspended in distilled water, the electrolyte diffuses out and the colloid stays behind. The rate of diffusion is proportional to the concentration difference across the membrane, so if the outer water is kept clean the concentration inside falls exponentially, C = C₀e^(−t/τ), and a plot of ln C against t is a straight line of slope −1/τ. If the outer water is NOT changed, electrolyte builds up outside, the driving difference collapses, and the process stops at equilibrium with the sol still impure.",
+    "keyEquations": [
+      "C(t) = C₀ · e^(−t/τ)",
+      "ln C = ln C₀ − t/τ, so a graph of ln C against t has slope −1/τ",
+      "Rate of diffusion ∝ concentration difference across the membrane",
+      "Fraction removed = 1 − C(t)/C₀"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Parchment or cellophane dialysis bag",
+      "why": "The membrane whose pore size does the separating; it must pass ions but hold every colloidal particle."
+    },
+    {
+      "name": "Large beaker of distilled water",
+      "why": "The outer bath into which the electrolyte diffuses."
+    },
+    {
+      "name": "Stand and clamp",
+      "why": "To suspend the bag so its whole surface is immersed and available for diffusion."
+    },
+    {
+      "name": "Stirrer",
+      "why": "Stirring thins the boundary layer at the membrane and speeds diffusion measurably."
+    },
+    {
+      "name": "Burette and silver nitrate solution",
+      "why": "To follow the chloride in the outer water by titration at intervals."
+    },
+    {
+      "name": "Stopwatch and thermometer",
+      "why": "Time is the independent variable, and the diffusion rate depends on temperature."
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "timeMin",
+      "label": "Dialysis time",
+      "symbol": "t",
+      "unit": "min",
+      "type": "independent",
+      "min": 0,
+      "max": 180,
+      "step": 5,
+      "default": 20
+    },
+    {
+      "id": "membrane",
+      "label": "Membrane",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "parchment",
+      "options": [
+        "parchment",
+        "cellophane",
+        "torn"
+      ]
+    },
+    {
+      "id": "water",
+      "label": "Outer water",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "changed",
+      "options": [
+        "flowing",
+        "changed",
+        "standing"
+      ]
+    },
+    {
+      "id": "bag",
+      "label": "Bag size",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "medium",
+      "options": [
+        "small",
+        "medium",
+        "large"
+      ]
+    },
+    {
+      "id": "stirred",
+      "label": "Stirring",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "temperatureC",
+      "label": "Bath temperature",
+      "symbol": "T",
+      "unit": "°C",
+      "type": "control",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "default": 25
+    },
+    {
+      "id": "scale",
+      "label": "Least count",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "c005",
+      "options": [
+        "c01",
+        "c005",
+        "c002"
+      ]
+    },
+    {
+      "id": "tau",
+      "label": "Time constant",
+      "symbol": "τ",
+      "unit": "min",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    "Fill the dialysis bag with the sol, tie both ends securely, and rinse the outside with distilled water.",
+    "Suspend the bag in a beaker of distilled water so that it is completely immersed.",
+    "Start the stopwatch and stir the outer water gently.",
+    "At intervals, withdraw a sample of the OUTER water and titrate it for chloride to find how much electrolyte has crossed.",
+    "Replace the outer water with fresh distilled water after each sampling.",
+    "Continue for at least an hour, taking readings at several well-spaced times.",
+    "Plot ln C against t and take the time constant as the negative reciprocal of the slope.",
+    "Repeat once without changing the outer water and compare the two graphs."
+  ],
+  "simulation": {
+    "model": "dialysis",
+    "renderer": "dialysis",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "timeMin",
+        "label": "Dialysis time",
+        "widget": "slider"
+      },
+      {
+        "var": "membrane",
+        "label": "Membrane",
+        "widget": "segmented",
+        "options": [
+          "parchment",
+          "cellophane",
+          "torn"
+        ]
+      },
+      {
+        "var": "water",
+        "label": "Outer water",
+        "widget": "segmented",
+        "options": [
+          "flowing",
+          "changed",
+          "standing"
+        ]
+      },
+      {
+        "var": "bag",
+        "label": "Bag size",
+        "widget": "segmented",
+        "options": [
+          "small",
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "var": "stirred",
+        "label": "Stirring",
+        "widget": "switch"
+      },
+      {
+        "var": "temperatureC",
+        "label": "Bath temperature",
+        "widget": "slider"
+      },
+      {
+        "var": "scale",
+        "label": "Least count",
+        "widget": "segmented",
+        "options": [
+          "c01",
+          "c005",
+          "c002"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record C and t",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Obs",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "timeMin",
+        "label": "Time t",
+        "unit": "min",
+        "decimals": 0
+      },
+      {
+        "key": "insideMm",
+        "label": "Inside C",
+        "unit": "mM",
+        "decimals": 2
+      },
+      {
+        "key": "lnC",
+        "label": "ln C",
+        "unit": "",
+        "decimals": 3
+      },
+      {
+        "key": "removedPct",
+        "label": "Removed",
+        "unit": "%",
+        "decimals": 1
+      }
+    ],
+    "graph": {
+      "xKey": "timeMin",
+      "yKey": "lnC",
+      "xLabel": "Time t (min)",
+      "yLabel": "ln (C / mM)"
+    },
+    "minRows": 5
+  },
+  "calculations": {
+    "steps": [
+      "For each time, compute the natural logarithm of the concentration remaining inside the bag.",
+      "Plot ln C on the vertical axis against time on the horizontal.",
+      "Draw the best straight line through the points and measure its slope.",
+      "The slope equals −1/τ, so the time constant is the negative reciprocal of the slope.",
+      "Check whether the line stays straight: a curve flattening onto a plateau means the outer water was not changed."
+    ],
+    "resultKeys": [
+      "tau",
+      "percentError"
+    ]
+  },
+  "expectedResult": {
+    "statement": "The concentration inside the bag falls exponentially and the plot of ln C against time is a straight line, confirming first-order removal. With parchment, a medium bag, stirring and a bath at room temperature the time constant is about 30 minutes, so around 95 per cent of the electrolyte is gone in an hour and a half. If the outer water is never changed the curve bends away from the line and flattens onto a plateau well above zero: the sol is left permanently impure however long it is left.",
+    "value": 30,
+    "unit": "min",
+    "tolerancePct": 20
+  },
+  "safety": [
+    "Do not use a naked flame to warm the bath; use a water bath or hot plate.",
+    "Silver nitrate stains skin and clothing black and is corrosive; handle with care.",
+    "Handle the dialysis bag gently, since a tear releases the colloid and ruins the run.",
+    "Wash hands after handling the sol, especially if it is a metal hydroxide."
+  ],
+  "sourcesOfError": [
+    "Not changing the outer water, so the process stalls at equilibrium and the sol is never fully purified.",
+    "A tear in the membrane, which lets colloid escape and shows as a Tyndall cone in the outer water.",
+    "Taking all the readings close together in time, so the slope is poorly determined.",
+    "Failing to allow for the temperature of the bath, which changes the diffusion rate substantially.",
+    "Continuing dialysis too long, which strips the stabilising ions and coagulates the sol."
+  ],
+  "viva": [
+    {
+      "question": "What is dialysis?",
+      "expectedConcept": "Purification of a colloid by allowing ions and small molecules to diffuse out through a membrane that holds back the colloidal particles.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Separation by particle size across a membrane.",
+      "commonMisconception": "That dialysis separates by density or by charge."
+    },
+    {
+      "question": "Why does the colloid not pass through the membrane?",
+      "expectedConcept": "Colloidal particles are far larger than the pores; ions and small molecules are far smaller.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Pore size sits between the two.",
+      "commonMisconception": "That the membrane repels the colloid chemically."
+    },
+    {
+      "question": "Why must the outer water be changed regularly?",
+      "expectedConcept": "Diffusion is driven by the concentration difference. If electrolyte accumulates outside, the difference falls and the process stops at equilibrium.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "Maintaining the driving gradient.",
+      "commonMisconception": "That the water is changed only for cleanliness."
+    },
+    {
+      "question": "What does a straight line of ln C against t tell you?",
+      "expectedConcept": "That the removal is first order, with a rate proportional to the concentration remaining.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "Logarithmic plot straightens an exponential.",
+      "commonMisconception": "That a straight line of C against t would show the same thing."
+    },
+    {
+      "question": "How would you speed up dialysis?",
+      "expectedConcept": "Stir the bath, warm it, use a thinner membrane, or use a bag with a larger surface-to-volume ratio.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Anything that raises the flux or the area per unit volume.",
+      "commonMisconception": "That adding more water speeds it up indefinitely."
+    },
+    {
+      "question": "What is electrodialysis?",
+      "expectedConcept": "Dialysis carried out in an applied electric field, which drives the ions across far faster.",
+      "difficulty": "medium",
+      "bloom": "Remember",
+      "answerLogic": "An electric field accelerates ion migration.",
+      "commonMisconception": "That it works for uncharged impurities too."
+    },
+    {
+      "question": "Why can dialysis coagulate a lyophobic sol if continued too long?",
+      "expectedConcept": "The sol is stabilised by adsorbed ions; removing them along with the impurity destroys the charge that keeps the particles apart.",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "The stabilising ions are removed as well.",
+      "commonMisconception": "That purification can never harm the sol."
+    },
+    {
+      "question": "You see a Tyndall cone in the outer water. What has happened?",
+      "expectedConcept": "The membrane is damaged and colloid is escaping, so the run is invalid.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Colloid outside means a torn membrane.",
+      "commonMisconception": "That it shows dialysis is working well."
+    },
+    {
+      "question": "Give one important application of dialysis.",
+      "expectedConcept": "Haemodialysis, in which waste solutes are removed from the blood of a patient with kidney failure.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "The artificial kidney.",
+      "commonMisconception": "That the technique is purely a laboratory curiosity."
+    },
+    {
+      "question": "Why is the time constant, rather than the time to finish, the useful quantity?",
+      "expectedConcept": "An exponential never truly reaches zero, so there is no definite finishing time; the time constant characterises the whole curve.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "An exponential decay has no endpoint.",
+      "commonMisconception": "That the process completes at a definite time."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "A dialysis membrane allows through:",
+        "options": [
+          "Colloidal particles only",
+          "Ions and small molecules only",
+          "Everything",
+          "Nothing"
+        ],
+        "answer": 1,
+        "feedback": "The pores pass ions and small molecules but hold back colloidal particles."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The rate of diffusion across the membrane depends on:",
+        "options": [
+          "The colour of the sol",
+          "The concentration difference across it",
+          "The size of the beaker",
+          "The time of day"
+        ],
+        "answer": 1,
+        "feedback": "Diffusion is driven by the concentration difference, which is why the outer water must be kept clean."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Take at least five readings at well-spaced times.",
+        "check": "rows>=5"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Follow the run for at least half an hour so the fall is substantial.",
+        "check": "rows>=5"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "The slope of a graph of ln C against t equals:",
+        "options": [
+          "τ",
+          "−1/τ",
+          "1/τ",
+          "−τ"
+        ],
+        "answer": 1,
+        "feedback": "From C = C₀e^(−t/τ), taking logarithms gives ln C = ln C₀ − t/τ."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "If the outer water is never changed, the graph:",
+        "options": [
+          "Stays straight",
+          "Flattens onto a plateau above zero",
+          "Becomes steeper",
+          "Is unchanged"
+        ],
+        "answer": 1,
+        "feedback": "Electrolyte accumulates outside, the driving difference collapses, and the process stalls at equilibrium."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "C(t) = C₀ · e^(−t/τ)",
+    "assumptions": [
+      "C(t) = C₀ · e^(−t/τ)",
+      "ln C = ln C₀ − t/τ, so a graph of ln C against t has slope −1/τ",
+      "Rate of diffusion ∝ concentration difference across the membrane",
+      "Fraction removed = 1 − C(t)/C₀"
+    ],
+    "validRange": "The concentration inside the bag falls exponentially and the plot of ln C agains",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Not changing the outer water, so the process stalls at equilibrium and the sol is never fully purified.",
+      "A tear in the membrane, which lets colloid escape and shows as a Tyndall cone in the outer water.",
+      "Taking all the readings close together in time, so the slope is poorly determined.",
+      "Failing to allow for the temperature of the bath, which changes the diffusion rate substantially."
+    ],
+    "expectedBehaviour": [
+      "The concentration inside the bag falls exponentially and the plot of ln C against time is a straight line, confirming first-order removal. With parchment, a medium bag, stirring and a bath at room temperature the time constant is about 30 minutes, so around 95 per cent of the electrolyte is gone in an hour and a half. If the outer water is never changed the curve bends away from the line and flattens onto a plateau well above zero: the sol is left permanently impure however long it is left."
+    ],
+    "testFile": "tests/batch15.test.js"
+  }
+}

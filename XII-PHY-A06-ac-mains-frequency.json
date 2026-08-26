@@ -1,0 +1,532 @@
+{
+  "id": "XII-PHY-A06",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 6,
+    "unit": "Unit IV: Electromagnetic Induction and Alternating Currents",
+    "chapter": "Chapter-7: Alternating Current",
+    "topic": "Alternating currents, peak and RMS value of alternating current/voltage; reactance and impedance; LC oscillations, LCR series circuit, resonance; power in AC circuits",
+    "subtopic": "Frequency of the AC mains found by resonance of a stretched wire",
+    "practical": "To find the frequency of AC mains with a sonometer.",
+    "learningObjectives": [
+      "Drive a sonometer wire electrically from the AC mains through a step-down transformer",
+      "Find the resonant length for several tensions and calculate the driving frequency each time",
+      "Distinguish a permanent magnet, which drives the wire once per cycle, from an electromagnet, which drives it twice",
+      "Halve the observed frequency when an electromagnet is used, and justify why",
+      "Compare the result with the standard 50 Hz supply and find the percentage error"
+    ],
+    "competencies": [
+      "Measuring an electrical quantity by a purely mechanical resonance",
+      "Reasoning about how a force varies over a cycle rather than assuming it follows the current",
+      "Recognising when a measured value must be divided by a known factor",
+      "Working safely with mains-derived supplies"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Experiment 6 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Frequency of the AC mains using a sonometer",
+  "shortTitle": "AC Mains Frequency",
+  "objective": [
+    "To find the frequency of the alternating current mains supply using a sonometer.",
+    "To understand why an electromagnet drives the wire at twice the mains frequency.",
+    "To compare the measured frequency with the standard value of 50 Hz."
+  ],
+  "theory": {
+    "statement": "A stretched wire carrying an alternating current in a magnetic field, or a soft-iron wire near an electromagnet fed from the mains, is driven into forced vibration. When the natural frequency of the vibrating segment matches the driving frequency, resonance occurs and the amplitude becomes large.",
+    "derivationNote": "The natural frequency of the segment between the bridges is f = (1/2l)√(T/μ). At resonance this equals the frequency at which the wire is being driven, so measuring l and T gives the driving frequency directly.\n\nThe crucial question is what that driving frequency actually is, and the answer depends on the arrangement. With a horseshoe permanent magnet and a non-magnetic wire such as brass carrying the alternating current, the force on the wire is the Lorentz force BIl. This reverses direction every half cycle, pushing the wire up and then down, so the wire is driven once per cycle at exactly the mains frequency of 50 Hz.\n\nWith an electromagnet fed from the mains and a soft-iron wire, the situation is different. The electromagnet ATTRACTS the iron wire regardless of which way the current is flowing, so the wire is pulled once during each half cycle — twice per cycle. The wire is therefore driven at 100 Hz, and a student who reports the calculated frequency without halving it will state the mains frequency as 100 Hz, exactly twice the true value. This is the whole point of the experiment.",
+    "keyEquations": [
+      "f = (1/2l)·√(T/μ) at resonance",
+      "Permanent magnet, non-magnetic wire: driving frequency = mains frequency",
+      "Electromagnet, iron wire: driving frequency = 2 × mains frequency",
+      "mains frequency = calculated frequency / multiplier",
+      "percentage error = (50 − measured)/50 × 100"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Sonometer",
+      "spec": "with a brass wire for the horseshoe method or a soft-iron wire for the electromagnet",
+      "why": "Provides the stretched wire whose resonance is measured"
+    },
+    {
+      "name": "Step-down transformer",
+      "spec": "6-8 V from the 230 V mains",
+      "why": "SAFETY. The mains must never be connected to the wire directly; the transformer gives a low, safe voltage at the same frequency"
+    },
+    {
+      "name": "Horseshoe magnet",
+      "spec": "strong permanent magnet",
+      "why": "Provides a steady field so the alternating current in the wire feels a force that reverses each half cycle"
+    },
+    {
+      "name": "Electromagnet",
+      "spec": "fed from the same low-voltage AC supply",
+      "why": "The alternative arrangement, which attracts an iron wire twice per cycle"
+    },
+    {
+      "name": "Slotted weights and hanger",
+      "spec": "0.25 kg steps",
+      "why": "Apply and vary the known tension"
+    },
+    {
+      "name": "Rheostat",
+      "spec": "",
+      "why": "Limits the current through the wire so it does not overheat"
+    },
+    {
+      "name": "Metre scale",
+      "spec": "least count 0.1 cm",
+      "why": "Measures the resonant length between the bridges"
+    },
+    {
+      "name": "Screw gauge",
+      "spec": "least count 0.001 cm",
+      "why": "Measures the wire diameter so μ can be calculated"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "loadKg",
+      "label": "Load on the hanger",
+      "symbol": "M",
+      "unit": "kg",
+      "type": "independent",
+      "min": 0.25,
+      "max": 3,
+      "step": 0.25,
+      "default": 0.25
+    },
+    {
+      "id": "bridgeSeparationCm",
+      "label": "Distance between bridges",
+      "symbol": "l",
+      "unit": "cm",
+      "type": "independent",
+      "min": 5,
+      "max": 90,
+      "step": 0.1,
+      "default": 50
+    },
+    {
+      "id": "driver",
+      "label": "How the wire is driven",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "permanentMagnet",
+      "options": [
+        "permanentMagnet",
+        "electromagnet"
+      ]
+    },
+    {
+      "id": "wire",
+      "label": "Wire",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "brass",
+      "options": [
+        "brass",
+        "steel"
+      ]
+    },
+    {
+      "id": "resonantLengthCm",
+      "label": "Resonant length",
+      "symbol": "l",
+      "unit": "cm",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Connect the primary of the step-down transformer to the mains and its secondary to the sonometer wire. Never connect the wire to the mains directly.",
+      "checkpoint": false
+    },
+    {
+      "step": 2,
+      "text": "Choose the driving arrangement: a horseshoe magnet across a brass wire, or an electromagnet under a soft-iron wire.",
+      "checkpoint": true,
+      "expects": "driver"
+    },
+    {
+      "step": 3,
+      "text": "Place the magnet at the middle of the wire, with its field at right angles to the wire.",
+      "checkpoint": false
+    },
+    {
+      "step": 4,
+      "text": "Hang a small load on the hanger and note the total mass including the hanger.",
+      "checkpoint": true,
+      "expects": "loadKg"
+    },
+    {
+      "step": 5,
+      "text": "Switch on the supply and move the bridges slowly until the wire vibrates with maximum amplitude.",
+      "checkpoint": true,
+      "expects": "bridgeSeparationCm"
+    },
+    {
+      "step": 6,
+      "text": "Measure the distance between the bridges and record it against the tension.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 7,
+      "text": "Repeat for at least four different tensions.",
+      "checkpoint": true,
+      "expects": "rows>=4"
+    },
+    {
+      "step": 8,
+      "text": "Calculate the driving frequency from each reading using f = (1/2l)√(T/μ) and take the mean.",
+      "checkpoint": false
+    },
+    {
+      "step": 9,
+      "text": "If an electromagnet was used, halve that mean to obtain the mains frequency. Compare with 50 Hz.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "sonometer",
+    "renderer": "sonometer",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "bridgeSeparationCm",
+        "widget": "slider"
+      },
+      {
+        "var": "loadKg",
+        "widget": "slider"
+      },
+      {
+        "var": "driver",
+        "widget": "segmented",
+        "options": [
+          "permanentMagnet",
+          "electromagnet"
+        ]
+      },
+      {
+        "var": "wire",
+        "widget": "segmented",
+        "options": [
+          "brass",
+          "steel"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record resonant length",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "No.",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "loadKg",
+        "label": "M",
+        "unit": "kg",
+        "decimals": 2
+      },
+      {
+        "key": "tensionN",
+        "label": "T = Mg",
+        "unit": "N",
+        "decimals": 2
+      },
+      {
+        "key": "sqrtTension",
+        "label": "√T",
+        "unit": "√N",
+        "decimals": 3
+      },
+      {
+        "key": "resonantLengthCm",
+        "label": "l",
+        "unit": "cm",
+        "decimals": 1
+      }
+    ],
+    "graph": {
+      "x": "sqrtTension",
+      "y": "resonantLengthCm",
+      "xLabel": "√T (√N)",
+      "yLabel": "Resonant length l (cm)",
+      "throughOrigin": true
+    },
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "T = Mg for each load, including the hanger",
+      "Driving frequency for each reading from f = (1/2l)√(T/μ)",
+      "Take the mean of these frequencies",
+      "Divide by 2 if an electromagnet was used, by 1 for a permanent magnet",
+      "Compare with the standard 50 Hz and find the percentage error"
+    ],
+    "resultKeys": [
+      "mainsFrequency",
+      "drivenFrequency",
+      "multiplier"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Frequency of the AC mains",
+    "symbol": "f",
+    "value": 50,
+    "tolerance": 2.5,
+    "unit": "Hz",
+    "secondary": {
+      "quantity": "Frequency at which the wire is driven by an electromagnet",
+      "value": 100,
+      "tolerance": 5,
+      "unit": "Hz"
+    },
+    "statement": "The frequency of the AC mains is about 50 Hz. With a horseshoe magnet the wire is driven at the mains frequency itself. With an electromagnet the wire is attracted on both half cycles and so vibrates at 100 Hz, and that figure must be halved to give the mains frequency."
+  },
+  "safety": [
+    "NEVER connect the sonometer wire to the 230 V mains directly. Always use a step-down transformer to 6-8 V.",
+    "Switch off the supply before touching the wire, the bridges or the magnet.",
+    "Do not let the current run for long periods; the wire heats, which changes its tension and its length.",
+    "Keep liquids away from the transformer and the connections.",
+    "Do not lean over the loaded hanger; if the wire snaps under tension the weights fall.",
+    "Report any frayed lead or damaged plug to the teacher before switching on."
+  ],
+  "sourcesOfError": [
+    "Forgetting that an electromagnet drives the wire at twice the mains frequency, giving an answer of 100 Hz.",
+    "Heating of the wire by the current, which alters its tension and mass per unit length.",
+    "Friction at the pulley making the tension less than the weight hung.",
+    "The magnet not placed exactly at the middle, so it does not drive the antinode.",
+    "Uncertainty in μ, which enters the result as a square root.",
+    "The bridges having a physical width, so l is slightly uncertain."
+  ],
+  "viva": [
+    {
+      "question": "Why is a step-down transformer used in this experiment?",
+      "expectedConcept": "For safety. The 230 V mains would be lethal and would destroy the apparatus. The transformer supplies a low voltage of a few volts while keeping exactly the same frequency, which is the quantity being measured.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Low voltage, same frequency.",
+      "commonMisconception": "Thinking the transformer changes the frequency as well as the voltage."
+    },
+    {
+      "question": "Why does an electromagnet drive the wire at twice the mains frequency?",
+      "expectedConcept": "An electromagnet attracts a piece of soft iron whichever way the current is flowing. During one complete cycle the current reaches a maximum in one direction and then in the other, so the wire is attracted twice. It is therefore driven at 100 Hz from a 50 Hz supply.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Attraction is independent of current direction.",
+      "commonMisconception": "Assuming the force must follow the current and so reverse each half cycle."
+    },
+    {
+      "question": "Why does a horseshoe permanent magnet drive it at the mains frequency instead?",
+      "expectedConcept": "There the force is the Lorentz force on the current in the wire, F = BIl. Its direction depends on the direction of the current, so it reverses every half cycle, pushing the wire one way and then the other. That is one complete push-pull per cycle, so the wire is driven at 50 Hz.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Lorentz force reverses with the current.",
+      "commonMisconception": "Treating the two arrangements as equivalent."
+    },
+    {
+      "question": "A student using an electromagnet reports the mains frequency as 100 Hz. What went wrong?",
+      "expectedConcept": "Nothing went wrong with the measurement; the wire genuinely was vibrating at 100 Hz. The student forgot to divide by two. The electromagnet drives at twice the supply frequency, so the calculated value must be halved to give 50 Hz.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Correct data, missing final step.",
+      "commonMisconception": "Assuming the apparatus was faulty."
+    },
+    {
+      "question": "Why must a brass wire be used with the horseshoe magnet rather than an iron one?",
+      "expectedConcept": "Brass is not magnetic, so the only force on it is the Lorentz force on the current, which reverses each half cycle and gives a clean drive at the mains frequency. An iron wire would also be attracted by the magnet twice per cycle, mixing in a component at 100 Hz and confusing the result.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Avoids mixing the two driving mechanisms.",
+      "commonMisconception": "Believing any conducting wire will do."
+    },
+    {
+      "question": "How is the frequency calculated from the readings?",
+      "expectedConcept": "From the fundamental frequency of a stretched string, f = (1/2l)√(T/μ), where l is the resonant length, T the tension and μ the mass per unit length.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Correct formula with symbols.",
+      "commonMisconception": "Forgetting the factor of 2 in the denominator."
+    },
+    {
+      "question": "Why is the experiment repeated at several different tensions?",
+      "expectedConcept": "The mains frequency is a single fixed quantity, so every tension must give the same answer. Repeating at different tensions is an independent check: if the values agree, the method is sound; if they drift, there is a systematic error such as pulley friction or a heated wire.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Consistency check on a constant.",
+      "commonMisconception": "Thinking it is only to average out random error."
+    },
+    {
+      "question": "What is the standard frequency of the AC mains in India, and does it vary?",
+      "expectedConcept": "50 Hz. It is held very close to that value by the grid operator, drifting by only a fraction of a hertz, because clocks and motors depend on it. Some countries, such as the United States, use 60 Hz.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "50 Hz in India, 60 Hz elsewhere.",
+      "commonMisconception": "Thinking mains frequency varies widely from moment to moment."
+    },
+    {
+      "question": "Why should the current not be left on for a long time?",
+      "expectedConcept": "The current heats the wire. A hot wire expands, which reduces its tension, and its mass per unit length changes slightly too. Since the calculated frequency depends on both, the readings drift while the wire is warming.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Heating changes T and μ.",
+      "commonMisconception": "Worrying only about the wire burning out."
+    },
+    {
+      "question": "Could you find the mains frequency with a tuning fork instead?",
+      "expectedConcept": "Not directly, because a fork has its own fixed frequency and knows nothing about the mains. But a fork can be used to calibrate the wire: finding the resonant length for a fork of known frequency at the same tension lets you compare the two lengths and obtain the electrical frequency by the law of length.",
+      "difficulty": "hard",
+      "bloom": "Create",
+      "answerLogic": "Comparison method using the law of length.",
+      "commonMisconception": "Assuming a fork could somehow measure an electrical frequency on its own."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "An electromagnet fed from a 50 Hz supply attracts a soft-iron wire:",
+        "options": [
+          "25 times a second",
+          "50 times a second",
+          "100 times a second",
+          "200 times a second"
+        ],
+        "answer": 2,
+        "feedback": "It attracts on both half cycles regardless of current direction, so 100 times a second."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The step-down transformer is used because:",
+        "options": [
+          "It changes the frequency to a safe value",
+          "It lowers the voltage while keeping the frequency",
+          "It converts AC to DC",
+          "It increases the current"
+        ],
+        "answer": 1,
+        "feedback": "It lowers the voltage for safety but leaves the frequency, the quantity being measured, unchanged."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "With a horseshoe permanent magnet and a brass wire, the wire is driven at:",
+        "options": [
+          "Half the mains frequency",
+          "The mains frequency",
+          "Twice the mains frequency",
+          "Four times the mains frequency"
+        ],
+        "answer": 1,
+        "feedback": "The Lorentz force reverses with the current, giving one push-pull per cycle."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record resonant lengths for at least four different tensions.",
+        "check": "rows>=4"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Vary the load between readings.",
+        "check": "tempVaried"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the frequency of the AC mains you obtained (Hz).",
+        "answer": 50,
+        "tolerance": 4,
+        "feedback": "The Indian mains supply is 50 Hz."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "At what frequency does an electromagnet drive the wire from this supply (Hz)?",
+        "answer": 100,
+        "tolerance": 7,
+        "feedback": "Twice the mains frequency, because the iron is attracted on both half cycles."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Your electromagnet reading gives 100 Hz. The mains frequency is therefore:",
+        "options": [
+          "100 Hz",
+          "200 Hz",
+          "50 Hz",
+          "25 Hz"
+        ],
+        "answer": 2,
+        "feedback": "Halve it. The electromagnet drives the wire twice per cycle of the supply."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "f_driven = (1/2l)√(T/μ); f_mains = f_driven / multiplier, where the multiplier is 2 for an electromagnet and 1 for a permanent magnet",
+    "assumptions": [
+      "The transformer passes the mains frequency unchanged",
+      "The wire vibrates in its fundamental mode with one antinode",
+      "The pulley is frictionless, so T = Mg including the hanger",
+      "The wire does not heat appreciably during the readings"
+    ],
+    "validRange": "Load 0.25 to 3 kg; resonant length 15 to 90 cm; mains frequency 50 Hz",
+    "unitSystem": "Load in kg, tension in N, length in cm, frequency in Hz",
+    "edgeCases": [
+      "An electromagnet drives the wire at twice the mains frequency and the result must be halved",
+      "An electromagnet cannot drive a brass wire at all — warned",
+      "An iron wire with a permanent magnet mixes both mechanisms — warned",
+      "Every tension must give the same frequency; drift indicates a systematic error"
+    ],
+    "expectedBehaviour": [
+      "Both arrangements recover 50 Hz once the multiplier is applied",
+      "The electromagnet gives a driven frequency of 100 Hz",
+      "The calculated frequency is independent of the tension used",
+      "A heavier load resonates on a longer length at the same frequency"
+    ],
+    "testFile": "tests/batch5.test.js"
+  }
+}

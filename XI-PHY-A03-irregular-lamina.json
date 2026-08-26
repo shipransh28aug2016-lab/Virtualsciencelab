@@ -1,0 +1,202 @@
+{
+  "id": "XI-PHY-A03",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 3,
+    "unit": "Unit I: Physical World and Measurement",
+    "chapter": "Chapter-1: Units and Measurements",
+    "topic": "Need for measurement: Units of measurement; systems of units; SI units, fundamental and derived units, significant figures. Accuracy and precision of measuring instruments, errors in measurement",
+    "subtopic": "Least count of a screw gauge; combining a measured area with a measured thickness; propagation of percentage error in a product",
+    "practical": "To determine volume of an irregular lamina using screw gauge.",
+    "learningObjectives": [
+      "Find the least count of a screw gauge and use it to measure a small thickness",
+      "Determine the area of an irregular outline by counting squares on graph paper",
+      "Apply the rule for counting boundary squares consistently",
+      "Combine an area and a thickness into a volume, with correct units",
+      "Show that the percentage errors of the two measurements add when they are multiplied",
+      "Recognise that a finer grid reduces the uncertainty in the area"
+    ],
+    "competencies": [
+      "Selecting the right instrument for each part of a compound measurement",
+      "Estimating a quantity that no single instrument can read directly",
+      "Reasoning about how uncertainties combine rather than quoting a single reading",
+      "Judging when extra precision in one quantity is wasted because the other dominates the error"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Experiment 3 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Volume of an irregular lamina using a screw gauge",
+  "shortTitle": "Irregular lamina",
+  "objective": [
+    "To determine the volume of an irregular lamina using a screw gauge and graph paper.",
+    "To find the area of an irregular outline by counting squares.",
+    "To show how the percentage errors in area and thickness combine in the volume."
+  ],
+  "theory": {
+    "statement": "A lamina is a thin flat sheet. Its volume is simply its area multiplied by its thickness, but neither quantity can be read from a single instrument. The thickness is a small length, well suited to a screw gauge; the area has an irregular boundary and no formula, so it is found by tracing the outline on graph paper and counting squares.",
+    "derivationNote": "The screw gauge measures small lengths because the screw converts a large rotation of the circular scale into a small advance along the axis. Its least count is the pitch divided by the number of divisions on the circular scale, typically 0.5/50 = 0.01 mm. For the area, the traced outline is divided into complete squares, which are counted directly, and boundary squares, which are cut by the outline. The usual convention is to count a boundary square as whole if more than half of it lies inside and to ignore it otherwise; since the two errors are equally likely, they largely cancel. If a is the side of one square, area A = (number of squares) × a². The volume is then V = A × t, taking care that A and t are in consistent units: with A in cm² and t in mm, the thickness must be divided by ten. Because volume is a product, the percentage errors add: a 1 percent error in the area and a 1 percent error in the thickness give about 2 percent in the volume.",
+    "keyEquations": [
+      "L.C. = pitch / number of circular scale divisions",
+      "Thickness t = P.S.R. + (C.S.R. × L.C.) − zero error",
+      "Area A = (complete squares + counted boundary squares) × a²",
+      "Volume V = A × t",
+      "Percentage error in V = percentage error in A + percentage error in t"
+    ]
+  },
+  "apparatus": [
+    { "name": "Screw gauge", "spec": "pitch 0.5 mm or 1 mm, 50 or 100 circular divisions, with ratchet", "why": "Measures the thickness of the lamina, which is far too small for a metre scale" },
+    { "name": "Irregular lamina", "spec": "thin metal or card sheet of uniform thickness", "why": "The body whose volume is to be found" },
+    { "name": "Graph paper", "spec": "1 mm squares preferred; 2 mm and 5 mm also available", "why": "Provides the grid on which the irregular area is counted" },
+    { "name": "Sharp pencil", "spec": "hard, well pointed", "why": "A thick or slanted line makes the traced outline systematically too large" },
+    { "name": "Magnifying lens", "spec": "small hand lens", "why": "Helps decide whether a boundary square is more than half covered" }
+  ],
+  "materials": [],
+  "variables": [
+    { "id": "lamina", "label": "Lamina", "symbol": "", "unit": "", "type": "control", "default": "brass", "options": ["brass", "aluminium", "steel", "card"] },
+    { "id": "gauge", "label": "Screw gauge", "symbol": "", "unit": "", "type": "control", "default": "sg50", "options": ["sg50", "sg100", "sg50f"] },
+    { "id": "grid", "label": "Graph paper", "symbol": "a", "unit": "mm", "type": "control", "default": "g1", "options": ["g1", "g2", "g5"] },
+    { "id": "thimble", "label": "Screw opening", "symbol": "", "unit": "mm", "type": "independent", "min": 0, "max": 4, "step": 0.01, "default": 1.62 },
+    { "id": "zeroErrorDiv", "label": "Zero error", "symbol": "", "unit": "div", "type": "control", "min": -5, "max": 5, "step": 1, "default": 0 },
+    { "id": "useRatchet", "label": "Use the ratchet", "symbol": "", "unit": "", "type": "control", "default": true },
+    { "id": "volume", "label": "Volume", "symbol": "V", "unit": "cm³", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Find the pitch of the screw gauge and the number of divisions on its circular scale, and calculate the least count.", "checkpoint": true, "expects": "gauge" },
+    { "step": 2, "text": "Bring the faces together with the ratchet and note the zero error, with its sign.", "checkpoint": true, "expects": "zeroErrorDiv" },
+    { "step": 3, "text": "Place the lamina between the faces and turn the ratchet until it slips. Note the pitch scale reading and the circular scale division.", "checkpoint": true, "expects": "thimble" },
+    { "step": 4, "text": "Repeat the thickness measurement at several different points on the lamina, since it may not be perfectly uniform.", "checkpoint": true, "expects": "rows>=3" },
+    { "step": 5, "text": "Place the lamina on the graph paper and trace its outline with a sharp pencil held vertically.", "checkpoint": false },
+    { "step": 6, "text": "Count all the squares lying completely inside the outline.", "checkpoint": false },
+    { "step": 7, "text": "Count a boundary square as whole if more than half of it is inside the outline, and ignore it if less than half is inside.", "checkpoint": false },
+    { "step": 8, "text": "Calculate the area from the total number of squares and the area of one square.", "checkpoint": false },
+    { "step": 9, "text": "Multiply the mean area by the mean thickness to obtain the volume, and compare the percentage errors of the two measurements.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "irregular-lamina",
+    "renderer": "irregular-lamina",
+    "fps": 45,
+    "controls": [
+      { "var": "thimble", "widget": "slider" },
+      { "var": "lamina", "widget": "segmented", "options": ["brass", "aluminium", "steel", "card"] },
+      { "var": "grid", "widget": "segmented", "options": ["g1", "g2", "g5"] },
+      { "var": "gauge", "widget": "segmented", "options": ["sg50", "sg100", "sg50f"] },
+      { "var": "zeroErrorDiv", "widget": "slider" },
+      { "var": "useRatchet", "widget": "switch" }
+    ],
+    "actions": [
+      { "id": "record", "label": "Record reading", "primary": true },
+      { "id": "reset", "label": "Reset" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "trial", "label": "Trial", "unit": "", "decimals": 0 },
+      { "key": "pitchScaleReading", "label": "P.S.R.", "unit": "mm", "decimals": 2 },
+      { "key": "circularDivision", "label": "C.S.R.", "unit": "div", "decimals": 0 },
+      { "key": "thickness", "label": "Thickness t", "unit": "mm", "decimals": 3 },
+      { "key": "completeSquares", "label": "Complete sq.", "unit": "", "decimals": 0 },
+      { "key": "boundarySquares", "label": "Boundary sq.", "unit": "", "decimals": 0 },
+      { "key": "area", "label": "Area A", "unit": "cm²", "decimals": 2 },
+      { "key": "volume", "label": "Volume V", "unit": "cm³", "decimals": 3 }
+    ],
+    "graph": { "x": "trial", "y": "volume", "xLabel": "Trial number", "yLabel": "Volume V (cm³)", "throughOrigin": false },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "L.C. = pitch / number of circular divisions",
+      "t = P.S.R. + (C.S.R. × L.C.) − zero error, for each trial",
+      "Mean thickness = sum of t / number of readings",
+      "A = (complete + counted boundary squares) × a², with a the side of one square",
+      "V = mean A × mean t / 10, converting mm to cm",
+      "Percentage error in V = percentage error in A + percentage error in t"
+    ],
+    "resultKeys": ["volume", "meanArea", "meanThickness"]
+  },
+  "expectedResult": {
+    "quantity": "Volume of the lamina",
+    "symbol": "V",
+    "value": 4.6,
+    "tolerance": 0.3,
+    "unit": "cm³",
+    "secondary": { "quantity": "Mean thickness", "value": 1.62, "tolerance": 0.05, "unit": "mm" },
+    "statement": "The brass lamina has a mean thickness of about 1.62 mm and an area of about 28.4 cm², giving a volume of about 4.6 cm³. The percentage error in the area is larger than that in the thickness, so the accuracy of the volume is limited by the counting of squares rather than by the screw gauge."
+  },
+  "safety": [
+    "The edges of a metal lamina can be sharp; handle it by the flat faces.",
+    "Do not over-tighten the screw gauge on the lamina — use the ratchet, or the threads will be strained.",
+    "Keep the screw gauge dry and clean, and store it with the faces slightly apart so they do not seize.",
+    "Take care with the sharp pencil when tracing around the outline."
+  ],
+  "sourcesOfError": [
+    "Boundary squares are judged by eye, and this is the largest single source of error.",
+    "A thick or slanted pencil line makes the traced outline larger than the lamina.",
+    "The lamina may not be of perfectly uniform thickness, so the mean of several readings is needed.",
+    "Zero error of the screw gauge, if not corrected, shifts every thickness reading the same way.",
+    "Turning the thimble instead of the ratchet compresses a soft lamina and reads the thickness low.",
+    "The lamina may lift slightly off the paper while being traced, enlarging the outline."
+  ],
+  "viva": [
+    { "question": "What is the least count of a screw gauge and how do you find it?", "expectedConcept": "It is the smallest length the instrument can measure, equal to the pitch divided by the number of divisions on the circular scale. The pitch is the distance the screw advances in one complete rotation.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "L.C. = pitch / circular divisions.", "commonMisconception": "Calling the pitch itself the least count." },
+    { "question": "Why is the area found by counting squares rather than by a formula?", "expectedConcept": "The lamina has an irregular outline with no geometrical shape, so no formula applies. Counting squares of known area is a general method that works for any shape.", "difficulty": "easy", "bloom": "Understand", "answerLogic": "No formula exists for an arbitrary outline.", "commonMisconception": "Trying to approximate the shape as a rectangle." },
+    { "question": "How do you deal with the squares that the outline cuts through?", "expectedConcept": "A boundary square is counted as a whole square if more than half of it lies inside the outline, and is ignored if less than half lies inside. Since squares that are slightly more and slightly less than half covered occur about equally often, the errors tend to cancel.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "The more-than-half rule, justified by cancellation.", "commonMisconception": "Counting every boundary square as half, which is only correct on average and is harder to apply consistently." },
+    { "question": "Would 1 mm graph paper or 5 mm graph paper give the more accurate area? Why?", "expectedConcept": "The 1 mm paper. All the uncertainty lies in the boundary squares, and with a finer grid each boundary square is much smaller, so the doubtful area is a far smaller fraction of the total.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "Boundary area scales with the square side, total area does not.", "commonMisconception": "Thinking a finer grid is more accurate merely because there are more squares to count." },
+    { "question": "The area has an error of 1 percent and the thickness an error of 1 percent. What is the error in the volume?", "expectedConcept": "About 2 percent. When quantities are multiplied, their percentage errors add.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Percentage errors add in a product.", "commonMisconception": "Averaging the two errors, or taking the larger of them." },
+    { "question": "Why must the thickness be measured at several different points?", "expectedConcept": "A real lamina is not perfectly uniform, having been rolled or cut. Measuring at several points and taking the mean gives a thickness representative of the whole sheet rather than of one spot.", "difficulty": "easy", "bloom": "Understand", "answerLogic": "Non-uniformity, averaged out.", "commonMisconception": "Believing repetition is only about reducing random reading error." },
+    { "question": "What is the purpose of the ratchet on a screw gauge?", "expectedConcept": "It slips once a fixed gentle pressure is reached, so every reading is taken at the same force. This prevents the specimen from being compressed and protects the screw threads.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Constant, limited pressure.", "commonMisconception": "Thinking the ratchet is only a convenience for turning the screw faster." },
+    { "question": "A student traces the outline with a thick pencil held at a slant. How does this affect the result?", "expectedConcept": "The traced line falls outside the true edge of the lamina, so the enclosed outline is systematically larger than the lamina. The area, and therefore the volume, comes out too large. Being systematic, it is not reduced by repeating the tracing.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "A systematic enlargement of the outline.", "commonMisconception": "Assuming any error can be averaged away by repetition." },
+    { "question": "Why is a screw gauge preferred to vernier callipers for the thickness of this lamina?", "expectedConcept": "The thickness is of the order of a millimetre or less. A screw gauge has a least count of about 0.01 mm, ten times finer than the 0.1 mm of typical vernier callipers, so the percentage error is ten times smaller.", "difficulty": "medium", "bloom": "Evaluate", "answerLogic": "Compare least count with the quantity measured.", "commonMisconception": "Choosing an instrument by its range rather than by its least count." },
+    { "question": "If the lamina were made of a soft material, what precaution becomes especially important?", "expectedConcept": "Using the ratchet. A soft lamina can be compressed by over-tightening, which makes the measured thickness smaller than the true thickness and the volume too small.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Compression of a soft specimen.", "commonMisconception": "Believing a firmer grip always gives a better reading." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "A screw gauge has a pitch of 0.5 mm and 50 divisions on its circular scale. Its least count is:", "options": ["0.5 mm", "0.05 mm", "0.01 mm", "0.001 mm"], "answer": 2, "feedback": "L.C. = pitch / divisions = 0.5/50 = 0.01 mm." },
+      { "id": "pre2", "type": "mcq", "question": "A boundary square on the graph paper is counted as a full square when:", "options": ["Any part of it is inside the outline", "More than half of it is inside the outline", "It touches the outline", "It is completely inside the outline"], "answer": 1, "feedback": "The more-than-half rule. Squares slightly over and slightly under half cancel out on average." },
+      { "id": "pre3", "type": "mcq", "question": "The volume of a lamina of area A and thickness t is:", "options": ["A + t", "A × t", "A / t", "2(A + t)"], "answer": 1, "feedback": "Volume = area × thickness, with both in consistent units." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Record the thickness at three or more different points on the lamina.", "check": "rows>=3" },
+      { "id": "dur2", "type": "task", "question": "Note the zero error of the screw gauge before taking readings.", "check": "zeroChecked" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the volume of the brass lamina in cm³.", "answer": 4.6, "tolerance": 0.4, "feedback": "Area about 28.4 cm² times thickness 0.162 cm gives about 4.6 cm³." },
+      { "id": "post2", "type": "numeric", "question": "State the mean thickness in mm.", "answer": 1.62, "tolerance": 0.08, "feedback": "The brass lamina is about 1.62 mm thick." },
+      { "id": "post3", "type": "mcq", "question": "Which measurement limits the accuracy of the volume here?", "options": ["The thickness, because it is small", "The area, because boundary squares are judged by eye", "Neither, both are exact", "The least count of the metre scale"], "answer": 1, "feedback": "The screw gauge is precise to 0.01 mm in about 1.6 mm, well under 1 percent. The counting of boundary squares is the larger uncertainty." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "L.C. = pitch/divisions; t = P.S.R. + C.S.R.×L.C. − zero error; A = N a²; V = A t",
+    "assumptions": [
+      "The lamina is of uniform thickness",
+      "The outline is traced without tilting the pencil",
+      "The ratchet is used so the lamina is not compressed",
+      "Boundary squares more than half inside are counted whole, and the errors cancel",
+      "The faces of the lamina are parallel"
+    ],
+    "validRange": "Area 10 to 60 cm²; thickness 0.5 to 3 mm; grid side 1, 2 or 5 mm",
+    "unitSystem": "Thickness in mm, area in cm², volume in cm³",
+    "edgeCases": [
+      "A coarse grid leaves a larger fraction of the area in doubt",
+      "Non-uniform thickness shows as a spread in the readings",
+      "A thick pencil line enlarges the outline systematically",
+      "Zero error shifts every thickness reading in the same direction",
+      "A soft lamina measured without the ratchet reads thin"
+    ],
+    "expectedBehaviour": [
+      "Volume recovers the accepted value to within the combined percentage error",
+      "The 5 mm grid gives a visibly larger spread in the area than the 1 mm grid",
+      "Percentage errors of area and thickness add to give that of the volume",
+      "The area is independent of where the lamina is placed on the sheet"
+    ],
+    "testFile": "tests/batch7.test.js"
+  }
+}

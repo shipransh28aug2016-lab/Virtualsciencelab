@@ -1,0 +1,195 @@
+{
+  "id": "XI-PHY-B08",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 8,
+    "unit": "Unit X: Oscillations and Waves",
+    "chapter": "Chapter-14: Waves",
+    "topic": "Transverse and longitudinal waves, speed of travelling wave, reflection of waves, standing waves in strings and organ pipes, fundamental mode and harmonics",
+    "subtopic": "Laws of vibration of a stretched string: the law of length",
+    "practical": "To study the relation between frequency and length of a given wire under constant tension using sonometer.",
+    "learningObjectives": [
+      "Set up a stretched wire under a known constant tension on a sonometer",
+      "Find the resonant length for each of several tuning forks of known frequency",
+      "Use the paper rider as an objective indicator of resonance rather than judging by ear alone",
+      "Show that the product of frequency and resonant length is constant",
+      "Plot frequency against the reciprocal of length and obtain a straight line through the origin",
+      "Obtain the speed of the transverse wave on the wire from the slope of that line"
+    ],
+    "competencies": [
+      "Recognising an inverse proportionality and testing it by linearisation",
+      "Using resonance as a measuring technique",
+      "Holding one variable constant while a second is varied",
+      "Relating a graph slope to a physical quantity with units"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 8 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Law of length: frequency against resonant length at constant tension",
+  "shortTitle": "Sonometer — Law of Length",
+  "objective": [
+    "To study how the resonant length of a stretched wire depends on the frequency, at constant tension.",
+    "To verify that the product of frequency and resonant length is constant.",
+    "To find the speed of the transverse wave on the wire."
+  ],
+  "theory": {
+    "statement": "A wire stretched between two bridges and plucked vibrates in its fundamental mode with a node at each bridge and one antinode between them. The law of length states that at constant tension the frequency of the fundamental is inversely proportional to the vibrating length.",
+    "derivationNote": "Because there is a node at each bridge and a single antinode between them, the vibrating length holds exactly half a wavelength, so λ = 2l. A transverse wave on a stretched wire travels at v = √(T/μ), where T is the tension and μ the mass per unit length. Since v = fλ, the fundamental frequency is f = v/2l = (1/2l)√(T/μ). Holding the tension and the wire fixed keeps v constant, so f is inversely proportional to l and the product f × l must be the same for every fork. Plotting f against 1/l gives a straight line through the origin whose slope is v/2, so the graph yields the wave speed as well as verifying the law. Resonance is detected with a small paper rider: when the fork's frequency matches the natural frequency of the segment, the wire vibrates with maximum amplitude and throws the rider off. This is objective, unlike judging loudness by ear.",
+    "keyEquations": [
+      "λ = 2l for the fundamental mode",
+      "v = √(T/μ), where μ = πr²ρ",
+      "f = (1/2l)·√(T/μ)",
+      "f × l = constant at constant tension",
+      "slope of the f against 1/l line = v/2"
+    ]
+  },
+  "apparatus": [
+    { "name": "Sonometer", "spec": "hollow wooden box with a wire, two movable bridges and a pulley", "why": "The box amplifies the sound; the movable bridges set the vibrating length" },
+    { "name": "Set of tuning forks", "spec": "256, 288, 320, 384, 480 and 512 Hz", "why": "Provide accurately known frequencies to resonate against" },
+    { "name": "Slotted weights and hanger", "spec": "0.5 kg slotted weights", "why": "Apply a known constant tension through the pulley" },
+    { "name": "Paper rider", "spec": "small inverted V of paper", "why": "Objective indicator of resonance; it is thrown off only at maximum amplitude" },
+    { "name": "Metre scale", "spec": "least count 0.1 cm, fixed along the bed", "why": "Measures the distance between the bridges" },
+    { "name": "Rubber pad", "spec": "", "why": "The fork is struck on rubber, never on the bench, which would damage it and add overtones" },
+    { "name": "Screw gauge", "spec": "least count 0.001 cm", "why": "Measures the wire diameter, needed if μ is to be calculated" }
+  ],
+  "materials": [],
+  "variables": [
+    { "id": "bridgeSeparationCm", "label": "Distance between bridges", "symbol": "l", "unit": "cm", "type": "independent", "min": 5, "max": 60, "step": 0.1, "default": 19.5 },
+    { "id": "fork", "label": "Tuning fork", "symbol": "f", "unit": "Hz", "type": "control", "default": "f256", "options": ["f256", "f288", "f320", "f384", "f480", "f512"] },
+    { "id": "loadKg", "label": "Load (tension, held constant)", "symbol": "M", "unit": "kg", "type": "controlled", "min": 0.5, "max": 4, "step": 0.5, "default": 1 },
+    { "id": "wire", "label": "Wire", "symbol": "", "unit": "", "type": "control", "default": "steel", "options": ["steel", "brass", "steelThick"] },
+    { "id": "resonantLengthCm", "label": "Resonant length", "symbol": "l", "unit": "cm", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Set the sonometer on the bench and check that the pulley turns freely, oiling it if it does not.", "checkpoint": false },
+    { "step": 2, "text": "Hang a load on the hanger and do not change it for the rest of the experiment. The tension must stay constant.", "checkpoint": true, "expects": "loadKg" },
+    { "step": 3, "text": "Place a small paper rider at the middle of the wire between the bridges.", "checkpoint": false },
+    { "step": 4, "text": "Select a tuning fork of known frequency and strike it on the rubber pad, never on the bench.", "checkpoint": true, "expects": "fork" },
+    { "step": 5, "text": "Press the stem of the vibrating fork on the sonometer box and slide the bridges until the wire vibrates strongly and the rider is thrown off.", "checkpoint": true, "expects": "bridgeSeparationCm" },
+    { "step": 6, "text": "Measure the distance between the inner edges of the two bridges and record it against the fork's frequency.", "checkpoint": true, "expects": "record" },
+    { "step": 7, "text": "Repeat for every fork in the set, keeping the load unchanged throughout.", "checkpoint": true, "expects": "rows>=4" },
+    { "step": 8, "text": "For each reading calculate the product of frequency and length, and check whether it is constant.", "checkpoint": false },
+    { "step": 9, "text": "Plot frequency against the reciprocal of length. A straight line through the origin verifies the law of length.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "sonometer",
+    "renderer": "sonometer",
+    "fps": 60,
+    "controls": [
+      { "var": "bridgeSeparationCm", "widget": "slider" },
+      { "var": "fork", "widget": "segmented", "options": ["f256", "f288", "f320", "f384", "f480", "f512"] },
+      { "var": "loadKg", "widget": "slider" },
+      { "var": "wire", "widget": "segmented", "options": ["steel", "brass", "steelThick"] }
+    ],
+    "actions": [
+      { "id": "record", "label": "Record resonant length", "primary": true },
+      { "id": "reset", "label": "Reset" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "trial", "label": "No.", "unit": "", "decimals": 0 },
+      { "key": "frequencyHz", "label": "f", "unit": "Hz", "decimals": 0 },
+      { "key": "resonantLengthCm", "label": "l", "unit": "cm", "decimals": 1 },
+      { "key": "invLength", "label": "1/l", "unit": "cm⁻¹", "decimals": 5 },
+      { "key": "product", "label": "f × l", "unit": "Hz·cm", "decimals": 0 }
+    ],
+    "graph": { "x": "invLength", "y": "frequencyHz", "xLabel": "1/l (cm⁻¹)", "yLabel": "Frequency f (Hz)", "throughOrigin": true },
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "For each fork, compute the product f × l",
+      "Take the mean of these products and find the spread",
+      "Plot f against 1/l and draw the best-fit line through the origin",
+      "The slope of that line is v/2, so v = 2 × slope",
+      "Compare the spread in f × l with the uncertainty in measuring l"
+    ],
+    "resultKeys": ["meanProduct", "spreadPercent", "waveSpeed"]
+  },
+  "expectedResult": {
+    "quantity": "The constant product of frequency and resonant length",
+    "symbol": "f × l",
+    "value": 5000,
+    "tolerance": 250,
+    "unit": "Hz·cm",
+    "secondary": { "quantity": "Speed of the transverse wave on the wire", "value": 100, "tolerance": 5, "unit": "m·s⁻¹" },
+    "statement": "The product of frequency and resonant length is the same for every fork within experimental error, and the graph of frequency against the reciprocal of length is a straight line through the origin. The law of length is verified, and the slope gives a wave speed of about 100 m/s for a 1 kg load."
+  },
+  "safety": [
+    "Strike a tuning fork only on a rubber pad. Striking it on the bench chips the prongs, changes its frequency and can injure your hand.",
+    "Never touch the vibrating prongs to your teeth, eyes or ears.",
+    "Keep clear of the loaded hanger; if the wire snaps the weights fall.",
+    "A stretched wire that breaks can whip back. Wear eye protection when working near the elastic limit and never overload the wire.",
+    "Do not lean on the sonometer bed while the weights are hanging."
+  ],
+  "sourcesOfError": [
+    "The bridges have a physical width, so the true vibrating length is slightly uncertain.",
+    "The wire may not be perfectly uniform along its length, so μ is not quite constant.",
+    "Friction at the pulley means the tension in the wire is slightly less than the weight hung.",
+    "Judging the exact moment the rider is thrown off is subjective near the resonance peak.",
+    "The wire may not be perfectly horizontal or may sag under a heavy load.",
+    "A fork struck too hard excites overtones as well as the fundamental."
+  ],
+  "viva": [
+    { "question": "State the law of length for a vibrating string.", "expectedConcept": "At constant tension and for a given wire, the fundamental frequency is inversely proportional to the vibrating length, so f × l is constant.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Must state the constant-tension condition.", "commonMisconception": "Omitting that the tension and the wire must be unchanged." },
+    { "question": "Why is the vibrating length half a wavelength and not a whole one?", "expectedConcept": "The wire is clamped by a bridge at each end, so both ends must be nodes. The simplest pattern with a node at each end and nothing in between has a single antinode at the centre, and that is half a wavelength. Hence λ = 2l.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Boundary conditions force nodes at the bridges.", "commonMisconception": "Assuming the vibrating length equals the wavelength." },
+    { "question": "What is the purpose of the paper rider?", "expectedConcept": "It gives an objective sign of resonance. At resonance the amplitude is greatest and the wire throws the rider off, which is far more reliable than judging by ear which position sounds loudest.", "difficulty": "easy", "bloom": "Understand", "answerLogic": "Objective detection of maximum amplitude.", "commonMisconception": "Thinking the rider somehow causes or affects the resonance." },
+    { "question": "Why is the tuning fork struck on a rubber pad?", "expectedConcept": "Striking a hard surface chips the prongs and alters the frequency, and it excites overtones so that the fork no longer produces a clean single note. Rubber gives a soft blow that starts the fundamental cleanly.", "difficulty": "easy", "bloom": "Apply", "answerLogic": "Protects the fork and gives a pure tone.", "commonMisconception": "Believing it is only to reduce noise." },
+    { "question": "Why is the sonometer wire mounted on a hollow wooden box?", "expectedConcept": "The wire itself moves very little air and is almost inaudible. The box is set into forced vibration by the wire and, having a large surface area, couples the vibration to the air far more effectively, so the note becomes loud enough to judge.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Forced vibration of a large surface radiates sound efficiently.", "commonMisconception": "Thinking the box amplifies by resonating at one particular frequency." },
+    { "question": "What does the slope of your f against 1/l graph represent?", "expectedConcept": "From f = v/(2l), the slope of f against 1/l is v/2. So the slope multiplied by two gives the speed of the transverse wave on the wire under that tension.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Slope has physical meaning with units.", "commonMisconception": "Treating the slope as merely a number that shows the line is straight." },
+    { "question": "What would happen to the resonant length if you doubled the tension?", "expectedConcept": "The wave speed goes as the square root of the tension, so doubling T multiplies v by √2, and at the same frequency the resonant length also increases by a factor of √2, about 1.41.", "difficulty": "hard", "bloom": "Apply", "answerLogic": "l ∝ √T at fixed f.", "commonMisconception": "Expecting the length to double." },
+    { "question": "Why must the pulley be frictionless?", "expectedConcept": "Friction at the pulley means part of the weight is supported by the pulley rather than transmitted to the wire, so the actual tension is less than Mg. Since the frequency depends on the tension, this makes every calculated value systematically wrong.", "difficulty": "medium", "bloom": "Evaluate", "answerLogic": "Friction makes T less than Mg.", "commonMisconception": "Thinking friction only makes the pulley harder to turn." },
+    { "question": "Two wires of the same material and tension have diameters in the ratio 1:2. How do their fundamental frequencies compare?", "expectedConcept": "μ = πr²ρ, so the thicker wire has four times the mass per unit length. Since f ∝ 1/√μ, the thicker wire's frequency is half that of the thin one at the same length and tension.", "difficulty": "hard", "bloom": "Apply", "answerLogic": "μ ∝ d², f ∝ 1/√μ.", "commonMisconception": "Assuming frequency is halved simply because the diameter doubled, without going through μ." },
+    { "question": "Why should the load not be changed during this experiment?", "expectedConcept": "The law of length is a statement about frequency and length at CONSTANT tension. Changing the load changes the wave speed, so the product f × l would no longer be constant and the experiment would test nothing.", "difficulty": "easy", "bloom": "Evaluate", "answerLogic": "Only one variable may change at a time.", "commonMisconception": "Believing extra load simply makes the result more accurate." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "For the fundamental mode of a wire fixed at both ends, the vibrating length equals:", "options": ["One wavelength", "Half a wavelength", "Two wavelengths", "A quarter wavelength"], "answer": 1, "feedback": "Both ends are nodes and there is one antinode between them, so l = λ/2." },
+      { "id": "pre2", "type": "mcq", "question": "At constant tension, if the frequency is doubled the resonant length:", "options": ["Doubles", "Halves", "Is unchanged", "Becomes four times"], "answer": 1, "feedback": "f × l is constant, so doubling f must halve l." },
+      { "id": "pre3", "type": "mcq", "question": "The paper rider is used to:", "options": ["Damp the vibration", "Show when resonance occurs", "Measure the length", "Hold the wire down"], "answer": 1, "feedback": "It is flung off when the amplitude is greatest, which is at resonance." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Record resonant lengths for at least four different forks.", "check": "rows>=4" },
+      { "id": "dur2", "type": "task", "question": "Keep the load constant throughout.", "check": "volumeConstant" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the mean value of the product f × l (Hz·cm).", "answer": 5000, "tolerance": 350, "feedback": "With a 1 kg load on the standard steel wire, f × l comes to about 5000 Hz·cm." },
+      { "id": "post2", "type": "numeric", "question": "State the speed of the wave on the wire obtained from your graph (m/s).", "answer": 100, "tolerance": 8, "feedback": "The slope of f against 1/l is v/2, giving about 100 m/s for a 1 kg load." },
+      { "id": "post3", "type": "mcq", "question": "Your graph of f against 1/l is a straight line through the origin. This shows that:", "options": ["f is proportional to l", "f is inversely proportional to l", "f is independent of l", "f is proportional to l²"], "answer": 1, "feedback": "A straight line through the origin against 1/l means f ∝ 1/l — the law of length." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "f = (1/2l)√(T/μ); f × l = constant at constant T; slope of f vs 1/l = v/2",
+    "assumptions": [
+      "The wire is uniform and perfectly flexible",
+      "The bridges are sharp, so l is exactly the distance between them",
+      "The pulley is frictionless, so T = Mg",
+      "The wire vibrates in its fundamental mode with a single antinode"
+    ],
+    "validRange": "Vibrating length 8 to 60 cm; forks from 256 to 512 Hz; load 0.5 to 4 kg",
+    "unitSystem": "Length in cm on the bench, SI internally",
+    "edgeCases": [
+      "Very short lengths carry a large percentage error in l — warned",
+      "A slack wire cannot resonate at all — blocked",
+      "Recording away from resonance is refused; the length would mean nothing",
+      "Resonance is sharp, so the bridges must be moved slowly"
+    ],
+    "expectedBehaviour": [
+      "The product f × l is constant to within 4%",
+      "Doubling the frequency halves the resonant length",
+      "f against 1/l is straight, through the origin, with r² above 0.999",
+      "The slope gives the wave speed under the applied tension"
+    ],
+    "testFile": "tests/batch5.test.js"
+  }
+}

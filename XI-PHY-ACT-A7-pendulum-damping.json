@@ -1,0 +1,515 @@
+{
+  "id": "XI-PHY-ACT-A7",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 7,
+    "kind": "activity",
+    "unit": "Unit X: Oscillations and Waves",
+    "chapter": "Chapter-13: Oscillations",
+    "topic": "Periodic motion: time period, frequency, displacement as a function of time, periodic functions and their applications; simple harmonic motion and its equation; phase; oscillations of a loaded spring: restoring force and force constant; energy in S.H.M., kinetic and potential energies; simple pendulum and derivation of expression for its time period",
+    "subtopic": "Damped oscillations; energy of an oscillator proportional to the square of the amplitude; exponential decay",
+    "practical": "To study dissipation of energy of a simple pendulum by plotting a graph between square of amplitude and time.",
+    "learningObjectives": [
+      "Be able to study the dissipation of energy of a simple pendulum with time",
+      "Be able to plot a graph between the square of the amplitude and time",
+      "Be able to find the decay constant and the time in which the energy falls to half its value"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Activity 7 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Dissipation of energy of a simple pendulum",
+  "shortTitle": "Pendulum damping",
+  "objective": [
+    "To study the dissipation of energy of a simple pendulum with time.",
+    "To plot a graph between the square of the amplitude and time.",
+    "To find the decay constant and the time in which the energy falls to half its value."
+  ],
+  "theory": {
+    "statement": "A pendulum set swinging in air does not continue indefinitely: air resistance and friction at the support gradually remove energy, and the amplitude dies away. Since the energy of an oscillator is proportional to the square of its amplitude, a graph of the square of the amplitude against time is effectively a graph of the energy against time.",
+    "derivationNote": "For simple harmonic motion the total energy is one half of the mass times the square of the angular frequency times the square of the amplitude, so the energy is proportional to the square of the amplitude. This is why the syllabus asks for the square of the amplitude against time rather than the amplitude itself: the second graph shows how the amplitude decays, but the first shows how the ENERGY decays, which is the physical quantity of interest. For light damping the resistive force is proportional to the velocity, and the amplitude then falls exponentially with a decay constant b. Squaring, the square of the amplitude falls exponentially with a decay constant of twice b, so the curve is exponential, falling steeply at first and then ever more gently. It is NOT a straight line, and a straight line there would indicate a mistake. Taking natural logarithms gives a straight line whose slope is minus twice b, and that is how b is found quantitatively. The energy falls to half its value in a time equal to the natural logarithm of two divided by twice b, and this half-life is the same whatever part of the decay is chosen, which is the characteristic signature of exponential decay.",
+    "keyEquations": [
+      "Energy of an oscillator is proportional to the square of the amplitude",
+      "Amplitude decays exponentially with decay constant b",
+      "The square of the amplitude decays exponentially with decay constant twice b",
+      "The natural logarithm of the square of the amplitude is linear in time, with slope minus twice b",
+      "Half-life of the energy = natural logarithm of two, divided by twice b"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Simple pendulum",
+      "spec": "bob on a light inextensible thread about 1 m long",
+      "why": "The oscillator whose energy decay is studied"
+    },
+    {
+      "name": "Split cork and rigid stand",
+      "spec": "clamped firmly to the bench",
+      "why": "A rigid support, so energy is not lost into a swaying stand"
+    },
+    {
+      "name": "Horizontal scale",
+      "spec": "metre rule placed below the equilibrium position",
+      "why": "Measures the amplitude of each swing directly"
+    },
+    {
+      "name": "Stopwatch",
+      "spec": "least count 0.1 s",
+      "why": "Times the readings at regular intervals"
+    },
+    {
+      "name": "Bobs of different mass and size",
+      "spec": "brass, steel, wood and a large pith ball",
+      "why": "A light bob of large area is damped far more than a heavy compact one"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "initialAmplitudeCm",
+      "label": "Initial amplitude",
+      "symbol": "A0",
+      "unit": "cm",
+      "type": "independent",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "id": "lengthCm",
+      "label": "Length of pendulum",
+      "symbol": "L",
+      "unit": "cm",
+      "type": "control",
+      "min": 60,
+      "max": 120,
+      "step": 5,
+      "default": 100
+    },
+    {
+      "id": "bob",
+      "label": "Bob",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "brass",
+      "options": [
+        "brass",
+        "steel",
+        "wood",
+        "pith"
+      ]
+    },
+    {
+      "id": "medium",
+      "label": "Surroundings",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "air",
+      "options": [
+        "air",
+        "draught"
+      ]
+    },
+    {
+      "id": "amplitudeSq",
+      "label": "Square of amplitude",
+      "symbol": "A squared",
+      "unit": "cm2",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Suspend the bob from the split cork so that it hangs freely, and clamp the stand rigidly to the bench.",
+      "checkpoint": true,
+      "expects": "bob"
+    },
+    {
+      "step": 2,
+      "text": "Place a horizontal scale below the bob so that the amplitude can be read on either side of the rest position.",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Draw the bob aside by a small displacement and note the initial amplitude.",
+      "checkpoint": true,
+      "expects": "initialAmplitudeCm"
+    },
+    {
+      "step": 4,
+      "text": "Release the bob gently, without any push, and start the stopwatch at the same moment.",
+      "checkpoint": false
+    },
+    {
+      "step": 5,
+      "text": "At regular intervals, read the amplitude against the scale as the bob reaches its extreme position. Record it.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 6,
+      "text": "Continue until the amplitude has fallen appreciably, taking at least six readings.",
+      "checkpoint": true,
+      "expects": "rows>=4"
+    },
+    {
+      "step": 7,
+      "text": "Calculate the square of each amplitude and plot it against time.",
+      "checkpoint": false
+    },
+    {
+      "step": 8,
+      "text": "Plot the natural logarithm of that square against time, and find the decay constant from the slope.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "pendulum-damping",
+    "renderer": "pendulum-damping",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "initialAmplitudeCm",
+        "widget": "slider"
+      },
+      {
+        "var": "lengthCm",
+        "widget": "slider"
+      },
+      {
+        "var": "bob",
+        "widget": "segmented",
+        "options": [
+          "brass",
+          "steel",
+          "wood",
+          "pith"
+        ]
+      },
+      {
+        "var": "medium",
+        "widget": "segmented",
+        "options": [
+          "air",
+          "draught"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record amplitude",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Reading",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "timeS",
+        "label": "Time t",
+        "unit": "s",
+        "decimals": 0
+      },
+      {
+        "key": "amplitude",
+        "label": "Amplitude A",
+        "unit": "cm",
+        "decimals": 2
+      },
+      {
+        "key": "amplitudeSq",
+        "label": "A squared",
+        "unit": "cm2",
+        "decimals": 2
+      },
+      {
+        "key": "lnAmpSq",
+        "label": "ln(A squared)",
+        "unit": "",
+        "decimals": 3
+      },
+      {
+        "key": "energyMJ",
+        "label": "Energy",
+        "unit": "mJ",
+        "decimals": 3
+      }
+    ],
+    "graph": {
+      "x": "timeS",
+      "y": "amplitudeSq",
+      "xLabel": "Time t (s)",
+      "yLabel": "Square of amplitude (cm2)",
+      "throughOrigin": false
+    },
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "Record the amplitude at regular intervals of time",
+      "Calculate the square of the amplitude, which is proportional to the energy",
+      "Plot the square of the amplitude against time: the curve is exponential, not a straight line",
+      "Plot the natural logarithm of that square against time: this is a straight line",
+      "The decay constant is half the magnitude of that slope; the half-life follows from it"
+    ],
+    "resultKeys": [
+      "dampingConstant",
+      "halfLifeS",
+      "energyLostPercent"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Decay constant of the amplitude",
+    "symbol": "b",
+    "value": 0.0062,
+    "tolerance": 0.0015,
+    "unit": "per second",
+    "secondary": {
+      "quantity": "Half-life of the energy",
+      "value": 55.9,
+      "tolerance": 12,
+      "unit": "s"
+    },
+    "statement": "The square of the amplitude falls exponentially with time, showing that the energy of the pendulum decays exponentially. The logarithmic plot is a straight line, giving a decay constant of about 0.006 per second for the brass bob in still air, so the energy falls to half its value in roughly a minute."
+  },
+  "safety": [
+    "Clamp the stand firmly to the bench, or the swinging bob will topple it.",
+    "Keep the swinging bob clear of people, glassware and the edge of the bench.",
+    "Use a small amplitude: a heavy bob swinging widely is dangerous and is no longer simple harmonic anyway.",
+    "Check the thread for fraying before starting a long run."
+  ],
+  "sourcesOfError": [
+    "Reading the amplitude at the extreme position is difficult, since the bob is there only momentarily.",
+    "The amplitude changes slightly even during a single reading, because the decay is continuous.",
+    "Draughts in the room make the decay irregular and faster.",
+    "The support may not be perfectly rigid, so energy is lost into the stand.",
+    "Parallax when reading the amplitude against the scale.",
+    "Once the amplitude becomes small it cannot be read to any useful precision."
+  ],
+  "viva": [
+    {
+      "question": "Why is the square of the amplitude plotted rather than the amplitude itself?",
+      "expectedConcept": "Because the energy of an oscillator is proportional to the square of its amplitude. A graph of that square against time is therefore, apart from a constant factor, a graph of the energy against time, and the activity is about the dissipation of ENERGY.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Energy is proportional to the square of the amplitude.",
+      "commonMisconception": "Thinking amplitude itself measures the energy."
+    },
+    {
+      "question": "What shape is the graph of the square of the amplitude against time?",
+      "expectedConcept": "An exponential decay curve: steep at first and flattening as time goes on. It is not a straight line. If it looked straight, either the readings are wrong or too small a part of the decay has been covered.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Exponential decay, not linear.",
+      "commonMisconception": "Drawing a straight line of best fit through an exponential curve."
+    },
+    {
+      "question": "How do you obtain the decay constant from your data?",
+      "expectedConcept": "By plotting the natural logarithm of the square of the amplitude against time. That converts the exponential into a straight line whose slope is minus twice the decay constant, so the constant is half the magnitude of the slope.",
+      "difficulty": "hard",
+      "bloom": "Apply",
+      "answerLogic": "Linearise by taking logarithms.",
+      "commonMisconception": "Trying to read the constant off the curved graph directly."
+    },
+    {
+      "question": "What causes the damping of a simple pendulum in the laboratory?",
+      "expectedConcept": "Chiefly air resistance on the bob and the thread, together with friction at the point of support and a little energy carried away into the stand. For a large light bob, air resistance dominates.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Air resistance and support friction.",
+      "commonMisconception": "Attributing the decay to gravity weakening."
+    },
+    {
+      "question": "Which decays faster, a heavy compact bob or a light bulky one?",
+      "expectedConcept": "The light bulky one, by a large margin. The retarding force depends on the size and shape of the bob, while the energy stored depends on its mass. A large pith ball has a big drag and very little energy, so it stops within a minute; a heavy brass bob of the same size swings for many minutes.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Drag depends on size, energy on mass.",
+      "commonMisconception": "Assuming a heavier bob loses energy faster because it has more of it."
+    },
+    {
+      "question": "Does the period of the pendulum change as the amplitude decays?",
+      "expectedConcept": "For light damping the period is essentially unchanged, which is why the readings can be taken at regular intervals throughout. Strictly, damping lengthens the period very slightly, and a large initial amplitude also gives a slightly longer period, but both effects are negligible here.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Light damping leaves the period nearly constant.",
+      "commonMisconception": "Expecting a smaller swing to be noticeably quicker."
+    },
+    {
+      "question": "What is meant by the half-life of the energy?",
+      "expectedConcept": "The time in which the energy of the oscillation falls to half its value. Because the decay is exponential, this time is the same wherever you start measuring from: the energy takes just as long to fall from a half to a quarter as from full to half.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Constant halving time, characteristic of exponential decay.",
+      "commonMisconception": "Thinking the pendulum stops after two half-lives."
+    },
+    {
+      "question": "Where does the lost energy go?",
+      "expectedConcept": "Into the surrounding air as heat and a little sound, into heat at the point of support, and into vibration of the stand. Energy is conserved overall; only the mechanical energy of the pendulum decreases.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Heat and sound in the surroundings.",
+      "commonMisconception": "Saying the energy is destroyed."
+    },
+    {
+      "question": "Why must the initial amplitude be kept small?",
+      "expectedConcept": "Beyond about fifteen degrees the small-angle approximation fails, the motion is no longer simple harmonic, and the period begins to depend on the amplitude. The clean exponential decay of a lightly damped harmonic oscillator would no longer be expected.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Simple harmonic motion requires small angles.",
+      "commonMisconception": "Using a large swing to make the readings easier."
+    },
+    {
+      "question": "How would this experiment differ if performed in a vacuum?",
+      "expectedConcept": "Air resistance would be removed, leaving only friction at the support. The decay constant would be very much smaller and the pendulum would swing for a very long time. This is why precision clock pendulums were once enclosed in partially evacuated cases.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Removing the dominant damping mechanism.",
+      "commonMisconception": "Believing the pendulum would swing forever, ignoring support friction."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The energy of an oscillator is proportional to:",
+        "options": [
+          "The amplitude",
+          "The square of the amplitude",
+          "The period",
+          "The square root of the amplitude"
+        ],
+        "answer": 1,
+        "feedback": "Energy is proportional to the square of the amplitude, which is why that square is plotted."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The graph of the square of the amplitude against time for a damped pendulum is:",
+        "options": [
+          "A straight line",
+          "An exponential decay curve",
+          "A parabola",
+          "A horizontal line"
+        ],
+        "answer": 1,
+        "feedback": "It decays exponentially, not linearly."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "To find the decay constant, you should plot:",
+        "options": [
+          "Amplitude against time",
+          "Square of amplitude against time",
+          "Natural logarithm of the square against time",
+          "Amplitude against its square"
+        ],
+        "answer": 2,
+        "feedback": "Taking logarithms straightens the curve into a line whose slope gives the constant."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record at least four amplitudes as the swing dies away.",
+        "check": "rows>=4"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Continue until the amplitude has fallen appreciably.",
+        "check": "decayObserved"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the decay constant for the brass bob, in per second.",
+        "answer": 0.0062,
+        "tolerance": 0.002,
+        "feedback": "About 0.006 per second, from half the slope of the logarithmic plot."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "State the time in which the energy falls to half, in seconds.",
+        "answer": 55.9,
+        "tolerance": 15,
+        "feedback": "Roughly one minute for the brass bob in still air."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Your graph of the square of the amplitude came out as a straight line. The most likely explanation is:",
+        "options": [
+          "The damping is exponential as expected",
+          "Too small a part of the decay was covered, or the readings are wrong",
+          "The pendulum has stopped",
+          "The energy is constant"
+        ],
+        "answer": 1,
+        "feedback": "The square decays exponentially. Over a short span an exponential can look straight, so extend the run until the curvature is clear."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Energy of an oscillator is proportional to the square of the amplitude",
+    "assumptions": [
+      "Energy of an oscillator is proportional to the square of the amplitude",
+      "Amplitude decays exponentially with decay constant b",
+      "The square of the amplitude decays exponentially with decay constant twice b",
+      "The natural logarithm of the square of the amplitude is linear in time, with slope minus twice b"
+    ],
+    "validRange": "The square of the amplitude falls exponentially with time, showing that the ener",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Reading the amplitude at the extreme position is difficult, since the bob is there only momentarily.",
+      "The amplitude changes slightly even during a single reading, because the decay is continuous.",
+      "Draughts in the room make the decay irregular and faster.",
+      "The support may not be perfectly rigid, so energy is lost into the stand."
+    ],
+    "expectedBehaviour": [
+      "The square of the amplitude falls exponentially with time, showing that the energy of the pendulum decays exponentially. The logarithmic plot is a straight line, giving a decay constant of about 0.006 per second for the brass bob in still air, so the energy falls to half its value in roughly a minute."
+    ],
+    "testFile": "tests/batch9.test.js"
+  }
+}

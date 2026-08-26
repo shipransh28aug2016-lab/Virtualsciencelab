@@ -1,0 +1,531 @@
+{
+  "id": "XII-PHY-B04",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 4,
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-9: Ray Optics and Optical Instruments",
+    "topic": "Reflection of light, spherical mirrors, mirror formula; refraction of light; thin lens formula, lens maker's formula; combination of thin lenses in contact",
+    "subtopic": "Focal length of a concave lens determined with the help of an auxiliary convex lens",
+    "practical": "To find the focal length of a concave lens, using a convex lens.",
+    "learningObjectives": [
+      "Explain why a concave lens alone cannot form a real image of a real object",
+      "Use a convex lens to produce a real image I₁ that becomes a virtual object",
+      "Measure the virtual object distance u and the final real image distance v",
+      "Apply 1/v − 1/u = 1/f and obtain a NEGATIVE focal length",
+      "Discover that a real final image forms only while u is less than |f|",
+      "Calculate the power of the concave lens in dioptre"
+    ],
+    "competencies": [
+      "Handling virtual objects in the lens formula",
+      "Recognising the sign of a focal length as physically meaningful",
+      "Identifying the condition under which a method stops working",
+      "Averaging a quantity measured at several settings"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 4 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Focal length of a concave lens using a convex lens",
+  "shortTitle": "Concave Lens",
+  "objective": [
+    "To find the focal length of a concave lens with the help of a convex lens.",
+    "To verify that the focal length of a diverging lens is negative.",
+    "To calculate its power in dioptre."
+  ],
+  "theory": {
+    "statement": "A concave lens always forms a virtual image of a real object, so its focal length must be found indirectly. A convex lens is used to produce a real image which then serves as a virtual object for the concave lens.",
+    "derivationNote": "A concave lens is diverging. Rays from a real object leave it more divergent than they arrived, so they never actually meet and the image is virtual, erect and diminished. It cannot be caught on a screen, and so it cannot be located by the ordinary u-v method.\n\nThe way round this is to give the concave lens a VIRTUAL object. A convex lens is set up first and forms a real image I₁ on a screen; its position is noted carefully. The concave lens is then introduced between the convex lens and I₁. The light reaching the concave lens is now converging towards I₁, so I₁ acts as a virtual object at a distance u behind the concave lens. Acting on a converging beam, the concave lens merely reduces the convergence, and provided it does not reduce it too much the light still comes to a focus at some further point I₂, a real image that can be found on a screen.\n\nApplying the lens formula to the concave lens alone, with distances measured from it, 1/v − 1/u = 1/f, which rearranges to f = uv/(u − v). Because v is always greater than u the focal length comes out negative, as it must for a diverging lens. The method only works while the virtual object lies closer than the focal length: if u is greater than |f| the concave lens over-diverges the beam and the final image becomes virtual again, so nothing can be found on the screen. Sliding the concave lens too far towards the convex lens is exactly how a student meets that limit.",
+    "keyEquations": [
+      "A concave lens alone gives only a virtual image of a real object",
+      "Convex lens forms I₁; the concave lens sees it as a virtual object at distance u",
+      "1/v − 1/u = 1/f, so f = uv/(u − v)",
+      "f is negative for a diverging lens",
+      "A real final image requires u < |f|",
+      "Power P = 100/f dioptre with f in cm"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Concave lens",
+      "spec": "focal length about 15 cm, mounted on an upright",
+      "why": "The element whose focal length is required"
+    },
+    {
+      "name": "Convex lens",
+      "spec": "focal length about 20 cm",
+      "why": "Produces the real image I₁ that acts as the virtual object"
+    },
+    {
+      "name": "Optical bench",
+      "spec": "four uprights, least count 0.1 cm",
+      "why": "Holds and positions every component in line"
+    },
+    {
+      "name": "Illuminated object needle",
+      "spec": "with a cross-wire",
+      "why": "Provides a sharp object"
+    },
+    {
+      "name": "Screen",
+      "spec": "white card on an upright",
+      "why": "Receives I₁ and then the final image I₂"
+    },
+    {
+      "name": "Knitting needle and half-metre scale",
+      "spec": "",
+      "why": "Determine index corrections for the uprights"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "objectDistanceCm",
+      "label": "Object distance from the convex lens",
+      "symbol": "u₁",
+      "unit": "cm",
+      "type": "independent",
+      "min": 25,
+      "max": 60,
+      "step": 0.5,
+      "default": 30
+    },
+    {
+      "id": "elementPositionCm",
+      "label": "Concave lens position from the convex lens",
+      "symbol": "d",
+      "unit": "cm",
+      "type": "independent",
+      "min": 40,
+      "max": 58,
+      "step": 0.5,
+      "default": 48
+    },
+    {
+      "id": "element",
+      "label": "Concave lens",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "cl15",
+      "options": [
+        "cl15",
+        "cl20"
+      ]
+    },
+    {
+      "id": "lens",
+      "label": "Auxiliary convex lens",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "L20",
+      "options": [
+        "L20",
+        "L15",
+        "L25"
+      ]
+    },
+    {
+      "id": "focalCm",
+      "label": "Focal length",
+      "symbol": "f",
+      "unit": "cm",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Mount the illuminated object, the convex lens and the screen in line at the same height.",
+      "checkpoint": true,
+      "expects": "lens"
+    },
+    {
+      "step": 2,
+      "text": "Place the object beyond the focus of the convex lens and note its distance.",
+      "checkpoint": true,
+      "expects": "objectDistanceCm"
+    },
+    {
+      "step": 3,
+      "text": "Move the screen until a sharp real image is formed and record the position of I₁.",
+      "checkpoint": false
+    },
+    {
+      "step": 4,
+      "text": "Introduce the concave lens between the convex lens and I₁, without disturbing anything else.",
+      "checkpoint": true,
+      "expects": "element"
+    },
+    {
+      "step": 5,
+      "text": "Note the distance u from the concave lens to I₁. This is the virtual object distance.",
+      "checkpoint": true,
+      "expects": "elementPositionCm"
+    },
+    {
+      "step": 6,
+      "text": "Move the screen further away until a sharp image is again formed, and record v from the concave lens.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 7,
+      "text": "Repeat for at least three positions of the concave lens.",
+      "checkpoint": true,
+      "expects": "rows>=2"
+    },
+    {
+      "step": 8,
+      "text": "Slide the concave lens too close to the convex lens and observe that no image can be found. Explain why.",
+      "checkpoint": false
+    },
+    {
+      "step": 9,
+      "text": "Calculate f = uv/(u − v) for each row, take the mean, and find the power P = 100/f.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "auxiliary-lens",
+    "renderer": "auxiliary-lens",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "elementPositionCm",
+        "widget": "slider"
+      },
+      {
+        "var": "objectDistanceCm",
+        "widget": "slider"
+      },
+      {
+        "var": "element",
+        "widget": "segmented",
+        "options": [
+          "cl15",
+          "cl20"
+        ]
+      },
+      {
+        "var": "lens",
+        "widget": "segmented",
+        "options": [
+          "L20",
+          "L15",
+          "L25"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record u and v",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "No.",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "firstImageCm",
+        "label": "I₁ from convex lens",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "elementPositionCm",
+        "label": "Concave lens at",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "virtualObjectCm",
+        "label": "u (virtual object)",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "finalImageCm",
+        "label": "v",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "focalCm",
+        "label": "f = uv/(u−v)",
+        "unit": "cm",
+        "decimals": 2
+      }
+    ],
+    "graph": {
+      "x": "virtualObjectCm",
+      "y": "finalImageCm",
+      "xLabel": "Virtual object distance u (cm)",
+      "yLabel": "Final image distance v (cm)",
+      "throughOrigin": false
+    },
+    "minRows": 2
+  },
+  "calculations": {
+    "steps": [
+      "Locate I₁ with the convex lens alone",
+      "u = distance from the concave lens to I₁ (a virtual object)",
+      "v = distance from the concave lens to the new image",
+      "f = uv/(u − v) for each setting; the result is negative",
+      "Mean f, then P = 100/f dioptre"
+    ],
+    "resultKeys": [
+      "focalLength",
+      "power",
+      "spread"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Focal length of the concave lens",
+    "symbol": "f",
+    "value": -15,
+    "tolerance": 1.2,
+    "unit": "cm",
+    "secondary": {
+      "quantity": "Power of the lens",
+      "value": -6.67,
+      "tolerance": 0.6,
+      "unit": "D"
+    },
+    "statement": "The focal length of the given concave lens is about −15 cm and its power about −6.7 dioptre. The negative sign is not a bookkeeping detail: it is the signature of a diverging lens. Every position of the concave lens gives the same value."
+  },
+  "safety": [
+    "Do not focus sunlight with the convex lens; it can burn paper or skin and damage the eye.",
+    "Handle both lenses by their edges to avoid fingerprints and scratches.",
+    "Let the lamp housing cool before moving it.",
+    "Keep the bench clear of trailing leads."
+  ],
+  "sourcesOfError": [
+    "Index error between the upright mark and the optical centre of each lens.",
+    "A poorly located I₁, whose error propagates into every value of u.",
+    "Judging the sharpest final image by eye instead of removing parallax.",
+    "The two lenses not being coaxial or at the same height.",
+    "Working with u very close to |f|, where v becomes enormous and hard to locate.",
+    "Spherical aberration in either lens."
+  ],
+  "viva": [
+    {
+      "question": "Why can a concave lens not be measured directly by the u-v method?",
+      "expectedConcept": "For any real object a concave lens produces a virtual, erect, diminished image. The rays diverge and never actually meet, so nothing can be caught on a screen, and the u-v method needs a real image on a screen.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Always virtual for a real object.",
+      "commonMisconception": "Thinking the image is merely faint."
+    },
+    {
+      "question": "What is a virtual object?",
+      "expectedConcept": "A virtual object exists where a converging beam is heading for a point but is intercepted by another element before it gets there. The point towards which the light was converging then acts as the object for that element, and it lies on the far side of it.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Converging beam intercepted before its focus.",
+      "commonMisconception": "Confusing a virtual object with a virtual image."
+    },
+    {
+      "question": "Why does the focal length come out negative?",
+      "expectedConcept": "Because v is always larger than u in this arrangement, f = uv/(u − v) is negative. Physically the negative sign means the lens is diverging: its focus lies on the same side as the incoming light and rays are spread apart rather than brought together.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Sign follows from the algebra and matches the physics.",
+      "commonMisconception": "Treating the minus sign as an error to be dropped."
+    },
+    {
+      "question": "Why does no image form when the concave lens is moved too close to the convex lens?",
+      "expectedConcept": "Moving it closer increases the virtual object distance u. Once u exceeds the magnitude of the focal length, the concave lens removes more convergence than the beam has, so the emerging light diverges and the image becomes virtual again. A real final image needs u < |f|.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "States the u < |f| condition and why.",
+      "commonMisconception": "Assuming the image has simply moved off the end of the bench."
+    },
+    {
+      "question": "What is the power of a lens and what are its units?",
+      "expectedConcept": "Power is the reciprocal of the focal length in metres, measured in dioptre. With f in centimetres, P = 100/f. A diverging lens has negative power.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "P = 1/f(m), dioptre, negative for diverging.",
+      "commonMisconception": "Forgetting to convert centimetres to metres."
+    },
+    {
+      "question": "How would you tell a concave lens from a convex one by touch or by looking through it?",
+      "expectedConcept": "A concave lens is thinner at the centre than at the edges, and looking through it at a distant object gives an erect, diminished image that moves in the same direction as the lens. A convex lens is thicker at the centre and gives a magnified or inverted image depending on distance.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Shape and image behaviour.",
+      "commonMisconception": "Relying on shape alone, which is unreliable for a thin lens."
+    },
+    {
+      "question": "Could you find the focal length of the concave lens by combining it in contact with the convex lens instead?",
+      "expectedConcept": "Yes. Placed in contact, the combination has 1/F = 1/f₁ + 1/f₂. Measuring F for the combination and knowing f₁ for the convex lens gives f₂ directly. That method needs the combination still to be converging, so the convex lens must be the stronger of the two.",
+      "difficulty": "hard",
+      "bloom": "Create",
+      "answerLogic": "Contact-combination method and its condition.",
+      "commonMisconception": "Not realising the combination must remain converging to give a real image."
+    },
+    {
+      "question": "Why must the concave lens be placed between the convex lens and I₁?",
+      "expectedConcept": "Only there does it intercept a still-converging beam, which is what makes I₁ a virtual object. Beyond I₁ the light has already crossed and is diverging, so the concave lens would receive a real object and could form only a virtual image.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Needs to catch the beam while converging.",
+      "commonMisconception": "Thinking position relative to I₁ is unimportant."
+    },
+    {
+      "question": "What happens to the final image as u approaches |f|?",
+      "expectedConcept": "The emerging beam becomes almost parallel, so the image moves rapidly further away and towards infinity. In practice it becomes very faint and impossible to locate, which is why readings are taken well short of that limit.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "v tends to infinity as u tends to |f|.",
+      "commonMisconception": "Expecting the image to vanish abruptly rather than recede."
+    },
+    {
+      "question": "Does the value of f you obtain depend on which convex lens you used?",
+      "expectedConcept": "No. The convex lens is only a tool for producing a virtual object; the focal length obtained belongs to the concave lens alone. A different auxiliary lens shifts I₁ and so changes the positions used, but the calculated f must come out the same.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Result is a property of the element under test.",
+      "commonMisconception": "Expecting the auxiliary lens to influence the answer."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "A concave lens forms an image of a real object that is always:",
+        "options": [
+          "Real and inverted",
+          "Virtual, erect and diminished",
+          "Real and magnified",
+          "At infinity"
+        ],
+        "answer": 1,
+        "feedback": "A diverging lens always gives a virtual, erect, diminished image of a real object."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The focal length of a diverging lens is:",
+        "options": [
+          "Positive",
+          "Negative",
+          "Zero",
+          "Infinite"
+        ],
+        "answer": 1,
+        "feedback": "Negative — that sign is what distinguishes a diverging lens from a converging one."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "A real final image is obtained only when the virtual object distance u is:",
+        "options": [
+          "Greater than |f|",
+          "Less than |f|",
+          "Equal to |f|",
+          "Equal to 2|f|"
+        ],
+        "answer": 1,
+        "feedback": "Beyond |f| the lens over-diverges the beam and the image goes virtual."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record at least two null positions.",
+        "check": "rows>=2"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Change the object distance between readings.",
+        "check": "tempVaried"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the focal length of the concave lens (cm). Include the sign.",
+        "answer": -15,
+        "tolerance": 2,
+        "feedback": "About −15 cm; the negative sign is essential."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "State its power in dioptre.",
+        "answer": -6.67,
+        "tolerance": 1,
+        "feedback": "P = 100/f = 100/(−15) ≈ −6.7 D."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "You slide the concave lens closer to the convex lens and the image disappears. This is because:",
+        "options": [
+          "The screen is too small",
+          "u has exceeded |f| so the image is now virtual",
+          "The lens is dirty",
+          "The lamp is too dim"
+        ],
+        "answer": 1,
+        "feedback": "A real final image needs u < |f|. Beyond that the emerging beam diverges."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "f = uv/(u − v) with u the virtual object distance; f < 0; P = 100/f",
+    "assumptions": [
+      "Thin lenses and paraxial rays",
+      "The object lies beyond the focus of the auxiliary convex lens",
+      "The concave lens lies between the convex lens and I₁",
+      "Index corrections have been applied"
+    ],
+    "validRange": "Concave lens 40 to 58 cm from the convex lens; virtual object distance below |f|",
+    "unitSystem": "All distances in cm; power in dioptre",
+    "edgeCases": [
+      "u ≥ |f| gives no real image — warned, and the reading is refused",
+      "The concave lens placed beyond I₁ receives a real object — warned",
+      "Object inside the focus of the convex lens: no I₁ at all — blocked",
+      "As u approaches |f| the image recedes towards infinity"
+    ],
+    "expectedBehaviour": [
+      "The recovered focal length is negative",
+      "Every position of the concave lens gives the same focal length",
+      "The final image is always further from the lens than the virtual object",
+      "The result does not depend on the auxiliary lens used"
+    ],
+    "testFile": "tests/batch6.test.js"
+  }
+}

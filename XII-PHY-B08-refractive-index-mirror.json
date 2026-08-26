@@ -1,0 +1,527 @@
+{
+  "id": "XII-PHY-B08",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 8,
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-9: Ray Optics and Optical Instruments",
+    "topic": "Refraction of light, total internal reflection and optical fibres, refraction at spherical surfaces, lenses, refraction through a prism",
+    "subtopic": "Refractive index of a liquid from the apparent radius of curvature of a concave mirror",
+    "practical": "To find the refractive index of a liquid using a concave mirror and a plane mirror.",
+    "learningObjectives": [
+      "Locate the centre of curvature of a concave mirror by self-coincidence",
+      "Observe that adding liquid raises the apparent centre of curvature",
+      "Measure the true radius R and the apparent radius R′",
+      "Calculate the refractive index as μ = R/R′",
+      "Explain the shift in terms of refraction at the liquid surface",
+      "Confirm that the result is independent of which mirror is used"
+    ],
+    "competencies": [
+      "Using self-coincidence with a mirror",
+      "Relating an apparent position to refraction",
+      "Recognising a result that must be independent of the apparatus",
+      "Comparing two independent methods for the same quantity"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 8 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Refractive index of a liquid using a concave mirror and a plane mirror",
+  "shortTitle": "Refractive Index — Concave Mirror",
+  "objective": [
+    "To find the refractive index of a transparent liquid using a concave mirror.",
+    "To measure the true and apparent radii of curvature.",
+    "To check the value against the liquid-lens method."
+  ],
+  "theory": {
+    "statement": "When a little liquid is poured into a concave mirror, refraction at the liquid surface makes the centre of curvature appear closer than it really is. The refractive index is the ratio of the true radius of curvature to the apparent one.",
+    "derivationNote": "A concave mirror is placed with its reflecting surface upwards and an optical needle is held above it. When the needle is exactly at the centre of curvature, every ray from its tip travels along a radius, meets the mirror normally and is reflected straight back on itself, so the image is formed at the needle. Adjusting the needle until tip and image coincide with no parallax therefore locates the centre of curvature directly, and its height above the pole is the true radius R.\n\nA small quantity of the liquid is now poured into the mirror. Light from the needle must now cross the liquid surface twice. Refraction at that surface bends the rays, and the position at which they once more retrace their own path is no longer at R but at a smaller height R′. Applying Snell’s law at the surface for paraxial rays, and using the fact that the ray must still meet the mirror along a radius, gives the simple result\n\n    μ = R / R′\n\nThe apparent centre of curvature is always closer than the real one, because the liquid is optically denser than air, so R′ is always less than R and μ always comes out greater than one. This is the same physics that makes a swimming pool look shallower than it is, expressed through a curved mirror instead of a flat surface.",
+    "keyEquations": [
+      "Self-coincidence with the empty mirror locates C at height R",
+      "With liquid, coincidence occurs at the smaller height R′",
+      "μ = R / R′",
+      "R′ = R/μ, so a denser liquid lowers the needle further",
+      "R = 2f for the mirror"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Concave mirror",
+      "spec": "focal length about 15 cm, of ample aperture to hold liquid",
+      "why": "Both the reflecting element and the container for the liquid"
+    },
+    {
+      "name": "Optical needle",
+      "spec": "mounted in a clamp on a stand",
+      "why": "The object brought into coincidence with its own image"
+    },
+    {
+      "name": "Transparent liquid",
+      "spec": "water, glycerine or kerosene",
+      "why": "The specimen whose refractive index is required"
+    },
+    {
+      "name": "Iron stand with clamp",
+      "spec": "with fine vertical adjustment",
+      "why": "Holds the needle horizontally and lets its height be varied smoothly"
+    },
+    {
+      "name": "Plumb line and half-metre scale",
+      "spec": "least count 0.1 cm",
+      "why": "Measures the vertical height of the needle above the pole of the mirror"
+    },
+    {
+      "name": "Plane mirror",
+      "spec": "",
+      "why": "Used as a reference surface and to check that the liquid surface is level"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "liquid",
+      "label": "Liquid",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "water",
+      "options": [
+        "water",
+        "glycerine",
+        "kerosene",
+        "turpentine"
+      ]
+    },
+    {
+      "id": "mirror",
+      "label": "Concave mirror",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "m15",
+      "options": [
+        "m15",
+        "m10"
+      ]
+    },
+    {
+      "id": "method",
+      "label": "Method",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "concaveMirror",
+      "options": [
+        "concaveMirror"
+      ]
+    },
+    {
+      "id": "layerThin",
+      "label": "Only a little liquid used",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "benchLC",
+      "label": "Scale least count",
+      "symbol": "L.C.",
+      "unit": "cm",
+      "type": "controlled",
+      "min": 0.1,
+      "max": 0.5,
+      "step": 0.1,
+      "default": 0.1
+    },
+    {
+      "id": "mu",
+      "label": "Refractive index",
+      "symbol": "μ",
+      "unit": "",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Place the concave mirror on the base of the stand with its reflecting surface facing upwards and its axis vertical.",
+      "checkpoint": true,
+      "expects": "mirror"
+    },
+    {
+      "step": 2,
+      "text": "Clamp the optical needle horizontally above the pole of the mirror.",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Raise and lower the needle until its tip coincides with the tip of its inverted image, with no parallax.",
+      "checkpoint": false
+    },
+    {
+      "step": 4,
+      "text": "Measure the height of the needle above the pole with a plumb line and scale. This is the true radius of curvature R.",
+      "checkpoint": false
+    },
+    {
+      "step": 5,
+      "text": "Pour a small quantity of the liquid into the mirror, just enough to cover it.",
+      "checkpoint": true,
+      "expects": "liquid"
+    },
+    {
+      "step": 6,
+      "text": "Adjust the needle again for coincidence. It will now be lower. Measure this height: the apparent radius R′.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 7,
+      "text": "Repeat for at least three sets of readings.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 8,
+      "text": "Calculate μ = R/R′ for each set.",
+      "checkpoint": false
+    },
+    {
+      "step": 9,
+      "text": "Take the mean and compare with the accepted value for the liquid.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "refractive-index",
+    "renderer": "refractive-index",
+    "fps": 45,
+    "controls": [
+      {
+        "var": "liquid",
+        "widget": "segmented",
+        "options": [
+          "water",
+          "glycerine",
+          "kerosene",
+          "turpentine"
+        ]
+      },
+      {
+        "var": "mirror",
+        "widget": "segmented",
+        "options": [
+          "m15",
+          "m10"
+        ]
+      },
+      {
+        "var": "layerThin",
+        "widget": "switch"
+      },
+      {
+        "var": "benchLC",
+        "widget": "slider"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record R and R′",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "No.",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "radiusCm",
+        "label": "R (true)",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "apparentRadiusCm",
+        "label": "R′ (apparent)",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "mu",
+        "label": "μ = R/R′",
+        "unit": "",
+        "decimals": 4
+      }
+    ],
+    "graph": {
+      "x": "trial",
+      "y": "mu",
+      "xLabel": "Reading number",
+      "yLabel": "Refractive index μ",
+      "throughOrigin": false
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Locate C by self-coincidence with the empty mirror and measure R",
+      "Pour in the liquid and locate the new coincidence height R′",
+      "μ = R/R′ for each set of readings",
+      "Take the mean value of μ",
+      "Compare with the accepted value and with the liquid-lens method"
+    ],
+    "resultKeys": [
+      "refractiveIndex",
+      "accepted",
+      "percentError"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Refractive index of the liquid",
+    "symbol": "μ",
+    "value": 1.333,
+    "tolerance": 0.05,
+    "unit": "",
+    "secondary": {
+      "quantity": "Apparent radius of curvature for water",
+      "value": 22.5,
+      "tolerance": 1.5,
+      "unit": "cm"
+    },
+    "statement": "The refractive index of water by this method is about 1.33, in agreement with the value obtained by the liquid-lens method. The apparent centre of curvature is always closer than the true one, because the liquid is optically denser than air."
+  },
+  "safety": [
+    "Do not use the concave mirror to focus sunlight; it concentrates enough heat to burn paper, skin or the retina.",
+    "Wipe up spilt liquid at once, especially kerosene or turpentine, which are flammable.",
+    "Keep volatile liquids away from flames and work in a ventilated room.",
+    "Dry the mirror carefully afterwards; standing liquid will tarnish the reflecting surface.",
+    "Handle the mirror by its edges and do not overfill it."
+  ],
+  "sourcesOfError": [
+    "Too much liquid, so the layer is not thin compared with the radius of curvature.",
+    "The liquid surface not being exactly horizontal, or the mirror axis not vertical.",
+    "Parallax not removed tip to tip when judging coincidence.",
+    "Evaporation of a volatile liquid during a long set of readings.",
+    "Error in measuring the height with a plumb line, which is limited to about 0.1 cm.",
+    "The needle not being exactly above the pole of the mirror."
+  ],
+  "viva": [
+    {
+      "question": "Why does the image coincide with the needle when the needle is at the centre of curvature?",
+      "expectedConcept": "Every ray from a point at the centre of curvature travels along a radius, so it meets the mirror surface normally and is reflected straight back along its own path. All the rays therefore return to the starting point and the image is formed there.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Normal incidence along a radius.",
+      "commonMisconception": "Thinking coincidence occurs at the focus."
+    },
+    {
+      "question": "Why does the needle have to be lowered after the liquid is poured in?",
+      "expectedConcept": "Refraction at the liquid surface bends the rays, so the position from which the light appears to come, and hence the point at which the path is retraced, moves closer to the mirror. The apparent centre of curvature is nearer than the true one, so coincidence now occurs at a smaller height.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Refraction shifts the apparent centre closer.",
+      "commonMisconception": "Believing the liquid changes the mirror’s actual curvature."
+    },
+    {
+      "question": "Why is μ always greater than one in this experiment?",
+      "expectedConcept": "Because the liquid is optically denser than air, the apparent radius R′ is always smaller than the true radius R, and their ratio is therefore always greater than one. A value below one would mean the liquid was less dense optically than air, which does not occur for ordinary liquids.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "R′ < R always for a denser medium.",
+      "commonMisconception": "Not checking whether the result is physically possible."
+    },
+    {
+      "question": "How is this related to a swimming pool appearing shallow?",
+      "expectedConcept": "It is the same effect. Light from the bottom refracts away from the normal on leaving the water, so the bottom appears raised and the apparent depth is the real depth divided by μ. Here the curved mirror plays the role of the pool floor.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Same real-over-apparent relation.",
+      "commonMisconception": "Treating the two situations as unrelated."
+    },
+    {
+      "question": "Should the result depend on which concave mirror you use?",
+      "expectedConcept": "No. The refractive index is a property of the liquid alone. Using a mirror of different radius changes both R and R′ in the same proportion, so their ratio, and therefore μ, is unchanged. Checking this with a second mirror is a good test of the method.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Both radii scale together.",
+      "commonMisconception": "Expecting a bigger mirror to give a bigger μ."
+    },
+    {
+      "question": "Why should only a little liquid be used?",
+      "expectedConcept": "The simple result μ = R/R′ assumes the liquid layer is thin compared with the radius of curvature, so that refraction can be treated as occurring at a single surface close to the mirror. A deep layer invalidates that approximation.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Thin-layer paraxial assumption.",
+      "commonMisconception": "Thinking more liquid gives a clearer shift."
+    },
+    {
+      "question": "What is the relation between the radius of curvature and the focal length of the mirror?",
+      "expectedConcept": "R = 2f for a spherical mirror of small aperture, so a mirror of focal length 15 cm has a radius of curvature of 30 cm.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "R = 2f.",
+      "commonMisconception": "Writing f = 2R."
+    },
+    {
+      "question": "How would the reading change if glycerine were used instead of water?",
+      "expectedConcept": "Glycerine has a higher refractive index, about 1.47, so the apparent centre of curvature would be closer still and the needle would have to be lowered further. R′ would be smaller and the ratio R/R′ correspondingly larger.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Larger μ means smaller R′.",
+      "commonMisconception": "Expecting the same height for every liquid."
+    },
+    {
+      "question": "Why must the liquid surface be horizontal?",
+      "expectedConcept": "A tilted surface refracts the rays sideways as well as vertically, so they no longer retrace their own path and no clean coincidence can be found. The measured height would also not correspond to a true vertical distance.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Tilt destroys the retracing geometry.",
+      "commonMisconception": "Assuming a small tilt is harmless."
+    },
+    {
+      "question": "You obtained 1.33 by this method and 1.33 by the liquid-lens method. Why does that matter?",
+      "expectedConcept": "Because the two methods rely on quite different physics, one on refraction at a single surface with a mirror and the other on the lens maker’s formula for a liquid lens. Agreement between independent methods is much stronger evidence than repeating one method many times, since it rules out systematic errors peculiar to either.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Independent methods guard against systematic error.",
+      "commonMisconception": "Believing repetition alone establishes accuracy."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "With the empty mirror, the needle coincides with its image when it is at the:",
+        "options": [
+          "Focus",
+          "Centre of curvature",
+          "Pole",
+          "Infinity"
+        ],
+        "answer": 1,
+        "feedback": "At C every ray travels along a radius, meets the mirror normally and retraces its path."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "After liquid is poured in, the coincidence position is:",
+        "options": [
+          "Higher than before",
+          "Lower than before",
+          "Unchanged",
+          "Not obtainable"
+        ],
+        "answer": 1,
+        "feedback": "The apparent centre of curvature is closer, so the needle must be lowered."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "The refractive index is calculated as:",
+        "options": [
+          "R′/R",
+          "R/R′",
+          "R × R′",
+          "R − R′"
+        ],
+        "answer": 1,
+        "feedback": "μ = true radius / apparent radius, which is always greater than 1."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record at least three complete sets of readings.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Keep the microscope least count unchanged during a set.",
+        "check": "volumeConstant"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the refractive index of water you obtained.",
+        "answer": 1.333,
+        "tolerance": 0.07,
+        "feedback": "Water is about 1.33 by this method too."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "For a mirror of R = 30 cm and water, what apparent radius would you expect (cm)?",
+        "answer": 22.5,
+        "tolerance": 2,
+        "feedback": "R′ = R/μ = 30/1.33 ≈ 22.5 cm."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Repeating with a mirror of different radius should give:",
+        "options": [
+          "A larger μ",
+          "A smaller μ",
+          "The same μ",
+          "No result"
+        ],
+        "answer": 2,
+        "feedback": "Both R and R′ scale together, so μ is unchanged. It is a property of the liquid."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "μ = R/R′, where R′ is the apparent radius of curvature with liquid present",
+    "assumptions": [
+      "The liquid layer is thin compared with the radius of curvature",
+      "Paraxial rays and a small-aperture mirror",
+      "The liquid surface is horizontal and the mirror axis vertical",
+      "Coincidence is judged by removing parallax"
+    ],
+    "validRange": "Mirror radius 20 to 30 cm; liquids of refractive index 1.30 to 1.60",
+    "unitSystem": "Distances in cm; refractive index dimensionless",
+    "edgeCases": [
+      "μ must always exceed 1; a smaller value indicates a measurement error",
+      "A deep liquid layer breaks the thin-layer assumption — warned",
+      "A denser liquid lowers the coincidence position further",
+      "The result must not depend on the mirror chosen"
+    ],
+    "expectedBehaviour": [
+      "Water gives about 1.33 and glycerine about 1.47",
+      "The apparent radius is always less than the true radius",
+      "Both mirrors give the same refractive index",
+      "The value agrees with the liquid-lens method"
+    ],
+    "testFile": "tests/batch6.test.js"
+  }
+}

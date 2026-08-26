@@ -1,0 +1,521 @@
+{
+  "id": "XII-PHY-ACT-A5",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 5,
+    "kind": "activity",
+    "unit": "Unit III: Current Electricity",
+    "chapter": "Chapter-3: Current Electricity",
+    "topic": "Electric current, flow of electric charges in a metallic conductor, drift velocity, mobility and their relation with electric current; Ohm’s law, V-I characteristics, electrical resistivity and conductivity, temperature dependence of resistance, internal resistance of a cell, potential difference and emf of a cell, combination of cells, Kirchhoff’s rules, Wheatstone bridge",
+    "subtopic": "Potential gradient along a uniform wire; the principle of the potentiometer",
+    "practical": "To study the variation in potential drop with length of a wire for a steady current.",
+    "learningObjectives": [
+      "Be able to measure the potential drop across different lengths of a uniform wire carrying a steady current",
+      "Be able to plot the potential drop against length and show that the graph is a straight line through the origin",
+      "Be able to find the potential gradient along the wire from the slope of that line",
+      "Be able to establish the principle on which the potentiometer depends"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Activity 5 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Variation of potential drop with length of a wire for a steady current",
+  "shortTitle": "Potential drop vs length",
+  "objective": [
+    "To measure the potential drop across different lengths of a uniform wire carrying a steady current.",
+    "To plot the potential drop against length and show that the graph is a straight line through the origin.",
+    "To find the potential gradient along the wire from the slope of that line.",
+    "To establish the principle on which the potentiometer depends."
+  ],
+  "theory": {
+    "statement": "If a steady current is passed through a long wire of uniform thickness, the potential falls steadily along it. Tap off any length you like and the potential difference across that length is proportional to the length itself. The constant of proportionality is the potential gradient, measured in volt per metre, and it is what makes the potentiometer a usable instrument: a length of wire becomes a scale of potential difference.",
+    "derivationNote": "For a uniform wire of resistivity ρ and cross-sectional area A, a length l has resistance R = ρl/A. If a steady current I flows, Ohm’s law gives the potential drop across that length as V = IR = (Iρ/A)·l. Everything in the bracket is fixed while the current is steady, so V is directly proportional to l and a graph of V against l is a straight line. Its slope k = Iρ/A is the potential gradient. Two features of that graph matter. First, it must pass through the origin: at zero length there is no resistance and hence no potential drop, so an intercept means something is wrong, usually a resistance at the contact that is being counted as part of the wire. Second, it must be straight: curvature means the current is not steady, which happens if the wire warms up appreciably and its resistance drifts. This is why potentiometer wire is made of constantan, whose resistivity is almost independent of temperature, rather than a cheaper alloy like nichrome whose temperature coefficient is twenty times larger.",
+    "keyEquations": [
+      "Resistance of a length l of uniform wire: R = ρl/A",
+      "Potential drop across it: V = IR = (Iρ/A)·l",
+      "Potential gradient: k = V/l = Iρ/A, in volt per metre",
+      "The V–l graph is a straight line through the origin, of slope k",
+      "A thicker wire of the same material gives a smaller gradient for the same current"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Potentiometer wire",
+      "spec": "100 cm of constantan, stretched on a board beside a metre scale",
+      "why": "The uniform wire along which the potential falls; constantan barely changes resistance with temperature"
+    },
+    {
+      "name": "Driver cell",
+      "spec": "1.5 V to 6 V",
+      "why": "Drives the steady current along the whole wire"
+    },
+    {
+      "name": "Rheostat",
+      "spec": "0 to 30 Ω",
+      "why": "Sets the current, and hence the potential gradient, to a convenient value"
+    },
+    {
+      "name": "Jockey",
+      "spec": "sliding contact",
+      "why": "Taps off the chosen length; it is pressed, not dragged, so as not to score the wire"
+    },
+    {
+      "name": "Voltmeter",
+      "spec": "least count 0.02 to 0.1 V",
+      "why": "Measures the potential drop between the end terminal and the jockey"
+    },
+    {
+      "name": "Key and connecting leads",
+      "spec": "",
+      "why": "Closes the driver circuit only while a reading is being taken, so the wire does not heat needlessly"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "wire",
+      "label": "Wire",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "constantan",
+      "options": [
+        "constantan",
+        "constantanThick",
+        "nichrome"
+      ]
+    },
+    {
+      "id": "driver",
+      "label": "Driver cell",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "cell30",
+      "options": [
+        "cell15",
+        "cell30",
+        "cell60"
+      ]
+    },
+    {
+      "id": "voltmeter",
+      "label": "Voltmeter",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "v005",
+      "options": [
+        "v01",
+        "v005",
+        "v002"
+      ]
+    },
+    {
+      "id": "rheostatOhm",
+      "label": "Rheostat",
+      "symbol": "R",
+      "unit": "Ω",
+      "type": "control",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "id": "tapLengthCm",
+      "label": "Length tapped off",
+      "symbol": "l",
+      "unit": "cm",
+      "type": "independent",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "id": "gradient",
+      "label": "Potential gradient",
+      "symbol": "k",
+      "unit": "V/m",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Connect the driver cell, the key and the rheostat in series with the whole length of the potentiometer wire.",
+      "checkpoint": true,
+      "expects": "driver"
+    },
+    {
+      "step": 2,
+      "text": "Connect the voltmeter between the end terminal of the wire and the jockey."
+    },
+    {
+      "step": 3,
+      "text": "Close the key and adjust the rheostat so that a convenient current flows. Do not alter it again during the run: the current must stay steady.",
+      "checkpoint": true,
+      "expects": "rheostatOhm"
+    },
+    {
+      "step": 4,
+      "text": "Press the jockey at 10 cm and read the voltmeter. Press, do not drag: dragging scores the wire and makes it non-uniform."
+    },
+    {
+      "step": 5,
+      "text": "Repeat at intervals along the whole wire — 10, 25, 40, 55, 70, 85 and 100 cm — spreading the readings out rather than bunching them.",
+      "checkpoint": true
+    },
+    {
+      "step": 6,
+      "text": "Plot V against l. Check that the points lie on a straight line and that it passes through the origin."
+    },
+    {
+      "step": 7,
+      "text": "Find the slope of the line. That slope is the potential gradient of the wire, in volt per metre."
+    }
+  ],
+  "simulation": {
+    "model": "potential-drop",
+    "renderer": "potential-drop",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "tapLengthCm",
+        "widget": "slider"
+      },
+      {
+        "var": "rheostatOhm",
+        "widget": "slider"
+      },
+      {
+        "var": "wire",
+        "widget": "segmented",
+        "options": [
+          "constantan",
+          "constantanThick",
+          "nichrome"
+        ]
+      },
+      {
+        "var": "driver",
+        "widget": "segmented",
+        "options": [
+          "cell15",
+          "cell30",
+          "cell60"
+        ]
+      },
+      {
+        "var": "voltmeter",
+        "widget": "segmented",
+        "options": [
+          "v01",
+          "v005",
+          "v002"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record V and l",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Reading",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "lengthCm",
+        "label": "Length l",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "voltageV",
+        "label": "Potential drop V",
+        "unit": "V",
+        "decimals": 3
+      },
+      {
+        "key": "ratioVPerM",
+        "label": "V / l",
+        "unit": "V/m",
+        "decimals": 3
+      }
+    ],
+    "graph": {
+      "x": "lengthCm",
+      "y": "voltageV",
+      "xLabel": "Length l (cm)",
+      "yLabel": "Potential drop V (V)",
+      "throughOrigin": true
+    },
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "Tabulate the potential drop V against the length l tapped off",
+      "Compute V/l for each row and check that it is the same throughout",
+      "Plot V against l and draw the best straight line through the points",
+      "Confirm that the line passes through the origin",
+      "The slope of the line is the potential gradient k, in volt per metre"
+    ],
+    "resultKeys": [
+      "gradient",
+      "intercept",
+      "r2"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Potential gradient along the wire",
+    "symbol": "k",
+    "value": 0.774,
+    "tolerance": 0.15,
+    "unit": "V/m",
+    "secondary": {
+      "quantity": "Intercept of the V–l line",
+      "value": 0,
+      "tolerance": 0.03,
+      "unit": "V"
+    },
+    "statement": "The potential drop rises in direct proportion to the length tapped off. With the 3 V driver and 4 Ω in the rheostat the gradient is about 0.77 V per metre, the points lie on a straight line, and that line passes through the origin — which together establish the principle of the potentiometer."
+  },
+  "safety": [
+    "Press the jockey on the wire; never drag it along. Dragging scores the wire, makes it non-uniform, and ruins the apparatus for everyone after you.",
+    "Keep the key open except while a reading is being taken, so the wire does not heat unnecessarily.",
+    "Do not exceed the current rating of the wire. A hot wire does not have a steady resistance, and the whole activity depends on the current being steady.",
+    "Check that the driver cell is connected the right way round before closing the key.",
+    "Let the apparatus cool before dismantling it after a long run."
+  ],
+  "sourcesOfError": [
+    "The wire may not be perfectly uniform along its length, so the gradient varies slightly from place to place.",
+    "Contact resistance at the jockey or at the end terminal adds a small constant to every reading, showing up as an intercept.",
+    "The driver current drifts if the wire warms, and then the later readings do not belong on the same line as the earlier ones.",
+    "The voltmeter is not ideal and draws a little current from the wire, slightly reducing the reading.",
+    "Parallax in reading the jockey position against the metre scale.",
+    "Bunching all the readings into a short span of the wire makes the slope very poorly determined."
+  ],
+  "viva": [
+    {
+      "question": "Why is the potential drop proportional to the length of wire tapped off?",
+      "expectedConcept": "Because for a uniform wire the resistance of a length l is R = ρl/A, proportional to l. With a steady current I, Ohm’s law gives V = IR = (Iρ/A)l. Everything in the bracket is constant while the current is steady, so V is proportional to l.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "R ∝ l, and V = IR at constant I.",
+      "commonMisconception": "Thinking the proportionality holds even if the current is allowed to change."
+    },
+    {
+      "question": "What is the potential gradient, and what are its units?",
+      "expectedConcept": "It is the potential difference per unit length along the wire, k = V/l, measured in volt per metre. It equals Iρ/A, so it depends on the current, the material and the thickness of the wire — but not on where along the wire it is measured, provided the wire is uniform.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "k = V/l in V/m.",
+      "commonMisconception": "Confusing the potential gradient with the potential difference itself."
+    },
+    {
+      "question": "Why must the graph pass through the origin?",
+      "expectedConcept": "Because at zero length there is no wire between the terminal and the jockey, hence no resistance and no potential drop. A line that misses the origin indicates a constant added to every reading, which usually means a contact resistance at the terminal being counted as part of the wire.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "Zero length must mean zero drop.",
+      "commonMisconception": "Treating a small intercept as experimental scatter rather than a systematic fault."
+    },
+    {
+      "question": "Why must the current be kept steady throughout?",
+      "expectedConcept": "Because the gradient k = Iρ/A depends directly on the current. If the current changes between readings, each point belongs to a different gradient, so the points no longer lie on one straight line and the slope means nothing.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "k depends on I, so I must not drift.",
+      "commonMisconception": "Adjusting the rheostat between readings to get a convenient voltmeter deflection."
+    },
+    {
+      "question": "Why is potentiometer wire made of constantan rather than copper or nichrome?",
+      "expectedConcept": "Constantan has a high resistivity, so a metre of thin wire gives a usable resistance and a measurable gradient, and — as its name suggests — its resistivity barely changes with temperature. Copper has too low a resistivity, and nichrome, though resistive, has a temperature coefficient some twenty times larger, so it drifts as it warms.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "High ρ and a near-zero temperature coefficient.",
+      "commonMisconception": "Assuming any resistance wire would serve equally well."
+    },
+    {
+      "question": "What happens to the gradient if a thicker wire of the same material is used?",
+      "expectedConcept": "It falls, because k = Iρ/A and the area A is in the denominator. Doubling the cross-sectional area halves the gradient for the same current. A smaller gradient means a longer length is needed for a given potential difference, which gives finer resolution but a smaller range.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "k ∝ 1/A.",
+      "commonMisconception": "Expecting the thickness not to matter because the material is the same."
+    },
+    {
+      "question": "How is this result used in a potentiometer experiment?",
+      "expectedConcept": "Because the potential difference along the wire is proportional to length, the wire becomes a continuously variable, calibrated source of potential difference. Balancing an unknown emf against it and noting the balancing length gives the emf directly, with no current drawn from the source being measured at balance — which is why a potentiometer measures emf rather than terminal voltage.",
+      "difficulty": "hard",
+      "bloom": "Apply",
+      "answerLogic": "Length becomes a scale of potential difference.",
+      "commonMisconception": "Thinking the potentiometer measures a potential difference the way a voltmeter does."
+    },
+    {
+      "question": "Why is the jockey pressed rather than dragged along the wire?",
+      "expectedConcept": "Dragging scratches and thins the wire, making its cross-section non-uniform. The proportionality between potential drop and length then fails, because A varies along the wire, and the apparatus is permanently degraded for every subsequent user.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Dragging makes the wire non-uniform.",
+      "commonMisconception": "Believing a light drag is harmless."
+    },
+    {
+      "question": "What would curvature in the V–l graph indicate?",
+      "expectedConcept": "That the current was not steady while the readings were taken — most often because the wire warmed up, raising its resistance and reducing the current as the run went on. It can also indicate a wire whose thickness varies systematically along its length.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Curvature means a drifting current.",
+      "commonMisconception": "Attributing curvature to random reading error rather than a systematic drift."
+    },
+    {
+      "question": "Why should the readings be spread along the whole wire rather than bunched together?",
+      "expectedConcept": "Because the slope is determined by the span the points cover. Over a short span the difference between the extreme readings is small compared with the uncertainty in each, so the fitted slope is poorly constrained. Spreading the points over the full metre makes the slope far better determined for the same reading error.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "A long baseline determines a slope better.",
+      "commonMisconception": "Assuming more readings always help, regardless of where they are taken."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "For a uniform wire carrying a steady current, the potential drop across a length l is:",
+        "options": [
+          "Independent of l",
+          "Proportional to l",
+          "Proportional to l²",
+          "Inversely proportional to l"
+        ],
+        "answer": 1,
+        "feedback": "V = IR = (Iρ/A)l, so V is directly proportional to l."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The potential gradient along a potentiometer wire is measured in:",
+        "options": [
+          "Volt",
+          "Ohm per metre",
+          "Volt per metre",
+          "Ampere per metre"
+        ],
+        "answer": 2,
+        "feedback": "It is a potential difference per unit length, so V/m."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "The V against l graph for a uniform wire should be:",
+        "options": [
+          "A curve through the origin",
+          "A straight line through the origin",
+          "A straight line with a positive intercept",
+          "A horizontal line"
+        ],
+        "answer": 1,
+        "feedback": "Zero length gives zero drop, and the relation is linear."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Take at least four readings spread along the wire.",
+        "check": "rows>=4"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Keep the rheostat setting fixed so the current stays steady.",
+        "check": "settled"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the potential gradient you found, in V/m.",
+        "answer": 0.774,
+        "tolerance": 0.2,
+        "feedback": "About 0.77 V/m with the 3 V driver and 4 Ω in the rheostat."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "Your V–l line passes through the origin. This confirms that:",
+        "options": [
+          "The voltmeter is accurate",
+          "There is no significant contact resistance",
+          "The current was large",
+          "The wire is made of constantan"
+        ],
+        "answer": 1,
+        "feedback": "An intercept would indicate a constant added to every reading, typically a contact resistance."
+      },
+      {
+        "id": "post3",
+        "type": "numeric",
+        "question": "Using your gradient, what potential difference would appear across the whole 100 cm of wire, in V?",
+        "answer": 0.774,
+        "tolerance": 0.2,
+        "feedback": "k multiplied by 1.00 m gives the drop across the full wire."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Resistance of a length l of uniform wire: R = ρl/A",
+    "assumptions": [
+      "Resistance of a length l of uniform wire: R = ρl/A",
+      "Potential drop across it: V = IR = (Iρ/A)·l",
+      "Potential gradient: k = V/l = Iρ/A, in volt per metre",
+      "The V–l graph is a straight line through the origin, of slope k"
+    ],
+    "validRange": "The potential drop rises in direct proportion to the length tapped off. With the",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "The wire may not be perfectly uniform along its length, so the gradient varies slightly from place to place.",
+      "Contact resistance at the jockey or at the end terminal adds a small constant to every reading, showing up as an intercept.",
+      "The driver current drifts if the wire warms, and then the later readings do not belong on the same line as the earlier ones.",
+      "The voltmeter is not ideal and draws a little current from the wire, slightly reducing the reading."
+    ],
+    "expectedBehaviour": [
+      "The potential drop rises in direct proportion to the length tapped off. With the 3 V driver and 4 Ω in the rheostat the gradient is about 0.77 V per metre, the points lie on a straight line, and that line passes through the origin — which together establish the principle of the potentiometer."
+    ],
+    "testFile": "tests/batch11.test.js"
+  }
+}

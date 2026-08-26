@@ -1,0 +1,552 @@
+{
+  "id": "XII-PHY-A03",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 3,
+    "unit": "Unit II: Current Electricity",
+    "chapter": "Chapter-3: Current Electricity",
+    "topic": "Electric current; Ohm's law; resistance and resistivity; series and parallel combinations of resistors; Wheatstone bridge",
+    "subtopic": "Laws of combination of resistances in series and in parallel, verified by a null method",
+    "practical": "To verify the laws of combination (series) of resistances using a metre bridge. OR To verify the laws of combination (parallel) of resistances using a metre bridge.",
+    "learningObjectives": [
+      "Measure the resistance of each of two coils separately using a metre bridge",
+      "Measure the resistance of the two coils joined in series",
+      "Measure the resistance of the two coils joined in parallel",
+      "Verify experimentally that the series combination equals the sum of the individual resistances",
+      "Verify that the reciprocal of the parallel combination equals the sum of the reciprocals",
+      "Explain why a parallel combination is always smaller than the smaller component"
+    ],
+    "competencies": [
+      "Building series and parallel networks from a circuit diagram",
+      "Predicting a value from theory and then testing that prediction by measurement",
+      "Choosing the resistance box so the null point stays near the middle for each combination",
+      "Comparing a measured value against a calculated one and judging the agreement"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Experiment 3 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Laws of combination of resistances, verified with a metre bridge",
+  "shortTitle": "Combination Laws",
+  "objective": [
+    "To determine the resistance of two coils separately using a metre bridge.",
+    "To verify the law of combination of resistances in series.",
+    "To verify the law of combination of resistances in parallel."
+  ],
+  "theory": {
+    "statement": "When resistors are joined end to end in series the same current passes through each, and the potential differences add. When they are joined in parallel the same potential difference is applied across each, and the currents add.",
+    "derivationNote": "In series the current I is common, so the total potential difference is V = IR₁ + IR₂ = I(R₁ + R₂), giving an equivalent resistance R_s = R₁ + R₂. The combination is therefore always GREATER than either resistance. In parallel the potential difference V is common, so the total current is I = V/R₁ + V/R₂ = V(1/R₁ + 1/R₂), giving 1/R_p = 1/R₁ + 1/R₂, or R_p = R₁R₂/(R₁ + R₂). Since each term on the right of 1/R_p = 1/R₁ + 1/R₂ is positive, 1/R_p exceeds 1/R₁, so R_p is always SMALLER than the smaller of the two resistances. Each combination is measured on the metre bridge exactly as a single unknown would be, using S = R(100 − l)/l, and the measured value is then compared with the value predicted from the separate readings.",
+    "keyEquations": [
+      "Series: R_s = R₁ + R₂",
+      "Parallel: 1/R_p = 1/R₁ + 1/R₂, so R_p = R₁R₂/(R₁ + R₂)",
+      "Balance condition: S = R(100 − l)/l",
+      "R_s > R₁ and R_s > R₂",
+      "R_p < R₁ and R_p < R₂"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Metre bridge",
+      "spec": "one metre of uniform constantan wire on a wooden board with a metre scale",
+      "why": "Provides the two ratio arms as two lengths of one uniform wire"
+    },
+    {
+      "name": "Resistance box",
+      "spec": "0–100 Ω, plug type",
+      "why": "Supplies the known resistance R in the left gap"
+    },
+    {
+      "name": "Galvanometer",
+      "spec": "centre-zero, sensitive",
+      "why": "Detects the null point; must show deflection either side of zero"
+    },
+    {
+      "name": "Jockey",
+      "spec": "sharp knife edge",
+      "why": "Makes contact at one definite point on the bridge wire"
+    },
+    {
+      "name": "Leclanche cell or battery eliminator",
+      "spec": "2 V",
+      "why": "Drives the current through the bridge; a low voltage prevents heating"
+    },
+    {
+      "name": "One-way key",
+      "spec": "plug key",
+      "why": "Breaks the circuit when readings are not being taken, so the wire does not heat"
+    },
+    {
+      "name": "Unknown resistance coil",
+      "spec": "constantan or nichrome wire",
+      "why": "The resistance to be determined, placed in the right gap"
+    },
+    {
+      "name": "Screw gauge",
+      "spec": "least count 0.001 cm",
+      "why": "Measures the diameter of the wire, needed for resistivity"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "resistanceBox",
+      "label": "Resistance from box",
+      "symbol": "R",
+      "unit": "Ω",
+      "type": "independent",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "id": "jockeyCm",
+      "label": "Jockey position",
+      "symbol": "l",
+      "unit": "cm",
+      "type": "independent",
+      "min": 1,
+      "max": 99,
+      "step": 0.1,
+      "default": 50
+    },
+    {
+      "id": "unknown",
+      "label": "Unknown coil",
+      "symbol": "S",
+      "unit": "Ω",
+      "type": "control",
+      "default": "coilA",
+      "options": [
+        "coilA",
+        "coilB",
+        "coilC"
+      ]
+    },
+    {
+      "id": "combination",
+      "label": "Combination",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "single",
+      "options": [
+        "single",
+        "series",
+        "parallel"
+      ]
+    },
+    {
+      "id": "emf",
+      "label": "Cell e.m.f.",
+      "symbol": "E",
+      "unit": "V",
+      "type": "controlled",
+      "min": 1,
+      "max": 4,
+      "step": 0.5,
+      "default": 2
+    },
+    {
+      "id": "unknownS",
+      "label": "Unknown resistance",
+      "symbol": "S",
+      "unit": "Ω",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Connect coil A alone in the right gap and a suitable resistance in the left gap.",
+      "checkpoint": true,
+      "expects": "wiringCorrect"
+    },
+    {
+      "step": 2,
+      "text": "Find the null point and calculate the resistance of coil A from S = R(100 − l)/l.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 3,
+      "text": "Repeat for coil B alone and record its resistance.",
+      "checkpoint": false
+    },
+    {
+      "step": 4,
+      "text": "Now join the two coils in SERIES and place the combination in the right gap.",
+      "checkpoint": true,
+      "expects": "combination"
+    },
+    {
+      "step": 5,
+      "text": "Choose a larger resistance from the box so that the null point still falls near the middle of the wire.",
+      "checkpoint": true,
+      "expects": "resistanceBox"
+    },
+    {
+      "step": 6,
+      "text": "Find the null point and calculate the resistance of the series combination.",
+      "checkpoint": false
+    },
+    {
+      "step": 7,
+      "text": "Join the two coils in PARALLEL and repeat, this time choosing a smaller resistance from the box.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 8,
+      "text": "Calculate the expected values from R_s = R₁ + R₂ and R_p = R₁R₂/(R₁ + R₂).",
+      "checkpoint": false
+    },
+    {
+      "step": 9,
+      "text": "Compare each measured combination with its predicted value and comment on the agreement.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "metre-bridge",
+    "renderer": "metre-bridge",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "combination",
+        "widget": "segmented",
+        "options": [
+          "single",
+          "series",
+          "parallel"
+        ]
+      },
+      {
+        "var": "jockeyCm",
+        "widget": "slider"
+      },
+      {
+        "var": "resistanceBox",
+        "widget": "slider"
+      },
+      {
+        "var": "unknown",
+        "widget": "segmented",
+        "options": [
+          "coilA",
+          "coilB",
+          "coilC"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "findNull",
+        "label": "Record balance point",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "resistanceBox",
+        "label": "R",
+        "unit": "Ω",
+        "decimals": 0
+      },
+      {
+        "key": "balanceLength",
+        "label": "l",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "rightLength",
+        "label": "100 − l",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "unknownS",
+        "label": "S = R(100−l)/l",
+        "unit": "Ω",
+        "decimals": 3
+      }
+    ],
+    "graph": {
+      "x": "resistanceBox",
+      "y": "balanceLength",
+      "xLabel": "R (Ω)",
+      "yLabel": "Balance length l (cm)",
+      "throughOrigin": false
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "For each reading, S = R(100 − l)/l",
+      "Mean value for each configuration",
+      "Predicted series value R₁ + R₂",
+      "Predicted parallel value R₁R₂/(R₁ + R₂)",
+      "Percentage difference between the measured and predicted values"
+    ],
+    "resultKeys": [
+      "resistance",
+      "expected",
+      "combination"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Resistance of the series combination",
+    "symbol": "R_s",
+    "value": 12.9,
+    "tolerance": 0.5,
+    "unit": "Ω",
+    "secondary": {
+      "quantity": "Resistance of the parallel combination",
+      "value": 2.99,
+      "tolerance": 0.2,
+      "unit": "Ω"
+    },
+    "statement": "Coil A measures about 4.7 Ω and coil B about 8.2 Ω. In series the combination measures about 12.9 Ω, equal to their sum. In parallel it measures about 2.99 Ω, equal to R₁R₂/(R₁ + R₂) and smaller than either coil. Both laws of combination are verified within experimental error."
+  },
+  "safety": [
+    "Press the jockey gently and only for an instant; dragging it along the wire scrapes the surface and destroys the uniformity on which the whole method depends.",
+    "Keep the key open except while actually taking a reading, so the wire does not heat.",
+    "Use a cell of about 2 V; a higher voltage passes a large current and changes the resistance of the wire by heating it.",
+    "Check that all connections are tight and the terminals clean before switching on."
+  ],
+  "sourcesOfError": [
+    "The bridge wire may not be perfectly uniform in cross-section along its length.",
+    "End resistances at the copper strips and contact resistance at the terminals are not accounted for.",
+    "Heating of the wire by the current changes its resistance during the experiment.",
+    "Error in reading the position of the jockey against the metre scale, made worse if the null point is near either end.",
+    "The resistance box plugs may be loose or dirty, adding an unknown extra resistance."
+  ],
+  "viva": [
+    {
+      "question": "State the law of combination of resistances in series.",
+      "expectedConcept": "When resistors are joined in series the equivalent resistance is the sum of the individual resistances: R_s = R₁ + R₂ + ... The same current flows through each and the potential differences add.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Sum, with the reason from common current.",
+      "commonMisconception": "Quoting the parallel formula."
+    },
+    {
+      "question": "State the law of combination in parallel.",
+      "expectedConcept": "The reciprocal of the equivalent resistance is the sum of the reciprocals: 1/R_p = 1/R₁ + 1/R₂. The same potential difference is applied across each and the currents add.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Reciprocal sum, with the reason from common voltage.",
+      "commonMisconception": "Writing R_p = R₁ + R₂ divided by two."
+    },
+    {
+      "question": "Why is a parallel combination always smaller than the smaller resistance?",
+      "expectedConcept": "Adding a second path in parallel gives the current an extra route, so more current flows for the same voltage and the effective resistance falls. Algebraically 1/R_p = 1/R₁ + 1/R₂ is larger than 1/R₁ alone, so R_p is less than R₁.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Extra conducting path; reciprocal argument.",
+      "commonMisconception": "Expecting the parallel value to lie between the two resistances."
+    },
+    {
+      "question": "Why must the resistance box value be changed between the series and parallel measurements?",
+      "expectedConcept": "The null point sits at l = 100R/(R + S). The series combination is about 12.9 Ω and the parallel about 3 Ω, so keeping the same R would drive the balance point towards one end where the percentage error is large. R must be chosen close to the unknown each time.",
+      "difficulty": "hard",
+      "bloom": "Apply",
+      "answerLogic": "Keeping the null point near the middle for each configuration.",
+      "commonMisconception": "Leaving R unchanged throughout."
+    },
+    {
+      "question": "Two coils of 4.7 Ω and 8.2 Ω are joined in parallel. Calculate the expected resistance.",
+      "expectedConcept": "R_p = (4.7 × 8.2)/(4.7 + 8.2) = 38.54/12.9 = 2.99 Ω.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Product over sum for two resistors.",
+      "commonMisconception": "Adding to get 12.9 Ω."
+    },
+    {
+      "question": "Which combination would you use to obtain a large resistance from small ones?",
+      "expectedConcept": "Series, because the resistances simply add. To obtain a small resistance from larger ones you would use parallel.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Series adds, parallel reduces.",
+      "commonMisconception": "Confusing the two."
+    },
+    {
+      "question": "Why does the current split unequally between two unequal parallel resistances?",
+      "expectedConcept": "Both branches have the same potential difference across them, so by Ohm's law the current in each is V/R. The branch of smaller resistance carries the larger current, in inverse proportion to the resistances.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Common V, so I ∝ 1/R.",
+      "commonMisconception": "Assuming the current divides equally."
+    },
+    {
+      "question": "Household appliances are connected in parallel, not in series. Why?",
+      "expectedConcept": "Each appliance then receives the full mains voltage and can be switched on or off independently. In series they would share the voltage, all would have to be on together, and a break anywhere would stop everything.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Independent operation at full voltage.",
+      "commonMisconception": "Saying it is only to save wire."
+    },
+    {
+      "question": "Your measured series value is 12.7 Ω but the predicted value is 12.9 Ω. Is the law disproved?",
+      "expectedConcept": "No. The difference is about 1.5 per cent, which is within the experimental error of a metre bridge arising from end resistances, contact resistance at the terminals and the uncertainty in reading the null point.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Compare the discrepancy with the known sources of error.",
+      "commonMisconception": "Treating any numerical difference as a failure of the law."
+    },
+    {
+      "question": "Would the connecting wires themselves affect your result?",
+      "expectedConcept": "Yes, slightly. The connecting leads and the contacts at the terminals add a small resistance in series with the coils, so the measured value is a little higher than the true coil resistance. The effect is largest for the parallel combination, where the coil resistance itself is smallest.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "A fixed lead resistance matters more when the unknown is small.",
+      "commonMisconception": "Assuming connecting wires have exactly zero resistance."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Two resistors of 4 Ω and 6 Ω are joined in series. The equivalent resistance is:",
+        "options": [
+          "2.4 Ω",
+          "5 Ω",
+          "10 Ω",
+          "24 Ω"
+        ],
+        "answer": 2,
+        "feedback": "In series the resistances simply add: 4 + 6 = 10 Ω."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The same two resistors joined in parallel give:",
+        "options": [
+          "10 Ω",
+          "5 Ω",
+          "2.4 Ω",
+          "0.42 Ω"
+        ],
+        "answer": 2,
+        "feedback": "R_p = (4 × 6)/(4 + 6) = 24/10 = 2.4 Ω, smaller than either resistor."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "In a parallel combination, the quantity that is the same across both resistors is:",
+        "options": [
+          "The current",
+          "The potential difference",
+          "The power",
+          "The resistance"
+        ],
+        "answer": 1,
+        "feedback": "Parallel branches share the same two nodes, so they have the same potential difference; the current divides between them."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Measure the coils separately and in combination — at least three readings.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Connect the resistance box and the combination in the correct gaps.",
+        "check": "wiringCorrect"
+      },
+      {
+        "id": "dur3",
+        "type": "task",
+        "question": "Keep every balance point between 40 cm and 60 cm by choosing a suitable R.",
+        "check": "concordant"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the measured resistance of the SERIES combination (Ω).",
+        "answer": 12.9,
+        "tolerance": 0.6,
+        "feedback": "4.7 + 8.2 = 12.9 Ω."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "State the measured resistance of the PARALLEL combination (Ω).",
+        "answer": 2.99,
+        "tolerance": 0.25,
+        "feedback": "(4.7 × 8.2)/(4.7 + 8.2) = 2.99 Ω."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Your parallel value is smaller than either coil. This is because:",
+        "options": [
+          "The coils were damaged",
+          "An extra path lets more current flow for the same voltage",
+          "The bridge was unbalanced",
+          "Resistance always falls in a circuit"
+        ],
+        "answer": 1,
+        "feedback": "A second parallel path increases the total current for a given voltage, so the effective resistance is lower than either branch."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "S = R(100 − l)/l; R_s = R₁ + R₂; 1/R_p = 1/R₁ + 1/R₂",
+    "assumptions": [
+      "Bridge wire uniform in cross-section and material",
+      "Resistance per unit length constant",
+      "End and contact resistances negligible",
+      "Galvanometer sensitive enough to detect the null",
+      "Negligible heating of the wire"
+    ],
+    "validRange": "Unknown 1 to 20 Ω; R 1 to 20 Ω; balance point kept between 30 and 70 cm",
+    "unitSystem": "Lengths in cm, resistance in Ω, resistivity in Ω·m",
+    "edgeCases": [
+      "R = 0: no balance possible — blocked as an error",
+      "Balance below 20 cm or above 80 cm: percentage error large — warned",
+      "Equal R and S balance exactly at 50.0 cm",
+      "Interchanging R and S moves the balance point to (100 − l)"
+    ],
+    "expectedBehaviour": [
+      "The series combination equals the sum of the separate values to within 3%",
+      "The parallel combination equals R₁R₂/(R₁+R₂) to within 4%",
+      "The parallel value is smaller than either coil; the series value larger than both",
+      "The null point moves left for the series combination and right for the parallel one"
+    ],
+    "testFile": "tests/batch4.test.js"
+  }
+}

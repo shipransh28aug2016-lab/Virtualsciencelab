@@ -1,0 +1,195 @@
+{
+  "id": "XII-PHY-B05",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 5,
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-9: Ray Optics and Optical Instruments",
+    "topic": "Reflection and refraction of light; total internal reflection; refraction at spherical surfaces; lenses; refraction through a prism; optical instruments",
+    "subtopic": "Angle of deviation, angle of minimum deviation, prism formula for refractive index",
+    "practical": "To determine angle of minimum deviation for a given prism by plotting a graph between angle of incidence and angle of deviation.",
+    "learningObjectives": [
+      "Trace the path of a ray of light through a glass prism for several angles of incidence",
+      "Measure the angle of deviation for each angle of incidence",
+      "Plot deviation against angle of incidence and recognise that the curve has a minimum",
+      "Read the angle of minimum deviation from the lowest point of the smooth curve",
+      "Calculate the refractive index of the material using the prism formula",
+      "Recognise that at minimum deviation the ray passes symmetrically through the prism"
+    ],
+    "competencies": [
+      "Careful ray tracing and accurate measurement of angles",
+      "Interpreting a curve with a turning point, rather than a straight line",
+      "Understanding why the minimum must be read from a fitted curve, not from the lowest reading taken",
+      "Relating a geometrical measurement to a material property"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 5 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Angle of minimum deviation for a prism, and refractive index",
+  "shortTitle": "Prism Deviation",
+  "objective": [
+    "To determine the angle of deviation for several angles of incidence for a given prism.",
+    "To plot a graph between the angle of incidence and the angle of deviation.",
+    "To find the angle of minimum deviation and hence the refractive index of the material of the prism."
+  ],
+  "theory": {
+    "statement": "A ray of light passing through a prism is refracted at both faces and emerges travelling in a different direction from the one in which it entered. The angle between the incident and emergent directions is the angle of deviation, and it depends on the angle of incidence.",
+    "derivationNote": "From the geometry of the prism, the angles of refraction at the two faces satisfy r₁ + r₂ = A, where A is the refracting angle. The total deviation is δ = (i − r₁) + (e − r₂) = i + e − A. As the angle of incidence is increased from a small value the deviation first decreases, reaches a minimum and then increases again, so the graph of δ against i is a curve with a turning point. It can be shown that the minimum occurs when the ray passes symmetrically through the prism, so that i = e and therefore r₁ = r₂ = A/2. Substituting into Snell's law at the first face gives the prism formula μ = sin((A + δm)/2) / sin(A/2). Because the curve is flat near its minimum, the lowest reading actually taken is not in general the true minimum; a smooth curve must be drawn through all the points and its lowest point read off.",
+    "keyEquations": [
+      "r₁ + r₂ = A",
+      "δ = i + e − A",
+      "At minimum deviation: i = e and r₁ = r₂ = A/2",
+      "μ = sin((A + δm)/2) / sin(A/2)",
+      "Snell's law at each face: sin i = μ sin r₁ and μ sin r₂ = sin e"
+    ]
+  },
+  "apparatus": [
+    { "name": "Glass prism", "spec": "equilateral, refracting angle 60°", "why": "The refracting body under test" },
+    { "name": "Drawing board with white paper", "spec": "", "why": "The prism outline and ray directions are traced on it" },
+    { "name": "Optical pins", "spec": "six, sharp", "why": "Two fix the incident ray and two the emergent ray, by the method of no parallax" },
+    { "name": "Protractor", "spec": "least count 0.5°", "why": "Measures the angles of incidence and deviation" },
+    { "name": "Half-metre scale", "spec": "", "why": "Draws the straight ray lines accurately" },
+    { "name": "Sharp pencil and drawing pins", "spec": "", "why": "A blunt pencil line is itself a source of angular error" },
+    { "name": "Spectrometer with sodium lamp", "spec": "vernier least count 0.5 arc-minute", "why": "The alternative and more precise method, using monochromatic light" }
+  ],
+  "materials": [],
+  "variables": [
+    { "id": "incidenceDeg", "label": "Angle of incidence", "symbol": "i", "unit": "degree", "type": "independent", "min": 25, "max": 80, "step": 1, "default": 50 },
+    { "id": "prism", "label": "Prism", "symbol": "A", "unit": "", "type": "control", "default": "crown60", "options": ["crown60", "crown45", "flint60", "perspex60"] },
+    { "id": "source", "label": "Light source", "symbol": "", "unit": "", "type": "control", "default": "sodium", "options": ["sodium", "red", "violet", "white"] },
+    { "id": "deviation", "label": "Angle of deviation", "symbol": "δ", "unit": "degree", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Fix the white paper to the drawing board and draw the outline of the prism with its refracting angle A uppermost.", "checkpoint": false },
+    { "step": 2, "text": "Draw a normal to the first refracting face and mark an angle of incidence of about 35°.", "checkpoint": true, "expects": "incidenceDeg" },
+    { "step": 3, "text": "Fix two pins on the incident ray, well apart, and replace the prism on its outline.", "checkpoint": false },
+    { "step": 4, "text": "Looking through the other face, fix two more pins so that they appear in a straight line with the images of the first two. This locates the emergent ray.", "checkpoint": true, "expects": "source" },
+    { "step": 5, "text": "Remove the prism and the pins, join the marks to obtain the emergent ray, and produce both rays until they meet. Measure the angle between them: this is the deviation.", "checkpoint": true, "expects": "record" },
+    { "step": 6, "text": "Repeat for angles of incidence increasing in steps of about 5°, from 35° up to about 70°.", "checkpoint": false },
+    { "step": 7, "text": "Take at least seven readings, making sure several lie on each side of the smallest value you find.", "checkpoint": true, "expects": "rows>=5" },
+    { "step": 8, "text": "Plot the angle of deviation against the angle of incidence and draw a free-hand smooth curve through the points. Do not join them with straight lines.", "checkpoint": false },
+    { "step": 9, "text": "Draw a tangent parallel to the x-axis at the lowest point of the curve. The corresponding deviation is δm. Calculate the refractive index from the prism formula.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "prism-deviation",
+    "renderer": "prism-deviation",
+    "fps": 60,
+    "controls": [
+      { "var": "incidenceDeg", "widget": "slider" },
+      { "var": "prism", "widget": "segmented", "options": ["crown60", "crown45", "flint60", "perspex60"] },
+      { "var": "source", "widget": "segmented", "options": ["sodium", "red", "violet", "white"] }
+    ],
+    "actions": [
+      { "id": "record", "label": "Record deviation", "primary": true },
+      { "id": "reset", "label": "Reset" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "trial", "label": "No.", "unit": "", "decimals": 0 },
+      { "key": "incidence", "label": "i", "unit": "°", "decimals": 1 },
+      { "key": "emergence", "label": "e", "unit": "°", "decimals": 1 },
+      { "key": "r1", "label": "r₁", "unit": "°", "decimals": 1 },
+      { "key": "r2", "label": "r₂", "unit": "°", "decimals": 1 },
+      { "key": "deviation", "label": "δ", "unit": "°", "decimals": 1 }
+    ],
+    "graph": { "x": "incidence", "y": "deviation", "xLabel": "Angle of incidence i (°)", "yLabel": "Angle of deviation δ (°)", "throughOrigin": false },
+    "minRows": 5
+  },
+  "calculations": {
+    "steps": [
+      "For each reading, check that δ = i + e − A",
+      "Plot δ against i and draw a smooth curve",
+      "Read δm at the lowest point of the curve",
+      "μ = sin((A + δm)/2) / sin(A/2)",
+      "Confirm that at the minimum i is approximately equal to e"
+    ],
+    "resultKeys": ["minimumDeviation", "refractiveIndex", "incidenceAtMinimum"]
+  },
+  "expectedResult": {
+    "quantity": "Angle of minimum deviation",
+    "symbol": "δm",
+    "value": 38.9,
+    "tolerance": 1.5,
+    "unit": "degree",
+    "secondary": { "quantity": "Refractive index of the glass", "value": 1.52, "tolerance": 0.04, "unit": "" },
+    "statement": "The graph of deviation against angle of incidence is a curve with a distinct minimum. For an equilateral crown-glass prism the angle of minimum deviation is about 39°, giving a refractive index of about 1.52. At the minimum the angle of emergence equals the angle of incidence, showing that the ray passes symmetrically through the prism."
+  },
+  "safety": [
+    "Optical pins are sharp. Press them in vertically and remove them carefully; never leave them loose on the bench.",
+    "Handle the prism by its edges. Fingerprints on the polished faces scatter light and spoil the image.",
+    "Do not look directly at a bright sodium lamp for long periods.",
+    "Keep the prism away from the edge of the table; glass chips easily and a chipped face cannot be used.",
+    "Use a lamp with a proper stand so it cannot topple onto the drawing board."
+  ],
+  "sourcesOfError": [
+    "The pins may not be fixed exactly vertical, which shifts the apparent ray direction.",
+    "A thick or blunt pencil line adds an angular error to every measurement.",
+    "The prism may be slightly displaced from its traced outline while the pins are being fixed.",
+    "Parallax while judging when the pins appear collinear.",
+    "The refracting angle A may not be exactly 60°, and should be measured rather than assumed.",
+    "Taking too few readings near the minimum, so the lowest point of the curve is poorly defined.",
+    "Using white light, which produces a spectrum instead of a single deviated ray."
+  ],
+  "viva": [
+    { "question": "Define the angle of deviation for a prism.", "expectedConcept": "It is the angle between the direction of the incident ray and the direction of the emergent ray, that is the angle through which the ray has been turned by passing through the prism.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Angle between incident and emergent directions.", "commonMisconception": "Confusing it with the refracting angle A of the prism." },
+    { "question": "Show that δ = i + e − A.", "expectedConcept": "The deviation at the first face is (i − r₁) and at the second face (e − r₂). The total deviation is their sum, i + e − (r₁ + r₂). Since the geometry of the prism gives r₁ + r₂ = A, this becomes δ = i + e − A.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Sum of deviations at the two faces plus the geometrical relation.", "commonMisconception": "Forgetting that r₁ + r₂ = A." },
+    { "question": "Why does the deviation curve have a minimum rather than falling steadily?", "expectedConcept": "As i increases, r₁ increases and r₂ decreases, so the deviation at the first face grows while that at the second face shrinks. At first the second effect dominates and the total falls, but beyond the symmetric position the first dominates and the total rises again. The two opposing trends produce a minimum.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Competition between the deviations at the two faces.", "commonMisconception": "Assuming a larger angle of incidence must always mean a larger deviation." },
+    { "question": "What is special about the path of the ray at minimum deviation?", "expectedConcept": "The ray passes symmetrically through the prism: the angle of incidence equals the angle of emergence, i = e, and therefore r₁ = r₂ = A/2. Inside the prism the ray is parallel to the base.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Symmetry condition.", "commonMisconception": "Thinking the ray passes undeviated at the minimum." },
+    { "question": "State the prism formula and explain each symbol.", "expectedConcept": "μ = sin((A + δm)/2) / sin(A/2), where μ is the refractive index of the material, A the refracting angle of the prism, and δm the angle of minimum deviation.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Correct formula with symbols identified.", "commonMisconception": "Writing sin(A + δm)/sin A without the halves." },
+    { "question": "Why must a smooth curve be drawn instead of joining the points with straight lines?", "expectedConcept": "The relation between δ and i is continuous and curved, and the curve is flat near its minimum. The lowest reading actually taken almost certainly does not fall exactly at the minimum. Drawing a smooth curve through all the points lets the true lowest value be read off, and it also averages out random errors in individual readings.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "The minimum lies between the sampled points.", "commonMisconception": "Reporting the smallest recorded deviation as δm." },
+    { "question": "What happens if the angle of incidence is made very small?", "expectedConcept": "The angle of refraction at the second face becomes large, and beyond a certain point it exceeds the critical angle. The ray is then totally internally reflected at the second face and no emergent ray is obtained at all.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "r₂ = A − r₁ grows as r₁ shrinks, until it passes the critical angle.", "commonMisconception": "Expecting a very small deviation at very small incidence." },
+    { "question": "How would the result differ if red light were used instead of violet?", "expectedConcept": "The refractive index of glass is smaller for red light than for violet, so red is deviated less. The angle of minimum deviation for red is therefore smaller, and the calculated refractive index correspondingly smaller. This wavelength dependence is dispersion.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "μ depends on wavelength.", "commonMisconception": "Believing refractive index is a single fixed number for a material." },
+    { "question": "Why is monochromatic light preferred for this experiment?", "expectedConcept": "White light contains all wavelengths and each is deviated by a different amount, so instead of one emergent ray a spectrum is produced and there is no single angle of deviation to measure. Sodium light is very nearly monochromatic, giving one sharp emergent ray.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Dispersion makes the measurement ambiguous.", "commonMisconception": "Thinking white light is simply dimmer rather than dispersed." },
+    { "question": "For a prism of small refracting angle, what does the deviation reduce to?", "expectedConcept": "For a thin prism the angles are all small, so the sines may be replaced by the angles themselves. The prism formula then gives δ = (μ − 1)A, independent of the angle of incidence. This is the result used in the theory of the achromatic combination and of dispersion.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "Small-angle approximation of the prism formula.", "commonMisconception": "Applying δ = (μ − 1)A to a 60° prism." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "For a ray passing through a prism, the deviation δ equals:", "options": ["i + e + A", "i + e − A", "i − e + A", "A − i − e"], "answer": 1, "feedback": "δ = (i − r₁) + (e − r₂) and r₁ + r₂ = A, so δ = i + e − A." },
+      { "id": "pre2", "type": "mcq", "question": "At the angle of minimum deviation:", "options": ["i is much greater than e", "i equals e", "The ray is undeviated", "r₁ equals A"], "answer": 1, "feedback": "The minimum occurs when the ray passes symmetrically, so i = e and r₁ = r₂ = A/2." },
+      { "id": "pre3", "type": "mcq", "question": "The graph of deviation against angle of incidence is:", "options": ["A straight line through the origin", "A straight line with an intercept", "A curve with a minimum", "A curve with a maximum"], "answer": 2, "feedback": "The deviation falls, reaches a minimum and rises again, so the curve has a turning point at the bottom." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Record at least five readings spanning both sides of the minimum.", "check": "rows>=5" },
+      { "id": "dur2", "type": "task", "question": "Vary the angle of incidence between readings.", "check": "tempVaried" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the angle of minimum deviation from your graph (degrees).", "answer": 38.9, "tolerance": 2.5, "feedback": "For an equilateral crown-glass prism, δm is about 39°." },
+      { "id": "post2", "type": "numeric", "question": "Calculate the refractive index of the material of the prism.", "answer": 1.52, "tolerance": 0.06, "feedback": "μ = sin((60 + 38.9)/2) / sin(30) = sin(49.45°) / 0.5 = 1.52." },
+      { "id": "post3", "type": "mcq", "question": "At a small angle of incidence no emergent ray is seen. This is because:", "options": ["The prism is too thick", "The light is absorbed", "Total internal reflection occurs at the second face", "The angle of deviation is zero"], "answer": 2, "feedback": "As r₁ decreases, r₂ = A − r₁ increases. Once r₂ exceeds the critical angle the ray is totally internally reflected and never emerges." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "δ = i + e − A; r₁ + r₂ = A; μ = sin((A + δm)/2)/sin(A/2)",
+    "assumptions": [
+      "The prism has a uniform refracting angle A",
+      "Monochromatic light is used, since μ depends on wavelength",
+      "The prism faces are clean and optically flat",
+      "The pins are vertical and the ray directions accurately traced"
+    ],
+    "validRange": "Refracting angle 30° to 60°; angle of incidence 30° to 75°",
+    "unitSystem": "All angles in degrees; refractive index dimensionless",
+    "edgeCases": [
+      "Below a critical angle of incidence the ray is totally internally reflected — warned",
+      "The δ–i curve has a minimum, unlike every other graph in the syllabus",
+      "Two angles of incidence give the same deviation, one on each side of the minimum",
+      "White light gives a spectrum, so no single deviation exists — warned"
+    ],
+    "expectedBehaviour": [
+      "δ falls, reaches a minimum, then rises as i increases",
+      "At the minimum i = e and r₁ = r₂ = A/2 to within reading error",
+      "μ recovered from A and δm reproduces the tabulated value",
+      "Violet deviates more than red, and flint more than crown"
+    ],
+    "testFile": "tests/batch3.test.js"
+  }
+}

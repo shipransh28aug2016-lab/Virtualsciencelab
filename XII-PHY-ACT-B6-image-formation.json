@@ -1,0 +1,528 @@
+{
+  "id": "XII-PHY-ACT-B6",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 6,
+    "kind": "activity",
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-9: Ray Optics and Optical Instruments",
+    "topic": "Reflection of light, spherical mirrors, mirror formula; refraction of light, total internal reflection and optical fibers, refraction at spherical surfaces, lenses, thin lens formula, lens maker’s formula; magnification, power of a lens, combination of thin lenses in contact; refraction of light through a prism",
+    "subtopic": "Image formation by a convex lens and a concave mirror; real and virtual images; magnification",
+    "practical": "To study the nature and size of the image formed by a (i) convex lens, or (ii) concave mirror, on a screen by using a candle and a screen.",
+    "learningObjectives": [
+      "Be able to obtain images of a candle flame on a screen for different object distances",
+      "Be able to classify each image as real or virtual, erect or inverted, enlarged or diminished",
+      "Be able to measure the magnification and compare it with the ratio of the image and object distances",
+      "Be able to find the focal length of the lens or mirror from the readings"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Activity 6 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Nature and size of the image formed by a convex lens or concave mirror",
+  "shortTitle": "Image on a screen",
+  "objective": [
+    "To obtain images of a candle flame on a screen for different object distances.",
+    "To classify each image as real or virtual, erect or inverted, enlarged or diminished.",
+    "To measure the magnification and compare it with the ratio of the image and object distances.",
+    "To find the focal length of the lens or mirror from the readings."
+  ],
+  "theory": {
+    "statement": "Move a candle slowly towards a convex lens and the image on the screen changes in a definite sequence: at first small and far from the lens, then the same size, then large and far away, and finally — once the candle is inside the focus — no image on the screen at all. Learning that sequence, and understanding why it ends the way it does, is the object of this activity.",
+    "derivationNote": "For a thin lens the object and image distances are related by 1/v − 1/u = 1/f in the New Cartesian convention, and for a mirror by 1/v + 1/u = 1/f. The magnification is m = v/u for a lens and m = −v/u for a mirror, and in both cases it equals the ratio of the image height to the object height. Working through the cases: with the object beyond 2F the image is real, inverted and diminished, and lies between F and 2F. At exactly 2F it is real, inverted and the same size, also at 2F — the neatest configuration in the whole experiment, and the easiest way to find f without any calculation. Between F and 2F the image is real, inverted and enlarged, lying beyond 2F. At the focus itself the emergent rays are parallel, so they never meet and no image forms at any finite distance. Inside the focus the emergent rays diverge and only APPEAR to come from a point on the same side as the object: the image is virtual, erect and enlarged. This last case is the one the apparatus cannot show, because light does not actually reach the place where the image seems to be, and a screen can only display light that arrives at it.",
+    "keyEquations": [
+      "Lens: 1/v − 1/u = 1/f, with m = v/u",
+      "Mirror: 1/v + 1/u = 1/f, with m = −v/u",
+      "In both cases m = height of image / height of object",
+      "At u = 2F the image is at 2F and the same size, so f = u/2",
+      "Inside the focus the image is virtual and cannot be caught on a screen"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Convex lens or concave mirror",
+      "spec": "f = 10 to 20 cm, in a holder",
+      "why": "The converging element under study"
+    },
+    {
+      "name": "Candle",
+      "spec": "flame about 2 cm high",
+      "why": "A self-luminous object of known height; its height sets the magnification scale"
+    },
+    {
+      "name": "White screen",
+      "spec": "on a sliding holder",
+      "why": "Catches the real image; it cannot show a virtual one"
+    },
+    {
+      "name": "Optical bench with a metre scale",
+      "spec": "least count 0.1 cm",
+      "why": "Measures the object and image distances along the axis"
+    },
+    {
+      "name": "Small scale or graph paper on the screen",
+      "spec": "least count 0.05 to 0.1 cm",
+      "why": "Measures the height of the image so the magnification can be found"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "element",
+      "label": "Element",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "lens",
+      "options": [
+        "lens",
+        "mirror"
+      ]
+    },
+    {
+      "id": "lens",
+      "label": "Convex lens",
+      "symbol": "f",
+      "unit": "",
+      "type": "control",
+      "default": "f15",
+      "options": [
+        "f10",
+        "f15",
+        "f20"
+      ]
+    },
+    {
+      "id": "mirror",
+      "label": "Concave mirror",
+      "symbol": "f",
+      "unit": "",
+      "type": "control",
+      "default": "m12",
+      "options": [
+        "m12",
+        "m18"
+      ]
+    },
+    {
+      "id": "scale",
+      "label": "Scale",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "s01",
+      "options": [
+        "s01",
+        "s005"
+      ]
+    },
+    {
+      "id": "objectDistanceCm",
+      "label": "Object distance",
+      "symbol": "u",
+      "unit": "cm",
+      "type": "independent",
+      "min": 5,
+      "max": 100,
+      "step": 1,
+      "default": 45
+    },
+    {
+      "id": "focalLength",
+      "label": "Focal length",
+      "symbol": "f",
+      "unit": "cm",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Mount the lens in its holder and place the lighted candle well beyond twice the focal length.",
+      "checkpoint": true,
+      "expects": "objectDistanceCm"
+    },
+    {
+      "step": 2,
+      "text": "Move the screen until the image of the flame is as sharp as you can make it.",
+      "checkpoint": true
+    },
+    {
+      "step": 3,
+      "text": "Record the object distance, the image distance, and the height of the image. Note whether it is erect or inverted."
+    },
+    {
+      "step": 4,
+      "text": "Move the candle to exactly twice the focal length and confirm that the image is the same size as the object.",
+      "checkpoint": true
+    },
+    {
+      "step": 5,
+      "text": "Move it between F and 2F and note that the image is now enlarged and further away."
+    },
+    {
+      "step": 6,
+      "text": "Move the candle to the focus. No image forms on the screen wherever you put it: the emergent rays are parallel."
+    },
+    {
+      "step": 7,
+      "text": "Move the candle inside the focus. The screen stays blank — now look THROUGH the lens and you will see the enlarged erect virtual image."
+    }
+  ],
+  "simulation": {
+    "model": "image-formation",
+    "renderer": "image-formation",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "objectDistanceCm",
+        "widget": "slider"
+      },
+      {
+        "var": "element",
+        "widget": "segmented",
+        "options": [
+          "lens",
+          "mirror"
+        ]
+      },
+      {
+        "var": "lens",
+        "widget": "segmented",
+        "options": [
+          "f10",
+          "f15",
+          "f20"
+        ]
+      },
+      {
+        "var": "mirror",
+        "widget": "segmented",
+        "options": [
+          "m12",
+          "m18"
+        ]
+      },
+      {
+        "var": "scale",
+        "widget": "segmented",
+        "options": [
+          "s01",
+          "s005"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record u, v and height",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Reading",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "objectDistanceCm",
+        "label": "Object distance u",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "imageDistanceCm",
+        "label": "Image distance v",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "imageHeightCm",
+        "label": "Image height",
+        "unit": "cm",
+        "decimals": 2
+      },
+      {
+        "key": "magnification",
+        "label": "Magnification m",
+        "unit": "",
+        "decimals": 3
+      },
+      {
+        "key": "size",
+        "label": "Nature",
+        "unit": "",
+        "decimals": 0
+      }
+    ],
+    "graph": {
+      "x": "objectDistanceCm",
+      "y": "imageDistanceCm",
+      "xLabel": "Object distance u (cm)",
+      "yLabel": "Image distance v (cm)",
+      "throughOrigin": false
+    },
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "For each position compute 1/u and 1/v",
+      "Find f from 1/f = 1/v + 1/u in magnitudes, and take the mean",
+      "Compute the magnification from the image and object heights",
+      "Check that it agrees with the ratio v/u",
+      "Tabulate the nature of the image at each position and compare with the standard cases"
+    ],
+    "resultKeys": [
+      "focalLength",
+      "naturesSeen",
+      "magConsistent"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Focal length of the lens",
+    "symbol": "f",
+    "value": 15,
+    "tolerance": 1.5,
+    "unit": "cm",
+    "secondary": {
+      "quantity": "Magnification at u = 2f",
+      "value": 1,
+      "tolerance": 0.15,
+      "unit": ""
+    },
+    "statement": "Beyond 2F the image is real, inverted and diminished; at 2F it is real, inverted and the same size; between F and 2F it is real, inverted and enlarged; at F no image forms at all; and inside F the image is virtual and erect and the screen stays blank. The focal length recovered from 1/f = 1/v + 1/u agrees with the marked value to within a per cent or two."
+  },
+  "safety": [
+    "A lighted candle is a naked flame: keep paper, hair and loose sleeves well away from it.",
+    "Do not leave the candle burning unattended, and have a heatproof mat beneath it.",
+    "The lens and its metal holder become warm if left close to the flame.",
+    "Never use the lens to focus sunlight onto anything, including the bench or your hand.",
+    "Extinguish the candle before dismantling the apparatus."
+  ],
+  "sourcesOfError": [
+    "Judging the point of sharpest focus by eye, which is uncertain by a centimetre or so.",
+    "The flame flickering, which blurs the image and makes its height hard to read.",
+    "The centre of the lens, the flame and the screen not at the same height above the bench.",
+    "Taking distances from the edge of the holder rather than from the optical centre of the lens.",
+    "The lens not being thin, so the thin-lens formula is only approximate.",
+    "Trying to catch the virtual image on the screen and recording a blank as a zero reading."
+  ],
+  "viva": [
+    {
+      "question": "Why can a virtual image not be caught on a screen?",
+      "expectedConcept": "Because light does not actually reach the place where the image appears to be. For a virtual image the emergent rays diverge and only appear, when traced backwards, to come from a point behind the lens. No light arrives there, so a screen placed there shows nothing at all. It can only be seen by looking through the lens.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "No light actually converges at a virtual image.",
+      "commonMisconception": "Believing the screen simply needs to be placed on the other side."
+    },
+    {
+      "question": "Where must the object be placed to get an image the same size as itself?",
+      "expectedConcept": "At twice the focal length. Then the image also forms at 2F on the other side and the magnification is exactly one. It is the most useful single configuration in the experiment because it gives the focal length as half the object distance, with no calculation at all.",
+      "difficulty": "easy",
+      "bloom": "Apply",
+      "answerLogic": "u = 2f gives v = 2f and m = 1.",
+      "commonMisconception": "Thinking the same-size image occurs at the focus."
+    },
+    {
+      "question": "What happens when the object is placed exactly at the focus?",
+      "expectedConcept": "No image forms on any screen. Rays from a point at the focus emerge parallel to one another, and parallel rays never meet, so there is no point at any finite distance where they could form an image. The image is said to be at infinity.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "Parallel emergent rays never converge.",
+      "commonMisconception": "Expecting a very large image rather than none at all."
+    },
+    {
+      "question": "Is a real image from a single convex lens always inverted?",
+      "expectedConcept": "Yes. For a single converging lens or concave mirror with a real object, every real image is inverted. An erect image from such an element is always virtual. That is why the image on the screen in this experiment is upside down every single time.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Real image from one converging element ⇒ inverted.",
+      "commonMisconception": "Expecting the image to become erect at some object distance."
+    },
+    {
+      "question": "How does the magnification change as the object is moved away from the lens?",
+      "expectedConcept": "It falls. The image distance approaches the focal length as the object goes to infinity, so m = v/u tends to zero: the image becomes smaller and smaller and settles at the focal plane. Conversely, as the object approaches the focus from outside, the image runs away and the magnification grows without limit.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "Further object, smaller image.",
+      "commonMisconception": "Thinking magnification depends only on the lens and not on the object position."
+    },
+    {
+      "question": "Two routes give the magnification. What are they, and why check both?",
+      "expectedConcept": "The ratio of the image height to the object height, and the ratio v/u of the distances. They must agree, and comparing them is an internal check on the experiment: if they disagree the distances have probably been measured from the wrong reference point, or the screen is not at the true position of sharpest focus.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "m = h′/h and m = v/u must agree.",
+      "commonMisconception": "Using only one route and having no way to detect an error."
+    },
+    {
+      "question": "Why must the flame, the lens and the screen be at the same height?",
+      "expectedConcept": "Because the thin-lens formula applies to rays close to the principal axis. If the flame sits above the axis the image forms below it, at an angle, so it is not properly in the plane of the screen and the measured height and distance both suffer.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "The apparatus must share one optical axis.",
+      "commonMisconception": "Believing only the horizontal distances matter."
+    },
+    {
+      "question": "What is the advantage of using a distant object to find the focal length quickly?",
+      "expectedConcept": "Rays from a very distant object arrive effectively parallel, so they converge at the focal plane. The image distance measured is then the focal length directly, with no formula needed. It is rough, because no object is truly at infinity, but it is an excellent first estimate before the careful measurements begin.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Parallel rays converge at the focus.",
+      "commonMisconception": "Treating the distant-object method as exact rather than approximate."
+    },
+    {
+      "question": "Why does the image become fainter as it becomes larger?",
+      "expectedConcept": "Because the same amount of light collected by the lens is spread over a larger area. The lens gathers a fixed quantity of the light from the flame; if the image is magnified four times in linear size, that light covers sixteen times the area, so the illumination falls in the same proportion.",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "Fixed light spread over a larger area.",
+      "commonMisconception": "Assuming a larger image must be brighter because it is easier to see."
+    },
+    {
+      "question": "How would the results differ if a concave mirror of the same focal length were used?",
+      "expectedConcept": "They would not, in essentials. The mirror formula 1/v + 1/u = 1/f gives the same sequence of images at the same object distances, and the same magnifications. The only differences are practical: the image forms on the same side as the object, so the screen must not block the incoming light, and there is no chromatic aberration because no refraction is involved.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Same sequence; the mirror has no chromatic aberration.",
+      "commonMisconception": "Expecting a mirror to give erect images where a lens gives inverted ones."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "For a real image on a screen from a convex lens, the object must be:",
+        "options": [
+          "Inside the focus",
+          "At the focus",
+          "Beyond the focus",
+          "At the lens"
+        ],
+        "answer": 2,
+        "feedback": "Only beyond the focus do the emergent rays converge to a real image."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "An object at twice the focal length gives an image that is:",
+        "options": [
+          "Diminished",
+          "The same size",
+          "Enlarged",
+          "Virtual"
+        ],
+        "answer": 1,
+        "feedback": "At u = 2f the image is also at 2f, so m = 1."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "A virtual image:",
+        "options": [
+          "Can be caught on a screen",
+          "Cannot be caught on a screen",
+          "Is always inverted",
+          "Forms only at the focus"
+        ],
+        "answer": 1,
+        "feedback": "No light actually reaches the position of a virtual image."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Take at least four readings at different object distances.",
+        "check": "rows>=4"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Focus the screen sharply before recording.",
+        "check": "settled"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the focal length of the lens you found, in cm.",
+        "answer": 15,
+        "tolerance": 2,
+        "feedback": "The marked value is 15 cm."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "With the candle inside the focus the screen stayed blank because the image is:",
+        "options": [
+          "Too faint",
+          "Too large",
+          "Virtual",
+          "Inverted"
+        ],
+        "answer": 2,
+        "feedback": "No light converges there, so a screen can show nothing."
+      },
+      {
+        "id": "post3",
+        "type": "numeric",
+        "question": "At what object distance, in cm, was the image the same size as the object?",
+        "answer": 30,
+        "tolerance": 3,
+        "feedback": "At u = 2f = 30 cm for a 15 cm lens."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Lens: 1/v − 1/u = 1/f, with m = v/u",
+    "assumptions": [
+      "Lens: 1/v − 1/u = 1/f, with m = v/u",
+      "Mirror: 1/v + 1/u = 1/f, with m = −v/u",
+      "In both cases m = height of image / height of object",
+      "At u = 2F the image is at 2F and the same size, so f = u/2"
+    ],
+    "validRange": "Beyond 2F the image is real, inverted and diminished; at 2F it is real, inverted",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Judging the point of sharpest focus by eye, which is uncertain by a centimetre or so.",
+      "The flame flickering, which blurs the image and makes its height hard to read.",
+      "The centre of the lens, the flame and the screen not at the same height above the bench.",
+      "Taking distances from the edge of the holder rather than from the optical centre of the lens."
+    ],
+    "expectedBehaviour": [
+      "Beyond 2F the image is real, inverted and diminished; at 2F it is real, inverted and the same size; between F and 2F it is real, inverted and enlarged; at F no image forms at all; and inside F the image is virtual and erect and the screen stays blank. The focal length recovered from 1/f = 1/v + 1/u agrees with the marked value to within a per cent or two."
+    ],
+    "testFile": "tests/batch13.test.js"
+  }
+}

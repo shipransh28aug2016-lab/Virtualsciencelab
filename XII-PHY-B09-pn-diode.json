@@ -1,0 +1,529 @@
+{
+  "id": "XII-PHY-B09",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 9,
+    "unit": "Unit IX: Electronic Devices",
+    "chapter": "Chapter-14: Semiconductor Electronics: Materials, Devices and Simple Circuits",
+    "topic": "Energy bands in conductors, semiconductors and insulators; intrinsic and extrinsic semiconductors; p-n junction; semiconductor diode: I-V characteristics in forward and reverse bias",
+    "subtopic": "Diode as a rectifier; special purpose p-n junction diodes: LED, photodiode, solar cell and Zener diode",
+    "practical": "To draw the I-V characteristic curve for a p-n junction diode in forward and reverse bias.",
+    "learningObjectives": [
+      "Set up forward-bias and reverse-bias circuits for a p-n junction diode",
+      "Measure the diode current for a range of applied voltages in both biases",
+      "Plot the complete I-V characteristic on a single set of axes",
+      "Determine the knee or cut-in voltage by extrapolating the steep forward branch",
+      "Calculate the static and dynamic resistance of the diode",
+      "Explain the unidirectional conduction of a diode in terms of the depletion region and the potential barrier"
+    ],
+    "competencies": [
+      "Correct identification of diode polarity and safe circuit construction with a protective resistor",
+      "Choosing appropriate meter ranges: milliammeter for forward, microammeter for reverse",
+      "Plotting and interpreting a non-linear characteristic curve",
+      "Relating a device's external behaviour to its internal physics"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 9 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "I-V characteristics of a p-n junction diode",
+  "shortTitle": "p-n Junction Diode",
+  "objective": [
+    "To draw the I-V characteristic curve of a p-n junction diode in forward bias.",
+    "To draw the I-V characteristic curve in reverse bias.",
+    "To determine the knee voltage and the dynamic resistance of the diode."
+  ],
+  "theory": {
+    "statement": "A p-n junction has a depletion region across which a potential barrier exists. Forward bias lowers this barrier and allows a large current to flow; reverse bias raises it, so only a very small saturation current due to minority carriers can cross.",
+    "derivationNote": "The current through an ideal diode follows the Shockley equation I = I₀(e^(qV/ηkT) − 1), where I₀ is the reverse saturation current, η the ideality factor and kT/q the thermal voltage, about 26 mV at room temperature. Because the exponent grows rapidly, the current is negligible until the applied voltage approaches the barrier height, after which it rises very steeply. This produces the characteristic knee at about 0.7 V for silicon and 0.3 V for germanium. In reverse bias the exponential term becomes negligible and I tends to −I₀, a current of only a few microamps that is almost independent of voltage until breakdown occurs.",
+    "keyEquations": [
+      "I = I₀(e^(qV/ηkT) − 1)",
+      "Thermal voltage V_T = kT/q ≈ 0.026 V at 300 K",
+      "Static resistance R_dc = V/I",
+      "Dynamic resistance r_ac = ΔV/ΔI",
+      "Knee voltage: intercept of the extrapolated steep branch on the V axis"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "p-n junction diode",
+      "spec": "silicon, 1N4007",
+      "why": "The device under test; germanium and an LED are offered for comparison"
+    },
+    {
+      "name": "Voltmeter",
+      "spec": "0–1 V for forward, 0–15 V for reverse",
+      "why": "Measures the voltage across the diode itself, not across the resistor"
+    },
+    {
+      "name": "Milliammeter",
+      "spec": "0–30 mA",
+      "why": "Forward currents are in milliamps"
+    },
+    {
+      "name": "Microammeter",
+      "spec": "0–50 µA",
+      "why": "Reverse currents are thousands of times smaller and need a far more sensitive meter"
+    },
+    {
+      "name": "Protective resistor",
+      "spec": "100 Ω to 1 kΩ",
+      "why": "Limits the forward current, which would otherwise rise exponentially and destroy the junction"
+    },
+    {
+      "name": "Rheostat or potential divider",
+      "spec": "0–50 Ω",
+      "why": "Varies the applied voltage smoothly from zero"
+    },
+    {
+      "name": "Battery",
+      "spec": "0–6 V d.c.",
+      "why": "Supplies the bias voltage"
+    },
+    {
+      "name": "One-way key",
+      "spec": "plug key",
+      "why": "Isolates the circuit between readings"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "supplyV",
+      "label": "Supply voltage",
+      "symbol": "V",
+      "unit": "V",
+      "type": "independent",
+      "min": 0,
+      "max": 6,
+      "step": 0.05,
+      "default": 2
+    },
+    {
+      "id": "bias",
+      "label": "Bias",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "forward",
+      "options": [
+        "forward",
+        "reverse"
+      ]
+    },
+    {
+      "id": "diode",
+      "label": "Diode",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "si",
+      "options": [
+        "si",
+        "ge",
+        "led"
+      ]
+    },
+    {
+      "id": "seriesR",
+      "label": "Protective resistor",
+      "symbol": "R",
+      "unit": "Ω",
+      "type": "controlled",
+      "min": 10,
+      "max": 1000,
+      "step": 10,
+      "default": 100
+    },
+    {
+      "id": "current",
+      "label": "Diode current",
+      "symbol": "I",
+      "unit": "mA",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Identify the p and n ends of the diode from the band marked on its body. The band marks the n side, the cathode.",
+      "checkpoint": false
+    },
+    {
+      "step": 2,
+      "text": "For forward bias, connect the p side to the positive terminal of the battery through the protective resistor, with the milliammeter in series.",
+      "checkpoint": true,
+      "expects": "wiringCorrect"
+    },
+    {
+      "step": 3,
+      "text": "Connect the voltmeter directly across the diode, not across the diode and resistor together.",
+      "checkpoint": false
+    },
+    {
+      "step": 4,
+      "text": "Increase the supply voltage in small steps from zero. Note that almost no current flows at first.",
+      "checkpoint": true,
+      "expects": "supplyV"
+    },
+    {
+      "step": 5,
+      "text": "Continue increasing the voltage past the knee, recording the voltage across the diode and the current at each step. Do not exceed 30 mA.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 6,
+      "text": "Record at least six readings covering both sides of the knee.",
+      "checkpoint": true,
+      "expects": "rows>=4"
+    },
+    {
+      "step": 7,
+      "text": "Reverse the connections to the diode and replace the milliammeter with a microammeter.",
+      "checkpoint": false
+    },
+    {
+      "step": 8,
+      "text": "Increase the reverse voltage in steps up to about 10 V, recording the very small reverse current at each step.",
+      "checkpoint": false
+    },
+    {
+      "step": 9,
+      "text": "Plot the forward readings in the first quadrant and the reverse readings in the third. Extrapolate the steep forward branch to the voltage axis to find the knee voltage.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "pn-diode",
+    "renderer": "pn-diode",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "supplyV",
+        "widget": "slider"
+      },
+      {
+        "var": "bias",
+        "widget": "segmented",
+        "options": [
+          "forward",
+          "reverse"
+        ]
+      },
+      {
+        "var": "diode",
+        "widget": "segmented",
+        "options": [
+          "si",
+          "ge",
+          "led"
+        ]
+      },
+      {
+        "var": "seriesR",
+        "widget": "slider"
+      }
+    ],
+    "actions": [
+      {
+        "id": "apply",
+        "label": "Record V and I",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "bias",
+        "label": "Bias",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "voltage",
+        "label": "V",
+        "unit": "V",
+        "decimals": 2
+      },
+      {
+        "key": "current",
+        "label": "I",
+        "unit": "mA / µA",
+        "decimals": 2
+      },
+      {
+        "key": "diode",
+        "label": "Diode",
+        "unit": "",
+        "decimals": 0
+      }
+    ],
+    "graph": {
+      "x": "voltage",
+      "y": "current",
+      "xLabel": "Voltage across diode (V)",
+      "yLabel": "Current (mA)",
+      "throughOrigin": false
+    },
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "Plot I against V for the forward bias readings",
+      "Extend the steep straight portion back to cut the voltage axis; the intercept is the knee voltage",
+      "Static resistance R_dc = V/I at a chosen point",
+      "Dynamic resistance r_ac = ΔV/ΔI over the steep region"
+    ],
+    "resultKeys": [
+      "kneeVoltage",
+      "dynamicResistance",
+      "staticResistance"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Knee voltage of the silicon diode",
+    "symbol": "V_knee",
+    "value": 0.65,
+    "tolerance": 0.12,
+    "unit": "V",
+    "secondary": {
+      "quantity": "Dynamic resistance in the conducting region",
+      "value": 3.5,
+      "tolerance": 3,
+      "unit": "Ω"
+    },
+    "statement": "The forward characteristic is non-linear, with negligible current until a knee at about 0.7 V for silicon, after which the current rises steeply. In reverse bias only a few microamps flow, almost independent of voltage. The diode therefore conducts in one direction only."
+  },
+  "safety": [
+    "Always include the protective series resistor in the forward-bias circuit; without it the current rises exponentially past the knee and the diode is destroyed within seconds.",
+    "Do not exceed the maximum forward current of about 30 mA for a small signal diode.",
+    "Keep the reverse voltage well below the breakdown value; an ordinary rectifier diode is not designed to survive breakdown.",
+    "Use the microammeter, never the milliammeter, for reverse readings — the reverse current is a thousand times smaller."
+  ],
+  "sourcesOfError": [
+    "The voltmeter draws a small current, so the ammeter reading is slightly greater than the true diode current.",
+    "Heating of the junction during a long run raises the reverse saturation current and shifts the curve.",
+    "Least count of the meters, particularly in the region below the knee where the current changes very rapidly with voltage.",
+    "Loose connections adding resistance in series with the diode.",
+    "Taking too few readings near the knee, so its position on the graph is poorly defined."
+  ],
+  "viva": [
+    {
+      "question": "What is a p-n junction and what is the depletion region?",
+      "expectedConcept": "A p-n junction is formed when p-type and n-type semiconductors are joined. Near the junction electrons and holes diffuse across and recombine, leaving a region containing only immobile ionised donors and acceptors and no free charge carriers. This is the depletion region, and it sets up a potential barrier.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Diffusion, recombination, immobile ions, barrier.",
+      "commonMisconception": "Describing the depletion region as empty of atoms rather than of free carriers."
+    },
+    {
+      "question": "Why does the forward current remain almost zero until the knee voltage?",
+      "expectedConcept": "Until the applied voltage is comparable with the barrier potential, the barrier is only slightly lowered and very few carriers have enough energy to cross. Because the current depends exponentially on voltage, it stays negligibly small and then rises very steeply once the barrier is largely overcome.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Exponential dependence in the Shockley equation.",
+      "commonMisconception": "Thinking the diode is a perfect insulator below the knee and a perfect conductor above it."
+    },
+    {
+      "question": "What is the knee voltage for silicon and for germanium, and why do they differ?",
+      "expectedConcept": "About 0.7 V for silicon and 0.3 V for germanium. Silicon has a larger band gap, so its junction has a higher potential barrier that requires a greater applied voltage to overcome.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Band gap determines barrier height.",
+      "commonMisconception": "Attributing the difference to the physical size of the diode."
+    },
+    {
+      "question": "Why is a protective resistor essential in the forward-bias circuit?",
+      "expectedConcept": "Beyond the knee the current increases exponentially with only a small further rise in voltage. The diode itself has a very small dynamic resistance, so without an external resistance to limit it the current would rise to a destructive value.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "The diode cannot limit its own current.",
+      "commonMisconception": "Thinking the resistor is there to protect the meters."
+    },
+    {
+      "question": "Why is a microammeter used in reverse bias?",
+      "expectedConcept": "The reverse current is the saturation current due to thermally generated minority carriers, typically only a few microamps. A milliammeter would show no perceptible deflection at all.",
+      "difficulty": "easy",
+      "bloom": "Apply",
+      "answerLogic": "Range must match the expected magnitude.",
+      "commonMisconception": "Believing the reverse current is exactly zero."
+    },
+    {
+      "question": "What is dynamic resistance and how does it differ from static resistance?",
+      "expectedConcept": "Static resistance is simply V/I at a point on the curve. Dynamic resistance is ΔV/ΔI, the reciprocal of the slope at that point. Because the characteristic is non-linear, the two are different, and the dynamic resistance in the conducting region is much smaller.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "The distinction only matters because the device is non-ohmic.",
+      "commonMisconception": "Assuming Ohm's law applies and the two are the same."
+    },
+    {
+      "question": "Why is the voltmeter connected directly across the diode and not across the diode and resistor?",
+      "expectedConcept": "The characteristic required is that of the diode alone. If the voltmeter spans both, the reading includes the IR drop across the resistor, which is large and would completely distort the shape of the curve.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Measure the quantity you intend to plot.",
+      "commonMisconception": "Thinking the resistor's drop is negligible."
+    },
+    {
+      "question": "What is meant by reverse breakdown, and how is a Zener diode different?",
+      "expectedConcept": "Beyond a certain reverse voltage the current increases very sharply, by avalanche multiplication or Zener tunnelling. An ordinary diode is destroyed by the heat produced, but a Zener diode is doped heavily so that breakdown occurs at a low, sharply defined voltage and is non-destructive if the current is limited. This makes it useful as a voltage regulator.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Breakdown itself is not destructive; uncontrolled heating is.",
+      "commonMisconception": "Thinking a Zener diode does not break down at all."
+    },
+    {
+      "question": "How does the diode act as a rectifier?",
+      "expectedConcept": "It conducts appreciably in forward bias but passes only a negligible current in reverse. When an alternating voltage is applied, current flows during only one half of each cycle, so the alternating input becomes a unidirectional output.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Unidirectional conduction is the basis of rectification.",
+      "commonMisconception": "Saying the diode converts a.c. to a steady d.c. without any filtering."
+    },
+    {
+      "question": "What happens to the characteristic if the temperature of the diode is raised?",
+      "expectedConcept": "The reverse saturation current increases roughly exponentially with temperature, so the reverse current grows noticeably. In forward bias the knee voltage falls slightly, by about 2 mV for each degree rise.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "More thermally generated minority carriers.",
+      "commonMisconception": "Assuming the curve is independent of temperature."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The band marked on the body of a diode indicates:",
+        "options": [
+          "The anode, p side",
+          "The cathode, n side",
+          "The positive terminal in forward bias",
+          "Nothing in particular"
+        ],
+        "answer": 1,
+        "feedback": "The band marks the cathode, which is the n side. In forward bias the unbanded p end goes to the positive terminal."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "For reverse bias readings the correct meter is a:",
+        "options": [
+          "Milliammeter",
+          "Microammeter",
+          "Voltmeter in series",
+          "Galvanometer"
+        ],
+        "answer": 1,
+        "feedback": "Reverse currents are of the order of microamps, so a microammeter is needed."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "The approximate knee voltage of a silicon diode is:",
+        "options": [
+          "0.1 V",
+          "0.3 V",
+          "0.7 V",
+          "1.8 V"
+        ],
+        "answer": 2,
+        "feedback": "Silicon has a knee at about 0.7 V. Germanium is about 0.3 V and a red LED about 1.8 V."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Include the protective series resistor before closing the key.",
+        "check": "wiringCorrect"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Record at least four forward-bias readings spanning the knee.",
+        "check": "rows>=4"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "From your graph, state the knee voltage of the silicon diode (V).",
+        "answer": 0.65,
+        "tolerance": 0.15,
+        "feedback": "Extrapolating the steep branch to the voltage axis gives about 0.64 V, a little below the nominal 0.7 V."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "The reverse current stays almost constant as the reverse voltage rises. This is because:",
+        "options": [
+          "The diode has infinite resistance",
+          "It is a saturation current limited by the number of minority carriers",
+          "The meter is faulty",
+          "The voltage is too small"
+        ],
+        "answer": 1,
+        "feedback": "Every thermally generated minority carrier that reaches the junction is swept across, so the current saturates and does not depend much on the voltage."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Comparing the forward and reverse currents at the same magnitude of applied voltage shows that the diode:",
+        "options": [
+          "Obeys Ohm's law",
+          "Conducts equally both ways",
+          "Conducts in one direction only",
+          "Has a constant resistance"
+        ],
+        "answer": 2,
+        "feedback": "The forward current is many thousands of times the reverse current, which is exactly what makes the diode useful as a rectifier."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "I = I₀(e^(qV/ηkT) − 1); V_T = kT/q ≈ 0.026 V; r_ac = ΔV/ΔI",
+    "assumptions": [
+      "Junction temperature constant at about 300 K",
+      "Ideality factor about 1.85 for a silicon junction diode",
+      "Bulk series resistance small but included",
+      "Protective resistor limits the forward current"
+    ],
+    "validRange": "Forward supply 0 to 5 V; reverse 0 to 15 V; forward current up to 30 mA",
+    "unitSystem": "Volts; forward current in mA, reverse current in µA",
+    "edgeCases": [
+      "Below the knee the forward current is under 0.5 mA",
+      "Reverse current only a few µA and nearly independent of voltage",
+      "Beyond breakdown the reverse current rises sharply — warned",
+      "Series resistor under 50 Ω in forward bias — blocked as an error"
+    ],
+    "expectedBehaviour": [
+      "Forward characteristic non-linear with a sharp knee",
+      "Knee ranks germanium below silicon below LED",
+      "Forward to reverse current ratio exceeds 10⁴ at the same voltage",
+      "Extrapolated knee sits slightly below the nominal barrier voltage"
+    ],
+    "testFile": "tests/batch2.test.js"
+  }
+}

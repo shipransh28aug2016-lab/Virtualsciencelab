@@ -1,0 +1,198 @@
+{
+  "id": "XI-PHY-B01",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 1,
+    "unit": "Unit VII: Properties of Bulk Matter",
+    "chapter": "Chapter-8: Mechanical Properties of Solids",
+    "topic": "Elastic behaviour of solids, stress-strain relationship, Hooke's law, Young's modulus, bulk modulus, shear modulus of rigidity, Poisson's ratio, elastic energy",
+    "subtopic": "Determination of Young's modulus of the material of a wire by Searle's apparatus",
+    "practical": "To determine Young's modulus of elasticity of the material of a given wire.",
+    "learningObjectives": [
+      "Define stress, strain and Young's modulus, and state their units",
+      "Load a wire in steps and measure the extension with a micrometer to 0.001 cm",
+      "Plot load against extension and verify that the graph is a straight line through the origin within the elastic limit",
+      "Determine Young's modulus from the slope of that line and the dimensions of the wire",
+      "Recognise the elastic limit and exclude any readings beyond it from the analysis",
+      "Appreciate that Young's modulus is a property of the material and not of the specimen"
+    ],
+    "competencies": [
+      "Measuring a very small extension with a micrometer and a spirit level",
+      "Recognising the limit of validity of a physical law from the shape of a graph",
+      "Excluding invalid data points with a stated reason rather than averaging them in",
+      "Propagating measurements of length, diameter and load into a single derived constant"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Young's modulus of the material of a wire by Searle's apparatus",
+  "shortTitle": "Young's Modulus",
+  "objective": [
+    "To determine Young's modulus of elasticity of the material of a given wire.",
+    "To verify that the extension is proportional to the load within the elastic limit.",
+    "To identify the elastic limit of the wire."
+  ],
+  "theory": {
+    "statement": "Within the elastic limit the extension produced in a wire is directly proportional to the stretching force. The ratio of longitudinal stress to longitudinal strain is a constant for the material, called Young's modulus.",
+    "derivationNote": "Longitudinal stress is the force per unit area of cross-section, F/A, and longitudinal strain is the fractional change in length, l/L. Young's modulus is their ratio: Y = (F/A)/(l/L) = FL/(A·l). With a load of mass M, F = Mg, and with a wire of diameter D, A = πD²/4, giving Y = 4MgL/(πD²·l). Rearranged, l = (4gL/πD²Y)·M, so a graph of load against extension is a straight line through the origin whose slope is Mg/l, and Y = slope × L/A. Searle's apparatus uses two identical wires side by side: the reference wire carries a constant load and the experimental wire is loaded in steps. Only the difference in their lengths is measured, so any change of length due to a change in room temperature affects both wires equally and cancels. Beyond the elastic limit Hooke's law fails, the graph bends away from the straight line, and the wire does not recover its original length when unloaded; such points must be excluded from the calculation.",
+    "keyEquations": [
+      "Stress = F/A = Mg/(πD²/4)",
+      "Strain = l/L",
+      "Y = stress/strain = FL/(A·l) = 4MgL/(πD²·l)",
+      "Slope of the load-extension graph = Mg/l",
+      "Y = slope × L/A"
+    ]
+  },
+  "apparatus": [
+    { "name": "Searle's apparatus", "spec": "two identical wire frames with a spirit level and micrometer screw", "why": "Measures the difference in length between the loaded and reference wires, cancelling temperature effects" },
+    { "name": "Experimental wire", "spec": "steel, about 2 m long, 0.45 mm diameter", "why": "The specimen whose Young's modulus is required" },
+    { "name": "Reference wire", "spec": "identical material and length, constant load", "why": "Provides the comparison length; any temperature change affects both wires alike" },
+    { "name": "Slotted weights", "spec": "0.5 kg each, with hanger", "why": "Applies the stretching force in known steps" },
+    { "name": "Micrometer screw", "spec": "least count 0.001 cm", "why": "Restores the spirit-level bubble to centre and reads the extension" },
+    { "name": "Screw gauge", "spec": "least count 0.001 cm", "why": "Measures the diameter of the wire, needed for the area of cross-section" },
+    { "name": "Metre scale", "spec": "least count 0.1 cm", "why": "Measures the original length of the wire" }
+  ],
+  "materials": [],
+  "variables": [
+    { "id": "loadKg", "label": "Load on the wire", "symbol": "M", "unit": "kg", "type": "independent", "min": 0.5, "max": 6, "step": 0.5, "default": 0.5 },
+    { "id": "wire", "label": "Material of the wire", "symbol": "", "unit": "", "type": "control", "default": "steel", "options": ["steel", "copper", "brass", "aluminium"] },
+    { "id": "lengthM", "label": "Original length", "symbol": "L", "unit": "m", "type": "controlled", "min": 1, "max": 3, "step": 0.1, "default": 2 },
+    { "id": "diameterMm", "label": "Diameter of wire", "symbol": "D", "unit": "mm", "type": "controlled", "min": 0.3, "max": 1, "step": 0.05, "default": 0.45 },
+    { "id": "extensionCm", "label": "Extension", "symbol": "l", "unit": "cm", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Measure the original length of the experimental wire with a metre scale.", "checkpoint": true, "expects": "lengthM" },
+    { "step": 2, "text": "Measure the diameter of the wire with a screw gauge at several places and in perpendicular directions, then take the mean.", "checkpoint": true, "expects": "diameterMm" },
+    { "step": 3, "text": "Apply a small constant load to both wires so that any kinks are straightened out before readings begin.", "checkpoint": false },
+    { "step": 4, "text": "Bring the bubble of the spirit level to the centre using the micrometer screw and note the reading. This is the zero position.", "checkpoint": false },
+    { "step": 5, "text": "Add a 0.5 kg weight to the experimental wire, wait for the wire to settle, then re-centre the bubble and note the new micrometer reading.", "checkpoint": true, "expects": "loadKg" },
+    { "step": 6, "text": "The difference between the two micrometer readings is the extension for that load. Record it.", "checkpoint": true, "expects": "record" },
+    { "step": 7, "text": "Repeat, increasing the load in equal steps. Take at least four readings, keeping every load within the elastic limit.", "checkpoint": true, "expects": "rows>=3" },
+    { "step": 8, "text": "Unload in the same steps and check that the readings retrace the loading values. If they do not, the elastic limit has been exceeded.", "checkpoint": false },
+    { "step": 9, "text": "Plot load against extension, find the slope of the straight portion, and calculate Y = slope × L/A.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "youngs-modulus",
+    "renderer": "youngs-modulus",
+    "fps": 60,
+    "controls": [
+      { "var": "loadKg", "widget": "slider" },
+      { "var": "wire", "widget": "segmented", "options": ["steel", "copper", "brass", "aluminium"] },
+      { "var": "lengthM", "widget": "slider" },
+      { "var": "diameterMm", "widget": "slider" }
+    ],
+    "actions": [
+      { "id": "record", "label": "Record extension", "primary": true },
+      { "id": "reset", "label": "Unload the wire" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "trial", "label": "No.", "unit": "", "decimals": 0 },
+      { "key": "loadKg", "label": "Load M", "unit": "kg", "decimals": 1 },
+      { "key": "loadN", "label": "Force F", "unit": "N", "decimals": 2 },
+      { "key": "extensionCm", "label": "Extension l", "unit": "cm", "decimals": 4 },
+      { "key": "extensionMm", "label": "l", "unit": "mm", "decimals": 3 },
+      { "key": "stressMPa", "label": "Stress", "unit": "MPa", "decimals": 1 },
+      { "key": "strain", "label": "Strain", "unit": "", "decimals": 6 }
+    ],
+    "graph": { "x": "extensionMm", "y": "loadN", "xLabel": "Extension (mm)", "yLabel": "Load (N)", "throughOrigin": true },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Area of cross-section A = πD²/4",
+      "Plot load in newton against extension in metre",
+      "Slope of the straight portion = F/l",
+      "Y = slope × L/A",
+      "Exclude any reading taken beyond the elastic limit"
+    ],
+    "resultKeys": ["youngsModulus", "slope", "r2"]
+  },
+  "expectedResult": {
+    "quantity": "Young's modulus of steel",
+    "symbol": "Y",
+    "value": 2.0e11,
+    "tolerance": 1.2e10,
+    "unit": "N·m⁻²",
+    "secondary": { "quantity": "Slope of the load-extension line", "value": 31800, "tolerance": 3000, "unit": "N·m⁻¹" },
+    "statement": "The load-extension graph is a straight line through the origin within the elastic limit, confirming Hooke's law. Young's modulus for the steel wire comes out at about 2.0 × 10¹¹ N·m⁻², close to the accepted value."
+  },
+  "safety": [
+    "A wire under tension stores energy and whips dangerously if it snaps. Wear eye protection and never look along the wire.",
+    "Place a sandbox or padding beneath the weights so a falling load cannot injure a foot.",
+    "Add and remove weights gently; a jerk can exceed the breaking stress even when the static load is safe.",
+    "Do not exceed the recommended maximum load for the wire supplied.",
+    "Check that the support and the clamps are secure before loading."
+  ],
+  "sourcesOfError": [
+    "Kinks in the wire straighten under the first loads, giving a false extension at the start.",
+    "The wire not being uniform in diameter along its length.",
+    "Yielding or slipping of the wire at the clamp, which mimics an extension.",
+    "Temperature change during the experiment, largely cancelled by the reference wire.",
+    "Backlash in the micrometer screw if it is turned in both directions.",
+    "Loading beyond the elastic limit, after which Hooke's law no longer applies."
+  ],
+  "viva": [
+    { "question": "Define stress and strain, and give their units.", "expectedConcept": "Stress is the restoring force per unit area of cross-section, measured in N·m⁻² or pascal. Strain is the fractional change in dimension, here the change in length divided by the original length, and it has no unit.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Definitions with the correct units, noting strain is dimensionless.", "commonMisconception": "Giving strain a unit such as metre." },
+    { "question": "State Hooke's law and its limitation.", "expectedConcept": "Within the elastic limit, stress is directly proportional to strain. Beyond the elastic limit the relation fails: the material does not return to its original dimensions when the load is removed.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Proportionality plus the elastic-limit condition.", "commonMisconception": "Stating the law as universally true." },
+    { "question": "Why is Young's modulus a property of the material rather than of the wire?", "expectedConcept": "Y is defined as the ratio of stress to strain, and both are normalised quantities: stress divides the force by the area and strain divides the extension by the original length. The dimensions of the specimen therefore cancel, leaving a number characteristic of the material alone.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "Normalisation removes the geometry.", "commonMisconception": "Thinking a thicker wire has a larger Young's modulus." },
+    { "question": "Why does Searle's apparatus use two wires?", "expectedConcept": "The reference wire carries a constant load and only the experimental wire is loaded in steps. Both hang in the same room, so a change in temperature makes both expand equally and the difference in length, which is what is measured, is unaffected. A single wire would give an extension contaminated by thermal expansion.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Differential measurement cancels a common-mode error.", "commonMisconception": "Thinking the second wire is merely for mechanical support." },
+    { "question": "Why is a long, thin wire preferred?", "expectedConcept": "The extension is proportional to the length and inversely proportional to the square of the diameter. A long thin wire therefore gives a larger extension for the same load, which can be measured with a smaller percentage error.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "l = FL/(AY), so maximise L and minimise A.", "commonMisconception": "Choosing a thick wire because it seems stronger and safer." },
+    { "question": "What is the elastic limit, and how would you recognise that you had passed it?", "expectedConcept": "It is the maximum stress a material can bear and still return to its original dimensions. Past it the load-extension graph bends away from the straight line, the extension grows out of proportion to the load, and the unloading readings no longer retrace the loading readings.", "difficulty": "medium", "bloom": "Evaluate", "answerLogic": "Three observable signatures: curvature, disproportion, permanent set.", "commonMisconception": "Confusing the elastic limit with the breaking point." },
+    { "question": "Why must the first few readings be taken only after a small constant load has been applied?", "expectedConcept": "A wire as supplied usually contains kinks. Under the first small load these straighten out, producing a large apparent extension that has nothing to do with elastic stretching. A preliminary load removes them so that the recorded extensions are genuinely elastic.", "difficulty": "hard", "bloom": "Apply", "answerLogic": "Distinguishing straightening from stretching.", "commonMisconception": "Recording the initial straightening as a valid data point." },
+    { "question": "Which has the greater Young's modulus, steel or rubber, and what does that mean physically?", "expectedConcept": "Steel, by an enormous margin. A large Young's modulus means a large stress is needed to produce a given strain, so the material is difficult to stretch. Steel is therefore far more elastic in the technical sense than rubber, even though rubber stretches more easily.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "Elasticity means resistance to deformation, not stretchiness.", "commonMisconception": "Calling rubber more elastic because it stretches further." },
+    { "question": "The diameter is measured in several places and directions. Why?", "expectedConcept": "A drawn wire is not perfectly uniform along its length nor exactly circular in section. Since Y depends on the square of the diameter, an error there is doubled in the result, so the mean of several readings is used.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "D appears squared, so its error is the most critical.", "commonMisconception": "Measuring the diameter once and assuming it is uniform." },
+    { "question": "What is elastic hysteresis?", "expectedConcept": "If a material has been strained beyond its elastic limit, the extension for a given load during unloading differs from that during loading, so the two curves do not coincide and enclose a loop. The area of the loop represents energy dissipated as heat within the material.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Loading and unloading curves differ; the loop area is dissipated energy.", "commonMisconception": "Assuming unloading always exactly retraces loading." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "The SI unit of Young's modulus is:", "options": ["N·m", "N·m⁻¹", "N·m⁻²", "It is dimensionless"], "answer": 2, "feedback": "Y is stress divided by strain. Stress is N·m⁻² and strain is dimensionless, so Y has the unit of stress, N·m⁻² or pascal." },
+      { "id": "pre2", "type": "mcq", "question": "If the diameter of the wire is doubled, the extension for the same load becomes:", "options": ["Twice as large", "Half as large", "One quarter as large", "Unchanged"], "answer": 2, "feedback": "The extension is inversely proportional to the area, and the area varies as the square of the diameter, so doubling D quarters the extension." },
+      { "id": "pre3", "type": "mcq", "question": "The reference wire in Searle's apparatus is there to:", "options": ["Share the load", "Cancel the effect of a change in temperature", "Increase the extension", "Measure the diameter"], "answer": 1, "feedback": "Both wires expand equally if the room warms, so the measured difference in length is unaffected." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Record at least three loads within the elastic limit.", "check": "rows>=3" },
+      { "id": "dur2", "type": "task", "question": "Change the load between readings.", "check": "massVaried" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State Young's modulus you obtained for the steel wire, as a multiple of 10¹¹ N·m⁻².", "answer": 2.0, "tolerance": 0.15, "feedback": "The accepted value for steel is about 2.0 × 10¹¹ N·m⁻²." },
+      { "id": "post2", "type": "mcq", "question": "Your load-extension graph bends over at the top. This means:", "options": ["The micrometer is faulty", "The elastic limit has been exceeded", "The wire is too long", "The readings should be averaged"], "answer": 1, "feedback": "Curvature at high load is the signature of the elastic limit. Those points must be excluded from the straight-line fit." },
+      { "id": "post3", "type": "mcq", "question": "A copper wire and a steel wire of identical dimensions carry the same load. Which extends more?", "options": ["Steel", "Copper", "Both the same", "Cannot be predicted"], "answer": 1, "feedback": "Copper has the smaller Young's modulus, about 1.1 × 10¹¹ against 2.0 × 10¹¹ for steel, so it extends nearly twice as much." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "Y = (F/A)/(l/L) = 4MgL/(πD²l); slope of load against extension = F/l",
+    "assumptions": [
+      "The wire obeys Hooke's law, so the load stays within the elastic limit",
+      "The wire is uniform in cross-section",
+      "Both wires are of the same material and length, so temperature effects cancel",
+      "The extension is measured to 0.001 cm",
+      "The wire is free of kinks and loaded without jerks"
+    ],
+    "validRange": "Load 0.5 to 5 kg; length 1 to 3 m; diameter 0.3 to 1.0 mm",
+    "unitSystem": "Load in kg converted to N; lengths in m; Y in N·m⁻²",
+    "edgeCases": [
+      "Past the elastic limit the extension grows out of proportion — warned and excluded from the fit",
+      "A short wire gives too small an extension to measure well — warned",
+      "A thick wire extends as the inverse square of the diameter — warned",
+      "Points beyond the limit are discarded by derive() and reported as such"
+    ],
+    "expectedBehaviour": [
+      "Extension is proportional to load within the elastic limit",
+      "The load-extension graph is a straight line through the origin",
+      "Doubling the length doubles the extension; doubling the diameter quarters it",
+      "Y is the same whatever the length and diameter of the specimen"
+    ],
+    "testFile": "tests/batch4.test.js"
+  }
+}

@@ -1,0 +1,548 @@
+{
+  "id": "XI-PHY-B09",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 9,
+    "unit": "Unit X: Oscillations and Waves",
+    "chapter": "Chapter-14: Waves",
+    "topic": "Transverse and longitudinal waves, speed of travelling wave, reflection of waves, standing waves in strings and organ pipes, fundamental mode and harmonics",
+    "subtopic": "Laws of vibration of a stretched string: the law of tension",
+    "practical": "To study the relation between the length of a given wire and tension for constant frequency using sonometer.",
+    "learningObjectives": [
+      "Keep the driving frequency fixed by using one tuning fork throughout",
+      "Find the resonant length for each of several different tensions",
+      "Show that the resonant length is proportional to the square root of the tension",
+      "Plot length against the square root of tension and obtain a straight line through the origin",
+      "Recover the mass per unit length of the wire from the slope of that line",
+      "Explain why the graph must pass through the origin"
+    ],
+    "competencies": [
+      "Recognising a square-root relationship and linearising it",
+      "Choosing the right quantity to plot so a curve becomes a straight line",
+      "Holding the frequency constant while the tension is varied",
+      "Extracting a material property from a graph slope"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 9 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Law of tension: resonant length against tension at constant frequency",
+  "shortTitle": "Sonometer — Law of Tension",
+  "objective": [
+    "To study how the resonant length of a stretched wire depends on the tension, at constant frequency.",
+    "To verify that the resonant length is proportional to the square root of the tension.",
+    "To find the mass per unit length of the wire from the graph."
+  ],
+  "theory": {
+    "statement": "The law of tension states that for a given wire vibrating at a fixed frequency, the resonant length is proportional to the square root of the tension in the wire.",
+    "derivationNote": "The fundamental frequency of a stretched wire is f = (1/2l)√(T/μ). Rearranged for the length this becomes l = (1/2f√μ)·√T. If the same tuning fork is used for every reading, f is fixed, and μ is a property of the wire, so everything in the bracket is constant. The resonant length is therefore directly proportional to the square root of the tension. This is why quadrupling the load doubles the resonant length rather than quadrupling it — a result that surprises most students the first time they see it. Plotting l against √T gives a straight line through the origin whose slope is 1/(2f√μ), so the slope yields the mass per unit length of the wire without ever weighing it. The line must pass through the origin because a wire with no tension has no restoring force and cannot carry a wave at all: zero tension means zero resonant length for any finite frequency.",
+    "keyEquations": [
+      "f = (1/2l)·√(T/μ)",
+      "l = (1/2f√μ)·√T, so l ∝ √T at constant f",
+      "l/√T = constant",
+      "T = Mg, including the mass of the hanger",
+      "slope of l against √T = 1/(2f√μ), so μ = 1/(2f·slope)²"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Sonometer",
+      "spec": "hollow wooden box with a wire, two movable bridges and a pulley",
+      "why": "The box amplifies the sound; the movable bridges set the vibrating length"
+    },
+    {
+      "name": "Set of tuning forks",
+      "spec": "256, 288, 320, 384, 480 and 512 Hz",
+      "why": "Provide accurately known frequencies to resonate against"
+    },
+    {
+      "name": "Slotted weights and hanger",
+      "spec": "0.5 kg slotted weights",
+      "why": "Apply a known constant tension through the pulley"
+    },
+    {
+      "name": "Paper rider",
+      "spec": "small inverted V of paper",
+      "why": "Objective indicator of resonance; it is thrown off only at maximum amplitude"
+    },
+    {
+      "name": "Metre scale",
+      "spec": "least count 0.1 cm, fixed along the bed",
+      "why": "Measures the distance between the bridges"
+    },
+    {
+      "name": "Rubber pad",
+      "spec": "",
+      "why": "The fork is struck on rubber, never on the bench, which would damage it and add overtones"
+    },
+    {
+      "name": "Screw gauge",
+      "spec": "least count 0.001 cm",
+      "why": "Measures the wire diameter, needed if μ is to be calculated"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "loadKg",
+      "label": "Load on the hanger",
+      "symbol": "M",
+      "unit": "kg",
+      "type": "independent",
+      "min": 0.5,
+      "max": 8,
+      "step": 0.5,
+      "default": 1
+    },
+    {
+      "id": "bridgeSeparationCm",
+      "label": "Distance between bridges",
+      "symbol": "l",
+      "unit": "cm",
+      "type": "independent",
+      "min": 5,
+      "max": 90,
+      "step": 0.1,
+      "default": 19.5
+    },
+    {
+      "id": "fork",
+      "label": "Tuning fork (held constant)",
+      "symbol": "f",
+      "unit": "Hz",
+      "type": "controlled",
+      "default": "f256",
+      "options": [
+        "f256",
+        "f288",
+        "f320",
+        "f384",
+        "f480",
+        "f512"
+      ]
+    },
+    {
+      "id": "wire",
+      "label": "Wire",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "steel",
+      "options": [
+        "steel",
+        "brass",
+        "steelThick"
+      ]
+    },
+    {
+      "id": "resonantLengthCm",
+      "label": "Resonant length",
+      "symbol": "l",
+      "unit": "cm",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Set up the sonometer and check that the pulley turns freely.",
+      "checkpoint": false
+    },
+    {
+      "step": 2,
+      "text": "Choose one tuning fork and use it for every reading. The frequency must not change.",
+      "checkpoint": true,
+      "expects": "fork"
+    },
+    {
+      "step": 3,
+      "text": "Hang the smallest load on the hanger and note the total mass, including the hanger itself.",
+      "checkpoint": true,
+      "expects": "loadKg"
+    },
+    {
+      "step": 4,
+      "text": "Place the paper rider at the middle of the wire between the bridges.",
+      "checkpoint": false
+    },
+    {
+      "step": 5,
+      "text": "Strike the fork on the rubber pad, press its stem on the box, and move the bridges until the rider is thrown off.",
+      "checkpoint": true,
+      "expects": "bridgeSeparationCm"
+    },
+    {
+      "step": 6,
+      "text": "Measure the distance between the bridges and record it against the tension.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 7,
+      "text": "Add more weight and repeat, for at least five different tensions.",
+      "checkpoint": true,
+      "expects": "rows>=4"
+    },
+    {
+      "step": 8,
+      "text": "For each reading calculate √T and the ratio l/√T, and check whether that ratio is constant.",
+      "checkpoint": false
+    },
+    {
+      "step": 9,
+      "text": "Plot l against √T. A straight line through the origin verifies the law of tension.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "sonometer",
+    "renderer": "sonometer",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "loadKg",
+        "widget": "slider"
+      },
+      {
+        "var": "bridgeSeparationCm",
+        "widget": "slider"
+      },
+      {
+        "var": "fork",
+        "widget": "segmented",
+        "options": [
+          "f256",
+          "f288",
+          "f320",
+          "f384",
+          "f480",
+          "f512"
+        ]
+      },
+      {
+        "var": "wire",
+        "widget": "segmented",
+        "options": [
+          "steel",
+          "brass",
+          "steelThick"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record resonant length",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "No.",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "loadKg",
+        "label": "M",
+        "unit": "kg",
+        "decimals": 2
+      },
+      {
+        "key": "tensionN",
+        "label": "T = Mg",
+        "unit": "N",
+        "decimals": 2
+      },
+      {
+        "key": "sqrtTension",
+        "label": "√T",
+        "unit": "√N",
+        "decimals": 3
+      },
+      {
+        "key": "resonantLengthCm",
+        "label": "l",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "ratio",
+        "label": "l/√T",
+        "unit": "cm/√N",
+        "decimals": 3
+      }
+    ],
+    "graph": {
+      "x": "sqrtTension",
+      "y": "resonantLengthCm",
+      "xLabel": "√T (√N)",
+      "yLabel": "Resonant length l (cm)",
+      "throughOrigin": true
+    },
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "T = Mg for each load, including the hanger",
+      "Compute √T and the ratio l/√T for every reading",
+      "Check that the ratio is constant within experimental error",
+      "Plot l against √T and draw the best line through the origin",
+      "From the slope, μ = 1/(2f × slope)²"
+    ],
+    "resultKeys": [
+      "meanRatio",
+      "spreadPercent",
+      "linearDensity"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "The constant ratio of resonant length to the square root of tension",
+    "symbol": "l/√T",
+    "value": 6.24,
+    "tolerance": 0.4,
+    "unit": "cm/√N",
+    "secondary": {
+      "quantity": "Mass per unit length of the wire from the slope",
+      "value": 0.00098,
+      "tolerance": 8e-05,
+      "unit": "kg·m⁻¹"
+    },
+    "statement": "The ratio of resonant length to the square root of the tension is constant within experimental error, and the graph of l against √T is a straight line passing through the origin. The law of tension is verified. The slope gives a mass per unit length of about 9.8 × 10⁻⁴ kg/m, agreeing with πr²ρ for the wire supplied."
+  },
+  "safety": [
+    "Strike a tuning fork only on a rubber pad. Striking it on the bench chips the prongs, changes its frequency and can injure your hand.",
+    "Never touch the vibrating prongs to your teeth, eyes or ears.",
+    "Keep clear of the loaded hanger; if the wire snaps the weights fall.",
+    "A stretched wire that breaks can whip back. Wear eye protection when working near the elastic limit and never overload the wire.",
+    "Do not lean on the sonometer bed while the weights are hanging."
+  ],
+  "sourcesOfError": [
+    "Friction at the pulley makes the actual tension slightly less than the weight hung.",
+    "The mass of the hanger is easily forgotten, which shifts every tension by a constant amount.",
+    "The bridges have a physical width, so the vibrating length is slightly uncertain.",
+    "A heavy load may stretch the wire past its elastic limit, permanently changing μ.",
+    "The wire may not be uniform along its length.",
+    "Judging the exact resonance position is subjective near the peak."
+  ],
+  "viva": [
+    {
+      "question": "State the law of tension for a vibrating string.",
+      "expectedConcept": "For a given wire vibrating at a fixed frequency, the resonant length is proportional to the square root of the tension.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Must include the constant-frequency and same-wire conditions.",
+      "commonMisconception": "Saying length is proportional to tension, forgetting the square root."
+    },
+    {
+      "question": "If you quadruple the load, what happens to the resonant length?",
+      "expectedConcept": "It doubles. The length goes as the square root of the tension, and the square root of four is two. This is the single most characteristic prediction of the law.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "√4 = 2.",
+      "commonMisconception": "Expecting the length to become four times greater."
+    },
+    {
+      "question": "Why is l plotted against √T rather than against T?",
+      "expectedConcept": "A graph of l against T is a curve, and it is very hard to tell one curve from another by eye. Plotting l against √T converts the relationship into a straight line through the origin, which can be checked at a glance and whose slope has a physical meaning.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Linearisation makes the law testable.",
+      "commonMisconception": "Thinking the square root is an arbitrary choice."
+    },
+    {
+      "question": "Why must the graph pass through the origin?",
+      "expectedConcept": "A wire with no tension has no restoring force, so it cannot carry a transverse wave and cannot resonate at any finite frequency. Zero tension must therefore correspond to zero resonant length. An intercept means a systematic error, usually a forgotten hanger mass or pulley friction.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Physical necessity plus its use as an error check.",
+      "commonMisconception": "Treating a non-zero intercept as harmless scatter."
+    },
+    {
+      "question": "What does the slope of your graph give you?",
+      "expectedConcept": "From l = √T/(2f√μ), the slope is 1/(2f√μ). Since f is known, the slope yields μ, the mass per unit length of the wire, without weighing it.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Slope gives a material property.",
+      "commonMisconception": "Not realising μ can be found this way."
+    },
+    {
+      "question": "Why must the mass of the hanger be included in the tension?",
+      "expectedConcept": "The hanger hangs from the wire along with the slotted weights, so the wire supports their total weight. Leaving it out makes every tension too small by the same amount, which shows up as a non-zero intercept on the graph.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Tension is the total weight supported.",
+      "commonMisconception": "Counting only the slotted weights."
+    },
+    {
+      "question": "What is the mass per unit length of a wire, and how else could you find it?",
+      "expectedConcept": "It is the mass of one metre of the wire, μ = πr²ρ. It can be found directly by weighing a measured length, or from the diameter measured with a screw gauge together with the density of the material.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Definition plus two independent methods.",
+      "commonMisconception": "Confusing it with the density of the material."
+    },
+    {
+      "question": "Why should the wire not be loaded beyond its elastic limit?",
+      "expectedConcept": "Past the elastic limit the wire is permanently stretched, so it becomes longer and thinner and its mass per unit length changes. Every reading taken before the overload then refers to a different wire, and the whole table becomes inconsistent.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "μ is no longer constant.",
+      "commonMisconception": "Thinking the only risk is the wire snapping."
+    },
+    {
+      "question": "Two wires of the same material and length are under the same tension, one twice as thick. Which has the lower frequency?",
+      "expectedConcept": "The thicker one. Its mass per unit length is four times greater, and since f ∝ 1/√μ, its frequency is half as great.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "μ ∝ d² and f ∝ 1/√μ.",
+      "commonMisconception": "Assuming thickness has no effect at the same tension."
+    },
+    {
+      "question": "Why is the same tuning fork used throughout this experiment?",
+      "expectedConcept": "The law of tension relates length and tension at CONSTANT frequency. Changing the fork changes f, so l would change for two reasons at once and neither relationship could be tested.",
+      "difficulty": "easy",
+      "bloom": "Evaluate",
+      "answerLogic": "One variable at a time.",
+      "commonMisconception": "Believing that using several forks gives a better average."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "At constant frequency, if the tension is quadrupled the resonant length:",
+        "options": [
+          "Quadruples",
+          "Doubles",
+          "Halves",
+          "Is unchanged"
+        ],
+        "answer": 1,
+        "feedback": "l ∝ √T, and √4 = 2, so the length doubles."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The tension in the sonometer wire is:",
+        "options": [
+          "The mass of the slotted weights only",
+          "The total weight hung, including the hanger",
+          "The weight divided by the length",
+          "The weight times the length"
+        ],
+        "answer": 1,
+        "feedback": "T = Mg where M includes the hanger. Forgetting the hanger gives a non-zero intercept."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "A graph of l against √T should be:",
+        "options": [
+          "A curve",
+          "A straight line through the origin",
+          "A horizontal line",
+          "A parabola"
+        ],
+        "answer": 1,
+        "feedback": "l is proportional to √T, so the graph is a straight line through the origin."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record resonant lengths for at least four different tensions.",
+        "check": "rows>=4"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Vary the load between readings.",
+        "check": "tempVaried"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the mean value of l/√T (cm/√N).",
+        "answer": 6.24,
+        "tolerance": 0.6,
+        "feedback": "With the 256 Hz fork on the standard steel wire the ratio is about 6.24."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "Your l against √T line passes through the origin. This is because:",
+        "options": [
+          "The graph paper starts at zero",
+          "A wire with no tension cannot resonate at all",
+          "The fork frequency is zero",
+          "The wire has no mass"
+        ],
+        "answer": 1,
+        "feedback": "No tension means no restoring force, so no wave and no resonant length."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "The slope of the l against √T graph lets you calculate:",
+        "options": [
+          "The frequency of the fork",
+          "The mass per unit length of the wire",
+          "The length of the sonometer",
+          "The density of air"
+        ],
+        "answer": 1,
+        "feedback": "slope = 1/(2f√μ), so with f known the slope gives μ."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "l = √T/(2f√μ); l/√T constant at constant f; μ = 1/(2f·slope)²",
+    "assumptions": [
+      "The same tuning fork is used for every reading, so f is constant",
+      "The wire is uniform, so μ is the same at every tension",
+      "The pulley is frictionless, so T = Mg including the hanger",
+      "The wire stays within its elastic limit throughout"
+    ],
+    "validRange": "Load 0.5 to 8 kg; resonant length 10 to 90 cm; one fixed fork frequency",
+    "unitSystem": "Load in kg, tension in N, length in cm",
+    "edgeCases": [
+      "Zero tension gives zero resonant length — the line must pass through the origin",
+      "Loads beyond about 8 kg risk the elastic limit — warned",
+      "A forgotten hanger mass shows up as a non-zero intercept",
+      "Recording away from resonance is refused"
+    ],
+    "expectedBehaviour": [
+      "l/√T is constant to within 4%",
+      "Quadrupling the tension doubles the resonant length",
+      "l against √T is straight through the origin with r² above 0.999",
+      "The slope recovers μ to within a couple of per cent"
+    ],
+    "testFile": "tests/batch5.test.js"
+  }
+}

@@ -1,0 +1,207 @@
+{
+  "id": "XI-PHY-B05",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 5,
+    "unit": "Unit VII: Properties of Bulk Matter",
+    "chapter": "Chapter-9: Mechanical Properties of Fluids",
+    "topic": "Viscosity, Stokes' law, terminal velocity, streamline and turbulent flow, critical velocity, Bernoulli's theorem and its simple applications",
+    "subtopic": "Terminal velocity of a sphere falling through a viscous liquid; determination of the coefficient of viscosity by Stokes' law",
+    "practical": "To determine the coefficient of viscosity of a given viscous liquid by measuring terminal velocity of a given spherical body.",
+    "learningObjectives": [
+      "State Stokes' law and identify the three forces acting on a sphere falling through a liquid",
+      "Explain how the balance of weight, upthrust and viscous drag produces a terminal velocity",
+      "Measure the terminal velocity of a sphere between two marks on the tube",
+      "Calculate the coefficient of viscosity from η = 2r²(ρ − σ)g / 9v",
+      "Verify that the terminal velocity is proportional to the square of the radius",
+      "Recognise the conditions under which Stokes' law fails: turbulent flow and wall effects"
+    ],
+    "competencies": [
+      "Recognising a dynamic equilibrium as a balance of three forces",
+      "Judging when a physical law is being applied outside its range of validity",
+      "Correcting a measurement for a known systematic effect rather than ignoring it",
+      "Understanding why a property of a liquid must not depend on the body used to measure it"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 5 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Coefficient of viscosity by terminal velocity",
+  "shortTitle": "Viscosity",
+  "objective": [
+    "To determine the coefficient of viscosity of a given viscous liquid by measuring the terminal velocity of a spherical body.",
+    "To verify that the terminal velocity is proportional to the square of the radius of the sphere.",
+    "To examine the conditions under which Stokes' law applies."
+  ],
+  "theory": {
+    "statement": "A small sphere falling through a viscous liquid is acted on by three forces: its weight acting downwards, the upthrust of the displaced liquid acting upwards, and the viscous drag acting upwards and increasing with speed. The sphere accelerates until the drag has grown enough to balance the other two, after which it falls at a constant speed called the terminal velocity.",
+    "derivationNote": "Stokes showed that for slow, streamline flow the viscous drag on a sphere of radius r moving with velocity v through a liquid of coefficient of viscosity η is F = 6πηrv. At the terminal velocity the net force is zero, so the drag plus the upthrust equals the weight: 6πηrv + (4/3)πr³σg = (4/3)πr³ρg, where ρ is the density of the sphere and σ that of the liquid. Rearranging gives 6πηrv = (4/3)πr³(ρ − σ)g, and hence η = 2r²(ρ − σ)g / 9v. Since v is proportional to r² for a given liquid, a graph of v against r² is a straight line through the origin, and η can also be found from its slope. Two conditions limit the method. Stokes' law assumes streamline flow, which requires the Reynolds number, Re = 2rvσ/η, to be well below one; a large sphere in a thin liquid produces eddies and the drag is then greater than 6πηrv. Second, the liquid displaced by the sphere must flow back past it, so a narrow tube retards the fall; the observed velocity is corrected to the free value by the Ladenburg relation v_free = v_observed × (1 + 2.4 r/R), where R is the radius of the tube.",
+    "keyEquations": [
+      "Viscous drag F = 6πηrv (Stokes' law)",
+      "At terminal velocity: 6πηrv = (4/3)πr³(ρ − σ)g",
+      "η = 2r²(ρ − σ)g / 9v",
+      "v ∝ r², so the graph of v against r² is a straight line through the origin",
+      "Reynolds number Re = 2rvσ/η, which must be well below 1",
+      "Ladenburg wall correction: v_free = v_observed × (1 + 2.4 r/R)"
+    ]
+  },
+  "apparatus": [
+    { "name": "Tall glass jar", "spec": "wide bore, about 120 mm, filled with the viscous liquid", "why": "Holds the liquid; a wide bore keeps the wall retardation small" },
+    { "name": "Viscous liquid", "spec": "castor oil, glycerine or engine oil", "why": "The liquid whose coefficient of viscosity is to be found" },
+    { "name": "Steel spheres", "spec": "of several radii, 1 to 3 mm", "why": "Falling bodies; varying the radius tests the v ∝ r² relation" },
+    { "name": "Screw gauge", "spec": "least count 0.01 mm", "why": "Measures the radius of each sphere, which enters the formula as r²" },
+    { "name": "Stopwatch", "spec": "least count 0.1 s", "why": "Times the fall between the two marks" },
+    { "name": "Two rubber bands or marks", "spec": "on the outside of the jar", "why": "Define the measured distance; the upper one must be well below the surface so the sphere has reached terminal velocity" },
+    { "name": "Thermometer", "spec": "0 to 50 °C", "why": "Viscosity depends strongly on temperature, so it must be recorded" },
+    { "name": "Metre scale", "spec": "least count 1 mm", "why": "Measures the distance between the marks" }
+  ],
+  "materials": [],
+  "variables": [
+    { "id": "liquid", "label": "Liquid in the jar", "symbol": "", "unit": "", "type": "control", "default": "castorOil", "options": ["castorOil", "glycerine", "engineOil"] },
+    { "id": "ball", "label": "Sphere", "symbol": "r", "unit": "", "type": "independent", "default": "steel3", "options": ["steel2", "steel3", "steel4", "steel6", "glass4", "nylon3"] },
+    { "id": "tube", "label": "Vessel", "symbol": "R", "unit": "", "type": "control", "default": "wide", "options": ["wide", "narrow"] },
+    { "id": "upperMarkCm", "label": "Upper mark below surface", "symbol": "", "unit": "cm", "type": "control", "min": 2, "max": 30, "step": 1, "default": 15 },
+    { "id": "fallDistanceCm", "label": "Distance between marks", "symbol": "d", "unit": "cm", "type": "controlled", "min": 20, "max": 60, "step": 5, "default": 40 },
+    { "id": "tempC", "label": "Temperature of liquid", "symbol": "T", "unit": "°C", "type": "control", "min": 10, "max": 35, "step": 1, "default": 20 },
+    { "id": "etaPas", "label": "Coefficient of viscosity", "symbol": "η", "unit": "Pa·s", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Fill the tall jar with the viscous liquid and let it stand until there are no air bubbles and the temperature is steady. Record the temperature.", "checkpoint": true, "expects": "tempC" },
+    { "step": 2, "text": "Measure the radius of each sphere with the screw gauge, taking readings in two perpendicular directions.", "checkpoint": true, "expects": "ball" },
+    { "step": 3, "text": "Fix two marks on the jar. Place the upper mark well below the surface so that the sphere has already reached its terminal velocity before it passes it.", "checkpoint": true, "expects": "upperMarkCm" },
+    { "step": 4, "text": "Measure the distance between the two marks with the metre scale.", "checkpoint": false },
+    { "step": 5, "text": "Drop a sphere gently into the centre of the liquid surface so that it falls along the axis of the jar without touching the walls.", "checkpoint": false },
+    { "step": 6, "text": "Start the stopwatch as the sphere crosses the upper mark and stop it as it crosses the lower mark. Record the reading.", "checkpoint": true, "expects": "record" },
+    { "step": 7, "text": "Repeat with spheres of different radii, at least three readings in all.", "checkpoint": true, "expects": "rows>=3" },
+    { "step": 8, "text": "Calculate the terminal velocity for each sphere as the distance between the marks divided by the time.", "checkpoint": false },
+    { "step": 9, "text": "Calculate η from η = 2r²(ρ − σ)g / 9v for each sphere, and also plot v against r² and find η from the slope.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "viscosity",
+    "renderer": "viscosity",
+    "fps": 60,
+    "controls": [
+      { "var": "ball", "widget": "segmented", "options": ["steel2", "steel3", "steel4", "steel6", "glass4", "nylon3"] },
+      { "var": "liquid", "widget": "segmented", "options": ["castorOil", "glycerine", "engineOil"] },
+      { "var": "tube", "widget": "segmented", "options": ["wide", "narrow"] },
+      { "var": "upperMarkCm", "widget": "slider" },
+      { "var": "fallDistanceCm", "widget": "slider" },
+      { "var": "tempC", "widget": "slider" }
+    ],
+    "actions": [
+      { "id": "record", "label": "Drop and time", "primary": true },
+      { "id": "reset", "label": "Reset" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "trial", "label": "Trial", "unit": "", "decimals": 0 },
+      { "key": "ball", "label": "Sphere", "unit": "", "decimals": 0 },
+      { "key": "radiusMm", "label": "Radius r", "unit": "mm", "decimals": 2 },
+      { "key": "radiusSq", "label": "r²", "unit": "mm²", "decimals": 2 },
+      { "key": "distanceCm", "label": "Distance d", "unit": "cm", "decimals": 0 },
+      { "key": "timeS", "label": "Time t", "unit": "s", "decimals": 2 },
+      { "key": "velocity", "label": "Velocity v", "unit": "cm/s", "decimals": 3 },
+      { "key": "etaPas", "label": "η", "unit": "Pa·s", "decimals": 3 }
+    ],
+    "graph": { "x": "radiusSq", "y": "velocity", "xLabel": "r² (mm²)", "yLabel": "Terminal velocity v (cm/s)", "throughOrigin": true },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Terminal velocity v = distance between marks / time taken",
+      "Correct for the walls of the vessel: v_free = v × (1 + 2.4 r/R)",
+      "η = 2r²(ρ − σ)g / 9v, with r in metre and v in metre per second",
+      "Repeat for each sphere and take the mean value of η",
+      "Alternatively plot v against r²: the slope equals 2(ρ − σ)g / 9η",
+      "1 Pa·s = 10 poise"
+    ],
+    "resultKeys": ["eta", "etaPoise", "reynolds"]
+  },
+  "expectedResult": {
+    "quantity": "Coefficient of viscosity of castor oil at 20 °C",
+    "symbol": "η",
+    "value": 0.985,
+    "tolerance": 0.09,
+    "unit": "Pa·s",
+    "secondary": { "quantity": "In poise", "value": 9.85, "tolerance": 0.9, "unit": "poise" },
+    "statement": "The terminal velocity of a 1.5 mm steel sphere in castor oil at 20 °C is about 3 cm/s, giving a coefficient of viscosity of about 0.99 Pa·s, that is roughly 9.9 poise. Every sphere gives the same value once the wall correction has been applied, which confirms that viscosity is a property of the liquid and not of the body used to measure it."
+  },
+  "safety": [
+    "Castor oil and glycerine make the floor dangerously slippery — wipe up any spill at once.",
+    "Handle the tall glass jar with both hands; it is heavy when full and tips easily.",
+    "Do not drop the spheres from a height, as they can crack the base of the jar.",
+    "Use a magnet or a retrieving hook to recover the steel spheres rather than tipping the jar.",
+    "Keep the oils away from any flame or hotplate."
+  ],
+  "sourcesOfError": [
+    "Starting the stopwatch by eye at the upper mark, and stopping it at the lower — reaction time affects both ends.",
+    "The sphere may not have reached its terminal velocity if the upper mark is too near the surface.",
+    "The sphere may not fall along the axis of the jar, so the wall retardation is greater than the calculated correction.",
+    "Air bubbles clinging to the sphere reduce its effective density.",
+    "The temperature of the liquid may change during the experiment, and viscosity is very sensitive to temperature.",
+    "The radius enters the formula as r², so any error in measuring it is doubled in the result."
+  ],
+  "viva": [
+    { "question": "State Stokes' law.", "expectedConcept": "The viscous drag on a small sphere of radius r moving with velocity v through a liquid of coefficient of viscosity η, under streamline conditions, is F = 6πηrv.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "F = 6πηrv.", "commonMisconception": "Omitting the condition of streamline flow." },
+    { "question": "What is terminal velocity, and why does a falling sphere reach one?", "expectedConcept": "It is the constant velocity a body attains when the net force on it becomes zero. The viscous drag increases with speed, so the sphere accelerates until the drag plus the upthrust exactly balances the weight; after that there is no acceleration.", "difficulty": "easy", "bloom": "Understand", "answerLogic": "Drag grows with v until the forces balance.", "commonMisconception": "Thinking the sphere stops, rather than moving at a constant speed." },
+    { "question": "Name the three forces acting on the sphere and give their directions.", "expectedConcept": "The weight (4/3)πr³ρg acting downwards, the upthrust (4/3)πr³σg acting upwards, and the viscous drag 6πηrv acting upwards, opposite to the motion.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Weight down; upthrust and drag up.", "commonMisconception": "Forgetting the upthrust, which gives the term (ρ − σ) rather than ρ." },
+    { "question": "Why must the upper mark be well below the surface of the liquid?", "expectedConcept": "Because the sphere needs a short distance to accelerate up to its terminal velocity. If timing begins before that, the average velocity over the marked distance is less than the terminal velocity, and since η is inversely proportional to v, the calculated viscosity comes out too large.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "Timing must begin only after the acceleration phase.", "commonMisconception": "Believing the sphere reaches terminal velocity instantly." },
+    { "question": "Why is a wide jar preferred to a narrow tube?", "expectedConcept": "The liquid displaced by the sphere must flow back up past it. In a narrow tube it has only a small gap to flow through, so the sphere is retarded by the walls and the observed velocity is too low, making η too high. The Ladenburg correction v_free = v(1 + 2.4 r/R) allows for this.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Wall drag reduces the observed velocity.", "commonMisconception": "Thinking the tube diameter is irrelevant as long as the sphere fits." },
+    { "question": "What is the Reynolds number and why does it matter here?", "expectedConcept": "Re = 2rvσ/η is the ratio of inertial to viscous forces. Stokes' law is derived for creeping, streamline flow and is only valid while Re is well below one. A large or fast sphere gives a high Reynolds number, eddies form behind it, the drag exceeds 6πηrv, and the calculated viscosity is too small.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "Stokes' law requires low Reynolds number.", "commonMisconception": "Assuming Stokes' law holds for any sphere in any liquid." },
+    { "question": "How does the terminal velocity depend on the radius of the sphere?", "expectedConcept": "It is proportional to the square of the radius, since v = 2r²(ρ − σ)g / 9η. Doubling the radius makes the sphere fall four times as fast.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "v ∝ r².", "commonMisconception": "Thinking v is proportional to r, or to the mass." },
+    { "question": "Why must the temperature of the liquid be recorded?", "expectedConcept": "The viscosity of a liquid falls steeply as the temperature rises — by several percent per degree for these oils. A value of η quoted without the temperature at which it was measured is meaningless.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "η is strongly temperature dependent.", "commonMisconception": "Assuming viscosity is a fixed constant for a substance." },
+    { "question": "How does the viscosity of a gas change with temperature, compared with a liquid?", "expectedConcept": "They behave oppositely. The viscosity of a liquid decreases with rising temperature because the molecules move apart and the intermolecular forces weaken. The viscosity of a gas increases with temperature because it arises from the transfer of momentum between layers by molecular motion, which becomes more vigorous when hot.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Different microscopic origins for the two cases.", "commonMisconception": "Assuming all fluids thin out when heated." },
+    { "question": "What would happen if the sphere were less dense than the liquid?", "expectedConcept": "It would not fall at all. The upthrust would exceed the weight, so the net force would be upwards and the sphere would float or rise. The term (ρ − σ) would be negative and the experiment could not be performed.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Sign of (ρ − σ) decides the direction of motion.", "commonMisconception": "Thinking every body sinks in every liquid, only more slowly." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "According to Stokes' law, the viscous drag on a sphere is proportional to:", "options": ["r² v", "r v", "r v²", "r³ v"], "answer": 1, "feedback": "F = 6πηrv, so the drag is proportional to the radius and to the velocity." },
+      { "id": "pre2", "type": "mcq", "question": "At terminal velocity, the acceleration of the sphere is:", "options": ["Equal to g", "Half of g", "Zero", "Increasing"], "answer": 2, "feedback": "Terminal velocity is reached when the net force is zero, so the acceleration is zero and the speed is constant." },
+      { "id": "pre3", "type": "mcq", "question": "Terminal velocity is proportional to:", "options": ["r", "r²", "r³", "1/r"], "answer": 1, "feedback": "v = 2r²(ρ − σ)g/9η, so v is proportional to the square of the radius." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Time at least three falls.", "check": "rows>=3" },
+      { "id": "dur2", "type": "task", "question": "Use spheres of different radii to test the v ∝ r² relation.", "check": "radiusVaried" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the coefficient of viscosity of castor oil at 20 °C in Pa·s.", "answer": 0.985, "tolerance": 0.12, "feedback": "About 0.99 Pa·s, or roughly 9.9 poise, at 20 °C." },
+      { "id": "post2", "type": "numeric", "question": "Express that value in poise.", "answer": 9.85, "tolerance": 1.2, "feedback": "1 Pa·s = 10 poise, so 0.985 Pa·s is 9.85 poise." },
+      { "id": "post3", "type": "mcq", "question": "You used a large sphere in the thinnest oil and got a viscosity much lower than expected. The most likely reason is:", "options": ["The stopwatch was slow", "The Reynolds number was above one, so the flow was turbulent and Stokes' law failed", "The sphere was too dense", "The jar was too tall"], "answer": 1, "feedback": "Once Re exceeds about one, eddies form and the real drag is larger than 6πηrv, so the value of η calculated from Stokes' law comes out too small." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "η = 2r²(ρ − σ)g / 9v; Re = 2rvσ/η; v_free = v_observed (1 + 2.4 r/R)",
+    "assumptions": [
+      "The sphere has reached terminal velocity before the upper mark",
+      "The flow is streamline, so Stokes' law applies",
+      "The wall correction accounts for the finite width of the vessel",
+      "The liquid is at a steady uniform temperature",
+      "The sphere is smooth, spherical and falls along the axis"
+    ],
+    "validRange": "Ball radius 1 to 5 mm; fall distance 20 to 60 cm; Reynolds number below about 1",
+    "unitSystem": "Radius in mm, distance in cm, time in s; η in Pa·s and poise",
+    "edgeCases": [
+      "Timing before terminal velocity is reached gives η too high",
+      "A large ball in a thin liquid turns the flow turbulent and Stokes' law fails",
+      "A narrow tube retards the ball; the Ladenburg correction restores the free velocity",
+      "Viscosity falls steeply with rising temperature",
+      "A sphere less dense than the liquid floats and cannot be measured"
+    ],
+    "expectedBehaviour": [
+      "η recovers the accepted value for all three liquids to within a few percent",
+      "Both the wide jar and the narrow tube give the same η once corrected",
+      "v is proportional to r², giving a straight line through the origin",
+      "The model refuses a reading for a sphere that floats"
+    ],
+    "testFile": "tests/batch8.test.js"
+  }
+}

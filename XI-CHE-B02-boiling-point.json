@@ -1,0 +1,562 @@
+{
+  "id": "XI-CHE-B02",
+  "class": "XI",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "B",
+    "categoryTitle": "Characterization and Purification of Chemical Substances",
+    "assessmentComponent": "Content Based Experiment (06 marks)",
+    "serial": 2,
+    "unit": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques",
+    "chapter": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques",
+    "topic": "General introduction, methods of purification, qualitative and quantitative analysis, classification and IUPAC nomenclature of organic compounds",
+    "subtopic": "Boiling point as a criterion of purity; dependence on external pressure; elevation of boiling point by a non-volatile solute",
+    "practical": "Determination of boiling point of an organic compound.",
+    "learningObjectives": [
+      "Be able to determine the boiling point of a given organic liquid by the Siwoloboff method",
+      "Be able to show that the boiling point depends on the external pressure",
+      "Be able to observe that a non-volatile impurity raises the boiling point"
+    ],
+    "competencies": [
+      "Performing a standard laboratory operation and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, CATEGORY B, Experiment 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Determination of the boiling point of an organic compound",
+  "shortTitle": "Boiling point",
+  "objective": [
+    "To determine the boiling point of a given organic liquid by the Siwoloboff method.",
+    "To show that the boiling point depends on the external pressure.",
+    "To observe that a non-volatile impurity raises the boiling point."
+  ],
+  "theory": {
+    "statement": "A liquid boils when its saturated vapour pressure becomes equal to the pressure of the atmosphere above it. The boiling point is therefore not a property of the liquid alone but of the liquid and the pressure together, and a boiling point quoted without its pressure is incomplete.",
+    "derivationNote": "In the Siwoloboff method a little of the liquid is placed in a small tube with a capillary inverted in it, sealed at the upper end, and the whole is warmed in a bath. Below the boiling point only the air trapped in the capillary expands, giving a slow trickle of bubbles. When the vapour pressure of the liquid reaches atmospheric pressure a rapid and continuous stream of bubbles emerges. The reading is not taken then, but on cooling: the temperature at which the stream just ceases and the liquid begins to suck back into the capillary is the boiling point, and it is by far the sharper of the two observations. Two effects distinguish this from the melting point experiment. A non-volatile solute LOWERS the vapour pressure of the liquid, so a higher temperature is needed to reach atmospheric pressure and the boiling point is RAISED — elevation, not depression. And a reduction in the external pressure lowers the boiling point substantially, by roughly 0.04 °C for each millimetre of mercury for most organic liquids. That is the principle of distillation under reduced pressure, used for compounds that would decompose at their normal boiling point. Finally, a liquid with no rough surface to nucleate bubbles may superheat, boiling suddenly and violently a few degrees above its true boiling point; a boiling chip prevents this.",
+    "keyEquations": [
+      "A liquid boils when its saturated vapour pressure equals the external pressure",
+      "A non-volatile solute lowers the vapour pressure, so the boiling point is RAISED",
+      "The boiling point falls by about 0.04 °C for each mm Hg the pressure drops",
+      "The reading is taken as bubbling ceases on cooling, not while boiling vigorously"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Fusion tube",
+      "spec": "small, to hold a few drops of the liquid",
+      "why": "Holds the sample with the capillary inverted in it"
+    },
+    {
+      "name": "Capillary tube",
+      "spec": "sealed at the upper end, open below",
+      "why": "Traps air; the stream of bubbles from it marks the boiling point"
+    },
+    {
+      "name": "Liquid paraffin bath and thermometer",
+      "spec": "thermometer to 220 °C",
+      "why": "Heats the sample evenly and reads its temperature"
+    },
+    {
+      "name": "Boiling chips",
+      "spec": "porous porcelain",
+      "why": "Provide nucleation sites so the liquid boils smoothly instead of superheating"
+    },
+    {
+      "name": "Barometer",
+      "spec": "",
+      "why": "The boiling point depends on the atmospheric pressure, so it must be recorded"
+    },
+    {
+      "name": "Organic liquid",
+      "spec": "both crude and redistilled",
+      "why": "Comparing them shows the elevation caused by a non-volatile impurity"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "liquid",
+      "label": "Liquid",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "ethanol",
+      "options": [
+        "acetone",
+        "ethanol",
+        "water",
+        "toluene",
+        "aniline"
+      ]
+    },
+    {
+      "id": "purity",
+      "label": "Sample",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "pure",
+      "options": [
+        "pure",
+        "slight",
+        "impure"
+      ]
+    },
+    {
+      "id": "bath",
+      "label": "Heating bath",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "oil",
+      "options": [
+        "oil",
+        "water"
+      ]
+    },
+    {
+      "id": "chips",
+      "label": "Boiling chips",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "with",
+      "options": [
+        "with",
+        "without"
+      ]
+    },
+    {
+      "id": "pressureMmHg",
+      "label": "Atmospheric pressure",
+      "symbol": "P",
+      "unit": "mm Hg",
+      "type": "independent",
+      "min": 600,
+      "max": 800,
+      "step": 10,
+      "default": 760
+    },
+    {
+      "id": "boilingPoint",
+      "label": "Boiling point",
+      "symbol": "",
+      "unit": "°C",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Place a few drops of the liquid in the fusion tube and add a boiling chip.",
+      "checkpoint": true,
+      "expects": "chips"
+    },
+    {
+      "step": 2,
+      "text": "Invert a capillary sealed at its upper end into the liquid, and tie the tube to the thermometer.",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Record the barometric pressure before starting.",
+      "checkpoint": true,
+      "expects": "pressureMmHg"
+    },
+    {
+      "step": 4,
+      "text": "Warm the bath steadily and watch the mouth of the capillary.",
+      "checkpoint": false
+    },
+    {
+      "step": 5,
+      "text": "Continue until a rapid and continuous stream of bubbles emerges.",
+      "checkpoint": true,
+      "expects": "onset"
+    },
+    {
+      "step": 6,
+      "text": "Remove the flame and let the bath cool. Note the temperature at which the stream just ceases and the liquid sucks back.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 7,
+      "text": "Repeat; a boiling point is never quoted from a single determination.",
+      "checkpoint": true,
+      "expects": "rows>=2"
+    },
+    {
+      "step": 8,
+      "text": "Correct the observed value to 760 mm Hg and compare with the accepted boiling point.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "boiling-point",
+    "renderer": "boiling-point",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "pressureMmHg",
+        "widget": "slider"
+      },
+      {
+        "var": "liquid",
+        "widget": "segmented",
+        "options": [
+          "acetone",
+          "ethanol",
+          "water",
+          "toluene",
+          "aniline"
+        ]
+      },
+      {
+        "var": "purity",
+        "widget": "segmented",
+        "options": [
+          "pure",
+          "slight",
+          "impure"
+        ]
+      },
+      {
+        "var": "bath",
+        "widget": "segmented",
+        "options": [
+          "oil",
+          "water"
+        ]
+      },
+      {
+        "var": "chips",
+        "widget": "segmented",
+        "options": [
+          "with",
+          "without"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record boiling point",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "liquid",
+        "label": "Liquid",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "purity",
+        "label": "Sample",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "pressureMmHg",
+        "label": "Pressure",
+        "unit": "mm Hg",
+        "decimals": 0
+      },
+      {
+        "key": "onsetC",
+        "label": "Bubbles start",
+        "unit": "°C",
+        "decimals": 1
+      },
+      {
+        "key": "observedC",
+        "label": "Bubbling ceases",
+        "unit": "°C",
+        "decimals": 1
+      },
+      {
+        "key": "correctedC",
+        "label": "Corrected to 760",
+        "unit": "°C",
+        "decimals": 1
+      }
+    ],
+    "graph": {
+      "x": "pressureMmHg",
+      "y": "observedC",
+      "xLabel": "Pressure (mm Hg)",
+      "yLabel": "Boiling point (°C)",
+      "throughOrigin": false
+    },
+    "minRows": 2
+  },
+  "calculations": {
+    "steps": [
+      "Note the temperature at which the stream of bubbles ceases on cooling",
+      "Record the barometric pressure at the time of the determination",
+      "Correction = (760 − observed pressure) × 0.04 °C per mm Hg",
+      "Corrected boiling point = observed value plus that correction",
+      "Compare with the accepted boiling point at 760 mm Hg"
+    ],
+    "resultKeys": [
+      "boilingPoint",
+      "pressureShiftC",
+      "percentError"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Boiling point of ethanol at 760 mm Hg",
+    "symbol": "",
+    "value": 78.4,
+    "tolerance": 2,
+    "unit": "°C",
+    "secondary": {
+      "quantity": "Fall in boiling point at 700 mm Hg",
+      "value": 2.4,
+      "tolerance": 1.2,
+      "unit": "°C"
+    },
+    "statement": "A rapid stream of bubbles marks the boiling point, and the sharper reading is taken as it ceases on cooling. Ethanol boils at about 78.4 °C at 760 mm Hg. At 700 mm Hg it boils some 2.4 °C lower, and a non-volatile impurity raises the boiling point rather than lowering it."
+  },
+  "safety": [
+    "Most organic liquids are highly flammable. Heat them only in a bath, never over a naked flame.",
+    "Acetone and ethanol vapour form explosive mixtures with air; keep all flames well away.",
+    "Aniline is toxic by skin absorption. Wear gloves and avoid breathing the vapour.",
+    "Superheated liquid can erupt from the tube without warning. Never look down into the mouth of the tube.",
+    "Allow the paraffin bath to cool fully before dismantling the apparatus."
+  ],
+  "sourcesOfError": [
+    "Superheating in the absence of a boiling chip, giving a value that is too high.",
+    "Taking the reading while boiling vigorously rather than as the bubbling ceases on cooling.",
+    "Failing to record the barometric pressure, so no correction can be made.",
+    "The thermometer bulb not level with the liquid in the fusion tube.",
+    "A leaking or cracked capillary, so no stream of bubbles ever forms.",
+    "Loss of the more volatile component if the sample is a mixture."
+  ],
+  "viva": [
+    {
+      "question": "Define the boiling point of a liquid.",
+      "expectedConcept": "The temperature at which the saturated vapour pressure of the liquid equals the external pressure above it. At that point vapour can form throughout the bulk of the liquid, not merely at the surface.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Vapour pressure equals external pressure.",
+      "commonMisconception": "Defining it as the temperature at which bubbles first appear, which can be trapped air."
+    },
+    {
+      "question": "Why does the boiling point depend on the atmospheric pressure?",
+      "expectedConcept": "Because boiling requires the vapour pressure to match the pressure pushing down on the liquid. Lower that external pressure and a lower vapour pressure suffices, so the liquid boils at a lower temperature. Water boils below 100 °C on a mountain for exactly this reason.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Less pressure to overcome means a lower temperature.",
+      "commonMisconception": "Thinking the boiling point is a fixed constant of the liquid."
+    },
+    {
+      "question": "Why is the reading taken as the bubbling CEASES on cooling?",
+      "expectedConcept": "Because that is the sharper observation. While heating, the onset of bubbling can be masked by trapped air or delayed by superheating. On cooling, the moment the vapour pressure falls just below atmospheric the stream stops abruptly and the liquid sucks back into the capillary, which is unmistakable.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "The cessation point is sharp and unambiguous.",
+      "commonMisconception": "Assuming the first appearance of bubbles is the boiling point."
+    },
+    {
+      "question": "How does a non-volatile impurity affect the boiling point?",
+      "expectedConcept": "It RAISES it. A dissolved solute lowers the vapour pressure of the solvent, so a higher temperature is needed before that pressure reaches atmospheric. This is elevation of boiling point, the opposite of what an impurity does to a melting point.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Lower vapour pressure means a higher boiling point.",
+      "commonMisconception": "Assuming impurities always lower a transition temperature."
+    },
+    {
+      "question": "What is superheating and how is it prevented?",
+      "expectedConcept": "Heating a liquid above its boiling point without it actually boiling, because there is no rough surface on which a bubble can nucleate. It ends in sudden violent boiling that can throw liquid out of the tube. A porous boiling chip supplies the nucleation sites and prevents it.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "No nucleation sites; cured by a boiling chip.",
+      "commonMisconception": "Thinking superheating is simply overheating the bath."
+    },
+    {
+      "question": "Why can a liquid be distilled under reduced pressure?",
+      "expectedConcept": "Because lowering the external pressure lowers the boiling point. A compound that would decompose at its normal boiling point can be distilled unchanged at a much lower temperature under vacuum. It is standard practice for heat-sensitive organic compounds.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Reduced pressure means a lower boiling temperature.",
+      "commonMisconception": "Believing vacuum distillation changes the compound rather than the conditions."
+    },
+    {
+      "question": "Why is only a very small quantity of liquid needed in this method?",
+      "expectedConcept": "Because the observation is of the capillary, not of bulk boiling. A few drops are enough to seal the mouth of the capillary and produce the stream of vapour bubbles, which makes the method economical for precious or scarce samples.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Only enough to seal the capillary is needed.",
+      "commonMisconception": "Thinking more liquid would give a more accurate result."
+    },
+    {
+      "question": "Distinguish between evaporation and boiling.",
+      "expectedConcept": "Evaporation happens only at the surface and at any temperature; boiling happens throughout the bulk of the liquid and only when the vapour pressure equals the external pressure. Evaporation is gradual, boiling is a definite change occurring at a definite temperature.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Surface and any temperature, against bulk and a definite temperature.",
+      "commonMisconception": "Treating boiling as merely fast evaporation."
+    },
+    {
+      "question": "Why must the boiling point be quoted with the pressure?",
+      "expectedConcept": "Because it is not a property of the liquid alone. The same liquid boils at different temperatures at different pressures, so a value without its pressure cannot be compared with a literature figure. Values are conventionally corrected to 760 mm Hg.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "It depends on pressure, so the pressure is part of the result.",
+      "commonMisconception": "Reporting a boiling point as a bare number."
+    },
+    {
+      "question": "Two liquids boil at the same temperature. Are they the same compound?",
+      "expectedConcept": "Not necessarily; boiling point alone is not proof of identity, just as melting point alone is not. It must be supported by other evidence, and an azeotropic mixture can even boil at a constant temperature while not being a pure substance at all.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Boiling point alone is not conclusive.",
+      "commonMisconception": "Treating a matching boiling point as an identification."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "A liquid boils when its saturated vapour pressure equals:",
+        "options": [
+          "Zero",
+          "The external pressure",
+          "Its critical pressure",
+          "The pressure of its own weight"
+        ],
+        "answer": 1,
+        "feedback": "That is the definition of the boiling point."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "A non-volatile impurity makes a liquid boil:",
+        "options": [
+          "Lower",
+          "Higher",
+          "At the same temperature",
+          "Not at all"
+        ],
+        "answer": 1,
+        "feedback": "A solute lowers the vapour pressure, so a higher temperature is needed — elevation of boiling point."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "In the Siwoloboff method the boiling point is read:",
+        "options": [
+          "When the first bubble appears",
+          "When the stream of bubbles ceases on cooling",
+          "When the liquid is all gone",
+          "At the highest temperature reached"
+        ],
+        "answer": 1,
+        "feedback": "The cessation on cooling is the sharp, unambiguous observation."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Determine the boiling point at least twice.",
+        "check": "rows>=2"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Record the barometric pressure for each determination.",
+        "check": "pressureRecorded"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the boiling point of ethanol corrected to 760 mm Hg, in °C.",
+        "answer": 78.4,
+        "tolerance": 3,
+        "feedback": "About 78.4 °C once corrected for the barometric pressure."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "You worked at 700 mm Hg and observed 76 °C. The corrected boiling point is about:",
+        "options": [
+          "73.6 °C",
+          "78.4 °C",
+          "76 °C",
+          "82 °C"
+        ],
+        "answer": 1,
+        "feedback": "Add roughly 0.04 °C per mm Hg below 760, giving about 2.4 °C of correction."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Your sample boiled 2 °C high and then boiled violently. The likely cause is:",
+        "options": [
+          "A non-volatile impurity",
+          "Superheating for lack of a boiling chip",
+          "Low pressure",
+          "A cold bath"
+        ],
+        "answer": 1,
+        "feedback": "Violent, delayed boiling is the signature of superheating."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "A liquid boils when its saturated vapour pressure equals the external pressure",
+    "assumptions": [
+      "A liquid boils when its saturated vapour pressure equals the external pressure",
+      "A non-volatile solute lowers the vapour pressure, so the boiling point is RAISED",
+      "The boiling point falls by about 0.04 °C for each mm Hg the pressure drops",
+      "The reading is taken as bubbling ceases on cooling, not while boiling vigorously"
+    ],
+    "validRange": "A rapid stream of bubbles marks the boiling point, and the sharper reading is ta",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Superheating in the absence of a boiling chip, giving a value that is too high.",
+      "Taking the reading while boiling vigorously rather than as the bubbling ceases on cooling.",
+      "Failing to record the barometric pressure, so no correction can be made.",
+      "The thermometer bulb not level with the liquid in the fusion tube."
+    ],
+    "expectedBehaviour": [
+      "A rapid stream of bubbles marks the boiling point, and the sharper reading is taken as it ceases on cooling. Ethanol boils at about 78.4 °C at 760 mm Hg. At 700 mm Hg it boils some 2.4 °C lower, and a non-volatile impurity raises the boiling point rather than lowering it."
+    ],
+    "testFile": "tests/batch9.test.js"
+  }
+}

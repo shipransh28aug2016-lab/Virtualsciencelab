@@ -1,0 +1,196 @@
+{
+  "id": "XI-PHY-A02",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 2,
+    "unit": "Unit I: Physical World and Measurement",
+    "chapter": "Chapter-1: Units and Measurements",
+    "topic": "Need for measurement; units of measurement; systems of units; SI units, fundamental and derived units; significant figures",
+    "subtopic": "Least count of a screw gauge; accuracy and precision of measuring instruments; errors in measurement",
+    "practical": "To measure diameter of a given wire and thickness of a given sheet using screw gauge.",
+    "learningObjectives": [
+      "Define the pitch of a screw and determine it by counting rotations against the pitch scale",
+      "Derive the least count of a screw gauge as pitch divided by the number of circular scale divisions",
+      "Read a screw gauge as pitch scale reading plus circular scale reading times least count",
+      "Identify positive and negative zero error and apply the correction with the correct sign",
+      "Measure the diameter of a wire and the thickness of a sheet to 0.01 mm",
+      "Calculate the area of cross-section of the wire and express it to the correct number of significant figures"
+    ],
+    "competencies": [
+      "Precise use of a micrometer and correct determination of its least count",
+      "Consistent application of force using the ratchet, so that readings are comparable",
+      "Distinguishing systematic zero error from random variation between readings",
+      "Reporting a result to a precision the instrument actually justifies"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Experiment 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Screw Gauge: diameter of a wire and thickness of a sheet",
+  "shortTitle": "Screw Gauge",
+  "objective": [
+    "To measure the diameter of a given wire using a screw gauge.",
+    "To measure the thickness of a given sheet.",
+    "To calculate the area of cross-section of the wire."
+  ],
+  "theory": {
+    "statement": "A screw gauge works on the principle of the screw: when the screw is rotated through one complete turn it advances along its axis by a fixed distance called the pitch. Dividing that motion among the divisions on the circular scale lets a very small length be measured.",
+    "derivationNote": "The pitch is found by noting the distance the screw advances along the pitch scale for a counted number of complete rotations, usually ten, and dividing. The least count is then the pitch divided by the total number of divisions on the circular scale: L.C. = pitch / N. For a pitch of 0.5 mm and 50 circular divisions, L.C. = 0.01 mm. The total reading is the pitch scale reading plus the circular scale division that coincides with the datum line, multiplied by the least count. Any zero error is then subtracted algebraically. Compared with vernier callipers, a screw gauge is ten times finer, which is why it is used for wires and thin sheets rather than for a beaker.",
+    "keyEquations": [
+      "Pitch = distance advanced / number of rotations",
+      "L.C. = pitch / number of circular scale divisions",
+      "Observed reading = P.S.R. + (H.S.R. × L.C.)",
+      "Correct reading = Observed reading − zero error (with its own sign)",
+      "Area of cross-section A = πd²/4"
+    ]
+  },
+  "apparatus": [
+    { "name": "Screw gauge", "spec": "pitch 0.5 mm, 50 circular divisions, L.C. 0.01 mm", "why": "The measuring instrument; the ratchet ensures a constant gentle pressure" },
+    { "name": "Copper wire", "spec": "about 0.4 mm diameter", "why": "The specimen whose diameter and area of cross-section are required" },
+    { "name": "Metal sheet", "spec": "thin, about 0.25 mm", "why": "Demonstrates that the same instrument measures thickness as well as diameter" },
+    { "name": "Half-metre scale", "spec": "least count 0.1 cm", "why": "Used only to confirm the length of wire, not its diameter" },
+    { "name": "Magnifying lens", "spec": "hand lens", "why": "Helps read which circular division coincides with the datum line" }
+  ],
+  "materials": [],
+  "variables": [
+    { "id": "gauge", "label": "Screw gauge", "symbol": "", "unit": "", "type": "control", "default": "sg50", "options": ["sg50", "sg100", "sg50f"] },
+    { "id": "specimen", "label": "Specimen", "symbol": "", "unit": "", "type": "control", "default": "wire", "options": ["wire", "thickWire", "sheet", "paper"] },
+    { "id": "thimble", "label": "Thimble setting", "symbol": "d", "unit": "mm", "type": "independent", "min": 0, "max": 5, "step": 0.001, "default": 0.412 },
+    { "id": "zeroErrorDiv", "label": "Zero error", "symbol": "e", "unit": "divisions", "type": "controlled", "min": -5, "max": 5, "step": 1, "default": 0 },
+    { "id": "useRatchet", "label": "Use the ratchet", "symbol": "", "unit": "", "type": "control", "default": true },
+    { "id": "corrected", "label": "Corrected reading", "symbol": "d", "unit": "mm", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Find the pitch: give the screw ten complete rotations and note how far it advances along the pitch scale. Divide by ten.", "checkpoint": true, "expects": "gauge" },
+    { "step": 2, "text": "Count the divisions on the circular scale and calculate the least count as pitch divided by that number.", "checkpoint": false },
+    { "step": 3, "text": "Turn the ratchet until the spindle just touches the anvil. If the zero of the circular scale does not coincide with the datum line, note the zero error and its sign.", "checkpoint": true, "expects": "zeroTaken" },
+    { "step": 4, "text": "Place the wire between the anvil and the spindle and turn the RATCHET, never the thimble, until it clicks.", "checkpoint": true, "expects": "useRatchet" },
+    { "step": 5, "text": "Read the pitch scale division just visible before the edge of the thimble. This is the P.S.R.", "checkpoint": false },
+    { "step": 6, "text": "Read the circular scale division that coincides with the datum line. This is the H.S.R.", "checkpoint": false },
+    { "step": 7, "text": "Calculate the observed reading and apply the zero error correction. Record it.", "checkpoint": true, "expects": "record" },
+    { "step": 8, "text": "Repeat at four different places along the wire and in mutually perpendicular directions, since the wire may not be uniform or perfectly circular.", "checkpoint": true, "expects": "rows>=3" },
+    { "step": 9, "text": "Take the mean, then calculate the area of cross-section using A = πd²/4. Repeat the whole procedure for the sheet.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "screw-gauge",
+    "renderer": "screw-gauge",
+    "fps": 60,
+    "controls": [
+      { "var": "gauge", "widget": "segmented", "options": ["sg50", "sg100", "sg50f"] },
+      { "var": "specimen", "widget": "segmented", "options": ["wire", "thickWire", "sheet", "paper"] },
+      { "var": "thimble", "widget": "slider" },
+      { "var": "zeroErrorDiv", "widget": "slider" },
+      { "var": "useRatchet", "widget": "switch" }
+    ],
+    "actions": [
+      { "id": "record", "label": "Record this reading", "primary": true },
+      { "id": "reset", "label": "Reset" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "trial", "label": "Trial", "unit": "", "decimals": 0 },
+      { "key": "pitchScaleReading", "label": "P.S.R.", "unit": "mm", "decimals": 2 },
+      { "key": "circularDivision", "label": "H.S.R.", "unit": "div", "decimals": 0 },
+      { "key": "leastCount", "label": "L.C.", "unit": "mm", "decimals": 4 },
+      { "key": "observed", "label": "Observed", "unit": "mm", "decimals": 3 },
+      { "key": "zeroError", "label": "Zero error", "unit": "mm", "decimals": 3 },
+      { "key": "corrected", "label": "Corrected", "unit": "mm", "decimals": 3 }
+    ],
+    "graph": { "x": "trial", "y": "corrected", "xLabel": "Trial number", "yLabel": "Corrected reading (mm)", "throughOrigin": false },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Pitch = distance advanced in ten rotations / 10",
+      "L.C. = pitch / number of circular divisions",
+      "Observed = P.S.R. + H.S.R. × L.C.",
+      "Corrected = Observed − zero error",
+      "Mean diameter d, then A = πd²/4"
+    ],
+    "resultKeys": ["meanValue", "radius", "area"]
+  },
+  "expectedResult": {
+    "quantity": "Mean diameter of the wire",
+    "symbol": "d",
+    "value": 0.412,
+    "tolerance": 0.015,
+    "unit": "mm",
+    "secondary": { "quantity": "Area of cross-section", "value": 0.1333, "tolerance": 0.01, "unit": "mm²" },
+    "statement": "The diameter of the given wire is about 0.412 mm and its area of cross-section about 0.133 mm², each measured to the least count of 0.01 mm."
+  },
+  "safety": [
+    "Always make the final turn with the ratchet. Forcing the thimble strains the screw threads and permanently damages the instrument.",
+    "Do not measure a hard object that could scratch the polished faces of the anvil and spindle.",
+    "Keep the measuring faces clean and dry; a speck of dust is itself a zero error.",
+    "Store the gauge with a small gap between the faces, so temperature changes cannot strain the screw."
+  ],
+  "sourcesOfError": [
+    "Zero error not noticed, or corrected with the wrong sign.",
+    "Backlash error: play in the screw threads if the screw is turned back and forth.",
+    "Turning the thimble instead of the ratchet, which compresses a soft specimen and gives a reading that is too low.",
+    "The wire not being uniform along its length or perfectly circular in cross-section.",
+    "Parallax while reading the circular scale against the datum line.",
+    "Reporting more significant figures than the least count justifies."
+  ],
+  "viva": [
+    { "question": "What is the principle of a screw gauge?", "expectedConcept": "It works on the principle of the screw: when a screw is given one complete rotation it advances along its axis by a fixed distance called the pitch. Subdividing one rotation among the circular scale divisions allows a small fraction of the pitch to be measured.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Rotation converted into linear advance.", "commonMisconception": "Describing it as simply a fine ruler." },
+    { "question": "Define pitch and least count of a screw gauge.", "expectedConcept": "The pitch is the distance the screw advances along its axis in one complete rotation. The least count is the pitch divided by the number of divisions on the circular scale, and is the smallest length the instrument can measure.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "L.C. = pitch / N.", "commonMisconception": "Quoting 0.01 mm as a fixed property of every screw gauge instead of a consequence of pitch and N." },
+    { "question": "A screw gauge has a pitch of 1 mm and 100 divisions on the circular scale. What is its least count?", "expectedConcept": "L.C. = 1 mm / 100 = 0.01 mm.", "difficulty": "easy", "bloom": "Apply", "answerLogic": "Direct substitution.", "commonMisconception": "Answering 0.1 mm by dividing by ten out of habit." },
+    { "question": "Why is a ratchet provided, and what happens if you ignore it?", "expectedConcept": "The ratchet slips once a fixed gentle pressure is reached, so every reading is taken at the same force. Turning the thimble directly lets you squeeze the specimen, which reads low on anything soft, and it can strain the screw threads.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Constant force means comparable readings.", "commonMisconception": "Treating the ratchet as merely a convenient handle." },
+    { "question": "What is backlash error and how is it avoided?", "expectedConcept": "Wear in the screw and nut means that on reversing the direction of rotation the spindle does not move at once. The reading then depends on which way the screw was last turned. It is avoided by always rotating the screw in the same direction while taking a set of readings.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "A systematic error of mechanical origin, distinct from zero error.", "commonMisconception": "Confusing backlash with zero error." },
+    { "question": "The circular scale zero lies four divisions BELOW the datum line when the faces touch. What is the zero error and how is it corrected?", "expectedConcept": "The zero error is positive, equal to +4 × 0.01 = +0.04 mm, and it must be SUBTRACTED from every observed reading.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Sign convention with a numerical value.", "commonMisconception": "Adding a positive zero error." },
+    { "question": "Why is a screw gauge preferred to vernier callipers for measuring a wire?", "expectedConcept": "Its least count is 0.01 mm, ten times finer than the 0.1 mm of ordinary vernier callipers. A wire of about 0.4 mm diameter would be only four least counts on a vernier, giving a very large percentage error.", "difficulty": "medium", "bloom": "Evaluate", "answerLogic": "Percentage error depends on the measurement expressed in least counts.", "commonMisconception": "Thinking the choice is only about convenience." },
+    { "question": "Why is the diameter measured at several places along the wire?", "expectedConcept": "A drawn wire is not perfectly uniform along its length, nor exactly circular in section. Measuring at several places and in perpendicular directions, then averaging, reduces the effect of both.", "difficulty": "easy", "bloom": "Understand", "answerLogic": "Averaging over position and orientation.", "commonMisconception": "Repeating the measurement at the same spot and calling it a repeat." },
+    { "question": "Your mean diameter is 0.412 mm. Why should you not write the area as 0.13329 mm²?", "expectedConcept": "The diameter is known to three significant figures, so the area cannot be known to five. It should be written as 0.133 mm². Extra digits imply a precision the instrument does not have.", "difficulty": "medium", "bloom": "Evaluate", "answerLogic": "Significant figures propagate through the calculation.", "commonMisconception": "Copying every digit from the calculator display." },
+    { "question": "How would the reading change if the screw gauge were made with a finer pitch?", "expectedConcept": "A finer pitch gives a smaller least count for the same number of circular divisions, so the instrument resolves more finely. The trade-off is that the spindle advances more slowly, so measuring takes longer, and the scale becomes harder to read.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "L.C. = pitch / N, so reducing the pitch reduces the least count.", "commonMisconception": "Assuming finer pitch automatically means a more accurate result regardless of technique." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "A screw gauge has a pitch of 0.5 mm and 50 divisions on its circular scale. Its least count is:", "options": ["0.5 mm", "0.05 mm", "0.01 mm", "0.001 mm"], "answer": 2, "feedback": "L.C. = pitch / N = 0.5 mm / 50 = 0.01 mm." },
+      { "id": "pre2", "type": "mcq", "question": "The ratchet on a screw gauge is used to:", "options": ["Turn the screw faster", "Apply the same gentle pressure every time", "Read the circular scale", "Correct the zero error"], "answer": 1, "feedback": "The ratchet slips at a fixed pressure, so all readings are taken at the same force and are therefore comparable." },
+      { "id": "pre3", "type": "mcq", "question": "Pitch of a screw is defined as the distance moved by the screw in:", "options": ["One division of the circular scale", "One complete rotation", "Ten rotations", "One millimetre of the pitch scale"], "answer": 1, "feedback": "The pitch is the axial advance per complete rotation; it is usually found by counting ten rotations and dividing." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Note the zero error before taking any measurement.", "check": "zeroTaken" },
+      { "id": "dur2", "type": "task", "question": "Record at least three readings at different places on the wire.", "check": "rows>=3" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the mean corrected diameter of the wire (mm).", "answer": 0.412, "tolerance": 0.02, "feedback": "The wire supplied has a diameter of about 0.412 mm." },
+      { "id": "post2", "type": "numeric", "question": "Calculate the area of cross-section of the wire (mm²).", "answer": 0.1333, "tolerance": 0.015, "feedback": "A = πd²/4 with d = 0.412 mm gives about 0.133 mm²." },
+      { "id": "post3", "type": "mcq", "question": "Your observed reading is 0.46 mm and the zero error is +0.03 mm. The correct reading is:", "options": ["0.49 mm", "0.46 mm", "0.43 mm", "0.40 mm"], "answer": 2, "feedback": "Correct = observed − zero error = 0.46 − (+0.03) = 0.43 mm. A positive zero error is subtracted." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "L.C. = pitch/N; reading = P.S.R. + H.S.R.×L.C. − zero error; A = πd²/4",
+    "assumptions": [
+      "The screw threads are uniform, so the pitch is constant",
+      "The ratchet is used, so the pressure is the same for every reading",
+      "The specimen is not compressed by the measuring faces",
+      "Zero error is constant over the range used"
+    ],
+    "validRange": "0 to 25 mm opening; pitch 0.5 or 1 mm; 50 or 100 circular divisions",
+    "unitSystem": "Millimetres; area in mm²",
+    "edgeCases": [
+      "Opening below one least count cannot be resolved — blocked",
+      "Turning the thimble instead of the ratchet compresses a soft sheet — warned",
+      "A hard wire is unaffected by the ratchet setting",
+      "A gauge with L.C. 0.005 mm resolves 0.4125 mm where a 0.01 mm gauge reads 0.41 mm"
+    ],
+    "expectedBehaviour": [
+      "P.S.R. + H.S.R. × L.C. always reconstructs the total reading exactly",
+      "Positive zero error lowers the corrected reading, negative raises it",
+      "The mean of repeated readings converges on the true diameter",
+      "Area scales as the square of the diameter"
+    ],
+    "testFile": "tests/batch3.test.js"
+  }
+}

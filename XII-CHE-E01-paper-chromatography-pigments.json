@@ -1,0 +1,480 @@
+{
+  "id": "XII-CHE-E01",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "E",
+    "categoryTitle": "Chromatography",
+    "assessmentComponent": "Content Based Experiment",
+    "serial": 1,
+    "unit": "Unit VIII: Analytical and separation techniques",
+    "chapter": "Chromatography",
+    "topic": "Paper chromatography and Rf values",
+    "subtopic": "Partition between a stationary and a mobile phase",
+    "practical": "Separation of pigments from extracts of leaves and flowers by paper chromatography and determination of Rf values.",
+    "learningObjectives": [
+      "Be able to separate the pigments present in a leaf or flower extract on chromatography paper",
+      "Be able to measure the distance travelled by each pigment and by the solvent front",
+      "Be able to calculate the Rf value of each pigment and use it to identify the pigment",
+      "Be able to show that Rf does not depend on how far the solvent was allowed to travel"
+    ],
+    "competencies": [
+      "Performing a standard laboratory operation and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, CATEGORY C, Experiment 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Separation of pigments from leaf and flower extracts by paper chromatography",
+  "shortTitle": "Chromatography of pigments",
+  "objective": [
+    "To separate the pigments present in a leaf or flower extract on chromatography paper.",
+    "To measure the distance travelled by each pigment and by the solvent front.",
+    "To calculate the Rf value of each pigment and use it to identify the pigment.",
+    "To show that Rf does not depend on how far the solvent was allowed to travel."
+  ],
+  "theory": {
+    "statement": "A leaf looks uniformly green, but the green hides a mixture. Paper chromatography separates that mixture using nothing more than a strip of paper and a solvent. The paper fibres hold water tightly — this is the stationary phase — and the solvent climbing the paper by capillary action is the mobile phase. Each pigment constantly dissolves into the moving solvent and re-attaches to the wet paper, and the fraction of time it spends moving decides how far it gets. A non-polar pigment such as carotene prefers the non-polar solvent and travels almost as fast as the front; chlorophyll b is more polar, clings to the paper, and lags far behind. The position of each is reported as Rf, the distance the pigment moved divided by the distance the solvent moved. Because it is a RATIO, Rf is the same whether the paper ran for ten minutes or thirty — and that is exactly what makes it a usable identifying constant rather than just a measurement.",
+    "keyEquations": [
+      "Rf = distance travelled by the component / distance travelled by the solvent front",
+      "Rf is dimensionless and always lies between 0 and 1",
+      "Accepted values: carotene 0.95, pheophytin 0.83, xanthophyll 0.71, chlorophyll a 0.65, chlorophyll b 0.45",
+      "Larger Rf means greater solubility in the mobile phase and weaker adsorption on the paper"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Chromatography paper strip",
+      "why": "The paper holds water in its fibres; that trapped water is the stationary phase the components partition against."
+    },
+    {
+      "name": "Glass jar with a lid",
+      "why": "The chamber must stay saturated with solvent vapour, otherwise the paper dries as the solvent climbs and the front becomes ragged."
+    },
+    {
+      "name": "Capillary tube",
+      "why": "A small, concentrated spot is essential. A large spot spreads into a smear and no clean Rf can be measured."
+    },
+    {
+      "name": "Metre rule graduated in mm",
+      "why": "Rf is a ratio of two measured distances, so both must be read to the same precision."
+    },
+    {
+      "name": "Pencil",
+      "why": "Pencil marks do not dissolve. Ink would itself separate and run up the paper with the sample."
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "sample",
+      "label": "Extract",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "spinach",
+      "options": [
+        "spinach",
+        "marigold",
+        "hibiscus"
+      ]
+    },
+    {
+      "id": "solvent",
+      "label": "Solvent",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "petAcetone",
+      "options": [
+        "petAcetone",
+        "acetoneHcl",
+        "butanol"
+      ]
+    },
+    {
+      "id": "runMinutes",
+      "label": "Run time",
+      "symbol": "t",
+      "unit": "min",
+      "type": "independent",
+      "min": 0,
+      "max": 45,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "id": "solventLevelCm",
+      "label": "Solvent level",
+      "symbol": "h",
+      "unit": "cm",
+      "type": "control",
+      "min": 0.5,
+      "max": 3,
+      "step": 0.1,
+      "default": 1
+    },
+    {
+      "id": "spotLineCm",
+      "label": "Spotting line",
+      "symbol": "",
+      "unit": "cm",
+      "type": "control",
+      "min": 0.5,
+      "max": 3,
+      "step": 0.5,
+      "default": 2
+    },
+    {
+      "id": "scale",
+      "label": "Rule",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "r01",
+      "options": [
+        "r01",
+        "r005"
+      ]
+    },
+    {
+      "id": "rf",
+      "label": "Rf value",
+      "symbol": "Rf",
+      "unit": "",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    "Draw a pencil line 2 cm from the bottom of the paper strip and mark the centre of it.",
+    "Grind the leaves with a little acetone and spot the extract on the pencil mark with a capillary tube, drying between applications so the spot stays small.",
+    "Pour solvent into the jar to a depth WELL BELOW the pencil line.",
+    "Suspend the strip so its lower edge dips into the solvent but the spot does not, and close the jar.",
+    "Allow the solvent to climb until the front is a centimetre or two from the top, then remove the strip.",
+    "Mark the solvent front immediately in pencil, before it evaporates, and let the strip dry.",
+    "Measure from the pencil line to the centre of each coloured band and to the solvent front.",
+    "Calculate Rf for each band, and repeat with a different run time to show that Rf does not change."
+  ],
+  "simulation": {
+    "model": "chromatography",
+    "renderer": "chromatography",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "sample",
+        "label": "Extract",
+        "widget": "segmented",
+        "options": [
+          "spinach",
+          "marigold",
+          "hibiscus"
+        ]
+      },
+      {
+        "var": "solvent",
+        "label": "Solvent",
+        "widget": "segmented",
+        "options": [
+          "petAcetone",
+          "acetoneHcl",
+          "butanol"
+        ]
+      },
+      {
+        "var": "runMinutes",
+        "label": "Run time",
+        "widget": "slider"
+      },
+      {
+        "var": "solventLevelCm",
+        "label": "Solvent level",
+        "widget": "slider"
+      },
+      {
+        "var": "spotLineCm",
+        "label": "Spotting line",
+        "widget": "slider"
+      },
+      {
+        "var": "scale",
+        "label": "Rule",
+        "widget": "segmented",
+        "options": [
+          "r01",
+          "r005"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Measure spots",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "sample",
+        "label": "Extract"
+      },
+      {
+        "key": "frontCm",
+        "label": "Solvent front",
+        "unit": "cm",
+        "decimals": 2
+      },
+      {
+        "key": "spots",
+        "label": "Bands",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "topComponent",
+        "label": "Fastest band"
+      },
+      {
+        "key": "topDistanceCm",
+        "label": "Distance",
+        "unit": "cm",
+        "decimals": 2
+      },
+      {
+        "key": "topRf",
+        "label": "Rf",
+        "unit": "",
+        "decimals": 3
+      }
+    ],
+    "graph": null,
+    "minRows": 2
+  },
+  "calculations": {
+    "steps": [
+      "Measure the distance from the pencil line to the solvent front.",
+      "Measure the distance from the pencil line to the centre of each coloured band.",
+      "Divide each band distance by the front distance to obtain its Rf.",
+      "Compare each Rf with the accepted values to identify the pigment.",
+      "Check that the Rf of the same pigment agrees between runs of different length."
+    ],
+    "resultKeys": [
+      "componentCount",
+      "worstErrorPct"
+    ]
+  },
+  "expectedResult": {
+    "statement": "Spinach extract separates into as many as five bands. Carotene runs almost with the solvent front at Rf about 0.95, followed by pheophytin 0.83, xanthophyll 0.71, chlorophyll a 0.65 and chlorophyll b 0.45. The same pigment gives the same Rf in a short run and a long one, since Rf is a ratio of two distances that grow together.",
+    "value": 0.95,
+    "unit": "",
+    "tolerancePct": 10
+  },
+  "safety": [
+    "Acetone and petroleum ether are highly flammable: keep them away from any flame or hotplate.",
+    "Work in a well-ventilated room and keep the chromatography jar closed.",
+    "Avoid breathing the solvent vapour and do not let the solvents touch the skin.",
+    "Dispose of used solvent in the labelled organic waste container, never down the sink."
+  ],
+  "sourcesOfError": [
+    "Letting the solvent level reach the spot, which washes the sample off the paper entirely.",
+    "Making the spot too large, so the bands overlap and smear.",
+    "Failing to mark the solvent front at once, so it evaporates and the front distance is guessed.",
+    "Leaving the jar open, so the paper dries and the front climbs unevenly.",
+    "Measuring to the edge of a band rather than its centre, which biases every Rf."
+  ],
+  "viva": [
+    {
+      "question": "What are the stationary and mobile phases in paper chromatography?",
+      "expectedConcept": "The stationary phase is the water held in the cellulose fibres of the paper; the mobile phase is the solvent that climbs it.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Water in the paper, and the climbing solvent.",
+      "commonMisconception": "That the paper itself is the stationary phase."
+    },
+    {
+      "question": "Why does carotene travel furthest?",
+      "expectedConcept": "Carotene is non-polar and highly soluble in the non-polar solvent, so it spends most of its time in the mobile phase and is carried nearly to the front.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "Most soluble in the mobile phase, least adsorbed.",
+      "commonMisconception": "That it travels furthest because it is the lightest molecule."
+    },
+    {
+      "question": "What does a small Rf value tell you about a component?",
+      "expectedConcept": "It is strongly adsorbed on the paper and only sparingly soluble in the mobile phase, so it lags behind.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Strong adsorption, poor solubility in the solvent.",
+      "commonMisconception": "That a small Rf means very little of the substance is present."
+    },
+    {
+      "question": "Does the Rf value change if you run the paper for longer?",
+      "expectedConcept": "No. Both distances increase in the same proportion, so their ratio is unchanged. That constancy is why Rf can be used to identify a substance.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "No, because both distances grow together.",
+      "commonMisconception": "That a longer run gives a larger Rf."
+    },
+    {
+      "question": "Why does a leaf appear green if it contains orange and yellow pigments too?",
+      "expectedConcept": "Chlorophyll is present in much the largest amount and absorbs strongly in the red and blue, so the green it reflects overwhelms the other colours.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "Chlorophyll dominates by quantity.",
+      "commonMisconception": "That the other pigments appear only in autumn."
+    },
+    {
+      "question": "Two substances give the same Rf in one solvent. Are they the same compound?",
+      "expectedConcept": "Not necessarily. Rf is characteristic of a compound in a particular solvent system, so confirmation requires running them again in a different solvent.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "No; confirm in a second solvent system.",
+      "commonMisconception": "That equal Rf proves identity outright."
+    },
+    {
+      "question": "Why must the spot be above the solvent level?",
+      "expectedConcept": "If the solvent covers the spot, the sample dissolves off into the trough instead of being carried up the paper, and nothing separates.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "The sample would wash away into the reservoir.",
+      "commonMisconception": "That the spot must touch the solvent to start moving."
+    },
+    {
+      "question": "Why is the line drawn in pencil and not in ink?",
+      "expectedConcept": "Ink is itself a mixture of dyes and would separate and travel up the paper, confusing the chromatogram.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Ink would run; graphite will not.",
+      "commonMisconception": "That pencil is only used because it is easier to see."
+    },
+    {
+      "question": "Why is the jar kept closed during the run?",
+      "expectedConcept": "A closed jar becomes saturated with solvent vapour, so solvent does not evaporate from the paper surface and the front rises evenly.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "To saturate the chamber with vapour.",
+      "commonMisconception": "That it is only to stop the smell escaping."
+    },
+    {
+      "question": "Can Rf ever be greater than one?",
+      "expectedConcept": "No. The component is carried by the solvent, so it can never travel further than the solvent front, and the ratio cannot exceed one.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "A component cannot outrun the solvent carrying it.",
+      "commonMisconception": "That a very soluble substance can move ahead of the front."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The Rf value is defined as:",
+        "options": [
+          "Solvent distance / component distance",
+          "Component distance / solvent distance",
+          "Component distance × solvent distance",
+          "Distance moved per minute"
+        ],
+        "answer": 1,
+        "feedback": "Rf is how far the component moved as a fraction of how far the solvent moved."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The spotting line is drawn in pencil because:",
+        "options": [
+          "Pencil is easier to see",
+          "Ink would dissolve and separate on the paper",
+          "Pencil repels the solvent",
+          "It is only a convention"
+        ],
+        "answer": 1,
+        "feedback": "Ink is a mixture of dyes and would run up the paper along with the sample."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Develop at least two chromatograms with different run times.",
+        "check": "rows>=2"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Keep the solvent level below the spotting line in every run.",
+        "check": "rows>=2"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "A student runs the paper twice as long. The Rf of carotene will:",
+        "options": [
+          "Double",
+          "Halve",
+          "Stay about the same",
+          "Become greater than 1"
+        ],
+        "answer": 2,
+        "feedback": "Both distances grow together, so their ratio is unchanged."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "A pigment moves 6.6 cm while the solvent front moves 10.0 cm. What is its Rf?",
+        "answer": 0.66,
+        "tolerance": 0.03,
+        "feedback": "Rf = 6.6 / 10.0 = 0.66, which is close to chlorophyll a."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Rf = distance travelled by the component / distance travelled by the solvent front",
+    "assumptions": [
+      "Rf = distance travelled by the component / distance travelled by the solvent front",
+      "Rf is dimensionless and always lies between 0 and 1",
+      "Accepted values: carotene 0.95, pheophytin 0.83, xanthophyll 0.71, chlorophyll a 0.65, chlorophyll b 0.45",
+      "Larger Rf means greater solubility in the mobile phase and weaker adsorption on the paper"
+    ],
+    "validRange": "Spinach extract separates into as many as five bands. Carotene runs almost with ",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Letting the solvent level reach the spot, which washes the sample off the paper entirely.",
+      "Making the spot too large, so the bands overlap and smear.",
+      "Failing to mark the solvent front at once, so it evaporates and the front distance is guessed.",
+      "Leaving the jar open, so the paper dries and the front climbs unevenly."
+    ],
+    "expectedBehaviour": [
+      "Spinach extract separates into as many as five bands. Carotene runs almost with the solvent front at Rf about 0.95, followed by pheophytin 0.83, xanthophyll 0.71, chlorophyll a 0.65 and chlorophyll b 0.45. The same pigment gives the same Rf in a short run and a long one, since Rf is a ratio of two distances that grow together."
+    ],
+    "testFile": "tests/batch17.test.js"
+  }
+}

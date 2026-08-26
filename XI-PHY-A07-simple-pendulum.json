@@ -1,0 +1,185 @@
+{
+  "id": "XI-PHY-A07",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 7,
+    "unit": "Unit X: Oscillations and Waves",
+    "chapter": "Chapter-13: Oscillations",
+    "topic": "Simple harmonic motion; simple pendulum and derivation of its time period",
+    "subtopic": "Time period of a simple pendulum; acceleration due to gravity",
+    "practical": "Using a simple pendulum, plot its L-T^2 graph and use it to find the effective length of second's pendulum.",
+    "learningObjectives": [
+      "Measure the effective length of a simple pendulum and the time for a counted number of oscillations",
+      "Establish experimentally that T squared varies directly with the effective length L",
+      "Determine the acceleration due to gravity from the slope of the L-T^2 graph",
+      "Find the effective length of a second's pendulum from the graph",
+      "Recognise that the time period does not depend on the mass of the bob"
+    ],
+    "competencies": [
+      "Scientific measurement using a metre scale and stop clock, including least count",
+      "Graphical analysis and interpretation of a linear relationship",
+      "Error analysis: reaction time, amplitude and counting errors",
+      "Drawing an evidence-based conclusion from experimental data"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Experiment 7 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Simple Pendulum: L-T² graph and the second's pendulum",
+  "shortTitle": "Simple Pendulum",
+  "objective": [
+    "To plot the L-T² graph for a simple pendulum.",
+    "To use the graph to find the effective length of a second's pendulum.",
+    "To determine the acceleration due to gravity, g, from the slope."
+  ],
+  "theory": {
+    "statement": "For small angular amplitude the bob of a simple pendulum executes simple harmonic motion with time period T = 2π√(L/g), where L is the effective length measured from the point of suspension to the centre of gravity of the bob.",
+    "derivationNote": "Squaring gives T² = (4π²/g)·L, so a graph of T² against L is a straight line through the origin whose slope is 4π²/g. Hence g = 4π²/slope. A second's pendulum has T = 2 s, so its length is read off the graph at T² = 4 s².",
+    "keyEquations": [
+      "T = 2π√(L/g)",
+      "T² = (4π²/g)·L",
+      "g = 4π² × (L/T²) = 4π²/slope",
+      "L(second's pendulum) = g/π² ≈ 99.2 cm"
+    ]
+  },
+  "apparatus": [
+    { "name": "Metallic bob with hook", "spec": "brass or iron, ~60 g", "why": "Heavy and small, so air resistance is negligible" },
+    { "name": "Cotton thread", "spec": "fine, strong, ~1.5 m", "why": "Light and inextensible so the length stays constant" },
+    { "name": "Split cork", "spec": "two halves", "why": "Grips the thread at one definite point of suspension" },
+    { "name": "Clamp and stand", "spec": "iron, heavy base", "why": "Provides a rigid support that does not vibrate" },
+    { "name": "Stop clock / stop watch", "spec": "least count 0.1 s", "why": "Times a counted number of oscillations" },
+    { "name": "Metre scale", "spec": "least count 0.1 cm", "why": "Measures the thread length" },
+    { "name": "Vernier callipers", "spec": "least count 0.01 cm", "why": "Measures the bob diameter, half of which is added to the thread length" }
+  ],
+  "materials": [],
+  "variables": [
+    { "id": "lengthCm", "label": "Effective length L", "symbol": "L", "unit": "cm", "type": "independent", "min": 20, "max": 150, "step": 5, "default": 60 },
+    { "id": "massG", "label": "Mass of bob", "symbol": "m", "unit": "g", "type": "controlled", "min": 20, "max": 200, "step": 20, "default": 60 },
+    { "id": "amplitudeDeg", "label": "Amplitude", "symbol": "θ₀", "unit": "degree", "type": "controlled", "min": 2, "max": 30, "step": 1, "default": 8 },
+    { "id": "oscillations", "label": "Oscillations to time", "symbol": "n", "unit": "", "type": "control", "min": 5, "max": 30, "step": 5, "default": 20 },
+    { "id": "period", "label": "Time period T", "symbol": "T", "unit": "s", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Measure the diameter of the bob with vernier callipers and note its radius r.", "checkpoint": false },
+    { "step": 2, "text": "Set the effective length L (thread length + hook + radius of bob) using the length slider. Start at 60 cm.", "checkpoint": true, "expects": "lengthCm" },
+    { "step": 3, "text": "Displace the bob through a small angle (not more than 15°) and release it gently so it swings in one vertical plane.", "checkpoint": true, "expects": "amplitudeDeg" },
+    { "step": 4, "text": "Allow a few oscillations to pass, then start the stop clock as the bob crosses the mean position.", "checkpoint": false },
+    { "step": 5, "text": "Count 20 complete oscillations and stop the clock. Record the total time t.", "checkpoint": true, "expects": "record" },
+    { "step": 6, "text": "Calculate T = t/n and T². Enter the reading in the observation table.", "checkpoint": false },
+    { "step": 7, "text": "Repeat for at least five more lengths, increasing L by about 10 cm each time.", "checkpoint": true, "expects": "rows>=5" },
+    { "step": 8, "text": "Plot L on the x-axis against T² on the y-axis and draw the best-fit straight line through the origin.", "checkpoint": false },
+    { "step": 9, "text": "Find the slope, calculate g = 4π²/slope, and read the length at T² = 4 s² to get the second's pendulum.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "simple-pendulum",
+    "renderer": "simple-pendulum",
+    "fps": 60,
+    "controls": [
+      { "var": "lengthCm", "widget": "slider" },
+      { "var": "massG", "widget": "slider" },
+      { "var": "amplitudeDeg", "widget": "slider" },
+      { "var": "oscillations", "widget": "segmented", "options": [10, 20, 30] }
+    ],
+    "actions": [
+      { "id": "release", "label": "Release bob", "primary": true },
+      { "id": "startTiming", "label": "Start stop clock" },
+      { "id": "reset", "label": "Reset" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "lengthCm", "label": "L", "unit": "cm", "decimals": 1 },
+      { "key": "oscillations", "label": "n", "unit": "", "decimals": 0 },
+      { "key": "totalTime", "label": "t", "unit": "s", "decimals": 2 },
+      { "key": "period", "label": "T = t/n", "unit": "s", "decimals": 3 },
+      { "key": "periodSq", "label": "T²", "unit": "s²", "decimals": 3 }
+    ],
+    "graph": { "x": "lengthM", "y": "periodSq", "xLabel": "L (m)", "yLabel": "T² (s²)", "throughOrigin": true },
+    "minRows": 5
+  },
+  "calculations": {
+    "steps": [
+      "Slope of the L-T² graph = ΔT²/ΔL",
+      "g = 4π² / slope",
+      "Second's pendulum: read L at T² = 4 s²"
+    ],
+    "resultKeys": ["slope", "g", "secondsPendulumCm"]
+  },
+  "expectedResult": {
+    "quantity": "Acceleration due to gravity",
+    "symbol": "g",
+    "value": 9.79,
+    "tolerance": 0.35,
+    "unit": "m·s⁻²",
+    "secondary": { "quantity": "Effective length of second's pendulum", "value": 99.2, "tolerance": 4, "unit": "cm" },
+    "statement": "The L-T² graph is a straight line through the origin, showing T² ∝ L. The value of g obtained is close to 9.8 m·s⁻² and the second's pendulum is about 99 cm long."
+  },
+  "safety": [
+    "Clamp the stand firmly to the table so it cannot topple while the bob swings.",
+    "Keep the amplitude small (under 15°) — a wildly swinging bob can strike a neighbour or the stand.",
+    "Ensure nobody is standing in the plane of oscillation.",
+    "Use a bob with a secure hook; check the knot before releasing."
+  ],
+  "sourcesOfError": [
+    "Reaction time while starting and stopping the clock (reduced by timing 20 oscillations instead of one).",
+    "Amplitude larger than 15° makes the motion non-simple-harmonic and increases T.",
+    "The bob spinning or moving in an ellipse instead of a plane.",
+    "Yielding of the support or a stretchable thread changing the effective length.",
+    "Error in locating the centre of gravity of the bob."
+  ],
+  "viva": [
+    { "question": "What is a simple pendulum?", "expectedConcept": "An ideal simple pendulum is a heavy point mass suspended by a weightless, inextensible, perfectly flexible string from a rigid, frictionless support.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Definition; expects the three idealisations.", "commonMisconception": "Describing the laboratory arrangement without mentioning that the ideal bob is a point mass." },
+    { "question": "What is meant by the effective length of a pendulum?", "expectedConcept": "The distance from the point of suspension to the centre of gravity of the bob, i.e. length of thread + length of hook + radius of the bob.", "difficulty": "easy", "bloom": "Understand", "answerLogic": "Must include the bob radius.", "commonMisconception": "Taking only the thread length." },
+    { "question": "Why do we time 20 oscillations instead of one?", "expectedConcept": "The error due to reaction time is divided by the number of oscillations, so the error in T becomes 20 times smaller.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "Error propagation: ΔT = Δt/n.", "commonMisconception": "Saying it is 'more accurate' without explaining that the error is divided by n." },
+    { "question": "Does the time period depend on the mass of the bob? Justify.", "expectedConcept": "No. T = 2π√(L/g) contains no mass term, because the restoring force and the inertia both scale with mass and cancel.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "mg sinθ restoring force divided by m inertia.", "commonMisconception": "Believing a heavier bob swings faster or slower." },
+    { "question": "What is a second's pendulum and how long is it?", "expectedConcept": "A pendulum whose time period is exactly 2 seconds; its length is about 99.2 cm (approximately 1 m) at g = 9.8 m·s⁻².", "difficulty": "easy", "bloom": "Remember", "answerLogic": "L = gT²/4π² with T = 2 s.", "commonMisconception": "Thinking a second's pendulum takes 1 second for a full oscillation — it takes 1 s for each half swing." },
+    { "question": "Why must the amplitude be kept small?", "expectedConcept": "Only for small angles is sin θ ≈ θ, which makes the restoring force proportional to displacement and the motion simple harmonic. For large amplitudes T increases.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "SHM approximation.", "commonMisconception": "Thinking amplitude never affects the period at any angle." },
+    { "question": "What will happen to the time period of a pendulum taken to the Moon?", "expectedConcept": "g on the Moon is about 1/6 of that on Earth, so T increases by a factor of √6, about 2.45 times.", "difficulty": "hard", "bloom": "Apply", "answerLogic": "T ∝ 1/√g.", "commonMisconception": "Saying it becomes 6 times longer instead of √6." },
+    { "question": "The graph between L and T² is a straight line. What does its slope represent?", "expectedConcept": "The slope equals 4π²/g, so g can be calculated as 4π² divided by the slope.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "From T² = (4π²/g)L.", "commonMisconception": "Reading the slope as g itself." },
+    { "question": "If the pendulum bob is replaced by a hollow sphere filled with water that slowly leaks out, what happens to T?", "expectedConcept": "The centre of gravity first moves down (T increases), then rises back as the sphere empties (T decreases), returning to the original value.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "Effective length follows the centre of gravity.", "commonMisconception": "Assuming T only increases because mass is lost." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "The effective length of a simple pendulum is measured up to:", "options": ["The top of the bob", "The centre of gravity of the bob", "The bottom of the bob", "The hook only"], "answer": 1, "feedback": "The effective length runs from the point of suspension to the centre of gravity of the bob, so the radius of the bob must be added." },
+      { "id": "pre2", "type": "mcq", "question": "Which apparatus fixes a definite point of suspension?", "options": ["Vernier callipers", "Split cork", "Stop clock", "Metre scale"], "answer": 1, "feedback": "The split cork grips the thread so the pendulum swings about one fixed point." },
+      { "id": "pre3", "type": "mcq", "question": "The amplitude of oscillation should not exceed about:", "options": ["5°", "15°", "45°", "90°"], "answer": 1, "feedback": "Beyond roughly 15° the approximation sin θ ≈ θ fails and the motion stops being simple harmonic." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Record readings for at least five different lengths.", "check": "rows>=5" },
+      { "id": "dur2", "type": "task", "question": "Keep the amplitude at or below 15° for every reading.", "check": "amplitude<=15" },
+      { "id": "dur3", "type": "task", "question": "Show that changing the mass of the bob does not change T.", "check": "massVaried" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "From your graph, state the value of g you obtained (m·s⁻²).", "answer": 9.79, "tolerance": 0.4, "feedback": "The accepted value at this latitude is about 9.79 m·s⁻²." },
+      { "id": "post2", "type": "numeric", "question": "State the length of the second's pendulum from your graph (cm).", "answer": 99.2, "tolerance": 5, "feedback": "L = gT²/4π² with T = 2 s gives about 99 cm." },
+      { "id": "post3", "type": "mcq", "question": "Your L-T² graph passes through the origin. What does this prove?", "options": ["T is proportional to L", "T² is proportional to L", "T is independent of L", "T² is inversely proportional to L"], "answer": 1, "feedback": "A straight line through the origin means direct proportionality between the plotted quantities, i.e. T² ∝ L." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "T = 2π√(L/g); T² = (4π²/g)L; g = 4π²/slope",
+    "assumptions": ["Point mass bob", "Massless inextensible string", "Rigid frictionless support", "Amplitude below 15° so sin θ ≈ θ", "Air drag neglected"],
+    "validRange": "L = 0.20 m to 1.50 m; amplitude ≤ 15°; mass 20-200 g",
+    "unitSystem": "SI; bench measurements in cm and s, converted to m for the graph",
+    "edgeCases": [
+      "L below 20 cm: bob radius no longer negligible — blocked",
+      "Amplitude above 15°: period rises by the factor (1 + θ₀²/16)",
+      "n = 0: division by zero — blocked",
+      "Very large n: total time exceeds a practical lab period"
+    ],
+    "expectedBehaviour": [
+      "T independent of bob mass",
+      "T² directly proportional to L",
+      "Quadrupling L doubles T",
+      "g recovered within 3% from noisy quantised data"
+    ],
+    "testFile": "tests/simple-pendulum.test.js"
+  }
+}

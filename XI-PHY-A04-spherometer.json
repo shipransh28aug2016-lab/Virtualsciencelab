@@ -1,0 +1,194 @@
+{
+  "id": "XI-PHY-A04",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 4,
+    "unit": "Unit I: Physical World and Measurement",
+    "chapter": "Chapter-1: Units and Measurements",
+    "topic": "Need for measurement: Units of measurement; systems of units; SI units, fundamental and derived units, significant figures. Accuracy and precision of measuring instruments, errors in measurement",
+    "subtopic": "Least count of a spherometer; measurement of a sagitta; sensitivity of an indirect measurement",
+    "practical": "To determine radius of curvature of a given spherical surface by a spherometer.",
+    "learningObjectives": [
+      "Find the least count of a spherometer from its pitch and the divisions on its disc",
+      "Measure the sagitta of a spherical surface relative to a plane glass plate",
+      "Measure the distance between the legs from their impressions on paper",
+      "Calculate the radius of curvature from R = l²/6h + h/2",
+      "Assess the size of the h/2 correction term and decide when it matters",
+      "Explain why the method fails for a nearly plane surface"
+    ],
+    "competencies": [
+      "Using a null reference, the plane glass plate, to define a zero",
+      "Recognising that an indirect measurement can be far more sensitive to one quantity than another",
+      "Evaluating whether a correction term is significant at the precision available",
+      "Relating the design of an instrument to the range over which it is useful"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Experiment 4 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Radius of curvature of a spherical surface by spherometer",
+  "shortTitle": "Spherometer",
+  "objective": [
+    "To determine the radius of curvature of a given spherical surface using a spherometer.",
+    "To find the least count of the spherometer.",
+    "To examine how the accuracy of the result depends on the sagitta and the leg separation."
+  ],
+  "theory": {
+    "statement": "A spherometer has three fixed legs at the corners of an equilateral triangle and a central screw that can be raised or lowered. Placed on a spherical surface, the screw is turned until its tip just touches; the distance it must then travel to reach the plane through the three legs is the sagitta, h. From h and the distance between the legs, the radius of the sphere follows by geometry.",
+    "derivationNote": "Let the three legs lie on a circle of radius r, so that l, the distance between two legs, gives r = l/√3. If the central screw rises a height h above the plane of the legs, then by the intersecting-chords theorem applied to the vertical section through the centre, r² = h(2R − h), where R is the radius of the sphere. Expanding, r² = 2Rh − h², so R = (r² + h²)/(2h) = r²/(2h) + h/2. Substituting r² = l²/3 gives R = l²/(6h) + h/2. The second term is usually a small correction: for a watch glass with l about 40 mm and h about 1 mm, the first term is roughly 267 mm and the second only 0.5 mm, about a fifth of one percent. Notice that R depends on 1/h, so the percentage error in R equals that in h. A nearly plane surface has a very small h and therefore a very poorly determined R.",
+    "keyEquations": [
+      "L.C. = pitch / number of divisions on the circular disc",
+      "h = (number of complete turns × pitch) + (disc divisions × L.C.)",
+      "r = l/√3, where l is the distance between two legs",
+      "R = r²/(2h) + h/2 = l²/(6h) + h/2",
+      "Percentage error in R = percentage error in h"
+    ]
+  },
+  "apparatus": [
+    { "name": "Spherometer", "spec": "pitch 1 mm or 0.5 mm, circular disc of 100 or 50 divisions", "why": "Measures the sagitta, the small height of the spherical cap" },
+    { "name": "Spherical surface", "spec": "watch glass or a lens surface, convex or concave", "why": "The surface whose radius of curvature is to be found" },
+    { "name": "Plane glass plate", "spec": "thick, optically flat", "why": "Provides the flat reference from which the sagitta is measured" },
+    { "name": "Plain paper and pencil", "spec": "", "why": "The three legs are pressed on paper and their impressions used to measure the leg separation" },
+    { "name": "Metre scale", "spec": "least count 1 mm", "why": "Measures the distance between the leg impressions" }
+  ],
+  "materials": [],
+  "variables": [
+    { "id": "surface", "label": "Surface", "symbol": "", "unit": "", "type": "control", "default": "watchConvex", "options": ["watchConvex", "lensConvex", "watchConcave", "flatish"] },
+    { "id": "spherometer", "label": "Spherometer", "symbol": "", "unit": "", "type": "control", "default": "sp100", "options": ["sp100", "sp50", "spWide"] },
+    { "id": "screwTurns", "label": "Screw position", "symbol": "", "unit": "mm", "type": "independent", "min": 0, "max": 4, "step": 0.01, "default": 0 },
+    { "id": "legMm", "label": "Leg separation", "symbol": "l", "unit": "mm", "type": "controlled", "min": 30, "max": 50, "step": 0.5, "default": 40 },
+    { "id": "radius", "label": "Radius of curvature", "symbol": "R", "unit": "cm", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Find the pitch of the spherometer screw and the number of divisions on its disc, and calculate the least count.", "checkpoint": true, "expects": "spherometer" },
+    { "step": 2, "text": "Press the three legs gently on a sheet of paper and measure the distance between each pair of impressions. Take the mean as l.", "checkpoint": true, "expects": "legMm" },
+    { "step": 3, "text": "Place the spherometer on the plane glass plate and turn the screw until its tip just touches the surface. Note the disc reading; this is the reference.", "checkpoint": false },
+    { "step": 4, "text": "Raise the screw, place the spherometer on the spherical surface, and turn the screw down until it just touches, judging contact by the instrument beginning to pivot on its legs.", "checkpoint": true, "expects": "screwTurns" },
+    { "step": 5, "text": "Note the number of complete turns and the disc division, and calculate the sagitta h.", "checkpoint": true, "expects": "record" },
+    { "step": 6, "text": "Repeat at least three times, raising the screw fully between readings and always turning it in the same direction to avoid backlash.", "checkpoint": true, "expects": "rows>=3" },
+    { "step": 7, "text": "Calculate the radius of curvature from R = l²/6h + h/2, and note how small the second term is.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "spherometer",
+    "renderer": "spherometer",
+    "fps": 45,
+    "controls": [
+      { "var": "screwTurns", "widget": "slider" },
+      { "var": "surface", "widget": "segmented", "options": ["watchConvex", "lensConvex", "watchConcave", "flatish"] },
+      { "var": "spherometer", "widget": "segmented", "options": ["sp100", "sp50", "spWide"] },
+      { "var": "legMm", "widget": "slider" }
+    ],
+    "actions": [
+      { "id": "record", "label": "Record at contact", "primary": true },
+      { "id": "reset", "label": "Reset" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "trial", "label": "Trial", "unit": "", "decimals": 0 },
+      { "key": "legMm", "label": "Leg sep. l", "unit": "mm", "decimals": 1 },
+      { "key": "verticalScale", "label": "Complete turns", "unit": "mm", "decimals": 2 },
+      { "key": "discDivision", "label": "Disc division", "unit": "div", "decimals": 0 },
+      { "key": "sagitta", "label": "Sagitta h", "unit": "mm", "decimals": 3 },
+      { "key": "radiusCm", "label": "R", "unit": "cm", "decimals": 2 }
+    ],
+    "graph": { "x": "trial", "y": "radiusCm", "xLabel": "Trial number", "yLabel": "Radius of curvature R (cm)", "throughOrigin": false },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "L.C. = pitch / number of disc divisions",
+      "h = complete turns × pitch + disc divisions × L.C.",
+      "Mean h from all the trials",
+      "Main term = l²/(6h), converted from mm to cm",
+      "Correction term = h/2, converted from mm to cm",
+      "R = l²/(6h) + h/2"
+    ],
+    "resultKeys": ["radius", "meanSagitta", "correctionTerm"]
+  },
+  "expectedResult": {
+    "quantity": "Radius of curvature",
+    "symbol": "R",
+    "value": 22.5,
+    "tolerance": 1.5,
+    "unit": "cm",
+    "secondary": { "quantity": "Sagitta", "value": 1.19, "tolerance": 0.08, "unit": "mm" },
+    "statement": "For the convex watch glass with legs 40 mm apart the sagitta is about 1.19 mm, giving a radius of curvature of about 22.5 cm. The correction term h/2 contributes only about a quarter of one percent, so dropping it would change the result by less than the reading error — but it is included here so that its size can be seen rather than assumed."
+  },
+  "safety": [
+    "The legs of the spherometer are sharp; press them on paper gently and never on a polished optical surface with force.",
+    "Do not force the screw down onto the glass once contact is made — the tip can scratch or crack the surface.",
+    "Handle the watch glass and lens by their edges to keep the surfaces clean.",
+    "Place the plane glass plate on a flat bench so it cannot rock or slide off."
+  ],
+  "sourcesOfError": [
+    "Judging the exact instant of contact is the largest uncertainty; pressing further tilts the instrument on its legs.",
+    "Backlash in the screw, if it is reversed while seeking contact.",
+    "The three legs may not form an exactly equilateral triangle, so the mean of the three separations must be used.",
+    "The leg separation is measured with a metre scale to only 1 mm, and R depends on l², so this error is doubled.",
+    "The spherical surface may not be a true sphere over the whole area covered by the legs.",
+    "Dust between the legs and the surface raises the instrument slightly."
+  ],
+  "viva": [
+    { "question": "What is the least count of a spherometer?", "expectedConcept": "The pitch of the screw divided by the number of divisions on the circular disc. For a pitch of 1 mm and 100 divisions it is 0.01 mm.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "L.C. = pitch / disc divisions.", "commonMisconception": "Confusing pitch with least count." },
+    { "question": "What is the sagitta, and how is it measured here?", "expectedConcept": "It is the height of the spherical cap above the plane through the three legs. It is measured as the distance the central screw must travel between just touching the plane glass plate and just touching the spherical surface.", "difficulty": "easy", "bloom": "Understand", "answerLogic": "Difference of two screw readings.", "commonMisconception": "Thinking it is the thickness of the glass." },
+    { "question": "Derive or state the relation between R, l and h.", "expectedConcept": "R = l²/(6h) + h/2. It follows from r² = h(2R − h) for a circle, with r = l/√3 the radius of the circle through the three legs.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Intersecting chords, then substitute r = l/√3.", "commonMisconception": "Forgetting the factor of 3 that converts leg separation to leg-circle radius." },
+    { "question": "Why is the term h/2 often neglected?", "expectedConcept": "For a typical watch glass h is about 1 mm while l²/6h is several hundred millimetres, so h/2 is only a fraction of a percent of R — smaller than the experimental error. It should not be neglected for a strongly curved surface where h is large.", "difficulty": "medium", "bloom": "Evaluate", "answerLogic": "Compare the size of the two terms.", "commonMisconception": "Believing it can always be dropped, whatever the surface." },
+    { "question": "Why can a spherometer not measure a nearly plane surface accurately?", "expectedConcept": "Because R varies as 1/h. When the surface is nearly flat the sagitta is only a few least counts, so the percentage error in h — and therefore in R — is very large. A small absolute error in h then produces a huge error in R.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "R ∝ 1/h, so fractional errors carry straight through.", "commonMisconception": "Assuming the instrument is equally good over its whole range." },
+    { "question": "What is backlash error and how do you avoid it?", "expectedConcept": "It arises from the small play between the screw threads and the nut, so that on reversing the direction of rotation the tip does not move at once. It is avoided by always turning the screw in the same direction while taking a reading.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Play in the threads on reversal.", "commonMisconception": "Confusing it with zero error." },
+    { "question": "How would you use a spherometer with legs set further apart, and what difference would it make?", "expectedConcept": "The sagitta grows as the square of the leg separation, so wider legs give a much larger h for the same surface. This makes h easier to measure accurately and is the practical way to improve the result on a flat surface.", "difficulty": "hard", "bloom": "Create", "answerLogic": "h ≈ l²/6R, so h scales as l².", "commonMisconception": "Thinking the leg separation cancels out." },
+    { "question": "How do you tell when the screw tip just touches the surface?", "expectedConcept": "At the moment of contact the instrument begins to pivot or turn slightly on its legs when gently pushed. Turning the screw further lifts the instrument on the tip and the legs no longer rest firmly.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "The instrument pivots at contact.", "commonMisconception": "Pressing until the screw feels tight." },
+    { "question": "Does the method give a different result for a concave surface?", "expectedConcept": "No, the magnitude of R is the same. The only difference is that the screw must be lowered below the plane of the legs instead of raised above it, so the disc turns in the opposite sense and h is taken as negative in sign but the same in magnitude.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Sign of h changes, magnitude of R does not.", "commonMisconception": "Expecting a concave surface to give a negative radius in this experiment." },
+    { "question": "The leg separation is measured to only 1 mm with a metre scale. How much error does that introduce in R?", "expectedConcept": "R depends on l², so the percentage error in R is twice that in l. An error of 1 mm in 40 mm is 2.5 percent, giving about 5 percent in R — larger than the error from the screw reading, so it is worth measuring l carefully.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "A squared quantity doubles the percentage error.", "commonMisconception": "Assuming the finest instrument used sets the overall accuracy." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "The sagitta h measured by a spherometer is:", "options": ["The thickness of the glass", "The height of the spherical cap above the plane of the legs", "The distance between two legs", "The radius of the sphere"], "answer": 1, "feedback": "It is the height of the cap, found from the travel of the central screw between the plane plate and the curved surface." },
+      { "id": "pre2", "type": "mcq", "question": "In R = l²/6h + h/2, if h becomes very small then R:", "options": ["Becomes very small", "Becomes very large", "Stays the same", "Becomes negative"], "answer": 1, "feedback": "R varies as 1/h, so a nearly plane surface with a tiny sagitta has a very large radius of curvature." },
+      { "id": "pre3", "type": "mcq", "question": "Backlash error is avoided by:", "options": ["Using a finer screw", "Always turning the screw in the same direction", "Pressing the legs harder", "Taking a single reading only"], "answer": 1, "feedback": "The play between screw and nut only shows when the direction of rotation is reversed." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Record the sagitta at contact at least three times.", "check": "rows>=3" },
+      { "id": "dur2", "type": "task", "question": "Note the leg separation used for the readings.", "check": "legRecorded" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the radius of curvature of the watch glass in cm.", "answer": 22.5, "tolerance": 2.0, "feedback": "With l = 40 mm and h about 1.19 mm, R = 40²/(6×1.19) + 0.6 mm ≈ 225 mm = 22.5 cm." },
+      { "id": "post2", "type": "numeric", "question": "State the mean sagitta in mm.", "answer": 1.19, "tolerance": 0.12, "feedback": "About 1.19 mm for this surface with legs 40 mm apart." },
+      { "id": "post3", "type": "mcq", "question": "You measured a nearly plane glass plate and got a wildly varying R. Why?", "options": ["The spherometer was faulty", "R depends on 1/h, and h was only a few least counts", "The legs were too close together to reach", "Plane glass has no radius of curvature at all"], "answer": 1, "feedback": "A tiny sagitta carries a large percentage error, and that error passes straight into R because R varies as 1/h." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "R = l²/(6h) + h/2; L.C. = pitch/divisions; r = l/√3",
+    "assumptions": [
+      "The three legs and the screw are of equal length at the zero reading",
+      "The legs form an equilateral triangle",
+      "The surface is a true sphere over the area covered by the legs",
+      "The screw is turned in one direction only",
+      "Contact is judged by pivoting, not by pressure"
+    ],
+    "validRange": "Leg separation 30 to 50 mm; sagitta 0.05 to 3 mm; radius 15 to 200 cm",
+    "unitSystem": "Screw readings and leg separation in mm; radius reported in cm",
+    "edgeCases": [
+      "A nearly plane surface gives h of a few least counts and a meaningless R",
+      "A concave surface reverses the sense of the screw travel",
+      "Legs set wider than the sphere admit no reading at all",
+      "Backlash on reversing the screw",
+      "An error in l is doubled in R because R depends on l²"
+    ],
+    "expectedBehaviour": [
+      "R recovers the accepted value for both the convex and the concave watch glass",
+      "Wider legs give a larger sagitta for the same surface, as l²",
+      "The h/2 term is under one percent for a typical watch glass",
+      "Feeding the derived sagitta back through the formula returns the original radius exactly"
+    ],
+    "testFile": "tests/batch7.test.js"
+  }
+}

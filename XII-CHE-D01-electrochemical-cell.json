@@ -1,0 +1,577 @@
+{
+  "id": "XII-CHE-D01",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "D",
+    "serial": 1,
+    "categoryTitle": "Electrochemistry",
+    "unit": "Unit 2: Electrochemistry",
+    "chapter": "Unit 2: Electrochemistry — Galvanic Cells and the Nernst Equation",
+    "topic": "Redox reactions; EMF of a cell, standard electrode potential, Nernst equation and its application to chemical cells; relation between Gibbs energy change and EMF of a cell",
+    "subtopic": "Variation of cell potential with the concentration of the electrolytes; Daniell cell",
+    "practical": "Variation of cell potential in Zn/Zn2+ || Cu2+/Cu with change in concentration of electrolytes (CuSO4 or ZnSO4) at room temperature.",
+    "assessmentComponent": "Content Based Experiment (06 marks)",
+    "learningObjectives": [
+      "Set up a Daniell cell with two half-cells joined by a salt bridge",
+      "Identify the anode and cathode from the standard electrode potentials and the direction of electron flow",
+      "Measure the cell potential for several concentrations of copper sulphate and zinc sulphate",
+      "Apply the Nernst equation to predict how the cell potential varies with concentration",
+      "Plot cell potential against the logarithm of the concentration ratio and obtain E° from the intercept",
+      "Explain the function of the salt bridge in maintaining electrical neutrality"
+    ],
+    "competencies": [
+      "Assembling an electrochemical cell and connecting a high-resistance voltmeter correctly",
+      "Preparing solutions of accurately known concentration by successive dilution",
+      "Linear graphical analysis of a logarithmic relationship",
+      "Interpreting the sign and magnitude of a cell potential in terms of spontaneity"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Classes XI-XII Curriculum 2026-27, PRACTICAL SYLLABUS, D. Electrochemistry, item 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Variation of cell potential with concentration: the Nernst equation",
+  "shortTitle": "Electrochemical Cell",
+  "objective": [
+    "To set up the cell Zn | Zn²⁺ ‖ Cu²⁺ | Cu and measure its potential.",
+    "To study how the cell potential varies with the concentration of copper sulphate and of zinc sulphate.",
+    "To verify the Nernst equation and determine the standard cell potential from a graph."
+  ],
+  "theory": {
+    "statement": "In a Daniell cell, zinc is oxidised at the anode and copper ions are reduced at the cathode. The difference between the two electrode potentials drives electrons through the external circuit, and the salt bridge completes the circuit inside the cell.",
+    "derivationNote": "The cell reaction is Zn(s) + Cu²⁺(aq) → Zn²⁺(aq) + Cu(s), for which n = 2. The standard cell potential is E° = E°(cathode) − E°(anode) = 0.34 − (−0.76) = 1.10 V. The Nernst equation gives the potential at any concentration as E = E° − (2.303RT/nF)·log Q, where the reaction quotient Q is [Zn²⁺]/[Cu²⁺]; the solid metals have unit activity and do not appear. At 298 K the factor 2.303RT/F is 0.0591 V, so E = 1.10 − (0.0591/2)·log([Zn²⁺]/[Cu²⁺]). A graph of E against log([Zn²⁺]/[Cu²⁺]) is therefore a straight line of slope −0.0295 V whose intercept is E°. Note that only the ratio matters: if both solutions have the same concentration the logarithm is zero and E equals E° exactly, whatever that common concentration may be.",
+    "keyEquations": [
+      "Zn(s) + Cu²⁺(aq) → Zn²⁺(aq) + Cu(s)",
+      "E°cell = E°cathode − E°anode = 1.10 V",
+      "E = E° − (2.303RT/nF)·log([Zn²⁺]/[Cu²⁺])",
+      "At 298 K: E = 1.10 − (0.0591/2)·log([Zn²⁺]/[Cu²⁺])",
+      "ΔG = −nFE"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Beakers",
+      "spec": "two, 100 mL",
+      "why": "Hold the two half-cell solutions separately"
+    },
+    {
+      "name": "Zinc electrode",
+      "spec": "strip, cleaned with emery paper",
+      "why": "The anode, where oxidation occurs; a clean surface is needed for a steady potential"
+    },
+    {
+      "name": "Copper electrode",
+      "spec": "strip, cleaned with emery paper",
+      "why": "The cathode, where copper ions are reduced"
+    },
+    {
+      "name": "Salt bridge",
+      "spec": "U-tube filled with saturated KCl in agar",
+      "why": "Completes the circuit and keeps both solutions electrically neutral without letting them mix"
+    },
+    {
+      "name": "Voltmeter",
+      "spec": "high resistance, digital, 0–2 V",
+      "why": "Measures the e.m.f. while drawing almost no current, so the cell stays at equilibrium"
+    },
+    {
+      "name": "Volumetric flasks and pipettes",
+      "spec": "100 mL, class A",
+      "why": "Prepare the series of accurately diluted solutions"
+    },
+    {
+      "name": "Thermometer",
+      "spec": "0–50 °C",
+      "why": "The Nernst factor depends on temperature, which must be recorded"
+    }
+  ],
+  "materials": [
+    {
+      "name": "Copper sulphate solution",
+      "spec": "1.0, 0.1, 0.01 and 0.001 M",
+      "why": "The cathode electrolyte, varied to test the Nernst equation"
+    },
+    {
+      "name": "Zinc sulphate solution",
+      "spec": "1.0, 0.1, 0.01 and 0.001 M",
+      "why": "The anode electrolyte, varied in the second part of the experiment"
+    },
+    {
+      "name": "Potassium chloride",
+      "spec": "saturated, with agar",
+      "why": "Fills the salt bridge; K⁺ and Cl⁻ have almost equal ionic mobilities, so no junction potential is introduced"
+    },
+    {
+      "name": "Emery paper",
+      "spec": "fine",
+      "why": "Cleans the oxide layer from the metal strips before each run"
+    }
+  ],
+  "variables": [
+    {
+      "id": "cathodeConc",
+      "label": "[Cu²⁺]",
+      "symbol": "c",
+      "unit": "mol/L",
+      "type": "independent",
+      "min": 0.001,
+      "max": 1,
+      "step": 0.001,
+      "default": 1
+    },
+    {
+      "id": "anodeConc",
+      "label": "[Zn²⁺]",
+      "symbol": "a",
+      "unit": "mol/L",
+      "type": "independent",
+      "min": 0.001,
+      "max": 1,
+      "step": 0.001,
+      "default": 1
+    },
+    {
+      "id": "anode",
+      "label": "Anode",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "zn",
+      "options": [
+        "zn",
+        "fe",
+        "cu"
+      ]
+    },
+    {
+      "id": "cathode",
+      "label": "Cathode",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "cu",
+      "options": [
+        "cu",
+        "ag",
+        "zn"
+      ]
+    },
+    {
+      "id": "saltBridge",
+      "label": "Salt bridge in place",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "tempC",
+      "label": "Temperature",
+      "symbol": "T",
+      "unit": "°C",
+      "type": "controlled",
+      "min": 15,
+      "max": 45,
+      "step": 1,
+      "default": 25
+    },
+    {
+      "id": "emf",
+      "label": "Cell potential",
+      "symbol": "E",
+      "unit": "V",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Clean the zinc and copper strips with emery paper and rinse them with distilled water.",
+      "checkpoint": false
+    },
+    {
+      "step": 2,
+      "text": "Take 1 M zinc sulphate in one beaker and 1 M copper sulphate in the other. Dip the zinc strip in the zinc sulphate and the copper strip in the copper sulphate.",
+      "checkpoint": true,
+      "expects": "cathodeConc"
+    },
+    {
+      "step": 3,
+      "text": "Connect the two solutions with the salt bridge, making sure both ends are properly immersed.",
+      "checkpoint": true,
+      "expects": "saltBridge"
+    },
+    {
+      "step": 4,
+      "text": "Connect the zinc electrode to the negative and the copper electrode to the positive terminal of the voltmeter.",
+      "checkpoint": true,
+      "expects": "wiringCorrect"
+    },
+    {
+      "step": 5,
+      "text": "Record the steady reading of the voltmeter. This is the standard cell potential, since both concentrations are 1 M.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 6,
+      "text": "Replace the copper sulphate with 0.1 M solution, keeping the zinc sulphate at 1 M, and record the new potential.",
+      "checkpoint": false
+    },
+    {
+      "step": 7,
+      "text": "Repeat with 0.01 M and 0.001 M copper sulphate, recording the potential each time. Note the temperature.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 8,
+      "text": "Now keep the copper sulphate at 1 M and vary the zinc sulphate instead, and observe that the potential changes in the opposite sense.",
+      "checkpoint": false
+    },
+    {
+      "step": 9,
+      "text": "Plot E against log([Zn²⁺]/[Cu²⁺]). Find the slope and the intercept, and compare them with −0.0295 V and 1.10 V.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "electrochemical-cell",
+    "renderer": "electrochemical-cell",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "cathodeConc",
+        "widget": "slider"
+      },
+      {
+        "var": "anodeConc",
+        "widget": "slider"
+      },
+      {
+        "var": "saltBridge",
+        "widget": "switch"
+      },
+      {
+        "var": "tempC",
+        "widget": "slider"
+      }
+    ],
+    "actions": [
+      {
+        "id": "connect",
+        "label": "Record e.m.f.",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "anodeConc",
+        "label": "[Zn²⁺]",
+        "unit": "mol/L",
+        "decimals": 4
+      },
+      {
+        "key": "cathodeConc",
+        "label": "[Cu²⁺]",
+        "unit": "mol/L",
+        "decimals": 4
+      },
+      {
+        "key": "ratio",
+        "label": "[Zn²⁺]/[Cu²⁺]",
+        "unit": "",
+        "decimals": 3
+      },
+      {
+        "key": "logRatio",
+        "label": "log ratio",
+        "unit": "",
+        "decimals": 3
+      },
+      {
+        "key": "emf",
+        "label": "E",
+        "unit": "V",
+        "decimals": 3
+      },
+      {
+        "key": "tempC",
+        "label": "Temp",
+        "unit": "°C",
+        "decimals": 0
+      }
+    ],
+    "graph": {
+      "x": "logRatio",
+      "y": "emf",
+      "xLabel": "log([Zn²⁺]/[Cu²⁺])",
+      "yLabel": "Cell potential E (V)",
+      "throughOrigin": false
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "For each reading compute the ratio [Zn²⁺]/[Cu²⁺] and its logarithm",
+      "Plot E on the y-axis against log ratio on the x-axis",
+      "Slope = −2.303RT/nF, which is −0.0295 V at 298 K for n = 2",
+      "Intercept at log ratio = 0 gives E° of the cell",
+      "n may be recovered from the slope as n = −2.303RT/(slope × F)"
+    ],
+    "resultKeys": [
+      "standardPotential",
+      "slope",
+      "nFromSlope"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Standard cell potential from the intercept",
+    "symbol": "E°",
+    "value": 1.1,
+    "tolerance": 0.03,
+    "unit": "V",
+    "secondary": {
+      "quantity": "Slope of E against log ratio",
+      "value": -0.0295,
+      "tolerance": 0.005,
+      "unit": "V"
+    },
+    "statement": "The cell potential falls by about 0.0295 V for each tenfold increase in the ratio [Zn²⁺]/[Cu²⁺], and the graph of E against the logarithm of that ratio is a straight line of intercept 1.10 V. This confirms the Nernst equation with n = 2."
+  },
+  "safety": [
+    "Copper sulphate is harmful if swallowed and irritates the skin; wash your hands after handling it.",
+    "Never pipette any solution by mouth; always use a pipette filler.",
+    "Dispose of copper salt solutions in the labelled waste container, not down the sink, as copper ions are toxic to aquatic life.",
+    "Handle the emery paper and cut metal strips carefully; the edges are sharp.",
+    "Do not short the electrodes directly together, as this discharges the cell and heats the strips."
+  ],
+  "sourcesOfError": [
+    "An oxide or tarnish layer on the electrode gives an unsteady and low reading.",
+    "A voltmeter of low resistance draws current, so the cell is no longer at equilibrium and reads below the true e.m.f.",
+    "A poorly made salt bridge, or one whose ends are not properly immersed, introduces extra resistance and a junction potential.",
+    "Concentrations are approximated by activities, which is only accurate for dilute solutions.",
+    "Temperature drift changes the Nernst factor during the experiment.",
+    "Contamination of one half-cell solution by the other if the salt bridge leaks."
+  ],
+  "viva": [
+    {
+      "question": "What is the function of the salt bridge?",
+      "expectedConcept": "It completes the electrical circuit by allowing ions to migrate between the two half-cells, and it maintains electrical neutrality in each compartment. Without it, positive charge would build up in the anode compartment and negative charge in the cathode compartment, and the reaction would stop almost immediately.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Both functions: completing the circuit and preserving neutrality.",
+      "commonMisconception": "Saying it simply lets the two solutions mix."
+    },
+    {
+      "question": "Why is potassium chloride used in the salt bridge rather than some other salt?",
+      "expectedConcept": "The K⁺ and Cl⁻ ions have almost equal ionic mobilities, so they diffuse at nearly the same rate and no appreciable liquid junction potential develops at either end. The salt must also not react with either electrolyte.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Equal transport numbers minimise the junction potential.",
+      "commonMisconception": "Thinking any soluble salt would do equally well."
+    },
+    {
+      "question": "Write the cell reaction and state the value of n.",
+      "expectedConcept": "Zn(s) + Cu²⁺(aq) → Zn²⁺(aq) + Cu(s). Two electrons are transferred, so n = 2.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Balanced redox equation with the electron count.",
+      "commonMisconception": "Taking n = 1."
+    },
+    {
+      "question": "State the Nernst equation for this cell at 298 K.",
+      "expectedConcept": "E = E° − (0.0591/2)·log([Zn²⁺]/[Cu²⁺]), with E° = 1.10 V. The solid metals are at unit activity and do not appear in the expression.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Correct Q, correct n, solids omitted.",
+      "commonMisconception": "Including the concentrations of solid zinc and copper in Q."
+    },
+    {
+      "question": "What happens to the cell potential if the concentration of copper sulphate is decreased?",
+      "expectedConcept": "The potential falls. Reducing [Cu²⁺] increases the ratio [Zn²⁺]/[Cu²⁺], making the logarithm larger and the subtracted term bigger. This is also what Le Chatelier's principle predicts, since removing a reactant opposes the forward reaction.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Sign of the log term; consistent with Le Chatelier.",
+      "commonMisconception": "Expecting the potential to rise because 'less product' seems favourable."
+    },
+    {
+      "question": "Both solutions are made 0.5 M instead of 1 M. What is the cell potential?",
+      "expectedConcept": "Exactly 1.10 V, the standard value. The Nernst term depends only on the ratio of the two concentrations, and that ratio is still 1, so its logarithm is zero.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Only the ratio enters Q.",
+      "commonMisconception": "Assuming that any departure from 1 M must change the potential."
+    },
+    {
+      "question": "Why is a high-resistance voltmeter used?",
+      "expectedConcept": "The e.m.f. is the potential difference when the cell is drawing no current. A low-resistance voltmeter would draw appreciable current, so part of the potential would be lost across the internal resistance and the cell reaction would proceed, changing the concentrations as you measure them.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "E.m.f. is defined at zero current.",
+      "commonMisconception": "Thinking any voltmeter measures e.m.f. directly."
+    },
+    {
+      "question": "How is the cell potential related to the Gibbs energy change?",
+      "expectedConcept": "ΔG = −nFE. A positive cell potential corresponds to a negative Gibbs energy change, that is a spontaneous reaction. For this cell ΔG° = −2 × 96485 × 1.10 ≈ −212 kJ per mole.",
+      "difficulty": "hard",
+      "bloom": "Apply",
+      "answerLogic": "Sign relation plus the numerical calculation.",
+      "commonMisconception": "Omitting the negative sign and concluding that a positive E means non-spontaneous."
+    },
+    {
+      "question": "What would you observe if the electrodes were interchanged, with copper as the anode?",
+      "expectedConcept": "The calculated standard potential would be −1.10 V, which means the reaction as written is non-spontaneous. In practice the cell would simply operate in the reverse direction: zinc would still be oxidised, and the voltmeter would read on the other side or show a negative value.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "A negative E° signals the wrong assignment of electrodes.",
+      "commonMisconception": "Believing the cell would produce −1.10 V of useful work."
+    },
+    {
+      "question": "Why must the electrodes be cleaned with emery paper before use?",
+      "expectedConcept": "A layer of oxide or tarnish is a poor conductor and is not the pure metal whose electrode potential is tabulated. It gives an unsteady reading that drifts and is usually lower than the true value.",
+      "difficulty": "easy",
+      "bloom": "Apply",
+      "answerLogic": "The measured potential refers to a clean metal surface in contact with its ions.",
+      "commonMisconception": "Thinking cleanliness is only a matter of tidiness."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "In the cell Zn | Zn²⁺ ‖ Cu²⁺ | Cu, oxidation occurs at:",
+        "options": [
+          "The copper electrode",
+          "The zinc electrode",
+          "The salt bridge",
+          "Both electrodes"
+        ],
+        "answer": 1,
+        "feedback": "Zinc has the more negative standard reduction potential, so it is oxidised and acts as the anode."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The standard potential of the Daniell cell at 298 K is:",
+        "options": [
+          "0.42 V",
+          "1.10 V",
+          "−1.10 V",
+          "0.34 V"
+        ],
+        "answer": 1,
+        "feedback": "E° = E°(Cu²⁺/Cu) − E°(Zn²⁺/Zn) = 0.34 − (−0.76) = 1.10 V."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "The value of 2.303RT/F at 298 K is:",
+        "options": [
+          "0.0295 V",
+          "0.0591 V",
+          "0.118 V",
+          "1.10 V"
+        ],
+        "answer": 1,
+        "feedback": "2.303RT/F = 0.0591 V at 298 K. Dividing by n = 2 gives the 0.0295 V per decade seen in this cell."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record the potential for at least three different concentration ratios.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Keep the salt bridge in place for every reading.",
+        "check": "wiringCorrect"
+      },
+      {
+        "id": "dur3",
+        "type": "task",
+        "question": "Keep the temperature constant throughout the set of readings.",
+        "check": "volumeConstant"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "From the intercept of your graph, state the standard cell potential (V).",
+        "answer": 1.1,
+        "tolerance": 0.05,
+        "feedback": "The intercept at log ratio = 0 gives E° = 1.10 V."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "State the slope of your graph of E against log([Zn²⁺]/[Cu²⁺]) in volts.",
+        "answer": -0.0295,
+        "tolerance": 0.006,
+        "feedback": "The slope is −2.303RT/nF = −0.0591/2 = −0.0295 V per decade."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "The concentration of Cu²⁺ is reduced from 1 M to 0.01 M while Zn²⁺ stays at 1 M. The cell potential:",
+        "options": [
+          "Rises by 0.059 V",
+          "Falls by 0.059 V",
+          "Falls by 0.030 V",
+          "Does not change"
+        ],
+        "answer": 1,
+        "feedback": "The ratio increases by two decades, so E falls by 2 × 0.0295 = 0.059 V, from 1.100 to about 1.041 V."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "E = E° − (2.303RT/nF)·log([Zn²⁺]/[Cu²⁺]); E° = 1.10 V; n = 2; ΔG = −nFE",
+    "assumptions": [
+      "Activity coefficients taken as unity",
+      "No liquid junction potential at the salt bridge",
+      "Electrodes are pure metals of unit activity",
+      "Negligible current drawn, so the cell is at equilibrium",
+      "Constant temperature"
+    ],
+    "validRange": "Concentrations 0.001 to 1.0 mol/L; temperature 288 to 318 K",
+    "unitSystem": "Concentration in mol/L, potential in V, temperature in K",
+    "edgeCases": [
+      "Equal concentrations give exactly E°, since log 1 = 0",
+      "Salt bridge removed: the voltmeter reads zero — blocked as an error",
+      "Identical electrodes give no cell — blocked as an error",
+      "Copper as anode gives a negative E° — warned as non-spontaneous",
+      "Below 0.001 M the activity assumption fails — warned"
+    ],
+    "expectedBehaviour": [
+      "A tenfold change in the ratio shifts E by 0.0295 V",
+      "Raising [Cu²⁺] increases E; raising [Zn²⁺] decreases it",
+      "E against log ratio is linear with r² above 0.995",
+      "The number of electrons recovered from the slope is 2"
+    ],
+    "testFile": "tests/batch2.test.js"
+  }
+}

@@ -1,0 +1,558 @@
+{
+  "id": "XI-PHY-ACT-B1",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 1,
+    "kind": "activity",
+    "unit": "Unit VIII: Thermodynamics",
+    "chapter": "Chapter-10: Thermal Properties of Matter",
+    "topic": "Heat, temperature, thermal expansion; specific heat capacity; calorimetry; change of state - latent heat capacity; heat transfer-conduction, convection and radiation; Newton’s law of cooling",
+    "subtopic": "Latent heat of fusion; the plateau in a cooling curve; melting point as the temperature of the plateau",
+    "practical": "To observe change of state and plot a cooling curve for molten wax.",
+    "learningObjectives": [
+      "Be able to observe the change of state of molten wax as it cools and solidifies",
+      "Be able to plot a cooling curve of temperature against time",
+      "Be able to find the melting point of the wax from the plateau of that curve"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Activity 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Change of state and the cooling curve for molten wax",
+  "shortTitle": "Wax cooling curve",
+  "objective": [
+    "To observe the change of state of molten wax as it cools and solidifies.",
+    "To plot a cooling curve of temperature against time.",
+    "To find the melting point of the wax from the plateau of that curve."
+  ],
+  "theory": {
+    "statement": "A hot liquid left to cool loses heat to its surroundings and its temperature falls smoothly. Molten wax does not behave so simply. As it reaches its melting point the temperature stops falling and stays constant for several minutes, even though the wax is still losing heat all the while. That flat step is the change of state, and the temperature at which it occurs is the melting point.",
+    "derivationNote": "While the wax is liquid it obeys Newton’s law of cooling: the rate of loss of heat is proportional to the excess of temperature over the surroundings, so the temperature falls exponentially towards room temperature. When the wax reaches its melting point something else begins. To turn from liquid to solid each gram of wax must give up its latent heat of fusion, and that released energy very nearly replaces the heat escaping to the room. The wax continues to lose heat, but the loss is paid for out of the latent heat rather than out of the internal energy of the molecules, so the temperature does not change. Only when every last part has solidified does the temperature begin to fall again. The second fall is steeper than the first, because the specific heat capacity of the solid is lower than that of the liquid, so the same rate of heat loss produces a larger drop in temperature. Reading the melting point off the plateau is more reliable than any single thermometer reading, because the plateau is defined by many points agreeing rather than by one.",
+    "keyEquations": [
+      "While liquid or solid: rate of cooling is proportional to the excess temperature",
+      "During freezing: heat lost to the room is supplied by the latent heat of fusion",
+      "The temperature of the plateau is the melting point",
+      "The solid branch cools faster because its specific heat capacity is lower"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Boiling tube of wax",
+      "spec": "about 20 g of paraffin wax",
+      "why": "The substance whose change of state is observed"
+    },
+    {
+      "name": "Beaker of water and a burner",
+      "spec": "250 mL beaker",
+      "why": "A water bath melts the wax gently and evenly, without local overheating"
+    },
+    {
+      "name": "Thermometer",
+      "spec": "least count 0.5 °C, range up to 110 °C",
+      "why": "Reads the temperature of the wax; a fine least count is needed to see the plateau is flat"
+    },
+    {
+      "name": "Stopwatch",
+      "spec": "least count 0.1 s",
+      "why": "Times the readings at regular intervals"
+    },
+    {
+      "name": "Stirrer",
+      "spec": "glass or wire",
+      "why": "Keeps the liquid wax at a uniform temperature so the thermometer reads the whole of it"
+    },
+    {
+      "name": "Clamp and stand",
+      "spec": "",
+      "why": "Holds the tube and the thermometer steady without the bulb touching the wall"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "wax",
+      "label": "Wax",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "paraffin",
+      "options": [
+        "paraffin",
+        "beeswax",
+        "stearic"
+      ]
+    },
+    {
+      "id": "startTempC",
+      "label": "Starting temperature",
+      "symbol": "θ₁",
+      "unit": "°C",
+      "type": "independent",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "default": 85
+    },
+    {
+      "id": "roomTempC",
+      "label": "Room temperature",
+      "symbol": "θ₀",
+      "unit": "°C",
+      "type": "control",
+      "min": 20,
+      "max": 70,
+      "step": 2,
+      "default": 28
+    },
+    {
+      "id": "thermometer",
+      "label": "Thermometer",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "t05",
+      "options": [
+        "t1",
+        "t05",
+        "t01"
+      ]
+    },
+    {
+      "id": "interval",
+      "label": "Reading interval",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "i30",
+      "options": [
+        "i30",
+        "i60",
+        "i300"
+      ]
+    },
+    {
+      "id": "stirred",
+      "label": "Stirring",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "meltingPoint",
+      "label": "Melting point",
+      "symbol": "θₘ",
+      "unit": "°C",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Melt the wax in a boiling tube standing in a water bath, until it is well above its melting point.",
+      "checkpoint": true,
+      "expects": "wax"
+    },
+    {
+      "step": 2,
+      "text": "Take the tube out of the bath, clamp it in air, and suspend the thermometer so its bulb is in the middle of the wax.",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Note the temperature of the room, and check that it stays constant during the run.",
+      "checkpoint": true,
+      "expects": "roomTempC"
+    },
+    {
+      "step": 4,
+      "text": "Start the stopwatch and record the temperature at once.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 5,
+      "text": "Record the temperature every half minute, stirring gently while the wax is still liquid.",
+      "checkpoint": true,
+      "expects": "rows>=6"
+    },
+    {
+      "step": 6,
+      "text": "Continue recording through the period when the temperature stops falling, and well beyond it.",
+      "checkpoint": false
+    },
+    {
+      "step": 7,
+      "text": "Plot temperature against time and identify the flat portion of the curve.",
+      "checkpoint": false
+    },
+    {
+      "step": 8,
+      "text": "Read the melting point from the plateau, and compare the steepness of the two branches.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "wax-cooling",
+    "renderer": "wax-cooling",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "startTempC",
+        "widget": "slider"
+      },
+      {
+        "var": "roomTempC",
+        "widget": "slider"
+      },
+      {
+        "var": "wax",
+        "widget": "segmented",
+        "options": [
+          "paraffin",
+          "beeswax",
+          "stearic"
+        ]
+      },
+      {
+        "var": "thermometer",
+        "widget": "segmented",
+        "options": [
+          "t1",
+          "t05",
+          "t01"
+        ]
+      },
+      {
+        "var": "interval",
+        "widget": "segmented",
+        "options": [
+          "i30",
+          "i60",
+          "i300"
+        ]
+      },
+      {
+        "var": "stirred",
+        "widget": "switch"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record temperature",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Reading",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "timeS",
+        "label": "Time",
+        "unit": "s",
+        "decimals": 0
+      },
+      {
+        "key": "timeMin",
+        "label": "Time",
+        "unit": "min",
+        "decimals": 2
+      },
+      {
+        "key": "tempC",
+        "label": "Temperature",
+        "unit": "°C",
+        "decimals": 2
+      },
+      {
+        "key": "excessC",
+        "label": "Excess over room",
+        "unit": "°C",
+        "decimals": 2
+      },
+      {
+        "key": "state",
+        "label": "State",
+        "unit": "",
+        "decimals": 0
+      }
+    ],
+    "graph": {
+      "x": "timeS",
+      "y": "tempC",
+      "xLabel": "Time t (s)",
+      "yLabel": "Temperature (°C)",
+      "throughOrigin": false
+    },
+    "minRows": 6
+  },
+  "calculations": {
+    "steps": [
+      "Plot temperature against time for the whole run",
+      "Identify the flat portion where the temperature stops falling",
+      "The temperature of that plateau is the melting point of the wax",
+      "Measure how long the plateau lasts: that is the time taken to solidify",
+      "Compare the steepness of the curve before and after the plateau"
+    ],
+    "resultKeys": [
+      "meltingPoint",
+      "plateauDurationS",
+      "kSolid"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Melting point of paraffin wax",
+    "symbol": "θₘ",
+    "value": 58,
+    "tolerance": 2,
+    "unit": "°C",
+    "secondary": {
+      "quantity": "Duration of the plateau",
+      "value": 400,
+      "tolerance": 150,
+      "unit": "s"
+    },
+    "statement": "The cooling curve falls steeply at first, then flattens into a plateau at about 58 °C while the wax solidifies, and falls again more steeply once it is solid. The plateau temperature is the melting point, and it is the same whatever temperature the wax started from."
+  },
+  "safety": [
+    "Melt the wax in a water bath, never directly over a flame: hot wax is flammable and can catch fire.",
+    "Molten wax causes bad burns and sticks to the skin. Handle the tube only with a clamp or tongs.",
+    "Never put water on burning wax, and keep a heatproof mat under the apparatus.",
+    "Let the tube cool before trying to clean it, and never point its mouth towards anyone."
+  ],
+  "sourcesOfError": [
+    "The thermometer bulb may touch the wall of the tube and read the glass rather than the wax.",
+    "The room temperature may drift during a run that lasts half an hour.",
+    "Wax that is not stirred sets from the outside inwards, so the thermometer no longer reads a single temperature.",
+    "Reading too infrequently steps over the plateau and hides the change of state.",
+    "A draught across the tube speeds the cooling irregularly.",
+    "A coarse thermometer cannot distinguish a genuine plateau from slow cooling."
+  ],
+  "viva": [
+    {
+      "question": "Why does the temperature stay constant while the wax is solidifying?",
+      "expectedConcept": "Because the heat being lost to the room is supplied by the latent heat of fusion released as the liquid turns to solid, rather than by a fall in the internal energy of the molecules. Energy leaves the wax throughout, but it comes from the change of state, so the temperature does not drop.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Latent heat replaces the heat lost.",
+      "commonMisconception": "Thinking the wax stops losing heat during the plateau."
+    },
+    {
+      "question": "What is latent heat of fusion?",
+      "expectedConcept": "The heat required to change unit mass of a solid into liquid at its melting point, with no change of temperature. The same amount is given out when the liquid freezes. It is the energy needed to break the ordered arrangement of the solid, not to make the molecules move faster.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Heat of change of state at constant temperature.",
+      "commonMisconception": "Confusing it with specific heat capacity."
+    },
+    {
+      "question": "How do you find the melting point from your graph?",
+      "expectedConcept": "It is the temperature of the flat portion. Because the plateau is defined by many readings all agreeing, reading the melting point from it is far more reliable than taking one thermometer reading at the moment the wax appears to set.",
+      "difficulty": "easy",
+      "bloom": "Apply",
+      "answerLogic": "The temperature of the plateau.",
+      "commonMisconception": "Taking the temperature at which the wax first looks cloudy."
+    },
+    {
+      "question": "Why is the curve steeper after the plateau than before it?",
+      "expectedConcept": "The specific heat capacity of solid wax is lower than that of the liquid. With a smaller thermal capacity the same rate of heat loss produces a larger fall in temperature each second, so the solid branch descends more steeply.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Lower specific heat capacity of the solid.",
+      "commonMisconception": "Thinking the solid loses heat faster because it is colder."
+    },
+    {
+      "question": "Why should the wax be stirred while it is liquid?",
+      "expectedConcept": "To keep the whole of it at one temperature. Without stirring the outside cools first and may even begin to set while the middle is still hot, so the thermometer reads neither the outside nor the inside and the plateau becomes ragged and hard to locate.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "To keep the temperature uniform.",
+      "commonMisconception": "Believing stirring speeds the cooling and so should be avoided."
+    },
+    {
+      "question": "What would happen if the room were as warm as the melting point?",
+      "expectedConcept": "The wax could never cool below the room temperature, so it would never reach its melting point and would never freeze. No plateau would appear however long you waited, because a body cannot cool below its surroundings.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "A body cannot cool below its surroundings.",
+      "commonMisconception": "Assuming the wax will always solidify eventually."
+    },
+    {
+      "question": "Does the melting point depend on how hot the wax was to start with?",
+      "expectedConcept": "No. The melting point is a property of the substance. A hotter start simply means a longer liquid branch before the plateau is reached; the plateau itself sits at the same temperature.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "A property of the material, not of the run.",
+      "commonMisconception": "Expecting a hotter start to raise the plateau."
+    },
+    {
+      "question": "State Newton’s law of cooling.",
+      "expectedConcept": "The rate of loss of heat of a body is proportional to the excess of its temperature over that of its surroundings, provided that excess is small. It gives an exponential approach to the surrounding temperature.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Rate of loss proportional to excess temperature.",
+      "commonMisconception": "Stating it as the temperature itself falling at a constant rate."
+    },
+    {
+      "question": "Why is the wax melted in a water bath rather than over a flame?",
+      "expectedConcept": "A direct flame would overheat the wax locally, and wax vapour catches fire readily. A water bath cannot exceed 100 °C and heats the tube evenly all round, which is both safer and better for getting a uniform starting temperature.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Even heating below the flash point.",
+      "commonMisconception": "Thinking the bath is only to save time."
+    },
+    {
+      "question": "A pure substance gives a sharp plateau; an impure one does not. Why?",
+      "expectedConcept": "A pure substance freezes at a single definite temperature, so the plateau is flat. A mixture freezes over a range: the component that solidifies first changes the composition of what remains, so the freezing temperature drifts downwards and the plateau slopes instead of being level.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Purity gives a sharp melting point.",
+      "commonMisconception": "Assuming any solid must have a flat plateau."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "During the change of state from liquid to solid, the temperature:",
+        "options": [
+          "Rises",
+          "Stays constant",
+          "Falls quickly",
+          "Falls slowly"
+        ],
+        "answer": 1,
+        "feedback": "The latent heat released replaces the heat lost, so the temperature holds steady."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The plateau of a cooling curve gives:",
+        "options": [
+          "The room temperature",
+          "The melting point",
+          "The boiling point",
+          "The specific heat capacity"
+        ],
+        "answer": 1,
+        "feedback": "The flat portion sits at the temperature at which the substance changes state."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "Newton’s law of cooling says the rate of loss of heat is proportional to:",
+        "options": [
+          "The temperature of the body",
+          "The excess of temperature over the surroundings",
+          "The mass of the body",
+          "The time elapsed"
+        ],
+        "answer": 1,
+        "feedback": "It is the EXCESS over the surroundings that drives the loss."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Take at least six readings spanning the whole run.",
+        "check": "rows>=6"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Continue recording through the flat portion of the curve.",
+        "check": "plateauCovered"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the melting point of the wax read from your plateau, in °C.",
+        "answer": 58,
+        "tolerance": 3,
+        "feedback": "About 58 °C for paraffin wax."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "The wax continues to lose heat during the plateau. Where does that heat come from?",
+        "options": [
+          "The room",
+          "The latent heat released as the wax freezes",
+          "The thermometer",
+          "Nowhere; it stops losing heat"
+        ],
+        "answer": 1,
+        "feedback": "Freezing releases the latent heat of fusion, which pays for the loss without a fall in temperature."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "The branch after the plateau is steeper than the one before it because:",
+        "options": [
+          "The room got colder",
+          "Solid wax has a lower specific heat capacity",
+          "The thermometer changed",
+          "Heat loss stopped"
+        ],
+        "answer": 1,
+        "feedback": "A smaller thermal capacity means the same heat loss causes a bigger temperature drop."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "While liquid or solid: rate of cooling is proportional to the excess temperature",
+    "assumptions": [
+      "While liquid or solid: rate of cooling is proportional to the excess temperature",
+      "During freezing: heat lost to the room is supplied by the latent heat of fusion",
+      "The temperature of the plateau is the melting point",
+      "The solid branch cools faster because its specific heat capacity is lower"
+    ],
+    "validRange": "The cooling curve falls steeply at first, then flattens into a plateau at about ",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "The thermometer bulb may touch the wall of the tube and read the glass rather than the wax.",
+      "The room temperature may drift during a run that lasts half an hour.",
+      "Wax that is not stirred sets from the outside inwards, so the thermometer no longer reads a single temperature.",
+      "Reading too infrequently steps over the plateau and hides the change of state."
+    ],
+    "expectedBehaviour": [
+      "The cooling curve falls steeply at first, then flattens into a plateau at about 58 °C while the wax solidifies, and falls again more steeply once it is solid. The plateau temperature is the melting point, and it is the same whatever temperature the wax started from."
+    ],
+    "testFile": "tests/batch9.test.js"
+  }
+}

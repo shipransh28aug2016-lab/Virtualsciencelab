@@ -1,0 +1,510 @@
+{
+  "id": "XII-CHE-C02",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "C",
+    "categoryTitle": "Thermochemistry",
+    "assessmentComponent": "Content Based Experiment",
+    "serial": 2,
+    "unit": "Unit III: Chemical Thermodynamics",
+    "chapter": "Chapter-4: Chemical Thermodynamics",
+    "topic": "Enthalpy of neutralisation",
+    "subtopic": "Why strong acid and strong base always give the same value",
+    "practical": "Enthalpy of neutralization of strong acid (HCl) and strong base (NaOH).",
+    "learningObjectives": [
+      "Be able to measure the temperature rise when equal volumes of acid and alkali are mixed",
+      "Be able to calculate the enthalpy of neutralisation per mole of water formed",
+      "Be able to show that every strong acid with every strong base gives the same value",
+      "Be able to show that a weak acid or base gives a smaller value, and to explain why"
+    ],
+    "competencies": [
+      "Performing a standard laboratory operation and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, CATEGORY C, Experiment 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Enthalpy of neutralisation of a strong acid and a strong base",
+  "shortTitle": "Enthalpy of neutralisation",
+  "objective": [
+    "To measure the temperature rise when equal volumes of acid and alkali are mixed.",
+    "To calculate the enthalpy of neutralisation per mole of water formed.",
+    "To show that every strong acid with every strong base gives the same value.",
+    "To show that a weak acid or base gives a smaller value, and to explain why."
+  ],
+  "theory": {
+    "statement": "When a strong acid neutralises a strong base, both are already fully ionised, so the only chemical change is H⁺(aq) + OH⁻(aq) → H₂O(l). Since that single reaction is all that happens, the enthalpy change is the SAME for every strong acid and strong base pair, about −57.1 kJ mol⁻¹ of water formed. A weak acid such as ethanoic acid is only partly ionised, so some of the heat released is immediately spent ionising the rest of it, and the measured value is less exothermic — about −50.6 kJ mol⁻¹. The difference between the two figures IS the enthalpy of ionisation of the weak acid, which is why this experiment can measure something it never touches directly.",
+    "keyEquations": [
+      "H⁺(aq) + OH⁻(aq) → H₂O(l), ΔH = −57.1 kJ mol⁻¹",
+      "q = m·c·ΔT, taking m as the total mass of both solutions plus the water equivalent",
+      "n = moles of water formed = moles of the limiting reagent",
+      "ΔH(ionisation of weak acid) = ΔH(strong) − ΔH(weak)"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Polystyrene cup calorimeter with lid",
+      "why": "Polystyrene conducts heat badly, so nearly all the heat stays in the liquid where the thermometer can detect it."
+    },
+    {
+      "name": "Thermometer reading to 0.1 °C",
+      "why": "The whole result rests on a temperature difference of a few degrees, so the least count limits the accuracy directly."
+    },
+    {
+      "name": "Stirrer",
+      "why": "The liquid must be at one uniform temperature before the maximum is read."
+    },
+    {
+      "name": "Measuring cylinder",
+      "why": "The mass of liquid is taken from its volume, so the volume must be measured accurately."
+    },
+    {
+      "name": "Chemical balance",
+      "why": "The enthalpy is per MOLE, so the mass of solute has to be weighed rather than estimated."
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "mode",
+      "label": "Experiment",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "neutralisation",
+      "options": [
+        "neutralisation"
+      ]
+    },
+    {
+      "id": "acid",
+      "label": "Acid",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "hcl",
+      "options": [
+        "hcl",
+        "ch3cooh"
+      ]
+    },
+    {
+      "id": "base",
+      "label": "Base",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "naoh",
+      "options": [
+        "naoh",
+        "nh4oh"
+      ]
+    },
+    {
+      "id": "molarity",
+      "label": "Concentration",
+      "symbol": "M",
+      "unit": "mol dm⁻³",
+      "type": "independent",
+      "min": 0.25,
+      "max": 2,
+      "step": 0.25,
+      "default": 1
+    },
+    {
+      "id": "waterCm3",
+      "label": "Volume of each",
+      "symbol": "V",
+      "unit": "cm³",
+      "type": "control",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "default": 100
+    },
+    {
+      "id": "calorimeter",
+      "label": "Calorimeter",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "polystyrene",
+      "options": [
+        "polystyrene",
+        "vacuum",
+        "glass"
+      ]
+    },
+    {
+      "id": "correctForCalorimeter",
+      "label": "Correct for water equivalent",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "scale",
+      "label": "Thermometer",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "t01",
+      "options": [
+        "t1",
+        "t05",
+        "t01"
+      ]
+    },
+    {
+      "id": "enthalpy",
+      "label": "Enthalpy of neutralisation",
+      "symbol": "ΔH",
+      "unit": "kJ mol⁻¹",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    "Measure 100 cm³ of 1.0 M hydrochloric acid into the calorimeter and note its temperature.",
+    "Measure 100 cm³ of 1.0 M sodium hydroxide into a separate beaker and note its temperature.",
+    "Allow both to reach the same steady temperature and take the mean as the initial temperature.",
+    "Pour the alkali quickly into the acid, replace the lid and stir.",
+    "Record the highest temperature reached.",
+    "Calculate q for the combined mass of both solutions plus the water equivalent, then ΔH per mole of water.",
+    "Repeat with ethanoic acid in place of hydrochloric acid and compare."
+  ],
+  "simulation": {
+    "model": "calorimetry",
+    "renderer": "calorimetry",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "acid",
+        "label": "Acid",
+        "widget": "segmented",
+        "options": [
+          "hcl",
+          "ch3cooh"
+        ]
+      },
+      {
+        "var": "base",
+        "label": "Base",
+        "widget": "segmented",
+        "options": [
+          "naoh",
+          "nh4oh"
+        ]
+      },
+      {
+        "var": "molarity",
+        "label": "Concentration",
+        "widget": "slider"
+      },
+      {
+        "var": "waterCm3",
+        "label": "Volume of each",
+        "widget": "slider"
+      },
+      {
+        "var": "calorimeter",
+        "label": "Calorimeter",
+        "widget": "segmented",
+        "options": [
+          "polystyrene",
+          "vacuum",
+          "glass"
+        ]
+      },
+      {
+        "var": "correctForCalorimeter",
+        "label": "Correct for water equivalent",
+        "widget": "switch"
+      },
+      {
+        "var": "scale",
+        "label": "Thermometer",
+        "widget": "segmented",
+        "options": [
+          "t1",
+          "t05",
+          "t01"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record ΔT",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "system",
+        "label": "Pair"
+      },
+      {
+        "key": "initialC",
+        "label": "Initial T",
+        "unit": "°C",
+        "decimals": 1
+      },
+      {
+        "key": "finalC",
+        "label": "Final T",
+        "unit": "°C",
+        "decimals": 1
+      },
+      {
+        "key": "deltaC",
+        "label": "ΔT",
+        "unit": "°C",
+        "decimals": 2
+      },
+      {
+        "key": "moles",
+        "label": "Moles H₂O",
+        "unit": "mol",
+        "decimals": 4
+      },
+      {
+        "key": "enthalpyKJ",
+        "label": "ΔH",
+        "unit": "kJ mol⁻¹",
+        "decimals": 2
+      }
+    ],
+    "graph": null,
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Take ΔT as the maximum temperature minus the mean initial temperature.",
+      "Take m as the mass of BOTH solutions together, plus the water equivalent of the calorimeter.",
+      "Compute q = m·c·ΔT.",
+      "Find the moles of water formed, equal to the moles of the limiting reagent.",
+      "Compute ΔH = −q/n; it should be close to −57 kJ mol⁻¹ for a strong pair."
+    ],
+    "resultKeys": [
+      "meanKJ",
+      "percentError"
+    ]
+  },
+  "expectedResult": {
+    "statement": "Hydrochloric acid with sodium hydroxide gives about −57.1 kJ per mole of water formed, and so does every other strong acid with every other strong base, because in each case the only reaction is H⁺ + OH⁻ → H₂O. Ethanoic acid gives about −50.6 kJ mol⁻¹; the shortfall of roughly 6.5 kJ mol⁻¹ is the energy spent ionising the weak acid.",
+    "value": -57.1,
+    "unit": "kJ mol⁻¹",
+    "tolerancePct": 12
+  },
+  "safety": [
+    "Both 1 M acid and 1 M alkali are corrosive: wear eye protection and wash splashes at once.",
+    "Add the alkali to the acid steadily, not in a single splash that could throw liquid out.",
+    "Do not pipette either solution by mouth.",
+    "Neutralise and dilute the mixture before disposal."
+  ],
+  "sourcesOfError": [
+    "Failing to bring both solutions to the same starting temperature before mixing.",
+    "Ignoring the water equivalent of the calorimeter.",
+    "Using unequal volumes or concentrations, so one reagent is in excess and the moles of water are miscounted.",
+    "Reading the temperature after the peak has passed and heat has begun to leak away.",
+    "Dividing by the moles of acid rather than the moles of WATER formed when the acid is dibasic."
+  ],
+  "viva": [
+    {
+      "question": "Why is the enthalpy of neutralisation the same for all strong acid-strong base pairs?",
+      "expectedConcept": "Both are fully ionised, so the only reaction occurring is H⁺ + OH⁻ → H₂O, whatever the spectator ions.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "The same single reaction in every case.",
+      "commonMisconception": "That different acids must give different values."
+    },
+    {
+      "question": "Why is the value smaller for a weak acid?",
+      "expectedConcept": "The weak acid is only partly ionised, so part of the heat released is used to ionise the remainder.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "Ionisation consumes some of the heat.",
+      "commonMisconception": "That a weak acid reacts incompletely and so releases less heat overall."
+    },
+    {
+      "question": "What does the difference between the two values represent?",
+      "expectedConcept": "The enthalpy of ionisation of the weak acid.",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "A Hess cycle gives the ionisation enthalpy.",
+      "commonMisconception": "That the difference is experimental error."
+    },
+    {
+      "question": "Per what is the enthalpy of neutralisation quoted?",
+      "expectedConcept": "Per mole of water formed, not per mole of acid.",
+      "difficulty": "medium",
+      "bloom": "Remember",
+      "answerLogic": "Water formed is the common measure.",
+      "commonMisconception": "Per mole of acid, which fails for a dibasic acid."
+    },
+    {
+      "question": "Why must both solutions start at the same temperature?",
+      "expectedConcept": "Otherwise part of the observed change is simply the two liquids equalising, not the reaction.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "To isolate the heat of reaction.",
+      "commonMisconception": "That the mean of two different starting temperatures always corrects for it."
+    },
+    {
+      "question": "What would you expect for H₂SO₄ with NaOH per mole of ACID?",
+      "expectedConcept": "About −114 kJ, because two moles of water are formed per mole of the dibasic acid.",
+      "difficulty": "hard",
+      "bloom": "Apply",
+      "answerLogic": "Two moles of water per mole of acid.",
+      "commonMisconception": "That it is still −57 kJ per mole of acid."
+    },
+    {
+      "question": "Why is a polystyrene cup used rather than a glass beaker?",
+      "expectedConcept": "Polystyrene has a low thermal conductivity and a small water equivalent, so little heat is lost to the vessel or the room.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Insulation and low heat capacity.",
+      "commonMisconception": "That glass is better because it is a laboratory material."
+    },
+    {
+      "question": "What is the water equivalent of a calorimeter?",
+      "expectedConcept": "The mass of water that would absorb the same heat as the calorimeter for the same temperature rise.",
+      "difficulty": "medium",
+      "bloom": "Remember",
+      "answerLogic": "An equivalent mass of water.",
+      "commonMisconception": "That it is the mass of water actually in the calorimeter."
+    },
+    {
+      "question": "What happens to your answer if you ignore the water equivalent?",
+      "expectedConcept": "You divide by too small a mass, so the magnitude of the enthalpy comes out too small.",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "The vessel absorbs heat that is then unaccounted for.",
+      "commonMisconception": "That the error cancels out."
+    },
+    {
+      "question": "Why is the specific heat capacity of the solution taken as that of water?",
+      "expectedConcept": "The solutions are dilute, so their heat capacity differs from water by far less than the other experimental errors.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "A justified approximation for dilute solutions.",
+      "commonMisconception": "That the two are exactly equal."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The enthalpy of neutralisation of a strong acid and strong base is about:",
+        "options": [
+          "−14 kJ mol⁻¹",
+          "−57 kJ mol⁻¹",
+          "−114 kJ mol⁻¹",
+          "+57 kJ mol⁻¹"
+        ],
+        "answer": 1,
+        "feedback": "The reaction H⁺ + OH⁻ → H₂O releases about 57.1 kJ per mole of water formed."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "Neutralisation of a strong acid and strong base is:",
+        "options": [
+          "Endothermic",
+          "Exothermic",
+          "Athermic",
+          "Sometimes either"
+        ],
+        "answer": 1,
+        "feedback": "Heat is released, so the temperature rises and ΔH is negative."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Take at least three runs with the strong acid and strong base.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Repeat with a weak acid and compare the two values.",
+        "check": "rows>=3"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "Ethanoic acid with NaOH gives a value that is:",
+        "options": [
+          "More exothermic",
+          "Less exothermic",
+          "Identical",
+          "Endothermic"
+        ],
+        "answer": 1,
+        "feedback": "Energy spent ionising the weak acid is not available as heat, so the value is less negative."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "State the enthalpy of neutralisation of HCl and NaOH you obtained, in kJ mol⁻¹.",
+        "answer": -57.1,
+        "tolerance": 7,
+        "feedback": "The accepted value is about −57.1 kJ per mole of water formed."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "H⁺(aq) + OH⁻(aq) → H₂O(l), ΔH = −57.1 kJ mol⁻¹",
+    "assumptions": [
+      "H⁺(aq) + OH⁻(aq) → H₂O(l), ΔH = −57.1 kJ mol⁻¹",
+      "q = m·c·ΔT, taking m as the total mass of both solutions plus the water equivalent",
+      "n = moles of water formed = moles of the limiting reagent",
+      "ΔH(ionisation of weak acid) = ΔH(strong) − ΔH(weak)"
+    ],
+    "validRange": "Hydrochloric acid with sodium hydroxide gives about −57.1 kJ per mole of water f",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Failing to bring both solutions to the same starting temperature before mixing.",
+      "Ignoring the water equivalent of the calorimeter.",
+      "Using unequal volumes or concentrations, so one reagent is in excess and the moles of water are miscounted.",
+      "Reading the temperature after the peak has passed and heat has begun to leak away."
+    ],
+    "expectedBehaviour": [
+      "Hydrochloric acid with sodium hydroxide gives about −57.1 kJ per mole of water formed, and so does every other strong acid with every other strong base, because in each case the only reaction is H⁺ + OH⁻ → H₂O. Ethanoic acid gives about −50.6 kJ mol⁻¹; the shortfall of roughly 6.5 kJ mol⁻¹ is the energy spent ionising the weak acid."
+    ],
+    "testFile": "tests/batch16.test.js"
+  }
+}

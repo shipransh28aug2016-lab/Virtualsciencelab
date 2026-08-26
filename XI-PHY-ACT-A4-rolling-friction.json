@@ -1,0 +1,555 @@
+{
+  "id": "XI-PHY-ACT-A4",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 4,
+    "kind": "activity",
+    "unit": "Unit III: Laws of Motion",
+    "chapter": "Chapter-4: Laws of Motion",
+    "topic": "Intuitive concept of force; Inertia, Newton's first law of motion; momentum and Newton's second law of motion; impulse; Newton's third law of motion; equilibrium of concurrent forces; static and kinetic friction, laws of friction, rolling friction, lubrication",
+    "subtopic": "Rolling friction and its comparison with sliding friction; dependence on normal reaction and on the radius of the roller",
+    "practical": "To measure the force of limiting friction for rolling of a roller on a horizontal plane.",
+    "learningObjectives": [
+      "Be able to measure the force of limiting friction for a roller rolling on a horizontal plane",
+      "Be able to find the coefficient of rolling friction from the slope of the force against normal reaction graph",
+      "Be able to compare rolling friction with sliding friction for the same pair of surfaces"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Activity 4 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Limiting friction for a rolling roller",
+  "shortTitle": "Rolling friction",
+  "objective": [
+    "To measure the force of limiting friction for a roller rolling on a horizontal plane.",
+    "To find the coefficient of rolling friction from the slope of the force against normal reaction graph.",
+    "To compare rolling friction with sliding friction for the same pair of surfaces."
+  ],
+  "theory": {
+    "statement": "When a roller rests on a horizontal surface and a gradually increasing horizontal force is applied, it begins to roll once that force exceeds the rolling friction. Rolling friction is very much smaller than sliding friction, which is precisely why wheels and ball bearings are used everywhere in engineering.",
+    "derivationNote": "In sliding, the microscopic high points of the two surfaces are dragged across one another and sheared. In rolling they are brought into contact and then peeled apart one after another, without any relative sliding at the point of contact, so far less work is done against them. What remains is chiefly the energy lost in deforming the roller and the surface slightly at the contact: the roller is always, in effect, climbing out of a shallow depression of its own making. Like sliding friction, rolling friction is proportional to the normal reaction, so a graph of the force against the normal reaction is a straight line through the origin whose slope is the coefficient of rolling friction. Unlike sliding friction, it also depends on the radius: the resistance varies inversely with the radius, so a larger roller rolls more easily. For this reason the effect is often quoted as a coefficient of rolling RESISTANCE, the coefficient multiplied by the radius, which has the dimension of a length.",
+    "keyEquations": [
+      "Rolling friction F = coefficient of rolling friction times the normal reaction",
+      "Normal reaction R = (mass of roller + load) times g",
+      "The coefficient is the slope of the F against R graph, through the origin",
+      "Coefficient of rolling resistance = coefficient of rolling friction times the radius, a length",
+      "Rolling friction is one to two orders of magnitude smaller than sliding friction"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Metal roller",
+      "spec": "solid cylinder with an axle and hook, of known radius",
+      "why": "The body whose rolling friction is measured; different radii show the dependence on radius"
+    },
+    {
+      "name": "Horizontal plane",
+      "spec": "glass sheet, polished wood or a rubber mat, level and clean",
+      "why": "The second surface of the pair; a soft surface deforms more and resists more"
+    },
+    {
+      "name": "Frictionless pulley",
+      "spec": "clamped at the edge of the table",
+      "why": "Turns the vertical pull of the pan into a horizontal pull on the roller"
+    },
+    {
+      "name": "Pan and fine weights",
+      "spec": "weights down to 0.1 g",
+      "why": "Rolling friction is so small that coarse weights cannot resolve the threshold at all"
+    },
+    {
+      "name": "Load slabs",
+      "spec": "100 g each",
+      "why": "Vary the normal reaction without changing the surfaces in contact"
+    },
+    {
+      "name": "Spirit level",
+      "spec": "small",
+      "why": "Confirms the plane is horizontal, so the normal reaction really is the weight"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "panG",
+      "label": "Weight in the pan",
+      "symbol": "F",
+      "unit": "g",
+      "type": "independent",
+      "min": 0,
+      "max": 30,
+      "step": 0.1,
+      "default": 0
+    },
+    {
+      "id": "loadG",
+      "label": "Load on the roller",
+      "symbol": "m",
+      "unit": "g",
+      "type": "independent",
+      "min": 0,
+      "max": 400,
+      "step": 40,
+      "default": 0
+    },
+    {
+      "id": "surface",
+      "label": "Surface",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "wood",
+      "options": [
+        "glass",
+        "wood",
+        "rubber"
+      ]
+    },
+    {
+      "id": "roller",
+      "label": "Roller",
+      "symbol": "r",
+      "unit": "",
+      "type": "control",
+      "default": "r3",
+      "options": [
+        "r2",
+        "r3",
+        "r5"
+      ]
+    },
+    {
+      "id": "weights",
+      "label": "Finest weights",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "fine",
+      "options": [
+        "fine",
+        "medium",
+        "coarse"
+      ]
+    },
+    {
+      "id": "rollingFriction",
+      "label": "Rolling friction",
+      "symbol": "F",
+      "unit": "N",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Level the plane with the spirit level and clamp the pulley firmly at the edge of the table.",
+      "checkpoint": false
+    },
+    {
+      "step": 2,
+      "text": "Weigh the roller and the pan. Place the roller on the plane and connect it over the pulley to the pan.",
+      "checkpoint": true,
+      "expects": "roller"
+    },
+    {
+      "step": 3,
+      "text": "Check that the finest weights available are much smaller than the force you expect to measure.",
+      "checkpoint": true,
+      "expects": "weights"
+    },
+    {
+      "step": 4,
+      "text": "Add weights to the pan in the smallest steps available, tapping the table gently after each addition.",
+      "checkpoint": true,
+      "expects": "panG"
+    },
+    {
+      "step": 5,
+      "text": "Note the least weight at which the roller just begins to roll steadily. Record the reading.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 6,
+      "text": "Place a load on the roller to increase the normal reaction and repeat.",
+      "checkpoint": true,
+      "expects": "loadG"
+    },
+    {
+      "step": 7,
+      "text": "Take readings for at least three different loads.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 8,
+      "text": "Plot the rolling friction against the normal reaction and find the slope through the origin.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "rolling-friction",
+    "renderer": "rolling-friction",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "panG",
+        "widget": "slider"
+      },
+      {
+        "var": "loadG",
+        "widget": "slider"
+      },
+      {
+        "var": "surface",
+        "widget": "segmented",
+        "options": [
+          "glass",
+          "wood",
+          "rubber"
+        ]
+      },
+      {
+        "var": "roller",
+        "widget": "segmented",
+        "options": [
+          "r2",
+          "r3",
+          "r5"
+        ]
+      },
+      {
+        "var": "weights",
+        "widget": "segmented",
+        "options": [
+          "fine",
+          "medium",
+          "coarse"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record threshold",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "loadG",
+        "label": "Load m",
+        "unit": "g",
+        "decimals": 0
+      },
+      {
+        "key": "totalMassG",
+        "label": "Total mass",
+        "unit": "g",
+        "decimals": 0
+      },
+      {
+        "key": "normalReaction",
+        "label": "R",
+        "unit": "N",
+        "decimals": 3
+      },
+      {
+        "key": "panG",
+        "label": "Pan weight",
+        "unit": "g",
+        "decimals": 2
+      },
+      {
+        "key": "rollingFriction",
+        "label": "F",
+        "unit": "N",
+        "decimals": 4
+      },
+      {
+        "key": "ratio",
+        "label": "F/R",
+        "unit": "",
+        "decimals": 4
+      }
+    ],
+    "graph": {
+      "x": "normalReaction",
+      "y": "rollingFriction",
+      "xLabel": "Normal reaction R (N)",
+      "yLabel": "Rolling friction F (N)",
+      "throughOrigin": true
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Normal reaction R = (mass of roller + load) times g, divided by 1000",
+      "Rolling friction F = weight in the pan times g, divided by 1000",
+      "For each row, the ratio F/R should be constant",
+      "Slope of the F against R line through the origin gives the coefficient",
+      "Coefficient of rolling resistance = coefficient times radius, in cm"
+    ],
+    "resultKeys": [
+      "muRolling",
+      "rollingResistanceCm",
+      "r2"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Coefficient of rolling friction, steel on wood",
+    "symbol": "mu_r",
+    "value": 0.0048,
+    "tolerance": 0.0012,
+    "unit": "",
+    "secondary": {
+      "quantity": "Coefficient of rolling resistance",
+      "value": 0.0144,
+      "tolerance": 0.004,
+      "unit": "cm"
+    },
+    "statement": "The graph of rolling friction against normal reaction is a straight line through the origin, giving a coefficient of rolling friction of about 0.005 for steel on wood. This is roughly seventy times smaller than the sliding coefficient of 0.35 for the same pair of surfaces, which is why wheels are used."
+  },
+  "safety": [
+    "Clamp the pulley securely; a pulley that slips off the table sends the weights onto someone’s foot.",
+    "Keep feet clear of the area below the pan, and stop the roller before it reaches the pulley.",
+    "Add weights gently, because with forces this small a dropped weight starts the roller prematurely.",
+    "Do not let the roller fall from the table; a heavy roller can injure a foot."
+  ],
+  "sourcesOfError": [
+    "The finest weights available may be too coarse to resolve so small a force.",
+    "The threshold is judged by eye, and rolling begins very gently.",
+    "The plane may not be exactly horizontal, so a component of the weight assists or opposes the motion.",
+    "Dust or grit under the roller greatly increases the resistance.",
+    "The roller may slip instead of rolling, in which case sliding friction takes over.",
+    "Friction at the pulley is not negligible when the forces being measured are this small."
+  ],
+  "viva": [
+    {
+      "question": "Why is rolling friction so much smaller than sliding friction?",
+      "expectedConcept": "In rolling there is no relative sliding at the point of contact, so the microscopic junctions between the surfaces are peeled apart one by one rather than sheared. Much less work is done against them. What remains is mainly the energy lost in deforming the roller and surface slightly at the contact.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "No sliding at the contact point.",
+      "commonMisconception": "Thinking a roller has no friction at all."
+    },
+    {
+      "question": "On what does rolling friction depend?",
+      "expectedConcept": "On the normal reaction, on the nature and hardness of the two surfaces, and on the radius of the roller: the resistance varies inversely with the radius, so a larger wheel rolls more easily. It does not depend on the speed at these low speeds.",
+      "difficulty": "medium",
+      "bloom": "Remember",
+      "answerLogic": "Normal reaction, surfaces, radius.",
+      "commonMisconception": "Assuming it depends on the contact area."
+    },
+    {
+      "question": "Why must very fine weights be used in this activity?",
+      "expectedConcept": "Rolling friction is one to two orders of magnitude smaller than sliding friction, so the force being measured is only a fraction of a gram-weight. If the smallest available weight is larger than that force, the first weight added will start the roller and the threshold cannot be located.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "The increment must be smaller than the quantity measured.",
+      "commonMisconception": "Using the same weight box as for the sliding-friction experiment."
+    },
+    {
+      "question": "What is the coefficient of rolling resistance and how does it differ from the coefficient of rolling friction?",
+      "expectedConcept": "The coefficient of rolling friction is the dimensionless ratio of the force to the normal reaction. The coefficient of rolling resistance is a length, equal to that ratio multiplied by the radius, and it can be pictured as the small forward displacement of the point at which the normal reaction effectively acts.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "One is a ratio, the other a length.",
+      "commonMisconception": "Treating the two names as synonyms."
+    },
+    {
+      "question": "Why does a larger roller roll more easily?",
+      "expectedConcept": "The deformation at the contact is spread over a longer, shallower depression for a larger radius, so the roller has less of a hill to climb out of at each instant. Quantitatively the resistance varies inversely with the radius, so doubling the radius roughly halves the force needed.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Resistance varies inversely with radius.",
+      "commonMisconception": "Expecting a bigger roller to be harder to move because it is heavier."
+    },
+    {
+      "question": "Why is the resistance larger on a rubber mat than on glass?",
+      "expectedConcept": "Rolling resistance comes from deformation at the contact. A soft rubber mat deforms much more than glass, so the roller sinks into a deeper depression and continuously has to climb out of it. Hard, smooth surfaces give the least rolling resistance.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Softer surface deforms more.",
+      "commonMisconception": "Thinking rubber grips more in the way it does for sliding."
+    },
+    {
+      "question": "State the practical importance of rolling friction.",
+      "expectedConcept": "It is why wheels, rollers and ball bearings are used. Replacing a sliding contact by a rolling one reduces the resisting force by a factor of tens, which is one of the most important engineering facts about friction.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Wheels and bearings.",
+      "commonMisconception": "Believing bearings work by eliminating friction entirely."
+    },
+    {
+      "question": "The roller slips instead of rolling. How would your readings change?",
+      "expectedConcept": "Sliding friction would take over, which for these surfaces is tens of times larger. The force needed would jump sharply and the measured coefficient would be that of sliding, not rolling, so the activity would no longer be measuring what it claims to.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Slipping replaces rolling friction with sliding friction.",
+      "commonMisconception": "Assuming a round body always rolls."
+    },
+    {
+      "question": "Why should the graph of force against normal reaction pass through the origin?",
+      "expectedConcept": "With no normal reaction there is nothing pressing the surfaces together, so there is no deformation at the contact and no rolling resistance. Zero normal reaction must give zero force, so the relation is a direct proportionality.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "No load means no resistance.",
+      "commonMisconception": "Drawing a line with an intercept and still calling the slope the coefficient."
+    },
+    {
+      "question": "A cyclist inflates the tyres harder and finds the bicycle easier to pedal. Explain.",
+      "expectedConcept": "A harder tyre deforms less at the contact with the road, so there is a smaller depression to climb out of at every instant and the rolling resistance falls. It is the same effect as rolling on glass rather than on a rubber mat.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Less deformation, less rolling resistance.",
+      "commonMisconception": "Explaining it as reduced contact area in the sliding-friction sense."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Compared with sliding friction, rolling friction is:",
+        "options": [
+          "Much larger",
+          "Much smaller",
+          "Exactly equal",
+          "Always zero"
+        ],
+        "answer": 1,
+        "feedback": "It is typically one to two orders of magnitude smaller, which is why wheels are used."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The slope of the rolling friction against normal reaction graph gives:",
+        "options": [
+          "The radius of the roller",
+          "The coefficient of rolling friction",
+          "The mass of the roller",
+          "The angle of friction"
+        ],
+        "answer": 1,
+        "feedback": "The force is proportional to the normal reaction, so the slope through the origin is the coefficient."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "Rolling friction depends on the radius of the roller as:",
+        "options": [
+          "Directly proportional to the radius",
+          "Inversely proportional to the radius",
+          "Independent of the radius",
+          "Proportional to the radius squared"
+        ],
+        "answer": 1,
+        "feedback": "The resistance varies inversely with the radius, so a larger roller rolls more easily."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record the threshold for at least three different loads.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Vary the load on the roller between readings.",
+        "check": "massVaried"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the coefficient of rolling friction for steel on wood.",
+        "answer": 0.0048,
+        "tolerance": 0.0018,
+        "feedback": "About 0.005 from the slope of the force against normal reaction line."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "Your smallest weight is 5 g but the threshold is about 1.7 g. You will:",
+        "options": [
+          "Get a slightly rough value",
+          "Be unable to locate the threshold at all",
+          "Get a more accurate value",
+          "Measure sliding friction instead"
+        ],
+        "answer": 1,
+        "feedback": "The first weight added already exceeds the threshold, so it can never be bracketed."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Rolling friction is smaller than sliding friction mainly because:",
+        "options": [
+          "The roller is lighter",
+          "There is no relative sliding at the point of contact",
+          "The contact area is larger",
+          "Gravity acts differently"
+        ],
+        "answer": 1,
+        "feedback": "Junctions are peeled apart rather than sheared, so far less work is done against them."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Rolling friction F = coefficient of rolling friction times the normal reaction",
+    "assumptions": [
+      "Rolling friction F = coefficient of rolling friction times the normal reaction",
+      "Normal reaction R = (mass of roller + load) times g",
+      "The coefficient is the slope of the F against R graph, through the origin",
+      "Coefficient of rolling resistance = coefficient of rolling friction times the radius, a length"
+    ],
+    "validRange": "The graph of rolling friction against normal reaction is a straight line through",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "The finest weights available may be too coarse to resolve so small a force.",
+      "The threshold is judged by eye, and rolling begins very gently.",
+      "The plane may not be exactly horizontal, so a component of the weight assists or opposes the motion.",
+      "Dust or grit under the roller greatly increases the resistance."
+    ],
+    "expectedBehaviour": [
+      "The graph of rolling friction against normal reaction is a straight line through the origin, giving a coefficient of rolling friction of about 0.005 for steel on wood. This is roughly seventy times smaller than the sliding coefficient of 0.35 for the same pair of surfaces, which is why wheels are used."
+    ],
+    "testFile": "tests/batch9.test.js"
+  }
+}

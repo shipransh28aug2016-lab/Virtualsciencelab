@@ -1,0 +1,489 @@
+{
+  "id": "XI-PHY-ACT-A1",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 1,
+    "kind": "activity",
+    "unit": "Unit I: Physical World and Measurement",
+    "chapter": "Chapter-1: Units and Measurements",
+    "topic": "Need for measurement: Units of measurement; systems of units; SI units, fundamental and derived units, significant figures. Accuracy and precision of measuring instruments, errors in measurement",
+    "subtopic": "Least count of a scale; maximum error in a single reading; precision and significant figures",
+    "practical": "To make a paper scale of given least count, e.g., 0.2 cm, 0.5 cm.",
+    "learningObjectives": [
+      "Be able to make a paper scale of a given least count, such as 0.2 cm or 0.5 cm",
+      "Be able to measure lengths with the scale and state each result to a precision the scale can support",
+      "Be able to show how the least count fixes the maximum error in a single reading"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Activity 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Making a paper scale of a given least count",
+  "shortTitle": "Paper scale",
+  "objective": [
+    "To make a paper scale of a given least count, such as 0.2 cm or 0.5 cm.",
+    "To measure lengths with the scale and state each result to a precision the scale can support.",
+    "To show how the least count fixes the maximum error in a single reading."
+  ],
+  "theory": {
+    "statement": "The least count of a scale is the smallest length it can measure, that is the value of one of its divisions. A reading can never be quoted more precisely than this. Because the true length generally falls between two marks, the reading is taken to the nearer mark, so the largest error a single reading can carry is half of one division.",
+    "derivationNote": "A strip of paper of length L marked into n equal divisions has a least count of L/n. To make a scale of least count 0.2 cm on a 15 cm strip, 75 divisions are needed; for 0.5 cm, 30 divisions. When a length is measured, the result is a whole number of divisions, so the reading is quantised: nothing between two marks can be recorded. The maximum error is therefore ± L.C./2. The absolute error is fixed by the instrument, but the PERCENTAGE error depends on what is being measured, since it is the ratio of that fixed error to the length. A given scale is therefore relatively more accurate for long objects than for short ones, which is why a fine scale matters most when measuring something small.",
+    "keyEquations": [
+      "Least count = length of the scale / number of divisions",
+      "Maximum error in one reading = ± L.C. / 2",
+      "Reading = (number of divisions) × L.C.",
+      "Percentage error = (maximum error / measured length) × 100"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Paper strip",
+      "spec": "stiff, about 15 cm long and 2 cm wide",
+      "why": "The body of the scale; stiff paper does not stretch while being marked"
+    },
+    {
+      "name": "Standard metre scale",
+      "spec": "least count 0.1 cm",
+      "why": "Provides the reference lengths from which the divisions are marked"
+    },
+    {
+      "name": "Sharp pencil and set square",
+      "spec": "",
+      "why": "Marks the divisions squarely and finely; a thick mark defeats a fine least count"
+    },
+    {
+      "name": "Objects to measure",
+      "spec": "pencil, eraser, index card, paper clip, spoon",
+      "why": "Lengths of different sizes, to show how the percentage error changes"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "scale",
+      "label": "Least count to build",
+      "symbol": "L.C.",
+      "unit": "cm",
+      "type": "independent",
+      "default": "lc02",
+      "options": [
+        "lc10",
+        "lc05",
+        "lc02",
+        "lc01"
+      ]
+    },
+    {
+      "id": "object",
+      "label": "Object to measure",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "pencil",
+      "options": [
+        "pencil",
+        "eraser",
+        "card",
+        "clip",
+        "spoon"
+      ]
+    },
+    {
+      "id": "reading",
+      "label": "Measured length",
+      "symbol": "l",
+      "unit": "cm",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Take a stiff paper strip about 15 cm long and draw a straight line along its length.",
+      "checkpoint": false
+    },
+    {
+      "step": 2,
+      "text": "Decide the least count you want, for example 0.2 cm, and work out how many divisions the strip needs.",
+      "checkpoint": true,
+      "expects": "scale"
+    },
+    {
+      "step": 3,
+      "text": "Using the standard metre scale, mark the divisions at exactly equal intervals along the line.",
+      "checkpoint": false
+    },
+    {
+      "step": 4,
+      "text": "Number every fifth division so the scale can be read quickly, and mark the zero clearly at one end.",
+      "checkpoint": false
+    },
+    {
+      "step": 5,
+      "text": "Place the zero of your paper scale against one end of the object and read the mark nearest to the other end.",
+      "checkpoint": true,
+      "expects": "object"
+    },
+    {
+      "step": 6,
+      "text": "Record the reading as a whole number of divisions multiplied by the least count.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 7,
+      "text": "Repeat the measurement at least three times, and repeat with a scale of different least count.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 8,
+      "text": "Calculate the maximum error and the percentage error for each scale, and compare them.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "paper-scale",
+    "renderer": "paper-scale",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "scale",
+        "widget": "segmented",
+        "options": [
+          "lc10",
+          "lc05",
+          "lc02",
+          "lc01"
+        ]
+      },
+      {
+        "var": "object",
+        "widget": "segmented",
+        "options": [
+          "pencil",
+          "eraser",
+          "card",
+          "clip",
+          "spoon"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Measure and record",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "object",
+        "label": "Object",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "leastCount",
+        "label": "L.C.",
+        "unit": "cm",
+        "decimals": 2
+      },
+      {
+        "key": "divisions",
+        "label": "Divisions",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "reading",
+        "label": "Length",
+        "unit": "cm",
+        "decimals": 2
+      },
+      {
+        "key": "maxError",
+        "label": "Max error",
+        "unit": "cm",
+        "decimals": 3
+      },
+      {
+        "key": "percentError",
+        "label": "Error",
+        "unit": "%",
+        "decimals": 2
+      }
+    ],
+    "graph": {
+      "x": "trial",
+      "y": "reading",
+      "xLabel": "Trial number",
+      "yLabel": "Measured length (cm)",
+      "throughOrigin": false
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Least count = length of strip / number of divisions",
+      "Reading = number of divisions × least count",
+      "Maximum error = ± least count / 2",
+      "Percentage error = (maximum error / reading) × 100",
+      "Compare the percentage error for scales of different least count"
+    ],
+    "resultKeys": [
+      "meanReading",
+      "leastCount",
+      "maxError"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Length of the pencil",
+    "symbol": "l",
+    "value": 11.34,
+    "tolerance": 0.3,
+    "unit": "cm",
+    "secondary": {
+      "quantity": "Maximum error with a 0.2 cm scale",
+      "value": 0.1,
+      "tolerance": 0.01,
+      "unit": "cm"
+    },
+    "statement": "The pencil measures about 11.3 cm. With a least count of 0.2 cm the maximum error in a single reading is 0.1 cm, which is under one percent of this length but nearly three percent of the paper clip. The finer the least count, the smaller the error — but the marks must be drawn accurately for that finer figure to mean anything."
+  },
+  "safety": [
+    "Cut the paper strip with care; scissors and craft knives are the only real hazard in this activity.",
+    "Do not press so hard with the pencil that the paper tears or stretches at the mark.",
+    "Keep the paper scale flat and dry; a curled or damp strip changes length and the calibration is lost."
+  ],
+  "sourcesOfError": [
+    "Unequal spacing of the divisions, which makes the stated least count untrue.",
+    "A thick pencil line, which is itself wider than a fine division.",
+    "The paper stretching or curling, changing the length of the scale.",
+    "Parallax if the eye is not directly above the mark being read.",
+    "The zero of the scale not placed exactly at the end of the object."
+  ],
+  "viva": [
+    {
+      "question": "What is meant by the least count of a scale?",
+      "expectedConcept": "It is the smallest length the scale can measure, equal to the value of one of its divisions. No reading taken with that scale can be more precise than this.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Value of one division.",
+      "commonMisconception": "Confusing least count with the total length of the scale."
+    },
+    {
+      "question": "How many divisions are needed on a 15 cm strip for a least count of 0.2 cm?",
+      "expectedConcept": "Seventy-five, since 15 divided by 0.2 is 75. Each division then represents 0.2 cm.",
+      "difficulty": "easy",
+      "bloom": "Apply",
+      "answerLogic": "n = L / L.C.",
+      "commonMisconception": "Dividing the other way and getting 3."
+    },
+    {
+      "question": "What is the maximum error in a single reading taken with this scale?",
+      "expectedConcept": "Half of one division, that is ± 0.1 cm for a least count of 0.2 cm. The true length lies somewhere between the two marks, and taking the nearer one can be wrong by at most half a division.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "± L.C./2.",
+      "commonMisconception": "Saying the error equals the full least count."
+    },
+    {
+      "question": "The same scale is used to measure a 3 cm clip and a 12 cm pencil. Which measurement is more accurate?",
+      "expectedConcept": "The pencil. The absolute error is the same, half a division, for both, but as a fraction of the length it is four times smaller for the pencil. Percentage error falls as the measured length rises.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Fixed absolute error, varying percentage error.",
+      "commonMisconception": "Assuming the same scale gives the same accuracy for everything."
+    },
+    {
+      "question": "Why must the divisions be exactly equal?",
+      "expectedConcept": "The reading is taken as a number of divisions multiplied by the least count, which assumes every division has the same value. If the spacing varies, that multiplication is invalid and the scale has no single least count at all.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "The reading assumes uniform divisions.",
+      "commonMisconception": "Thinking small irregularities average out."
+    },
+    {
+      "question": "Would marking 150 divisions on the strip make your measurements ten times better than 15?",
+      "expectedConcept": "Only if you can actually draw and read marks one millimetre apart accurately on paper. A stated least count is a claim about precision, and a badly drawn fine scale is worse than a well drawn coarse one because it claims a precision it does not have.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Precision claimed must be precision achieved.",
+      "commonMisconception": "Believing more divisions always means a better instrument."
+    },
+    {
+      "question": "What is parallax error and how do you avoid it here?",
+      "expectedConcept": "It is the apparent shift of the reading when the eye is not directly above the mark, because the scale and the object are at slightly different levels. It is avoided by looking straight down at the mark.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Line of sight must be perpendicular.",
+      "commonMisconception": "Thinking parallax only matters for instruments with a pointer."
+    },
+    {
+      "question": "Distinguish between accuracy and precision.",
+      "expectedConcept": "Accuracy is how close a reading is to the true value; precision is how finely the reading can be expressed and how repeatable it is. A finely divided scale with its zero worn away is precise but not accurate.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Closeness to truth versus fineness and repeatability.",
+      "commonMisconception": "Using the two words as synonyms."
+    },
+    {
+      "question": "Why can this scale not distinguish two objects differing by 0.05 cm?",
+      "expectedConcept": "Because that difference is smaller than one division. Both objects round to the same mark, so the scale records the same reading for each. An instrument cannot resolve a difference below its least count.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Resolution is limited by the least count.",
+      "commonMisconception": "Expecting careful reading to reveal detail finer than the divisions."
+    },
+    {
+      "question": "How would you state a measurement of 11.4 cm made with a 0.2 cm scale?",
+      "expectedConcept": "As 11.4 ± 0.1 cm. The uncertainty is quoted alongside the value, and the value is given to the same decimal place as the uncertainty. Writing 11.437 cm would claim a precision the scale cannot deliver.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Quote value with uncertainty, to matching precision.",
+      "commonMisconception": "Copying extra digits from a calculator."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "A 15 cm strip is divided into 30 equal parts. Its least count is:",
+        "options": [
+          "0.2 cm",
+          "0.5 cm",
+          "1.0 cm",
+          "2.0 cm"
+        ],
+        "answer": 1,
+        "feedback": "15 / 30 = 0.5 cm per division."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The maximum error in a single reading of a scale is:",
+        "options": [
+          "One least count",
+          "Half a least count",
+          "Two least counts",
+          "Zero"
+        ],
+        "answer": 1,
+        "feedback": "Reading to the nearer mark can be wrong by at most half a division."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "A scale of least count 0.5 cm is used to measure a 4 cm object. The percentage error is about:",
+        "options": [
+          "0.6 %",
+          "3 %",
+          "6 %",
+          "12 %"
+        ],
+        "answer": 2,
+        "feedback": "Maximum error 0.25 cm on 4 cm is about 6 percent."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Take at least three readings with your paper scale.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Build and compare scales of two different least counts.",
+        "check": "scalesCompared"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the length of the pencil in cm.",
+        "answer": 11.34,
+        "tolerance": 0.4,
+        "feedback": "About 11.3 cm, quoted to the precision your scale allows."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "State the maximum error of a 0.2 cm scale, in cm.",
+        "answer": 0.1,
+        "tolerance": 0.02,
+        "feedback": "Half of one division: 0.2 / 2 = 0.1 cm."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "You rebuilt the scale with a 1.0 cm least count. Compared with 0.2 cm, your readings are:",
+        "options": [
+          "More precise",
+          "Less precise, with five times the maximum error",
+          "Unchanged",
+          "More accurate but less precise"
+        ],
+        "answer": 1,
+        "feedback": "The maximum error grows from 0.1 cm to 0.5 cm — five times larger."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Least count = length of the scale / number of divisions",
+    "assumptions": [
+      "Least count = length of the scale / number of divisions",
+      "Maximum error in one reading = ± L.C. / 2",
+      "Reading = (number of divisions) × L.C.",
+      "Percentage error = (maximum error / measured length) × 100"
+    ],
+    "validRange": "The pencil measures about 11.3 cm. With a least count of 0.2 cm the maximum erro",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Unequal spacing of the divisions, which makes the stated least count untrue.",
+      "A thick pencil line, which is itself wider than a fine division.",
+      "The paper stretching or curling, changing the length of the scale.",
+      "Parallax if the eye is not directly above the mark being read."
+    ],
+    "expectedBehaviour": [
+      "The pencil measures about 11.3 cm. With a least count of 0.2 cm the maximum error in a single reading is 0.1 cm, which is under one percent of this length but nearly three percent of the paper clip. The finer the least count, the smaller the error — but the marks must be drawn accurately for that finer figure to mean anything."
+    ],
+    "testFile": "tests/batch9.test.js"
+  }
+}

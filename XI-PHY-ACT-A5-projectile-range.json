@@ -1,0 +1,505 @@
+{
+  "id": "XI-PHY-ACT-A5",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 5,
+    "kind": "activity",
+    "unit": "Unit II: Kinematics",
+    "chapter": "Chapter-3: Motion in a Plane",
+    "topic": "Scalar and vector quantities; position and displacement vectors, general vectors and their notations; equality of vectors, multiplication of vectors by a real number; addition and subtraction of vectors, resolution of a vector in a plane, rectangular components; projectile motion",
+    "subtopic": "Horizontal range of a projectile; dependence on the angle of projection; complementary angles; maximum range at 45 degrees",
+    "practical": "To study the variation in range of a projectile with angle of projection.",
+    "learningObjectives": [
+      "Be able to study how the horizontal range of a projectile varies with the angle of projection",
+      "Be able to show that the range is greatest at a projection angle of 45 degrees",
+      "Be able to show that complementary angles of projection give equal ranges"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Activity 5 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Variation of the range of a projectile with the angle of projection",
+  "shortTitle": "Projectile range",
+  "objective": [
+    "To study how the horizontal range of a projectile varies with the angle of projection.",
+    "To show that the range is greatest at a projection angle of 45 degrees.",
+    "To show that complementary angles of projection give equal ranges."
+  ],
+  "theory": {
+    "statement": "A projectile launched with a given speed at an angle to the horizontal follows a parabolic path, because its horizontal velocity stays constant while its vertical velocity changes uniformly under gravity. How far it travels before landing depends on the angle of projection, and there is one angle for which the range is greatest.",
+    "derivationNote": "Resolve the launch velocity into a horizontal component and a vertical component. Launched from and landing at the same level, the projectile takes a time equal to twice the vertical component divided by g to return to that level, during which it travels a horizontal distance equal to the horizontal component multiplied by that time. Using the identity that twice the product of the sine and cosine of an angle equals the sine of twice the angle, the range becomes the square of the speed multiplied by the sine of twice the projection angle, divided by g. Two consequences follow. First, the sine of twice the angle is greatest when twice the angle is 90 degrees, so the range is maximum at 45 degrees. Second, the sine of an angle equals the sine of its supplement, which means that an angle and its complement give exactly the same range: 30 and 60 degrees land in the same place, as do 20 and 70. The steeper of the two takes longer and rises higher, but travels the same distance. Both results assume launch and landing are at the same height; from a raised launcher the symmetry is broken and the optimum angle falls below 45 degrees.",
+    "keyEquations": [
+      "Horizontal component = speed times cosine of the angle",
+      "Vertical component = speed times sine of the angle",
+      "Time of flight from ground level = twice the vertical component divided by g",
+      "Range = square of the speed times sine of twice the angle, divided by g",
+      "The range is a maximum at 45 degrees, and complementary angles give equal ranges"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Spring-loaded projectile launcher",
+      "spec": "with an adjustable angle scale and a repeatable spring setting",
+      "why": "Projects the ball at a controlled angle with the same speed each time"
+    },
+    {
+      "name": "Steel ball",
+      "spec": "small and dense",
+      "why": "A dense ball keeps air resistance negligible over the flight"
+    },
+    {
+      "name": "Measuring tape",
+      "spec": "least count 1 cm",
+      "why": "Measures the horizontal range from the launch point to the landing mark"
+    },
+    {
+      "name": "Carbon paper over plain paper",
+      "spec": "laid on the landing area",
+      "why": "Records the exact landing point of each shot as a mark"
+    },
+    {
+      "name": "Protractor or angle scale",
+      "spec": "on the launcher",
+      "why": "Sets and reads the angle of projection"
+    },
+    {
+      "name": "Plumb line and spirit level",
+      "spec": "",
+      "why": "Establishes the vertical and confirms the launcher base is level"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "angleDeg",
+      "label": "Angle of projection",
+      "symbol": "theta",
+      "unit": "deg",
+      "type": "independent",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "default": 45
+    },
+    {
+      "id": "launcher",
+      "label": "Spring setting",
+      "symbol": "u",
+      "unit": "",
+      "type": "control",
+      "default": "medium",
+      "options": [
+        "soft",
+        "medium",
+        "strong"
+      ]
+    },
+    {
+      "id": "mount",
+      "label": "Launcher mounting",
+      "symbol": "h",
+      "unit": "",
+      "type": "control",
+      "default": "ground",
+      "options": [
+        "ground",
+        "table"
+      ]
+    },
+    {
+      "id": "rangeM",
+      "label": "Horizontal range",
+      "symbol": "R",
+      "unit": "m",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Set the launcher on the floor and check with the spirit level that its base is horizontal.",
+      "checkpoint": true,
+      "expects": "mount"
+    },
+    {
+      "step": 2,
+      "text": "Choose a spring setting and keep it unchanged throughout, so that every shot has the same launch speed.",
+      "checkpoint": true,
+      "expects": "launcher"
+    },
+    {
+      "step": 3,
+      "text": "Lay carbon paper over plain paper across the landing area so each shot leaves a mark.",
+      "checkpoint": false
+    },
+    {
+      "step": 4,
+      "text": "Set the angle of projection to about 15 degrees and read it from the angle scale.",
+      "checkpoint": true,
+      "expects": "angleDeg"
+    },
+    {
+      "step": 5,
+      "text": "Fire the projectile and measure the horizontal distance from the launch point to the mark. Record it.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 6,
+      "text": "Increase the angle in steps of about 10 degrees, firing and measuring at each, up to about 75 degrees.",
+      "checkpoint": true,
+      "expects": "rows>=4"
+    },
+    {
+      "step": 7,
+      "text": "Include pairs of complementary angles such as 30 and 60 degrees, and compare their ranges.",
+      "checkpoint": false
+    },
+    {
+      "step": 8,
+      "text": "Plot the range against the angle of projection and identify the angle giving the greatest range.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "projectile-range",
+    "renderer": "projectile-range",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "angleDeg",
+        "widget": "slider"
+      },
+      {
+        "var": "launcher",
+        "widget": "segmented",
+        "options": [
+          "soft",
+          "medium",
+          "strong"
+        ]
+      },
+      {
+        "var": "mount",
+        "widget": "segmented",
+        "options": [
+          "ground",
+          "table"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Fire and measure",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Shot",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "angleDeg",
+        "label": "Angle",
+        "unit": "deg",
+        "decimals": 0
+      },
+      {
+        "key": "sin2Theta",
+        "label": "sin 2 theta",
+        "unit": "",
+        "decimals": 3
+      },
+      {
+        "key": "rangeM",
+        "label": "Range R",
+        "unit": "m",
+        "decimals": 3
+      },
+      {
+        "key": "timeOfFlight",
+        "label": "Flight time",
+        "unit": "s",
+        "decimals": 2
+      },
+      {
+        "key": "maxHeightM",
+        "label": "Max height",
+        "unit": "m",
+        "decimals": 3
+      }
+    ],
+    "graph": {
+      "x": "angleDeg",
+      "y": "rangeM",
+      "xLabel": "Angle of projection (degree)",
+      "yLabel": "Horizontal range R (m)",
+      "throughOrigin": false
+    },
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "For each shot note the angle and the measured range",
+      "Calculate the sine of twice the angle for each shot",
+      "Plot the range against the angle and find the angle of maximum range",
+      "Compare the ranges for complementary pairs such as 30 and 60 degrees",
+      "Recover the launch speed from the square root of the range times g divided by the sine of twice the angle"
+    ],
+    "resultKeys": [
+      "bestAngle",
+      "launchSpeed",
+      "optimumAngle"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Angle of maximum range",
+    "symbol": "theta",
+    "value": 45,
+    "tolerance": 6,
+    "unit": "degree",
+    "secondary": {
+      "quantity": "Launch speed recovered from the data",
+      "value": 6,
+      "tolerance": 0.4,
+      "unit": "m/s"
+    },
+    "statement": "The range rises to a maximum at a projection angle of 45 degrees and falls away symmetrically on either side. Complementary angles such as 30 and 60 degrees give equal ranges. The launch speed recovered from the data is about 6 m/s and is the same for every shot, confirming that the spring setting was unchanged."
+  },
+  "safety": [
+    "Never look into the muzzle of the launcher, and never point it at anyone.",
+    "Announce each shot clearly and make sure the landing area is clear of people before firing.",
+    "Wear eye protection; a small steel ball leaving at several metres per second can cause a serious eye injury.",
+    "Keep the launcher clamped or firmly held so it does not recoil off the bench.",
+    "Retrieve the ball only after the shot has landed and come to rest."
+  ],
+  "sourcesOfError": [
+    "The launch speed may vary slightly from shot to shot as the spring wears.",
+    "The angle scale may be misread, and near the extremes a small angular error shifts the landing point a long way.",
+    "The launch point is not exactly at the muzzle, so the measured range has a small fixed offset.",
+    "Air resistance slightly shortens the range, most noticeably at the higher speeds.",
+    "The floor may not be level, so launch and landing are not truly at the same height.",
+    "The landing mark can be difficult to identify if several shots land close together."
+  ],
+  "viva": [
+    {
+      "question": "Why is the path of a projectile a parabola?",
+      "expectedConcept": "The horizontal velocity is constant since no horizontal force acts, while the vertical motion has constant downward acceleration. Eliminating time between the horizontal and vertical equations gives the vertical displacement as a quadratic in the horizontal one, which is a parabola.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Uniform horizontal, uniformly accelerated vertical.",
+      "commonMisconception": "Thinking the ball is pushed forwards throughout the flight."
+    },
+    {
+      "question": "Derive the expression for the horizontal range.",
+      "expectedConcept": "The time of flight from ground level is twice the vertical component of velocity divided by g, and the horizontal distance covered is the horizontal component multiplied by that time. Combining them gives the range as the square of the speed times the sine of twice the angle, divided by g.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Range = horizontal velocity times time of flight.",
+      "commonMisconception": "Using the time to the highest point instead of the whole flight."
+    },
+    {
+      "question": "At what angle is the range greatest, and why?",
+      "expectedConcept": "At 45 degrees. The range is proportional to the sine of twice the angle, which reaches its maximum value of one when twice the angle is 90 degrees. It is the best compromise between a long flight time, favoured by a steep launch, and a large horizontal velocity, favoured by a shallow one.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "The sine of twice the angle peaks at 45 degrees.",
+      "commonMisconception": "Assuming a steeper launch always goes further."
+    },
+    {
+      "question": "Why do 30 degrees and 60 degrees give the same range?",
+      "expectedConcept": "Because the sine of an angle equals the sine of its supplement, so the sine of 60 degrees equals the sine of 120 degrees. The two projection angles are complementary, adding to 90 degrees. The 60 degree shot rises higher and stays in the air longer, but has a smaller horizontal velocity, and the two effects cancel exactly.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Symmetry of the sine function about 45 degrees.",
+      "commonMisconception": "Expecting the steeper shot to travel further because it flies longer."
+    },
+    {
+      "question": "How does the range change if the launch speed is doubled?",
+      "expectedConcept": "It becomes four times as great, since the range is proportional to the square of the speed. Speed matters far more than angle: a ten percent increase in speed adds about twenty-one percent to the range.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Range varies as the square of the speed.",
+      "commonMisconception": "Assuming the range simply doubles."
+    },
+    {
+      "question": "Which quantity is unaffected by the angle of projection: time of flight, maximum height, or horizontal velocity?",
+      "expectedConcept": "None of them is unaffected, since all three depend on the angle. The time of flight and the maximum height increase with angle, while the horizontal velocity decreases. What stays constant throughout any one flight is the horizontal velocity component itself.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "All depend on the angle; horizontal velocity is constant during a flight.",
+      "commonMisconception": "Confusing constant during a flight with independent of angle."
+    },
+    {
+      "question": "What happens to the maximum-range angle if the launcher is placed on a table?",
+      "expectedConcept": "It falls below 45 degrees. With extra height available, the projectile gains flight time for free, so it pays to launch flatter and convert more of the speed into horizontal velocity. The complementary-angle symmetry is also lost.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Extra height rewards a flatter launch.",
+      "commonMisconception": "Assuming 45 degrees is always optimal regardless of the launch height."
+    },
+    {
+      "question": "At the highest point of its flight, what is the velocity of the projectile?",
+      "expectedConcept": "It is horizontal, equal to the horizontal component of the launch velocity. The vertical component is momentarily zero, but the projectile is still moving, and its acceleration is still g downwards.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Vertical component zero, horizontal unchanged.",
+      "commonMisconception": "Saying the velocity is zero at the top, as for a body thrown straight up."
+    },
+    {
+      "question": "How would air resistance change your results?",
+      "expectedConcept": "It shortens every range, and more so at higher speeds, so the curve becomes lower and slightly asymmetric. The angle of maximum range falls a little below 45 degrees. This is why the optimum angle for a real thrown javelin or golf ball is well under 45 degrees.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Drag reduces range and lowers the optimum angle.",
+      "commonMisconception": "Assuming air resistance affects all angles equally."
+    },
+    {
+      "question": "Why must the spring setting be kept the same for every shot?",
+      "expectedConcept": "The whole study is of how the range varies with ANGLE, so every other quantity must be held constant. If the launch speed changed between shots, a change in range could not be attributed to the change in angle.",
+      "difficulty": "easy",
+      "bloom": "Apply",
+      "answerLogic": "Control every variable but the one being studied.",
+      "commonMisconception": "Thinking small speed variations do not matter since the range depends on angle."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The horizontal range of a projectile launched from ground level is proportional to:",
+        "options": [
+          "The sine of the angle",
+          "The sine of twice the angle",
+          "The cosine of the angle",
+          "The angle itself"
+        ],
+        "answer": 1,
+        "feedback": "The range is the square of the speed times the sine of twice the angle, divided by g."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The range is greatest when the angle of projection is:",
+        "options": [
+          "30 degrees",
+          "45 degrees",
+          "60 degrees",
+          "90 degrees"
+        ],
+        "answer": 1,
+        "feedback": "The sine of twice the angle is greatest when twice the angle is 90 degrees."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "Two angles that give the same range are:",
+        "options": [
+          "20 and 40 degrees",
+          "30 and 60 degrees",
+          "45 and 90 degrees",
+          "10 and 20 degrees"
+        ],
+        "answer": 1,
+        "feedback": "Complementary angles, adding to 90 degrees, give equal ranges."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Fire at four or more different angles.",
+        "check": "rows>=4"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Include a pair of complementary angles such as 30 and 60 degrees.",
+        "check": "angleVaried"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the angle of projection that gave the greatest range, in degrees.",
+        "answer": 45,
+        "tolerance": 8,
+        "feedback": "The maximum range occurs at 45 degrees for a ground-level launch."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "State the launch speed recovered from your data, in m/s.",
+        "answer": 6,
+        "tolerance": 0.6,
+        "feedback": "About 6 m/s, the same for every shot at this spring setting."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Your 30 and 60 degree shots landed at the same distance. This shows that:",
+        "options": [
+          "The launcher is faulty",
+          "Complementary angles give equal ranges",
+          "The range does not depend on angle",
+          "Air resistance is large"
+        ],
+        "answer": 1,
+        "feedback": "The sine of twice the angle is symmetric about 45 degrees, so complementary angles give identical ranges."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Horizontal component = speed times cosine of the angle",
+    "assumptions": [
+      "Horizontal component = speed times cosine of the angle",
+      "Vertical component = speed times sine of the angle",
+      "Time of flight from ground level = twice the vertical component divided by g",
+      "Range = square of the speed times sine of twice the angle, divided by g"
+    ],
+    "validRange": "The range rises to a maximum at a projection angle of 45 degrees and falls away ",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "The launch speed may vary slightly from shot to shot as the spring wears.",
+      "The angle scale may be misread, and near the extremes a small angular error shifts the landing point a long way.",
+      "The launch point is not exactly at the muzzle, so the measured range has a small fixed offset.",
+      "Air resistance slightly shortens the range, most noticeably at the higher speeds."
+    ],
+    "expectedBehaviour": [
+      "The range rises to a maximum at a projection angle of 45 degrees and falls away symmetrically on either side. Complementary angles such as 30 and 60 degrees give equal ranges. The launch speed recovered from the data is about 6 m/s and is the same for every shot, confirming that the spring setting was unchanged."
+    ],
+    "testFile": "tests/batch9.test.js"
+  }
+}

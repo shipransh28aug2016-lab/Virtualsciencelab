@@ -1,0 +1,538 @@
+{
+  "id": "XI-PHY-ACT-B2",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 2,
+    "kind": "activity",
+    "unit": "Unit VIII: Thermodynamics",
+    "chapter": "Chapter-10: Thermal Properties of Matter",
+    "topic": "Heat, temperature, thermal expansion; thermal expansion of solids, liquids and gases; specific heat capacity; calorimetry; change of state",
+    "subtopic": "Differential thermal expansion of two metals bonded together; the bimetallic strip as a thermostat",
+    "practical": "To observe and explain the effect of heating on a bi-metallic strip.",
+    "learningObjectives": [
+      "Be able to observe what happens when a bi-metallic strip is heated, and to explain it",
+      "Be able to measure the deflection of the free end and show it is proportional to the temperature rise",
+      "Be able to find the difference in the coefficients of linear expansion of the two metals"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Activity 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "The effect of heating on a bi-metallic strip",
+  "shortTitle": "Bi-metallic strip",
+  "objective": [
+    "To observe what happens when a bi-metallic strip is heated, and to explain it.",
+    "To measure the deflection of the free end and show it is proportional to the temperature rise.",
+    "To find the difference in the coefficients of linear expansion of the two metals."
+  ],
+  "theory": {
+    "statement": "Two strips of different metals are bonded face to face along their whole length. On heating, both expand, but the metal with the larger coefficient of linear expansion grows more. Because they cannot slide past one another, the only way the pair can accommodate the difference is to bend, with the faster-growing metal on the outside of the curve.",
+    "derivationNote": "Suppose the two metals have coefficients of linear expansion differing by a small amount. Heated through a temperature rise, one strip would become slightly longer than the other if they were free. Bonded together they must share a common length at the join, so the pair curves: the longer metal takes the outside of the arc, where the path is longer, and the shorter one the inside. For a strip of length L and total thickness t, clamped at one end, the deflection of the free end works out as three times L squared times the difference of the expansivities times the temperature rise, divided by twice the thickness. Three things follow. The bend depends on the DIFFERENCE of the two expansivities and not on either separately, so a bimetallic strip can never give the expansivity of one metal alone. It grows with the SQUARE of the length, so a longer strip is far more sensitive. And it is inversely proportional to the thickness, so a thin strip bends much more than a thick one. This is the basis of the thermostat: the bending strip makes or breaks an electrical contact at a set temperature.",
+    "keyEquations": [
+      "Deflection = 3 L squared times the difference in expansivity times the temperature rise, divided by 2 t",
+      "The strip bends towards the metal of SMALLER expansivity",
+      "The deflection depends on the DIFFERENCE of the expansivities, never on one alone",
+      "Deflection is proportional to the square of the length and inversely to the thickness"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Bi-metallic strip",
+      "spec": "invar and brass, riveted along its length",
+      "why": "The two metals differ greatly in expansivity, so the bend is large and easy to see"
+    },
+    {
+      "name": "Clamp and stand",
+      "spec": "rigid",
+      "why": "Holds one end fixed so the other is free to move; a loose clamp spoils the reading"
+    },
+    {
+      "name": "Bunsen burner or hot air source",
+      "spec": "with a heat-proof mat",
+      "why": "Raises the temperature of the strip uniformly"
+    },
+    {
+      "name": "Thermometer",
+      "spec": "range up to 300 °C",
+      "why": "Measures the temperature of the strip, which is the independent variable"
+    },
+    {
+      "name": "Millimetre scale",
+      "spec": "fixed vertically beside the free end",
+      "why": "Measures the deflection of the tip"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "pair",
+      "label": "Metal pair",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "invarBrass",
+      "options": [
+        "invarBrass",
+        "steelCopper",
+        "steelBrass",
+        "brassAlum",
+        "brassBrass"
+      ]
+    },
+    {
+      "id": "deltaTempC",
+      "label": "Temperature rise",
+      "symbol": "ΔT",
+      "unit": "°C",
+      "type": "independent",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 80
+    },
+    {
+      "id": "lengthMm",
+      "label": "Length of strip",
+      "symbol": "L",
+      "unit": "mm",
+      "type": "independent",
+      "min": 40,
+      "max": 160,
+      "step": 10,
+      "default": 100
+    },
+    {
+      "id": "thicknessMm",
+      "label": "Total thickness",
+      "symbol": "t",
+      "unit": "mm",
+      "type": "control",
+      "min": 0.4,
+      "max": 1.6,
+      "step": 0.2,
+      "default": 0.8
+    },
+    {
+      "id": "scale",
+      "label": "Scale",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "mm05",
+      "options": [
+        "mm1",
+        "mm05",
+        "mm01"
+      ]
+    },
+    {
+      "id": "deflectionMm",
+      "label": "Deflection",
+      "symbol": "δ",
+      "unit": "mm",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Clamp the bi-metallic strip horizontally at one end, leaving the other end free.",
+      "checkpoint": true,
+      "expects": "pair"
+    },
+    {
+      "step": 2,
+      "text": "Fix a millimetre scale beside the free end and note the position of the tip when cold.",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Note which metal is on top, and predict which way the strip will bend.",
+      "checkpoint": false
+    },
+    {
+      "step": 4,
+      "text": "Heat the strip gently and evenly, and note its temperature.",
+      "checkpoint": true,
+      "expects": "deltaTempC"
+    },
+    {
+      "step": 5,
+      "text": "Measure the deflection of the tip against the scale and record it.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 6,
+      "text": "Repeat for at least three different temperature rises.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 7,
+      "text": "Let the strip cool and check that it returns to its original position.",
+      "checkpoint": false
+    },
+    {
+      "step": 8,
+      "text": "Plot deflection against temperature rise and find the slope.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "bimetallic-strip",
+    "renderer": "bimetallic-strip",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "deltaTempC",
+        "widget": "slider"
+      },
+      {
+        "var": "lengthMm",
+        "widget": "slider"
+      },
+      {
+        "var": "thicknessMm",
+        "widget": "slider"
+      },
+      {
+        "var": "pair",
+        "widget": "segmented",
+        "options": [
+          "invarBrass",
+          "steelCopper",
+          "steelBrass",
+          "brassAlum",
+          "brassBrass"
+        ]
+      },
+      {
+        "var": "scale",
+        "widget": "segmented",
+        "options": [
+          "mm1",
+          "mm05",
+          "mm01"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record deflection",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "deltaTempC",
+        "label": "Temp rise",
+        "unit": "°C",
+        "decimals": 0
+      },
+      {
+        "key": "lengthMm",
+        "label": "Length",
+        "unit": "mm",
+        "decimals": 0
+      },
+      {
+        "key": "thicknessMm",
+        "label": "Thickness",
+        "unit": "mm",
+        "decimals": 1
+      },
+      {
+        "key": "deflectionMm",
+        "label": "Deflection",
+        "unit": "mm",
+        "decimals": 2
+      },
+      {
+        "key": "perDegree",
+        "label": "Per °C",
+        "unit": "mm/°C",
+        "decimals": 4
+      }
+    ],
+    "graph": {
+      "x": "deltaTempC",
+      "y": "deflectionMm",
+      "xLabel": "Temperature rise (°C)",
+      "yLabel": "Deflection (mm)",
+      "throughOrigin": true
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Plot the deflection against the temperature rise",
+      "The graph is a straight line through the origin; find its slope",
+      "Slope = 3 L squared times the difference in expansivity, divided by 2 t",
+      "Rearrange to get the difference in the coefficients of linear expansion",
+      "Compare with the accepted difference for the two metals"
+    ],
+    "resultKeys": [
+      "alphaDifference",
+      "slope",
+      "outerMetal"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Difference in coefficient of linear expansion, invar and brass",
+    "symbol": "Δα",
+    "value": 0.0000178,
+    "tolerance": 0.0000025,
+    "unit": "per K",
+    "secondary": {
+      "quantity": "Deflection at 80 °C on a 100 mm strip",
+      "value": 26.7,
+      "tolerance": 4,
+      "unit": "mm"
+    },
+    "statement": "The strip bends with the brass on the outside, because brass expands far more than invar. The deflection is proportional to the temperature rise, and the slope gives a difference in expansivity of about 17.8 millionths per kelvin, which matches the accepted values for the pair."
+  },
+  "safety": [
+    "The strip and the clamp become very hot: handle only with tongs and allow to cool before touching.",
+    "Keep the flame well away from the millimetre scale and from anything flammable.",
+    "Do not overheat the strip; excessive heating can weaken the bond between the two metals permanently.",
+    "Wear eye protection while the burner is alight."
+  ],
+  "sourcesOfError": [
+    "The temperature of the strip is not the same as that of the flame, and may not be uniform along it.",
+    "A clamp that is not rigid lets the whole strip move, adding to the apparent deflection.",
+    "Reading the tip position by eye against the scale introduces parallax.",
+    "The strip may not return exactly to its starting position if it has been overheated.",
+    "Convection currents from the burner can disturb a light strip.",
+    "The two metals may not be of exactly equal thickness, which the simple formula assumes."
+  ],
+  "viva": [
+    {
+      "question": "Why does a bi-metallic strip bend when heated?",
+      "expectedConcept": "The two metals have different coefficients of linear expansion, so one tries to become longer than the other. Because they are bonded along their whole length they cannot slide, and the only way to accommodate the difference is for the pair to curve, with the more expansive metal on the outside.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Different expansions, bonded together.",
+      "commonMisconception": "Thinking only one of the two metals expands."
+    },
+    {
+      "question": "Which metal ends up on the outside of the bend?",
+      "expectedConcept": "The one with the larger coefficient of linear expansion, because the outside of a curve is the longer path. For an invar and brass strip that is the brass, since brass expands about fifteen times as much as invar.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Larger expansivity takes the longer path.",
+      "commonMisconception": "Guessing from which metal is denser or harder."
+    },
+    {
+      "question": "Can this experiment give the coefficient of expansion of brass alone?",
+      "expectedConcept": "No. The bending depends only on the DIFFERENCE between the two expansivities. Any pair with the same difference would bend identically, so the individual value of either metal cannot be recovered without knowing the other independently.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Only the difference is measurable.",
+      "commonMisconception": "Believing the slope gives the expansivity of the more expansive metal."
+    },
+    {
+      "question": "How does the deflection depend on the length of the strip?",
+      "expectedConcept": "It is proportional to the square of the length. Doubling the length gives four times the deflection, which is why thermostat strips are made as long as the space allows, and are often coiled into a spiral to fit a long strip into a small instrument.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Deflection varies as L squared.",
+      "commonMisconception": "Expecting the deflection simply to double with length."
+    },
+    {
+      "question": "Why is invar chosen as one of the metals?",
+      "expectedConcept": "Invar is an alloy of iron and nickel with an exceptionally small coefficient of expansion, about a tenth that of ordinary steel. Pairing it with brass maximises the difference in expansivity and so gives the largest possible bend for a given temperature change.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Very low expansivity maximises the difference.",
+      "commonMisconception": "Thinking invar does not expand at all."
+    },
+    {
+      "question": "Give a practical use of a bi-metallic strip.",
+      "expectedConcept": "The thermostat. As the temperature rises the strip bends until it makes or breaks an electrical contact, switching a heater off or a cooler on. The same principle is used in flashing indicator lamps, fire alarms and simple oven thermometers.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Thermostats and thermal switches.",
+      "commonMisconception": "Thinking it is only a laboratory demonstration."
+    },
+    {
+      "question": "What would you observe on COOLING the strip below room temperature?",
+      "expectedConcept": "It would bend the other way. On cooling, the metal of larger expansivity contracts more, so it now takes the INSIDE of the curve, and the strip curves in the opposite sense to when it was heated.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Contraction reverses the curvature.",
+      "commonMisconception": "Expecting it to stay straight when cooled."
+    },
+    {
+      "question": "Why must the two strips be firmly bonded along their whole length?",
+      "expectedConcept": "If they could slide relative to one another they would simply each expand freely to their own new length and stay straight. The bending exists only because the bond forces them to keep a common length at the join.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "The constraint is what causes the bend.",
+      "commonMisconception": "Thinking the rivets only hold the strip together mechanically."
+    },
+    {
+      "question": "What happens if both strips are of the same metal?",
+      "expectedConcept": "Nothing bends. With identical expansivities there is no difference to accommodate, so the pair simply becomes longer and stays perfectly straight, however hot it is made.",
+      "difficulty": "easy",
+      "bloom": "Evaluate",
+      "answerLogic": "No difference means no bend.",
+      "commonMisconception": "Assuming any two bonded strips must curve."
+    },
+    {
+      "question": "How does the thickness affect the deflection?",
+      "expectedConcept": "The deflection is inversely proportional to the total thickness, so a strip twice as thick bends only half as far. A thick strip is also much stiffer, which is why thermostat strips are made thin.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Thinner bends more.",
+      "commonMisconception": "Expecting thickness to have no effect since both metals thicken equally."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "A bi-metallic strip bends on heating because:",
+        "options": [
+          "One metal melts",
+          "The two metals expand by different amounts",
+          "The strip gets heavier",
+          "Air pushes on it"
+        ],
+        "answer": 1,
+        "feedback": "Bonded metals of different expansivity must curve to accommodate the difference."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "On heating, the metal on the OUTSIDE of the bend is the one with:",
+        "options": [
+          "The larger expansivity",
+          "The smaller expansivity",
+          "The greater density",
+          "The higher melting point"
+        ],
+        "answer": 0,
+        "feedback": "The outside of a curve is the longer path, so the metal that grows more takes it."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "A bi-metallic strip is most commonly used in:",
+        "options": [
+          "A thermometer bulb",
+          "A thermostat",
+          "A barometer",
+          "A voltmeter"
+        ],
+        "answer": 1,
+        "feedback": "The bending strip makes or breaks a contact at a set temperature."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record the deflection at three or more temperatures.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Vary the temperature rise between readings.",
+        "check": "tempVaried"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the deflection of a 100 mm invar-brass strip heated through 80 °C, in mm.",
+        "answer": 26.7,
+        "tolerance": 5,
+        "feedback": "About 27 mm for a 0.8 mm thick strip."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "Your strip is made of brass on both sides. It will:",
+        "options": [
+          "Bend towards the top",
+          "Stay straight",
+          "Bend towards the bottom",
+          "Break"
+        ],
+        "answer": 1,
+        "feedback": "With no difference in expansivity there is nothing to accommodate, so it simply lengthens."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Doubling the length of the strip changes the deflection by a factor of:",
+        "options": [
+          "2",
+          "4",
+          "8",
+          "1"
+        ],
+        "answer": 1,
+        "feedback": "The deflection varies as the square of the length."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Deflection = 3 L squared times the difference in expansivity times the temperature rise, divided by 2 t",
+    "assumptions": [
+      "Deflection = 3 L squared times the difference in expansivity times the temperature rise, divided by 2 t",
+      "The strip bends towards the metal of SMALLER expansivity",
+      "The deflection depends on the DIFFERENCE of the expansivities, never on one alone",
+      "Deflection is proportional to the square of the length and inversely to the thickness"
+    ],
+    "validRange": "The strip bends with the brass on the outside, because brass expands far more th",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "The temperature of the strip is not the same as that of the flame, and may not be uniform along it.",
+      "A clamp that is not rigid lets the whole strip move, adding to the apparent deflection.",
+      "Reading the tip position by eye against the scale introduces parallax.",
+      "The strip may not return exactly to its starting position if it has been overheated."
+    ],
+    "expectedBehaviour": [
+      "The strip bends with the brass on the outside, because brass expands far more than invar. The deflection is proportional to the temperature rise, and the slope gives a difference in expansivity of about 17.8 millionths per kelvin, which matches the accepted values for the pair."
+    ],
+    "testFile": "tests/batch9.test.js"
+  }
+}

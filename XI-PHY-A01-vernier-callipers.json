@@ -1,0 +1,546 @@
+{
+  "id": "XI-PHY-A01",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 1,
+    "unit": "Unit I: Physical World and Measurement",
+    "chapter": "Chapter-1: Units and Measurements",
+    "topic": "Need for measurement; units of measurement; systems of units; SI units, fundamental and derived units; significant figures",
+    "subtopic": "Least count, accuracy and precision of measuring instruments; errors in measurement",
+    "practical": "To measure diameter of a small spherical/cylindrical body and to measure internal diameter and depth of a given beaker/calorimeter using Vernier Callipers and hence find its volume.",
+    "learningObjectives": [
+      "Derive the least count of a vernier calliper as one main scale division divided by the number of vernier divisions",
+      "Read a vernier calliper correctly as main scale reading plus vernier coincidence times least count",
+      "Identify positive and negative zero error and apply the correction with the right sign",
+      "Measure the external diameter of a spherical and a cylindrical body",
+      "Measure the internal diameter and depth of a beaker using the appropriate jaws and the depth strip",
+      "Compute the volume of the body from the measured dimensions and express it to the correct number of significant figures"
+    ],
+    "competencies": [
+      "Precise use of a measuring instrument and correct determination of its least count",
+      "Recognising and correcting systematic (zero) error as distinct from random error",
+      "Repeating measurements and taking a mean to reduce random error",
+      "Reporting a result to a number of significant figures justified by the instrument"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Experiment 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Vernier Callipers: diameter, internal diameter, depth and volume",
+  "shortTitle": "Vernier Callipers",
+  "objective": [
+    "To measure the diameter of a small spherical and a cylindrical body using vernier callipers.",
+    "To measure the internal diameter and depth of a given beaker.",
+    "To calculate the volume of each body from the measured dimensions."
+  ],
+  "theory": {
+    "statement": "A vernier calliper carries an auxiliary sliding scale on which N divisions occupy the same length as (N − 1) divisions of the main scale. Because of this the vernier can resolve a fraction of a main scale division equal to 1/N of it, which is the least count of the instrument.",
+    "derivationNote": "If one main scale division is M.S.D., then N vernier divisions = (N − 1) M.S.D., so 1 vernier division = ((N − 1)/N) M.S.D. The difference between one main scale division and one vernier division is M.S.D. − ((N − 1)/N) M.S.D. = M.S.D./N. This difference is the least count: L.C. = 1 M.S.D. / N. With M.S.D. = 1 mm = 0.1 cm and N = 10, L.C. = 0.01 cm. The total reading is then M.S.R. + (coinciding vernier division × L.C.), from which any zero error must be subtracted algebraically.",
+    "keyEquations": [
+      "L.C. = 1 M.S.D. / N",
+      "Observed reading = M.S.R. + (V.S.R. × L.C.)",
+      "Correct reading = Observed reading − zero error (with its own sign)",
+      "V(sphere) = (4/3)πr³",
+      "V(cylinder) = πr²h",
+      "V(beaker, internal) = πr²h"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Vernier callipers",
+      "spec": "least count 0.01 cm, 10 vernier divisions",
+      "why": "The measuring instrument; its two pairs of jaws read external and internal dimensions"
+    },
+    {
+      "name": "Spherical body",
+      "spec": "steel sphere, about 2 cm diameter",
+      "why": "External diameter measured between the lower (outside) jaws"
+    },
+    {
+      "name": "Cylindrical body",
+      "spec": "brass cylinder",
+      "why": "External diameter and height measured to give the volume"
+    },
+    {
+      "name": "Beaker or calorimeter",
+      "spec": "glass, about 4 cm internal diameter",
+      "why": "Internal diameter measured with the upper jaws, depth with the thin strip at the tail"
+    },
+    {
+      "name": "Magnifying lens",
+      "spec": "hand lens",
+      "why": "Helps judge which vernier division exactly coincides with a main scale division"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "calliper",
+      "label": "Vernier calliper",
+      "symbol": "N",
+      "unit": "divisions",
+      "type": "control",
+      "default": "vc10",
+      "options": [
+        "vc10",
+        "vc20",
+        "vc50"
+      ]
+    },
+    {
+      "id": "specimen",
+      "label": "Body to measure",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "sphere",
+      "options": [
+        "sphere",
+        "cylinder",
+        "beaker"
+      ]
+    },
+    {
+      "id": "measuring",
+      "label": "Dimension",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "diameter",
+      "options": [
+        "diameter",
+        "internal",
+        "depth"
+      ]
+    },
+    {
+      "id": "jawOpening",
+      "label": "Jaw opening",
+      "symbol": "d",
+      "unit": "cm",
+      "type": "independent",
+      "min": 0,
+      "max": 6,
+      "step": 0.001,
+      "default": 2.14
+    },
+    {
+      "id": "zeroErrorDiv",
+      "label": "Zero error",
+      "symbol": "e",
+      "unit": "divisions",
+      "type": "controlled",
+      "min": -5,
+      "max": 5,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "id": "corrected",
+      "label": "Corrected reading",
+      "symbol": "d",
+      "unit": "cm",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Determine the least count: note the value of one main scale division and count the number of divisions on the vernier scale. L.C. = 1 M.S.D. / N.",
+      "checkpoint": true,
+      "expects": "calliper"
+    },
+    {
+      "step": 2,
+      "text": "Bring the jaws into contact. If the vernier zero does not coincide with the main scale zero, note the zero error and its sign.",
+      "checkpoint": true,
+      "expects": "zeroTaken"
+    },
+    {
+      "step": 3,
+      "text": "Place the sphere between the lower jaws and tighten them gently until the body is just gripped. Do not force the jaws.",
+      "checkpoint": true,
+      "expects": "specimen"
+    },
+    {
+      "step": 4,
+      "text": "Read the main scale division just before the vernier zero. This is the M.S.R.",
+      "checkpoint": false
+    },
+    {
+      "step": 5,
+      "text": "Find the vernier division that exactly coincides with any main scale division. This is the V.S.R.",
+      "checkpoint": false
+    },
+    {
+      "step": 6,
+      "text": "Calculate the observed reading as M.S.R. + V.S.R. × L.C., then apply the zero error correction.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 7,
+      "text": "Repeat the measurement in at least three mutually perpendicular directions, since the body may not be perfectly round.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 8,
+      "text": "Use the upper jaws to measure the internal diameter of the beaker and the thin strip at the tail to measure its depth.",
+      "checkpoint": false
+    },
+    {
+      "step": 9,
+      "text": "Take the mean of the corrected readings and calculate the volume using the appropriate formula.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "vernier-callipers",
+    "renderer": "vernier-callipers",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "calliper",
+        "widget": "segmented",
+        "options": [
+          "vc10",
+          "vc20",
+          "vc50"
+        ]
+      },
+      {
+        "var": "specimen",
+        "widget": "segmented",
+        "options": [
+          "sphere",
+          "cylinder",
+          "beaker"
+        ]
+      },
+      {
+        "var": "jawOpening",
+        "widget": "slider"
+      },
+      {
+        "var": "zeroErrorDiv",
+        "widget": "slider"
+      }
+    ],
+    "actions": [
+      {
+        "id": "grip",
+        "label": "Record this reading",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "mainScaleReading",
+        "label": "M.S.R.",
+        "unit": "cm",
+        "decimals": 2
+      },
+      {
+        "key": "vernierDivision",
+        "label": "V.S.R.",
+        "unit": "div",
+        "decimals": 0
+      },
+      {
+        "key": "leastCount",
+        "label": "L.C.",
+        "unit": "cm",
+        "decimals": 3
+      },
+      {
+        "key": "observed",
+        "label": "Observed",
+        "unit": "cm",
+        "decimals": 3
+      },
+      {
+        "key": "zeroError",
+        "label": "Zero error",
+        "unit": "cm",
+        "decimals": 3
+      },
+      {
+        "key": "corrected",
+        "label": "Corrected",
+        "unit": "cm",
+        "decimals": 3
+      }
+    ],
+    "graph": {
+      "x": "trial",
+      "y": "corrected",
+      "xLabel": "Trial number",
+      "yLabel": "Corrected reading (cm)",
+      "throughOrigin": false
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "L.C. = 1 M.S.D. / N",
+      "Observed reading = M.S.R. + V.S.R. × L.C.",
+      "Corrected reading = Observed − zero error",
+      "Mean diameter d = Σ(corrected)/n, radius r = d/2",
+      "Volume from the appropriate formula for the shape"
+    ],
+    "resultKeys": [
+      "meanValue",
+      "radius",
+      "volume"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Mean diameter of the sphere",
+    "symbol": "d",
+    "value": 2.14,
+    "tolerance": 0.03,
+    "unit": "cm",
+    "secondary": {
+      "quantity": "Volume of the sphere",
+      "value": 5.13,
+      "tolerance": 0.25,
+      "unit": "cm³"
+    },
+    "statement": "The diameter of the given sphere is about 2.14 cm and its volume about 5.13 cm³, each measured to the least count of 0.01 cm."
+  },
+  "safety": [
+    "Tighten the jaws only until the body is just held; over-tightening damages both the instrument and a soft specimen.",
+    "Do not slide the vernier while the jaws grip the body, as this scratches the measuring faces.",
+    "Handle glass beakers carefully when inserting the depth strip.",
+    "Keep the calliper clean and dry; a grain of dust between the jaws is itself a zero error."
+  ],
+  "sourcesOfError": [
+    "Zero error not noticed, or corrected with the wrong sign.",
+    "Backlash error: play between the sliding vernier and the main scale.",
+    "Parallax while judging which vernier division coincides.",
+    "The body not being perfectly spherical or cylindrical, so the diameter differs with direction.",
+    "Excessive pressure on the jaws compressing a soft body.",
+    "Reporting more significant figures than the least count justifies."
+  ],
+  "viva": [
+    {
+      "question": "What is the least count of a vernier calliper and how is it obtained?",
+      "expectedConcept": "The least count is the smallest length that can be measured, equal to one main scale division divided by the number of vernier divisions: L.C. = 1 M.S.D. / N. For M.S.D. = 1 mm and N = 10, L.C. = 0.01 cm.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Must state the ratio, not merely quote 0.01 cm.",
+      "commonMisconception": "Quoting 0.01 cm as a fixed property of all vernier callipers rather than a consequence of M.S.D. and N."
+    },
+    {
+      "question": "Why does a vernier scale have N divisions covering only (N − 1) main scale divisions?",
+      "expectedConcept": "So that each vernier division is shorter than a main scale division by exactly 1/N of it. That difference is what allows a fraction of a main scale division to be read.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "The vernier principle rests on the small, constant difference between the two divisions.",
+      "commonMisconception": "Thinking the vernier simply magnifies the scale."
+    },
+    {
+      "question": "What is positive zero error and how is it corrected?",
+      "expectedConcept": "When the jaws are closed, if the vernier zero lies to the RIGHT of the main scale zero the error is positive. The correction is to SUBTRACT it from every observed reading.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Sign convention: correct reading = observed − zero error.",
+      "commonMisconception": "Adding a positive zero error instead of subtracting it."
+    },
+    {
+      "question": "A calliper shows a negative zero error of 0.03 cm. The observed reading is 2.11 cm. What is the correct reading?",
+      "expectedConcept": "Correct reading = observed − (−0.03) = 2.11 + 0.03 = 2.14 cm. A negative zero error is added.",
+      "difficulty": "hard",
+      "bloom": "Apply",
+      "answerLogic": "Algebraic subtraction of a negative quantity.",
+      "commonMisconception": "Subtracting 0.03 and obtaining 2.08 cm."
+    },
+    {
+      "question": "Why is the diameter measured in three mutually perpendicular directions?",
+      "expectedConcept": "A real body is not perfectly spherical. Measuring along different directions and taking the mean reduces the effect of this and of random error.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Averaging over orientation.",
+      "commonMisconception": "Believing repetition in the same direction is equally good."
+    },
+    {
+      "question": "Which jaws are used to measure the internal diameter of a beaker?",
+      "expectedConcept": "The upper jaws, which open outwards against the inside wall of the vessel. The lower jaws are for external dimensions and the thin strip at the tail is for depth.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Three separate measuring features of the instrument.",
+      "commonMisconception": "Using the lower jaws for internal measurement."
+    },
+    {
+      "question": "What is backlash error and how do you avoid it?",
+      "expectedConcept": "It is caused by wear or play in the screw and slide, so the reading depends on the direction from which the jaws were moved. It is avoided by always turning the screw in one direction while taking a set of readings.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "A systematic error of mechanical origin.",
+      "commonMisconception": "Confusing it with zero error."
+    },
+    {
+      "question": "If you used a calliper with 50 vernier divisions instead of 10, what changes?",
+      "expectedConcept": "The least count improves from 0.01 cm to 0.002 cm, so the reading can be given to one more decimal place, but the instrument becomes harder to read and needs a lens.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "L.C. = M.S.D./N, so larger N means finer resolution.",
+      "commonMisconception": "Thinking more divisions makes the measurement more accurate regardless of technique."
+    },
+    {
+      "question": "Why should the result not be written as 2.1400 cm?",
+      "expectedConcept": "The instrument resolves only to 0.01 cm, so only two decimal places are meaningful. Extra digits imply a precision the instrument does not have.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Significant figures must reflect the least count.",
+      "commonMisconception": "Copying all the digits from a calculator."
+    },
+    {
+      "question": "Distinguish between accuracy and precision using this experiment.",
+      "expectedConcept": "Precision is how closely repeated readings agree, set here by the least count. Accuracy is how close the mean is to the true value, which an uncorrected zero error would destroy even if every reading agreed perfectly.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Zero error affects accuracy, not precision.",
+      "commonMisconception": "Treating the two words as synonyms."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The least count of a vernier calliper with 20 vernier divisions and 1 mm main scale divisions is:",
+        "options": [
+          "0.1 cm",
+          "0.01 cm",
+          "0.005 cm",
+          "0.002 cm"
+        ],
+        "answer": 2,
+        "feedback": "L.C. = 1 M.S.D. / N = 0.1 cm / 20 = 0.005 cm."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "When the jaws are closed the vernier zero lies to the right of the main scale zero. The zero error is:",
+        "options": [
+          "Positive, and must be subtracted",
+          "Positive, and must be added",
+          "Negative, and must be subtracted",
+          "Zero"
+        ],
+        "answer": 0,
+        "feedback": "Vernier zero to the right means a positive zero error, which is subtracted from every observed reading."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "The depth of a beaker is measured using:",
+        "options": [
+          "The upper jaws",
+          "The lower jaws",
+          "The thin strip at the tail of the main scale",
+          "A metre scale"
+        ],
+        "answer": 2,
+        "feedback": "The thin strip that projects from the tail of the main scale is the depth gauge."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Note the zero error before taking any measurement.",
+        "check": "zeroTaken"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Record at least three readings of the same dimension.",
+        "check": "rows>=3"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the mean corrected diameter of the sphere (cm).",
+        "answer": 2.14,
+        "tolerance": 0.04,
+        "feedback": "The sphere provided has a diameter of about 2.14 cm."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "Calculate the volume of the sphere (cm³).",
+        "answer": 5.13,
+        "tolerance": 0.3,
+        "feedback": "V = (4/3)πr³ with r = 1.07 cm gives about 5.13 cm³."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Your observed reading is 3.46 cm and the zero error is −0.02 cm. The correct reading is:",
+        "options": [
+          "3.44 cm",
+          "3.46 cm",
+          "3.48 cm",
+          "3.50 cm"
+        ],
+        "answer": 2,
+        "feedback": "Correct = observed − zero error = 3.46 − (−0.02) = 3.48 cm."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "L.C. = M.S.D./N; reading = M.S.R. + V.S.R.×L.C. − zero error; V = (4/3)πr³ or πr²h",
+    "assumptions": [
+      "The main scale is uniformly graduated",
+      "The jaws are true and undamaged",
+      "The body is gripped without deformation",
+      "Zero error is constant over the range used"
+    ],
+    "validRange": "0 to 6 cm jaw opening; least count 0.01, 0.005 or 0.002 cm",
+    "unitSystem": "cm for all lengths, cm³ for volume",
+    "edgeCases": [
+      "Jaw opening below one least count cannot be resolved — blocked",
+      "Zero error larger than the reading itself gives a negative corrected value",
+      "A 50-division vernier resolves 1.234 cm where a 10-division one reads 1.23 cm",
+      "Fewer than three readings gives no meaningful mean — blocked"
+    ],
+    "expectedBehaviour": [
+      "M.S.R. + V.S.R. × L.C. always reconstructs the total reading exactly",
+      "Positive zero error lowers the corrected reading, negative raises it",
+      "Mean of repeated readings converges on the true dimension",
+      "Volume scales as the cube of the diameter for a sphere"
+    ],
+    "testFile": "tests/batch2.test.js"
+  }
+}

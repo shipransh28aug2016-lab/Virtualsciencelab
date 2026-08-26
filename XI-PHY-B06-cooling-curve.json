@@ -1,0 +1,200 @@
+{
+  "id": "XI-PHY-B06",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 6,
+    "unit": "Unit VII: Properties of Bulk Matter",
+    "chapter": "Chapter-10: Thermal Properties of Matter",
+    "topic": "Heat, temperature, thermal expansion; specific heat capacity; calorimetry; change of state; heat transfer by conduction, convection and radiation",
+    "subtopic": "Newton's law of cooling and its experimental verification",
+    "practical": "To study the relationship between the temperature of a hot body and time by plotting a cooling curve.",
+    "learningObjectives": [
+      "Record the temperature of a hot liquid at regular intervals as it cools",
+      "Plot a cooling curve of temperature against time and recognise it as exponential",
+      "State Newton's law of cooling and identify the conditions under which it holds",
+      "Linearise the data by plotting the logarithm of the excess temperature against time",
+      "Determine the cooling constant from the slope of that straight line",
+      "Explain why the body can never cool below the temperature of its surroundings"
+    ],
+    "competencies": [
+      "Systematic timed data collection over an extended period",
+      "Recognising a non-linear relationship and choosing a transformation that linearises it",
+      "Distinguishing an asymptotic approach from a straight-line fall",
+      "Relating the shape of a graph to the physical law that produced it"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 6 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Cooling curve: verification of Newton's law of cooling",
+  "shortTitle": "Cooling Curve",
+  "objective": [
+    "To study how the temperature of a hot body falls with time.",
+    "To plot the cooling curve and recognise its exponential shape.",
+    "To verify Newton's law of cooling and find the cooling constant."
+  ],
+  "theory": {
+    "statement": "Newton's law of cooling states that the rate of loss of heat from a body is directly proportional to the excess of its temperature over that of its surroundings, provided that excess is small.",
+    "derivationNote": "Writing θ for the temperature of the body and θ₀ for that of the surroundings, the law gives dθ/dt = −k(θ − θ₀), where k is a positive constant depending on the nature and area of the surface and on the thermal capacity of the body. Separating the variables and integrating from the initial temperature θ₁ at time zero gives ln(θ − θ₀) = ln(θ₁ − θ₀) − kt, or equivalently θ = θ₀ + (θ₁ − θ₀)e^(−kt). The cooling curve is therefore exponential: steep at first, when the excess temperature is large, and flattening as the body approaches the surrounding temperature, which it can only reach asymptotically. Plotting ln(θ − θ₀) against t straightens the curve into a line of slope −k, which is the quantitative test of the law. The law is only an approximation, valid for a small excess temperature; for a large excess, radiation dominates and follows Stefan's fourth-power law instead.",
+    "keyEquations": [
+      "dθ/dt = −k(θ − θ₀)",
+      "θ = θ₀ + (θ₁ − θ₀)e^(−kt)",
+      "ln(θ − θ₀) = ln(θ₁ − θ₀) − kt",
+      "slope of the ln(θ − θ₀) against t graph = −k",
+      "half-life of the excess temperature t½ = ln2 / k"
+    ]
+  },
+  "apparatus": [
+    { "name": "Calorimeter", "spec": "polished copper, with lid and stirrer", "why": "Holds the hot liquid; a polished surface radiates slowly and reproducibly" },
+    { "name": "Wooden jacket", "spec": "with cotton wool packing", "why": "Keeps the surroundings of the calorimeter at a steady temperature" },
+    { "name": "Thermometer", "spec": "0–110 °C, least count 0.5 °C", "why": "Reads the temperature of the liquid; the bulb must be fully immersed" },
+    { "name": "Stop clock", "spec": "least count 0.1 s", "why": "Times the readings at regular half-minute intervals" },
+    { "name": "Stirrer", "spec": "copper", "why": "Keeps the liquid at a uniform temperature throughout" },
+    { "name": "Heater or hot plate", "spec": "with a beaker of water", "why": "Heats the liquid to the starting temperature" },
+    { "name": "Second thermometer", "spec": "0–50 °C", "why": "Records the temperature of the surroundings, which must stay constant" }
+  ],
+  "materials": [
+    { "name": "Water", "spec": "about 100 g", "why": "The hot liquid whose cooling is studied" }
+  ],
+  "variables": [
+    { "id": "startTempC", "label": "Starting temperature", "symbol": "θ₁", "unit": "°C", "type": "independent", "min": 50, "max": 95, "step": 1, "default": 80 },
+    { "id": "roomTempC", "label": "Room temperature", "symbol": "θ₀", "unit": "°C", "type": "controlled", "min": 15, "max": 35, "step": 1, "default": 25 },
+    { "id": "vessel", "label": "Calorimeter", "symbol": "", "unit": "", "type": "control", "default": "polished", "options": ["polished", "blackened", "glass"] },
+    { "id": "massG", "label": "Mass of liquid", "symbol": "m", "unit": "g", "type": "controlled", "min": 50, "max": 300, "step": 25, "default": 100 },
+    { "id": "lidOn", "label": "Lid on", "symbol": "", "unit": "", "type": "control", "default": false },
+    { "id": "tempC", "label": "Temperature", "symbol": "θ", "unit": "°C", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Record the temperature of the surroundings with the second thermometer. It must stay constant throughout the experiment.", "checkpoint": true, "expects": "roomTempC" },
+    { "step": 2, "text": "Heat about 100 g of water to roughly 80 °C and pour it into the calorimeter.", "checkpoint": true, "expects": "startTempC" },
+    { "step": 3, "text": "Place the calorimeter inside the wooden jacket and suspend the thermometer so that its bulb is fully immersed but does not touch the walls or the base.", "checkpoint": false },
+    { "step": 4, "text": "Start the stop clock and note the temperature at that instant.", "checkpoint": true, "expects": "start" },
+    { "step": 5, "text": "Stir the liquid gently and continuously so that its temperature is uniform.", "checkpoint": false },
+    { "step": 6, "text": "Record the temperature every half minute. Do not stop until the temperature has fallen well towards the room value.", "checkpoint": true, "expects": "record" },
+    { "step": 7, "text": "Take at least twelve readings so that the shape of the curve is clearly established.", "checkpoint": true, "expects": "rows>=5" },
+    { "step": 8, "text": "Plot temperature against time. Note that the curve is steep at first and then flattens; it is not a straight line.", "checkpoint": false },
+    { "step": 9, "text": "Now plot ln(θ − θ₀) against time. This should be a straight line, and its slope gives −k.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "cooling-curve",
+    "renderer": "cooling-curve",
+    "fps": 60,
+    "controls": [
+      { "var": "startTempC", "widget": "slider" },
+      { "var": "roomTempC", "widget": "slider" },
+      { "var": "vessel", "widget": "segmented", "options": ["polished", "blackened", "glass"] },
+      { "var": "lidOn", "widget": "switch" }
+    ],
+    "actions": [
+      { "id": "record", "label": "Record temperature", "primary": true },
+      { "id": "reset", "label": "Fresh sample" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "trial", "label": "No.", "unit": "", "decimals": 0 },
+      { "key": "timeS", "label": "Time", "unit": "s", "decimals": 0 },
+      { "key": "timeMin", "label": "Time", "unit": "min", "decimals": 2 },
+      { "key": "tempC", "label": "θ", "unit": "°C", "decimals": 1 },
+      { "key": "excess", "label": "θ − θ₀", "unit": "°C", "decimals": 1 },
+      { "key": "lnExcess", "label": "ln(θ − θ₀)", "unit": "", "decimals": 4 }
+    ],
+    "graph": { "x": "timeS", "y": "tempC", "xLabel": "Time (s)", "yLabel": "Temperature θ (°C)", "throughOrigin": false },
+    "minRows": 5
+  },
+  "calculations": {
+    "steps": [
+      "Excess temperature = θ − θ₀ for each reading",
+      "Take the natural logarithm of each excess",
+      "Plot ln(θ − θ₀) against time; the points should lie on a straight line",
+      "Cooling constant k = −slope of that line",
+      "Half-life of the excess temperature t½ = ln2 / k"
+    ],
+    "resultKeys": ["coolingConstant", "halfLifeS", "r2"]
+  },
+  "expectedResult": {
+    "quantity": "Cooling constant",
+    "symbol": "k",
+    "value": 0.00165,
+    "tolerance": 0.0003,
+    "unit": "s⁻¹",
+    "secondary": { "quantity": "Half-life of the excess temperature", "value": 420, "tolerance": 90, "unit": "s" },
+    "statement": "The cooling curve is exponential, falling steeply at first and flattening as the liquid approaches room temperature, which it never crosses. The graph of ln(θ − θ₀) against time is a straight line, confirming Newton's law of cooling, and its slope gives a cooling constant of about 0.0017 s⁻¹ for a polished calorimeter."
+  },
+  "safety": [
+    "Water near 80 °C scalds. Carry the beaker with tongs or a cloth, never by hand.",
+    "Pour the hot water slowly to avoid splashing, and keep your face away from the rising steam.",
+    "Do not let the thermometer rest against the base of the calorimeter; it may crack and it will also read the wrong temperature.",
+    "Switch off the heater as soon as the water reaches the required temperature.",
+    "Clamp the thermometer rather than holding it by hand for the length of the run."
+  ],
+  "sourcesOfError": [
+    "The temperature of the surroundings may drift during the long run, breaking a key assumption.",
+    "Inadequate stirring leaves the liquid hotter at the top than at the bottom.",
+    "The thermometer bulb touching the wall reads the vessel temperature rather than the liquid temperature.",
+    "Delay between reading the thermometer and noting the clock.",
+    "Newton's law itself fails when the excess temperature is large, so the earliest readings may lie off the straight line.",
+    "Radiation from nearby heaters or direct sunlight falling on the calorimeter."
+  ],
+  "viva": [
+    { "question": "State Newton's law of cooling.", "expectedConcept": "The rate of loss of heat from a body is directly proportional to the excess of its temperature over that of its surroundings, provided the excess is small.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Must include the small-excess condition.", "commonMisconception": "Omitting the condition and stating it as universally true." },
+    { "question": "Why is the cooling curve not a straight line?", "expectedConcept": "Because the rate of cooling is proportional to the excess temperature, which itself falls as the body cools. As the excess shrinks, the body loses heat more slowly, so the curve flattens. This produces an exponential decay, not a constant rate of fall.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "The rate depends on the quantity that is changing.", "commonMisconception": "Expecting a uniform fall of so many degrees per minute." },
+    { "question": "Can the body cool below room temperature? Explain.", "expectedConcept": "No. Heat flows only from a hotter body to a colder one. As the temperature approaches that of the surroundings the excess tends to zero, so the rate of cooling tends to zero as well. The body approaches room temperature asymptotically but never crosses it.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "Zero excess means zero net heat flow.", "commonMisconception": "Extrapolating the curve straight through the room-temperature line." },
+    { "question": "Why do we plot ln(θ − θ₀) against time rather than θ against time?", "expectedConcept": "The cooling curve is exponential, and it is difficult to test an exponential by eye or to extract a constant from it. Taking logarithms turns the exponential into a straight line whose slope is −k, so the law can be tested quantitatively and k measured.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Linearisation of an exponential relationship.", "commonMisconception": "Treating the log plot as an unnecessary extra step." },
+    { "question": "On what factors does the cooling constant k depend?", "expectedConcept": "On the surface area of the body and the nature of its surface, since these govern how fast heat is radiated and convected away, and inversely on the thermal capacity of the body, which is its mass times its specific heat capacity.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Surface losses divided by thermal capacity.", "commonMisconception": "Believing k is a universal constant." },
+    { "question": "Why is a polished calorimeter used rather than a blackened one?", "expectedConcept": "A polished surface is a poor radiator, so heat is lost slowly and steadily, and the run lasts long enough to take plenty of readings. A blackened surface radiates far more strongly and the liquid cools too fast to follow comfortably.", "difficulty": "medium", "bloom": "Evaluate", "answerLogic": "Emissivity controls the rate of radiative loss.", "commonMisconception": "Thinking colour has no effect on cooling." },
+    { "question": "Why must the liquid be stirred continuously?", "expectedConcept": "Hot liquid rises and cooler liquid sinks, so without stirring the top is hotter than the bottom. The thermometer would then read only the temperature of the layer it sits in, not the temperature of the whole body, and the law assumes a single well-defined temperature.", "difficulty": "easy", "bloom": "Understand", "answerLogic": "Uniform temperature is an assumption of the analysis.", "commonMisconception": "Thinking stirring speeds up the cooling and should be avoided." },
+    { "question": "For what range of temperatures does Newton's law hold, and what takes over outside it?", "expectedConcept": "It holds for a small excess over the surroundings, in practice up to about 30 or 40 degrees. For a large excess, radiation dominates and follows Stefan's law, in which the rate depends on the difference of the fourth powers of the absolute temperatures.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "Newton's law is a small-excess approximation to Stefan's law.", "commonMisconception": "Applying Newton's law to a red-hot object." },
+    { "question": "Two identical calorimeters contain 100 g and 200 g of water at the same temperature. Which cools faster?", "expectedConcept": "The one with 100 g. Both lose heat at a similar rate through a similar surface, but the smaller mass has half the thermal capacity, so the same heat loss produces twice the temperature drop. Its cooling constant is larger.", "difficulty": "hard", "bloom": "Apply", "answerLogic": "k is inversely proportional to thermal capacity.", "commonMisconception": "Assuming both cool at the same rate because the liquid and vessel are the same." },
+    { "question": "What is the physical meaning of the slope of your ln(θ − θ₀) against t graph?", "expectedConcept": "The slope is −k. Its magnitude is the fractional rate at which the excess temperature decreases, and its reciprocal is the time in which the excess falls to 1/e of its value.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "Slope of the linearised form.", "commonMisconception": "Reading the slope as the rate of cooling in degrees per second." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "According to Newton's law of cooling, the rate of cooling is proportional to:", "options": ["The temperature of the body", "The excess of the body's temperature over the surroundings", "The square of the temperature", "The time elapsed"], "answer": 1, "feedback": "dθ/dt = −k(θ − θ₀). It is the EXCESS over the surroundings that matters, not the absolute temperature." },
+      { "id": "pre2", "type": "mcq", "question": "The shape of a cooling curve is:", "options": ["A straight line sloping down", "An exponential decay", "A parabola", "A straight line through the origin"], "answer": 1, "feedback": "Since the rate depends on the excess, which itself falls, the curve is an exponential decay that flattens towards room temperature." },
+      { "id": "pre3", "type": "mcq", "question": "The liquid is stirred continuously in order to:", "options": ["Cool it faster", "Keep its temperature uniform throughout", "Prevent evaporation", "Reduce the thermal capacity"], "answer": 1, "feedback": "Without stirring, convection leaves the top hotter than the bottom and the thermometer reads only one layer." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Record at least five readings as the liquid cools.", "check": "rows>=5" },
+      { "id": "dur2", "type": "task", "question": "Keep the room temperature constant throughout the run.", "check": "volumeConstant" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the cooling constant k you obtained (s⁻¹).", "answer": 0.00165, "tolerance": 0.0005, "feedback": "For a polished calorimeter with 100 g of water, k is about 0.00165 s⁻¹." },
+      { "id": "post2", "type": "numeric", "question": "Calculate the time for the excess temperature to fall to half its initial value (s).", "answer": 420, "tolerance": 120, "feedback": "t½ = ln2 / k = 0.693 / 0.00165 ≈ 420 s, about seven minutes." },
+      { "id": "post3", "type": "mcq", "question": "Your graph of ln(θ − θ₀) against time is a straight line. This confirms that:", "options": ["The body cools at a constant rate", "The rate of cooling is proportional to the excess temperature", "The body will reach 0 °C", "Cooling is independent of the surroundings"], "answer": 1, "feedback": "A straight logarithmic plot is the signature of exponential decay, which is exactly what dθ/dt = −k(θ − θ₀) predicts." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "dθ/dt = −k(θ − θ₀); θ = θ₀ + (θ₁ − θ₀)e^(−kt); ln(θ − θ₀) = ln(θ₁ − θ₀) − kt",
+    "assumptions": [
+      "Small excess temperature over the surroundings",
+      "Surrounding temperature constant throughout",
+      "Liquid stirred, so its temperature is uniform",
+      "Heat lost only to the surroundings, at a rate proportional to the excess",
+      "Thermometer bulb fully immersed and clear of the walls"
+    ],
+    "validRange": "Start 60 to 90 °C; room 15 to 35 °C; run up to 20 minutes",
+    "unitSystem": "Temperature in °C, time in seconds, k in s⁻¹",
+    "edgeCases": [
+      "Starting at or below room temperature: no cooling occurs — blocked",
+      "Excess above 60 °C: Stefan's law dominates and the early curve bends — warned",
+      "The body approaches room temperature asymptotically and never crosses it",
+      "A coarse thermometer flattens the tail of the logarithmic plot — warned"
+    ],
+    "expectedBehaviour": [
+      "Each successive temperature fall over equal intervals is smaller than the last",
+      "ln(excess) against time is straight, r² above 0.99",
+      "A blackened vessel gives a larger k than a polished one",
+      "A greater mass of liquid gives a smaller k"
+    ],
+    "testFile": "tests/batch3.test.js"
+  }
+}

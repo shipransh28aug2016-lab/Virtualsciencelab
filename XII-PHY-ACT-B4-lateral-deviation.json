@@ -1,0 +1,509 @@
+{
+  "id": "XII-PHY-ACT-B4",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 4,
+    "kind": "activity",
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-9: Ray Optics and Optical Instruments",
+    "topic": "Reflection of light, spherical mirrors, mirror formula; refraction of light, total internal reflection and optical fibers, refraction at spherical surfaces, lenses, thin lens formula, lens maker’s formula; magnification, power of a lens, combination of thin lenses in contact; refraction of light through a prism",
+    "subtopic": "Refraction at a plane surface; Snell’s law; lateral displacement through a parallel-sided slab",
+    "practical": "To observe refraction and lateral deviation of a beam of light incident obliquely on a glass slab.",
+    "learningObjectives": [
+      "Be able to trace a ray of light through a rectangular glass slab and observe how it bends",
+      "Be able to measure the lateral displacement of the emergent beam",
+      "Be able to show that the emergent ray is parallel to the incident ray",
+      "Be able to find the refractive index of the glass from the angles of incidence and refraction"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Activity 4 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Refraction and lateral deviation of a beam through a glass slab",
+  "shortTitle": "Lateral deviation",
+  "objective": [
+    "To trace a ray of light through a rectangular glass slab and observe how it bends.",
+    "To measure the lateral displacement of the emergent beam.",
+    "To show that the emergent ray is parallel to the incident ray.",
+    "To find the refractive index of the glass from the angles of incidence and refraction."
+  ],
+  "theory": {
+    "statement": "A ray entering a glass slab obliquely is bent towards the normal, travels across the glass in a straight line, and is bent away from the normal by exactly the same amount as it leaves. Because the two faces are parallel and there is air on both sides, the emergent ray ends up travelling in precisely the original direction. It has not been turned at all — it has been shifted sideways. That sideways shift is the lateral deviation.",
+    "derivationNote": "At the first face Snell’s law gives sin i = μ sin r, so the ray bends towards the normal on entering the denser medium. At the second face the ray travels from glass to air and meets the surface at the same angle r, because the faces are parallel and the normals are therefore parallel too. Applying Snell’s law again gives an emergent angle equal to i. The emergent ray is therefore parallel to the incident ray, whatever the angle of incidence and whatever the refractive index — the slab cannot change the direction of the light. Geometry on the path inside the glass gives the perpendicular displacement between the two parallel rays as d = t sin(i − r)/cos r, where t is the thickness of the slab. Two limits are worth noting. At normal incidence i = r = 0, so d = 0 and the ray passes straight through unshifted. As i approaches 90° the expression tends to t itself, so the shift can never exceed the thickness of the slab however obliquely the light strikes it. And since t appears as a simple factor, doubling the thickness doubles the shift.",
+    "keyEquations": [
+      "At the first face: sin i = μ sin r",
+      "At the second face the emergent angle equals i, so the emergent ray is parallel to the incident ray",
+      "Lateral deviation: d = t sin(i − r) / cos r",
+      "At normal incidence d = 0; as i → 90°, d → t",
+      "d is directly proportional to the thickness of the slab"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Rectangular glass slab",
+      "spec": "crown, flint or perspex; 1.5 to 4.5 cm thick",
+      "why": "The refracting medium; parallel faces are essential for the emergent ray to be parallel"
+    },
+    {
+      "name": "Drawing board, paper and pins",
+      "spec": "four optical pins",
+      "why": "The standard method of tracing the incident and emergent rays"
+    },
+    {
+      "name": "Protractor",
+      "spec": "least count 0.5°",
+      "why": "Measures the angles of incidence and refraction on the traced diagram"
+    },
+    {
+      "name": "Millimetre scale",
+      "spec": "least count 0.2 to 1 mm",
+      "why": "Measures the perpendicular distance between the incident and emergent rays"
+    },
+    {
+      "name": "Sharp pencil and set square",
+      "spec": "",
+      "why": "For drawing the normal accurately and for measuring the perpendicular displacement"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "slab",
+      "label": "Slab material",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "crown",
+      "options": [
+        "crown",
+        "flint",
+        "dense",
+        "perspex"
+      ]
+    },
+    {
+      "id": "thickness",
+      "label": "Slab thickness",
+      "symbol": "t",
+      "unit": "",
+      "type": "control",
+      "default": "t30",
+      "options": [
+        "t15",
+        "t30",
+        "t45"
+      ]
+    },
+    {
+      "id": "scale",
+      "label": "Scale",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "s005",
+      "options": [
+        "s01",
+        "s005",
+        "s002"
+      ]
+    },
+    {
+      "id": "incidenceDeg",
+      "label": "Angle of incidence",
+      "symbol": "i",
+      "unit": "°",
+      "type": "independent",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "default": 45
+    },
+    {
+      "id": "mu",
+      "label": "Refractive index",
+      "symbol": "μ",
+      "unit": "",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Place the slab on the paper and draw its outline. Mark a normal at the point where the ray will enter.",
+      "checkpoint": true,
+      "expects": "slab"
+    },
+    {
+      "step": 2,
+      "text": "Set the angle of incidence and fix two pins on the incident ray, well apart.",
+      "checkpoint": true,
+      "expects": "incidenceDeg"
+    },
+    {
+      "step": 3,
+      "text": "Look through the opposite face and fix two more pins so that all four appear in one straight line."
+    },
+    {
+      "step": 4,
+      "text": "Remove the slab and join the pin positions to trace the incident, refracted and emergent rays."
+    },
+    {
+      "step": 5,
+      "text": "Measure the angle of refraction at the first face with the protractor.",
+      "checkpoint": true
+    },
+    {
+      "step": 6,
+      "text": "Extend the incident ray forward and measure the perpendicular distance from it to the emergent ray: that is the lateral deviation.",
+      "checkpoint": true
+    },
+    {
+      "step": 7,
+      "text": "Repeat for at least four widely different angles of incidence, and check each time that the emergent ray is parallel to the incident one."
+    }
+  ],
+  "simulation": {
+    "model": "lateral-deviation",
+    "renderer": "lateral-deviation",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "incidenceDeg",
+        "widget": "slider"
+      },
+      {
+        "var": "slab",
+        "widget": "segmented",
+        "options": [
+          "crown",
+          "flint",
+          "dense",
+          "perspex"
+        ]
+      },
+      {
+        "var": "thickness",
+        "widget": "segmented",
+        "options": [
+          "t15",
+          "t30",
+          "t45"
+        ]
+      },
+      {
+        "var": "scale",
+        "widget": "segmented",
+        "options": [
+          "s01",
+          "s005",
+          "s002"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record i, r and shift",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Reading",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "incidenceDeg",
+        "label": "Angle i",
+        "unit": "°",
+        "decimals": 1
+      },
+      {
+        "key": "refractionDeg",
+        "label": "Angle r",
+        "unit": "°",
+        "decimals": 1
+      },
+      {
+        "key": "shiftMm",
+        "label": "Lateral shift d",
+        "unit": "mm",
+        "decimals": 2
+      },
+      {
+        "key": "thicknessCm",
+        "label": "Thickness t",
+        "unit": "cm",
+        "decimals": 1
+      }
+    ],
+    "graph": {
+      "x": "incidenceDeg",
+      "y": "shiftMm",
+      "xLabel": "Angle of incidence i (°)",
+      "yLabel": "Lateral shift d (mm)",
+      "throughOrigin": true
+    },
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "For each reading compute sin i and sin r",
+      "Find μ = sin i / sin r for each, and take the mean",
+      "Check that the emergent ray is parallel to the incident ray in every case",
+      "Plot the lateral shift against the angle of incidence",
+      "Confirm that the shift grows with the angle and never exceeds the slab thickness"
+    ],
+    "resultKeys": [
+      "mu",
+      "maxShiftMm",
+      "shiftIncreases"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Refractive index of the glass",
+    "symbol": "μ",
+    "value": 1.52,
+    "tolerance": 0.06,
+    "unit": "",
+    "secondary": {
+      "quantity": "Lateral shift at 45° through a 3 cm slab",
+      "value": 10.1,
+      "tolerance": 1.5,
+      "unit": "mm"
+    },
+    "statement": "The ray bends towards the normal on entering the glass and away from it on leaving, by exactly the same amount, so the emergent ray is parallel to the incident ray but displaced sideways. For crown glass μ comes out at about 1.52. The shift grows with the angle of incidence and is directly proportional to the thickness of the slab, but never exceeds that thickness however obliquely the light strikes."
+  },
+  "safety": [
+    "Push the optical pins into the board vertically and never leave them lying loose on the bench.",
+    "Handle the glass slab by its edges; a chipped or cracked slab should be reported rather than used.",
+    "Do not press the slab hard against the pins, which can snap them.",
+    "Keep the working area clear so the board does not slide while the pins are being sighted."
+  ],
+  "sourcesOfError": [
+    "The pins not vertical, so the line joining them is not the true path of the ray.",
+    "The two pins on each ray placed too close together, which magnifies the angular error in the traced line.",
+    "The outline of the slab shifting between placing the pins and tracing the rays.",
+    "Parallax when reading the protractor, giving an error of a degree or so in r.",
+    "Measuring the shift along the face instead of perpendicular to the rays.",
+    "The faces of a cheap slab not being accurately parallel, so the emergent ray is very slightly turned."
+  ],
+  "viva": [
+    {
+      "question": "Why is the emergent ray parallel to the incident ray?",
+      "expectedConcept": "Because the two faces of the slab are parallel, so the normals at the two faces are parallel too. The ray meets the second face at the same angle r at which it travelled inside the glass, and Snell’s law then gives an emergent angle equal to the original angle of incidence. Same direction, so the rays are parallel.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Parallel faces mean equal angles at entry and exit.",
+      "commonMisconception": "Thinking the slab turns the ray permanently through some angle."
+    },
+    {
+      "question": "What is lateral deviation, and what does it depend on?",
+      "expectedConcept": "It is the perpendicular distance between the incident ray produced forward and the emergent ray — the sideways shift of the beam. It is given by d = t sin(i − r)/cos r, so it depends on the thickness of the slab, the angle of incidence and the refractive index.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "d = t sin(i − r)/cos r.",
+      "commonMisconception": "Confusing lateral shift with the angle of deviation in a prism."
+    },
+    {
+      "question": "What happens at normal incidence?",
+      "expectedConcept": "Nothing at all. With i = 0 Snell’s law gives r = 0, so the ray is not bent at either face and d = t sin(0)/cos(0) = 0. The light passes straight through undeviated and unshifted.",
+      "difficulty": "easy",
+      "bloom": "Apply",
+      "answerLogic": "i = 0 gives r = 0 and no shift.",
+      "commonMisconception": "Expecting some shift even along the normal, because the medium has changed."
+    },
+    {
+      "question": "Can the lateral shift ever be larger than the slab thickness?",
+      "expectedConcept": "No. As the angle of incidence approaches 90°, sin(i − r)/cos r approaches 1, so d approaches t and never exceeds it. The shift is bounded by the thickness of the glass however obliquely the light strikes.",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "d → t as i → 90°.",
+      "commonMisconception": "Assuming the shift grows without limit with the angle."
+    },
+    {
+      "question": "How does the shift change if a slab of twice the thickness is used?",
+      "expectedConcept": "It doubles. The thickness appears as a simple multiplying factor in d = t sin(i − r)/cos r, so at the same angle of incidence and with the same glass, the shift is directly proportional to t.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "d ∝ t.",
+      "commonMisconception": "Expecting the relation to be non-linear because the geometry looks complicated."
+    },
+    {
+      "question": "Why does a glass of higher refractive index give a larger shift?",
+      "expectedConcept": "Because a larger μ bends the ray further towards the normal, making r smaller for the same i. That increases (i − r), and hence sin(i − r), so the ray travels a more slanted path across the glass and emerges further to one side.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "Larger μ means smaller r and a bigger (i − r).",
+      "commonMisconception": "Thinking μ affects only the direction and not the displacement."
+    },
+    {
+      "question": "Why must the pins be fixed vertically?",
+      "expectedConcept": "Because the line joining the pin positions on the paper is taken to be the path of the ray. A tilted pin meets the paper at a point that is not directly below its top, so the traced line is displaced from the true ray and both the angle and the shift come out wrong.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "A tilted pin marks the wrong point on the paper.",
+      "commonMisconception": "Believing only the spacing of the pins matters, not their tilt."
+    },
+    {
+      "question": "Why should the two pins on each ray be well separated?",
+      "expectedConcept": "Because a line is drawn through them, and the angular uncertainty in that line is the position error of the pins divided by their separation. Pins a centimetre apart give a line good to several degrees; pins ten centimetres apart give one ten times better.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "A longer baseline gives a better-defined line.",
+      "commonMisconception": "Placing both pins near the slab so they are easy to sight together."
+    },
+    {
+      "question": "Is any light lost at the surfaces of the slab?",
+      "expectedConcept": "Yes. At each face part of the light is reflected rather than transmitted, and the fraction reflected grows as the angle of incidence increases. Near grazing incidence most of the light is reflected, which is why the emergent beam becomes faint and hard to locate at large angles.",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "Partial reflection at each surface, increasing with angle.",
+      "commonMisconception": "Assuming all the light is transmitted because the glass is transparent."
+    },
+    {
+      "question": "Could total internal reflection occur at the second face of the slab?",
+      "expectedConcept": "No, never, for a parallel-sided slab in air. The ray inside the glass meets the second face at the angle r, and r is always smaller than the critical angle because r itself came from sin i = μ sin r with sin i at most 1. So the ray always emerges.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "r can never reach the critical angle in a parallel slab.",
+      "commonMisconception": "Expecting total internal reflection at large angles of incidence."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "A ray passing obliquely through a parallel-sided glass slab emerges:",
+        "options": [
+          "Turned through an angle",
+          "Parallel to the incident ray but displaced",
+          "Along the normal",
+          "Totally internally reflected"
+        ],
+        "answer": 1,
+        "feedback": "Parallel faces give equal angles at entry and exit, so only a sideways shift remains."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "At normal incidence the lateral deviation is:",
+        "options": [
+          "Equal to the thickness",
+          "Maximum",
+          "Zero",
+          "Half the thickness"
+        ],
+        "answer": 2,
+        "feedback": "With i = 0 the ray is not bent at all, so there is no shift."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "The lateral deviation of a slab is proportional to:",
+        "options": [
+          "1/t",
+          "t",
+          "t²",
+          "√t"
+        ],
+        "answer": 1,
+        "feedback": "The thickness appears as a simple factor in d = t sin(i − r)/cos r."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Take at least four readings at widely different angles.",
+        "check": "rows>=4"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Trace the rays before removing the pins.",
+        "check": "settled"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the refractive index of the slab you found.",
+        "answer": 1.52,
+        "tolerance": 0.1,
+        "feedback": "Crown glass is about 1.52."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "The emergent ray from a parallel-sided slab is:",
+        "options": [
+          "Bent towards the normal",
+          "Parallel to the incident ray",
+          "Perpendicular to the incident ray",
+          "Reflected back"
+        ],
+        "answer": 1,
+        "feedback": "The two refractions cancel in direction, leaving only a displacement."
+      },
+      {
+        "id": "post3",
+        "type": "numeric",
+        "question": "The lateral shift can never exceed which quantity, in cm, for your 3 cm slab?",
+        "answer": 3,
+        "tolerance": 0.5,
+        "feedback": "As i → 90° the shift tends to the slab thickness."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "At the first face: sin i = μ sin r",
+    "assumptions": [
+      "At the first face: sin i = μ sin r",
+      "At the second face the emergent angle equals i, so the emergent ray is parallel to the incident ray",
+      "Lateral deviation: d = t sin(i − r) / cos r",
+      "At normal incidence d = 0; as i → 90°, d → t"
+    ],
+    "validRange": "The ray bends towards the normal on entering the glass and away from it on leavi",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "The pins not vertical, so the line joining them is not the true path of the ray.",
+      "The two pins on each ray placed too close together, which magnifies the angular error in the traced line.",
+      "The outline of the slab shifting between placing the pins and tracing the rays.",
+      "Parallax when reading the protractor, giving an error of a degree or so in r."
+    ],
+    "expectedBehaviour": [
+      "The ray bends towards the normal on entering the glass and away from it on leaving, by exactly the same amount, so the emergent ray is parallel to the incident ray but displaced sideways. For crown glass μ comes out at about 1.52. The shift grows with the angle of incidence and is directly proportional to the thickness of the slab, but never exceeds that thickness however obliquely the light strikes."
+    ],
+    "testFile": "tests/batch13.test.js"
+  }
+}

@@ -1,0 +1,591 @@
+{
+  "id": "XI-CHE-E05",
+  "class": "XI",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "E",
+    "serial": 5,
+    "categoryTitle": "Quantitative Estimation",
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 6: Equilibrium — Acids, Bases and Salts",
+    "topic": "Ionization of acids and bases; acid-base neutralisation; volumetric analysis; hydrolysis of salts",
+    "subtopic": "Determination of the strength of an acid by titration against a standard solution of a salt of a weak acid",
+    "practical": "Determination of strength of a given solution of hydrochloric acid by titrating it against standard Sodium Carbonate solution.",
+    "assessmentComponent": "Volumetric Analysis (08 marks)",
+    "learningObjectives": [
+      "Use a standard solution of sodium carbonate of accurately known normality",
+      "Titrate hydrochloric acid of unknown strength against it with correct technique",
+      "Justify the choice of methyl orange, and explain why phenolphthalein is wrong for this pair",
+      "Recognise that the equivalence point lies BELOW pH 7 because the salt formed is neutral but carbonic acid is weak",
+      "Obtain concordant readings and reject discordant ones",
+      "Calculate the normality and the strength in grams per litre using N₁V₁ = N₂V₂"
+    ],
+    "competencies": [
+      "Accurate volumetric measurement and burette reading to 0.1 mL",
+      "Selecting an indicator from the pH at the equivalence point rather than by habit",
+      "Distinguishing the equivalence point from the end point",
+      "Stoichiometric calculation with normality and equivalent mass"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Classes XI-XII Curriculum 2026-27, PRACTICAL SYLLABUS, E. Quantitative Estimation, item 5 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Strength of hydrochloric acid by titration against standard sodium carbonate",
+  "shortTitle": "HCl vs Na₂CO₃",
+  "objective": [
+    "To titrate a given solution of hydrochloric acid against a standard solution of sodium carbonate.",
+    "To determine the normality of the hydrochloric acid.",
+    "To calculate its strength in grams per litre."
+  ],
+  "theory": {
+    "statement": "Sodium carbonate is the salt of a strong base and a weak acid, so its solution is basic. When titrated against hydrochloric acid it is neutralised completely, forming sodium chloride, water and carbon dioxide.",
+    "derivationNote": "The reaction is Na₂CO₃ + 2HCl → 2NaCl + H₂O + CO₂. Sodium carbonate is dibasic, so its equivalent mass is the molar mass divided by two, 106/2 = 53. At the equivalence point the solution contains sodium chloride and dissolved carbon dioxide, which forms carbonic acid, a weak acid. The equivalence pH is therefore BELOW 7, around pH 4. Methyl orange changes colour over pH 3.1 to 4.4, which brackets that point, so it is the correct indicator. Phenolphthalein changes at pH 8.2 to 10.0, well before the equivalence point is reached, so it would signal the end point far too early and give a titre that is too small — in fact it marks only the first stage, the conversion of carbonate to bicarbonate. At the end point N₁V₁ = N₂V₂, and the strength in grams per litre is the normality multiplied by the equivalent mass of hydrochloric acid, 36.5.",
+    "keyEquations": [
+      "Na₂CO₃ + 2HCl → 2NaCl + H₂O + CO₂",
+      "Equivalent mass of Na₂CO₃ = 106/2 = 53",
+      "N₁V₁ = N₂V₂",
+      "Strength (g/L) = Normality × 36.5",
+      "Equivalence pH is below 7, so methyl orange is required"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Burette",
+      "spec": "50 mL, least count 0.1 mL",
+      "why": "Delivers a measured, variable volume of the standard solution"
+    },
+    {
+      "name": "Pipette",
+      "spec": "20 mL bulb pipette",
+      "why": "Transfers an exact, fixed volume of the alkali into the flask"
+    },
+    {
+      "name": "Conical flask",
+      "spec": "250 mL",
+      "why": "Its shape allows swirling without splashing out the contents"
+    },
+    {
+      "name": "Burette stand with clamp",
+      "spec": "iron",
+      "why": "Holds the burette vertical and steady"
+    },
+    {
+      "name": "Funnel",
+      "spec": "small glass",
+      "why": "Fills the burette without spilling"
+    },
+    {
+      "name": "White glazed tile",
+      "spec": "porcelain",
+      "why": "Provides a white background so the first faint pink is visible"
+    },
+    {
+      "name": "Wash bottle",
+      "spec": "distilled water",
+      "why": "Rinses the sides of the flask so no reagent is left unreacted"
+    },
+    {
+      "name": "Volumetric flask",
+      "spec": "100 mL or 250 mL",
+      "why": "Prepares the standard solution to an exact volume"
+    },
+    {
+      "name": "Chemical balance and weight box",
+      "spec": "least count 0.01 g",
+      "why": "Weighs the oxalic acid crystals accurately"
+    }
+  ],
+  "materials": [
+    {
+      "name": "Hydrochloric acid",
+      "spec": "solution of unknown strength, about 0.1 N",
+      "why": "The analyte, pipetted into the conical flask"
+    },
+    {
+      "name": "Sodium carbonate",
+      "spec": "standard 0.1 N, prepared by weighing",
+      "why": "The standard solution in the burette; its normality is known accurately"
+    },
+    {
+      "name": "Methyl orange",
+      "spec": "indicator solution",
+      "why": "Changes over pH 3.1-4.4, which brackets the equivalence point of this titration"
+    },
+    {
+      "name": "Distilled water",
+      "spec": "for rinsing",
+      "why": "Rinses the glassware without altering the concentrations"
+    }
+  ],
+  "variables": [
+    {
+      "id": "buretteVolume",
+      "label": "Titrant delivered",
+      "symbol": "V",
+      "unit": "mL",
+      "type": "independent",
+      "min": 0,
+      "max": 50,
+      "step": 0.05,
+      "default": 0
+    },
+    {
+      "id": "indicator",
+      "label": "Indicator",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "methylOrange",
+      "options": [
+        "phenolphthalein",
+        "methylOrange"
+      ]
+    },
+    {
+      "id": "analyte",
+      "label": "In the flask",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "hcl",
+      "options": [
+        "hcl",
+        "naoh"
+      ]
+    },
+    {
+      "id": "titrant",
+      "label": "In the burette",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "na2co3",
+      "options": [
+        "na2co3",
+        "oxalic"
+      ]
+    },
+    {
+      "id": "titrantConc",
+      "label": "Normality of the standard",
+      "symbol": "N₂",
+      "unit": "N",
+      "type": "controlled",
+      "min": 0.05,
+      "max": 0.2,
+      "step": 0.005,
+      "default": 0.1
+    },
+    {
+      "id": "analyteVolume",
+      "label": "Volume pipetted",
+      "symbol": "V₁",
+      "unit": "mL",
+      "type": "controlled",
+      "min": 10,
+      "max": 25,
+      "step": 5,
+      "default": 20
+    },
+    {
+      "id": "pH",
+      "label": "pH in the flask",
+      "symbol": "pH",
+      "unit": "",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Weigh out the calculated mass of oxalic acid crystals and dissolve them in distilled water in a volumetric flask to prepare the standard solution.",
+      "checkpoint": false
+    },
+    {
+      "step": 2,
+      "text": "Rinse the burette with the standard oxalic acid solution, then fill it and clamp it vertically. Remove any air bubble from the nozzle.",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Note the initial burette reading with the eye level with the lower meniscus to avoid parallax.",
+      "checkpoint": true,
+      "expects": "initialReading"
+    },
+    {
+      "step": 4,
+      "text": "Rinse the pipette with the sodium hydroxide solution and transfer exactly 20 mL of it into a clean conical flask.",
+      "checkpoint": true,
+      "expects": "analyteVolume"
+    },
+    {
+      "step": 5,
+      "text": "Add 2 to 3 drops of phenolphthalein to the flask. The solution turns pink because the alkali is basic.",
+      "checkpoint": true,
+      "expects": "indicator"
+    },
+    {
+      "step": 6,
+      "text": "Run the acid in from the burette while swirling the flask continuously, keeping the flask on a white tile.",
+      "checkpoint": false
+    },
+    {
+      "step": 7,
+      "text": "As the pink colour begins to fade slowly, add the acid drop by drop until the pink JUST disappears and does not return on swirling. This is the end point.",
+      "checkpoint": true,
+      "expects": "endPoint"
+    },
+    {
+      "step": 8,
+      "text": "Note the final burette reading. The difference gives the volume of acid used.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 9,
+      "text": "Repeat the titration until at least two concordant readings, agreeing within 0.1 to 0.2 mL, are obtained.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 10,
+      "text": "Calculate the normality of the sodium hydroxide using N1V1 = N2V2 and hence its strength in grams per litre.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "titration",
+    "renderer": "titration",
+    "fps": 45,
+    "controls": [
+      {
+        "var": "buretteVolume",
+        "widget": "slider"
+      },
+      {
+        "var": "indicator",
+        "widget": "segmented",
+        "options": [
+          "phenolphthalein",
+          "methylOrange"
+        ]
+      },
+      {
+        "var": "titrantConc",
+        "widget": "slider"
+      },
+      {
+        "var": "analyteVolume",
+        "widget": "slider"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record end point",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Refill burette"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "initialReading",
+        "label": "Initial",
+        "unit": "mL",
+        "decimals": 1
+      },
+      {
+        "key": "finalReading",
+        "label": "Final",
+        "unit": "mL",
+        "decimals": 1
+      },
+      {
+        "key": "volumeUsed",
+        "label": "Volume used",
+        "unit": "mL",
+        "decimals": 1
+      },
+      {
+        "key": "pHAtStop",
+        "label": "pH at end point",
+        "unit": "",
+        "decimals": 2
+      }
+    ],
+    "graph": {
+      "x": "trial",
+      "y": "volumeUsed",
+      "xLabel": "Trial number",
+      "yLabel": "Volume of acid used (mL)",
+      "throughOrigin": false
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Mean of the concordant titres = V1 mL",
+      "N(NaOH) = (N(acid) × V(acid)) / V(NaOH)",
+      "Strength in g/L = Normality × 40",
+      "Molarity = Normality / 1, since NaOH is monoacidic"
+    ],
+    "resultKeys": [
+      "normality",
+      "strength",
+      "meanTitre"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Strength of the hydrochloric acid",
+    "symbol": "strength",
+    "value": 3.8,
+    "tolerance": 0.3,
+    "unit": "g/L",
+    "secondary": {
+      "quantity": "Normality of the hydrochloric acid",
+      "value": 0.104,
+      "tolerance": 0.008,
+      "unit": "N"
+    },
+    "statement": "Three concordant titres give a mean volume of standard sodium carbonate. Applying N₁V₁ = N₂V₂ gives a normality of about 0.104 N for the hydrochloric acid, and multiplying by the equivalent mass 36.5 gives a strength of about 3.8 g/L. Methyl orange gives a sharp end point; phenolphthalein would end the titration far too early."
+  },
+  "safety": [
+    "Sodium hydroxide is corrosive and causes severe burns. Wear eye protection and wash any splash immediately with plenty of water.",
+    "Never pipette any solution by mouth — always use a pipette filler.",
+    "Oxalic acid is poisonous if swallowed. Wash your hands after handling it.",
+    "Clamp the burette securely; a falling burette breaks and scatters glass and alkali.",
+    "Phenolphthalein solution is made up in ethanol and is flammable. Keep it away from flames."
+  ],
+  "sourcesOfError": [
+    "Parallax while reading the burette; the eye must be level with the lower meniscus.",
+    "An air bubble trapped in the burette nozzle, which escapes during the titration and adds an unmeasured volume.",
+    "Failing to rinse the burette and pipette with the solutions they are to contain, which dilutes them.",
+    "Overshooting the end point, so the pink colour is destroyed completely rather than just disappearing.",
+    "Not washing the sides of the conical flask, leaving some acid unreacted.",
+    "Using the wrong indicator, which changes colour away from the equivalence point."
+  ],
+  "viva": [
+    {
+      "question": "Write the equation for the reaction between sodium carbonate and hydrochloric acid.",
+      "expectedConcept": "Na₂CO₃ + 2HCl → 2NaCl + H₂O + CO₂. Two moles of acid are needed for each mole of carbonate.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Balanced equation with the 1:2 ratio.",
+      "commonMisconception": "Writing a 1:1 ratio and forgetting the carbon dioxide."
+    },
+    {
+      "question": "Why is the equivalent mass of sodium carbonate 53 and not 106?",
+      "expectedConcept": "Sodium carbonate is dibasic: each mole reacts with two moles of hydrogen ions. The equivalent mass is therefore the molar mass divided by the basicity, 106/2 = 53.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Equivalent mass = molar mass / basicity.",
+      "commonMisconception": "Using the molar mass directly, which doubles the calculated strength."
+    },
+    {
+      "question": "Why is methyl orange the correct indicator here, and not phenolphthalein?",
+      "expectedConcept": "At the equivalence point the solution contains sodium chloride and dissolved carbon dioxide, which forms weak carbonic acid, so the pH is about 4, below 7. Methyl orange changes over pH 3.1 to 4.4 and brackets that point. Phenolphthalein changes at pH 8.2 to 10.0, which is reached long before all the carbonate has reacted, so it would signal the end point far too early.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Indicator range must straddle the equivalence pH.",
+      "commonMisconception": "Choosing phenolphthalein because it was used in the previous titration."
+    },
+    {
+      "question": "What would you observe if phenolphthalein were used by mistake?",
+      "expectedConcept": "The pink colour would disappear after only about half the acid had been added, because that first end point corresponds to the conversion of carbonate to bicarbonate, not to complete neutralisation. The titre would be roughly half the true value and the calculated strength correspondingly wrong.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "The two-stage neutralisation of carbonate.",
+      "commonMisconception": "Expecting merely a slightly less sharp colour change."
+    },
+    {
+      "question": "Why does effervescence occur near the end point?",
+      "expectedConcept": "Carbon dioxide is released as the carbonate is decomposed by the acid. Near the end point the solution can no longer hold it in solution, so bubbles appear. Gentle swirling expels the gas and sharpens the colour change.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "CO₂ is a product of the reaction.",
+      "commonMisconception": "Thinking the bubbles indicate an error."
+    },
+    {
+      "question": "Distinguish between the equivalence point and the end point.",
+      "expectedConcept": "The equivalence point is the theoretical stage at which chemically equivalent amounts have reacted. The end point is where the indicator actually changes colour. A well chosen indicator makes the two nearly coincide; a poorly chosen one separates them.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Theoretical versus observed.",
+      "commonMisconception": "Treating the two terms as synonyms."
+    },
+    {
+      "question": "Why is sodium carbonate suitable as a primary standard?",
+      "expectedConcept": "It can be obtained pure and dry, it is stable in air, it does not absorb moisture appreciably, and it has a reasonably high equivalent mass so weighing errors are small. A standard solution can therefore be prepared simply by weighing.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "The criteria for a primary standard.",
+      "commonMisconception": "Assuming any soluble salt can serve as a standard."
+    },
+    {
+      "question": "What are concordant readings?",
+      "expectedConcept": "Readings that agree with one another within 0.1 mL. At least three concordant values are taken and their mean used; a discordant reading is rejected rather than averaged in.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Agreement to the least count.",
+      "commonMisconception": "Averaging every reading including an obvious outlier."
+    },
+    {
+      "question": "Why must the pipette be rinsed with the solution it will deliver?",
+      "expectedConcept": "Any distilled water left inside would dilute the solution being pipetted, so the flask would receive less acid than intended and the titre would be too small. Rinsing with the solution itself removes that error.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Avoiding dilution of the measured aliquot.",
+      "commonMisconception": "Thinking a rinse with distilled water is sufficient."
+    },
+    {
+      "question": "Your titre is 19.2 mL of 0.1 N sodium carbonate against 20 mL of acid. Calculate the strength of the acid.",
+      "expectedConcept": "N₁ × 20 = 0.1 × 19.2, so N₁ = 0.096 N. Strength = 0.096 × 36.5 = 3.5 g/L.",
+      "difficulty": "hard",
+      "bloom": "Apply",
+      "answerLogic": "N₁V₁ = N₂V₂ then multiply by the equivalent mass of HCl.",
+      "commonMisconception": "Using the equivalent mass of sodium carbonate instead of that of the acid being estimated."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The equivalent mass of sodium carbonate (molar mass 106) is:",
+        "options": [
+          "106",
+          "53",
+          "26.5",
+          "212"
+        ],
+        "answer": 1,
+        "feedback": "Sodium carbonate is dibasic, so the equivalent mass is 106/2 = 53."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The correct indicator for titrating HCl against Na₂CO₃ is:",
+        "options": [
+          "Phenolphthalein",
+          "Methyl orange",
+          "Litmus",
+          "Universal indicator"
+        ],
+        "answer": 1,
+        "feedback": "The equivalence pH is about 4 because carbonic acid is formed, so methyl orange (pH 3.1-4.4) is required."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "The gas evolved during this titration is:",
+        "options": [
+          "Hydrogen",
+          "Oxygen",
+          "Carbon dioxide",
+          "Chlorine"
+        ],
+        "answer": 2,
+        "feedback": "Na₂CO₃ + 2HCl → 2NaCl + H₂O + CO₂. Carbon dioxide causes the effervescence near the end point."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Perform at least three titrations.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Obtain at least two concordant readings within 0.2 mL.",
+        "check": "concordant"
+      },
+      {
+        "id": "dur3",
+        "type": "task",
+        "question": "Use the correct indicator for this pair of reagents.",
+        "check": "correctIndicator"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the normality of the hydrochloric acid you obtained (N).",
+        "answer": 0.104,
+        "tolerance": 0.012,
+        "feedback": "N₁V₁ = N₂V₂ with the mean concordant titre gives about 0.104 N."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "State the strength of the hydrochloric acid in g/L.",
+        "answer": 3.8,
+        "tolerance": 0.45,
+        "feedback": "Strength = normality × equivalent mass = 0.104 × 36.5 ≈ 3.8 g/L."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "If phenolphthalein were used instead, the titre would be:",
+        "options": [
+          "Larger than the true value",
+          "Roughly half the true value",
+          "Exactly the same",
+          "Zero"
+        ],
+        "answer": 1,
+        "feedback": "Phenolphthalein marks only the first stage, carbonate to bicarbonate, so the colour change comes after about half the acid has been added."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Na₂CO₃ + 2HCl → 2NaCl + H₂O + CO₂; N₁V₁ = N₂V₂; strength = N × 36.5",
+    "assumptions": [
+      "Complete dissociation of NaOH",
+      "Oxalic acid treated as a diprotic weak acid",
+      "Unit activity coefficients",
+      "298 K so Kw = 1.0e-14",
+      "Volumes additive on mixing"
+    ],
+    "validRange": "Burette 0-50 mL, pipette 5-25 mL, concentrations 0.02-0.5 N",
+    "unitSystem": "Volumes in mL, concentration in N and M, strength in g/L",
+    "edgeCases": [
+      "Zero titrant added: pH is that of the alkali alone (about 13)",
+      "At equivalence the pH is basic (about 8.4), NOT 7",
+      "Overshooting gives a permanent deep pink and an invalid reading",
+      "Zero titrant concentration is blocked"
+    ],
+    "expectedBehaviour": [
+      "The equivalence pH lies BELOW 7 because carbonic acid is formed",
+      "Methyl orange gives a sharp end point; phenolphthalein ends far too early",
+      "Three concordant titres agree within 0.1 mL",
+      "Strength = normality × 36.5 for hydrochloric acid"
+    ],
+    "testFile": "tests/chemistry.test.js"
+  }
+}

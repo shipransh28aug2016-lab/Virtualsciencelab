@@ -1,0 +1,174 @@
+{
+  "id": "XII-PHY-B03",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 3,
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-9: Ray Optics and Optical Instruments",
+    "topic": "Refraction at spherical surfaces, thin lens formula, magnification",
+    "subtopic": "Focal length of a convex lens by the u-v method",
+    "practical": "To find the focal length of a convex lens by plotting graphs between u and v or between 1/u and 1/v.",
+    "learningObjectives": [
+      "Set up an optical bench with object, convex lens and screen aligned on one axis",
+      "Locate the sharp real image for several object distances and measure u and v",
+      "Plot 1/u against 1/v and obtain the focal length from the intercepts",
+      "Verify the thin lens formula and calculate the power of the lens",
+      "Relate the position of the object to the nature and size of the image"
+    ],
+    "competencies": [
+      "Correct use of the New Cartesian sign convention",
+      "Judging sharpness of focus and avoiding parallax on an optical bench",
+      "Graphical determination of a constant from intercepts",
+      "Interpreting image characteristics for different object positions"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 3 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Focal length of a convex lens by the u-v method",
+  "shortTitle": "Convex Lens (u-v)",
+  "objective": [
+    "To find the focal length of a convex lens by locating real images for several object distances.",
+    "To plot graphs between u and v and between 1/u and 1/v.",
+    "To calculate the power of the lens."
+  ],
+  "theory": {
+    "statement": "For a thin lens the object distance u, image distance v and focal length f are related by the thin lens formula 1/v − 1/u = 1/f, using the New Cartesian sign convention in which distances measured against the incident light are negative.",
+    "derivationNote": "Taking magnitudes for a real object and a real image, the relation becomes 1/v + 1/u = 1/f, so f = uv/(u+v). A graph of 1/v against 1/u is a straight line of slope −1 whose intercepts on both axes equal 1/f. The u-v graph is a rectangular hyperbola with asymptotes at u = f and v = f.",
+    "keyEquations": ["1/v − 1/u = 1/f", "f = uv/(u+v) for magnitudes", "m = v/u", "P = 1/f (in metre) dioptre"]
+  },
+  "apparatus": [
+    { "name": "Convex lens", "spec": "focal length 10-20 cm", "why": "The lens under test" },
+    { "name": "Optical bench", "spec": "with three uprights and a metre scale", "why": "Holds and positions object, lens and screen on one axis" },
+    { "name": "Illuminated object / candle", "spec": "wire gauze or cross-wire", "why": "Provides a well-defined object of known height" },
+    { "name": "Screen", "spec": "white, on an upright", "why": "Catches the real image so that v can be measured" },
+    { "name": "Lens holder", "spec": "upright clamp", "why": "Keeps the lens vertical and centred" },
+    { "name": "Metre scale", "spec": "least count 0.1 cm", "why": "Reads the positions of the uprights" }
+  ],
+  "materials": [],
+  "variables": [
+    { "id": "lens", "label": "Lens", "symbol": "f", "unit": "", "type": "control", "options": ["L10", "L15", "L20"], "default": "L15" },
+    { "id": "objectDistanceCm", "label": "Object distance u", "symbol": "u", "unit": "cm", "type": "independent", "min": 5, "max": 100, "step": 1, "default": 40 },
+    { "id": "autoFocus", "label": "Auto-locate sharp image", "symbol": "", "unit": "", "type": "control", "default": true },
+    { "id": "screenPosCm", "label": "Screen position", "symbol": "v", "unit": "cm", "type": "independent", "min": 5, "max": 120, "step": 0.5, "default": 24 }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Find the rough focal length by focusing a distant object on the screen; the lens-to-screen distance is approximately f.", "checkpoint": false },
+    { "step": 2, "text": "Mount the object, lens and screen on the bench and adjust them so their centres lie on one horizontal line.", "checkpoint": false },
+    { "step": 3, "text": "Place the object at a distance u greater than f — start with about 1.5f to 2f.", "checkpoint": true, "expects": "objectDistanceCm" },
+    { "step": 4, "text": "Move the screen until a sharp, well-defined real inverted image is obtained. Read the image distance v.", "checkpoint": true, "expects": "sharp" },
+    { "step": 5, "text": "Record u and v, and calculate 1/u, 1/v and f = uv/(u+v).", "checkpoint": true, "expects": "record" },
+    { "step": 6, "text": "Repeat for at least five different object distances between f and 4f.", "checkpoint": true, "expects": "rows>=5" },
+    { "step": 7, "text": "Plot 1/v against 1/u. The intercepts on both axes give 1/f.", "checkpoint": false },
+    { "step": 8, "text": "Calculate the mean focal length and the power P = 1/f with f in metre.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "convex-lens",
+    "renderer": "convex-lens",
+    "fps": 45,
+    "controls": [
+      { "var": "objectDistanceCm", "widget": "slider" },
+      { "var": "lens", "widget": "segmented", "options": ["L10", "L15", "L20"] },
+      { "var": "autoFocus", "widget": "switch" },
+      { "var": "screenPosCm", "widget": "slider", "dependsOn": { "autoFocus": false } }
+    ],
+    "actions": [
+      { "id": "record", "label": "Record u and v", "primary": true },
+      { "id": "reset", "label": "Reset bench" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "u", "label": "u", "unit": "cm", "decimals": 1 },
+      { "key": "v", "label": "v", "unit": "cm", "decimals": 1 },
+      { "key": "invU", "label": "1/u", "unit": "cm⁻¹", "decimals": 4 },
+      { "key": "invV", "label": "1/v", "unit": "cm⁻¹", "decimals": 4 },
+      { "key": "fSingle", "label": "f = uv/(u+v)", "unit": "cm", "decimals": 2 }
+    ],
+    "graph": { "x": "invU", "y": "invV", "xLabel": "1/u (cm⁻¹)", "yLabel": "1/v (cm⁻¹)", "throughOrigin": false },
+    "minRows": 5
+  },
+  "calculations": {
+    "steps": [
+      "For each row compute f = uv/(u+v)",
+      "Take the mean of the f values",
+      "From the 1/u-1/v graph, f = 1/(y-intercept)",
+      "Power P = 100/f with f in cm gives dioptre"
+    ],
+    "resultKeys": ["fMean", "fFromGraph", "power"]
+  },
+  "expectedResult": {
+    "quantity": "Focal length of the convex lens",
+    "symbol": "f",
+    "value": 15,
+    "tolerance": 1,
+    "unit": "cm",
+    "secondary": { "quantity": "Power of the lens", "value": 6.67, "tolerance": 0.5, "unit": "D" },
+    "statement": "The 1/u-1/v graph is a straight line of slope −1 whose intercepts give 1/f. The focal length of the given convex lens is about 15 cm and its power about +6.7 D."
+  },
+  "safety": [
+    "Never use the lens to look directly at the Sun or focus sunlight on skin, paper or clothing — it can cause burns or fire.",
+    "Handle the lens by its edges to avoid scratching and greasing the surfaces.",
+    "If a candle is used as the object, keep loose paper and hair away from the flame.",
+    "Place the optical bench where it cannot be knocked off the table."
+  ],
+  "sourcesOfError": [
+    "The object, lens and screen may not be at the same height or on one axis.",
+    "Judging the position of sharpest focus is subjective; the image is sharp over a small range.",
+    "Bench error: the scale reading may not correspond exactly to the position of the optical centre.",
+    "The lens is not perfectly thin, so the thin lens formula is only approximate.",
+    "Parallax while reading the positions of the uprights."
+  ],
+  "viva": [
+    { "question": "State the thin lens formula and the sign convention used.", "expectedConcept": "1/v − 1/u = 1/f in the New Cartesian convention: distances are measured from the optical centre, those measured in the direction of incident light are positive and those against it are negative.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Formula plus convention.", "commonMisconception": "Writing 1/v + 1/u = 1/f without stating that magnitudes are being used." },
+    { "question": "Why can a virtual image not be obtained on the screen?", "expectedConcept": "A virtual image is formed where the rays only appear to diverge from; the rays do not actually meet there, so no light falls on a screen placed at that position.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Rays do not actually converge.", "commonMisconception": "Thinking the image is too faint rather than non-existent as real light." },
+    { "question": "Where must the object be placed to obtain an image of the same size as the object?", "expectedConcept": "At the centre of curvature of the lens, that is at u = 2f; the image is then real, inverted, of the same size and also at 2f.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "u = 2f gives v = 2f, m = −1.", "commonMisconception": "Saying at the focus." },
+    { "question": "What is the shape of the graph between u and v, and between 1/u and 1/v?", "expectedConcept": "The u-v graph is a rectangular hyperbola; the 1/u-1/v graph is a straight line with slope −1 whose intercepts on both axes equal 1/f.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "From the lens equation.", "commonMisconception": "Expecting the u-v graph to be a straight line." },
+    { "question": "What happens when the object is placed at the focus?", "expectedConcept": "The refracted rays emerge parallel to each other, so the image is formed at infinity and no image can be caught on the screen.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "u = f gives v = infinity.", "commonMisconception": "Saying the image forms at the focus on the other side." },
+    { "question": "Define the power of a lens and give its SI unit.", "expectedConcept": "The power of a lens is the reciprocal of its focal length expressed in metre; its SI unit is the dioptre (D). A convex lens has positive power.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "P = 1/f(m).", "commonMisconception": "Using f in centimetre without converting." },
+    { "question": "How does the focal length change if the lens is immersed in water?", "expectedConcept": "The focal length increases because the relative refractive index of glass with respect to water is smaller than that with respect to air, so the lens converges the light less strongly.", "difficulty": "hard", "bloom": "Apply", "answerLogic": "Lens maker's formula with the surrounding medium.", "commonMisconception": "Thinking the focal length is unaffected by the medium." },
+    { "question": "If the lower half of the lens is blackened, what happens to the image?", "expectedConcept": "The complete image is still formed at the same position because every part of the lens forms the full image, but the image becomes less bright since fewer rays reach it.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "Each portion of the lens forms a complete image.", "commonMisconception": "Believing only half the image is formed." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "For a real image to be formed by a convex lens, the object must be placed:", "options": ["Between the optical centre and f", "At the focus", "Beyond the focus", "Anywhere"], "answer": 2, "feedback": "Only when u > f do the refracted rays actually converge to form a real image." },
+      { "id": "pre2", "type": "mcq", "question": "In the New Cartesian convention, for a real object the distance u is:", "options": ["Positive", "Negative", "Zero", "Either"], "answer": 1, "feedback": "The object lies against the direction of incident light, so u is negative." },
+      { "id": "pre3", "type": "mcq", "question": "The power of a lens of focal length 20 cm is:", "options": ["+0.05 D", "+5 D", "+20 D", "+2 D"], "answer": 1, "feedback": "P = 1/f with f = 0.20 m gives +5 D." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Record at least five sets of u and v that produced a real image.", "check": "rows>=5" },
+      { "id": "dur2", "type": "task", "question": "Include one reading at u = 2f and note the magnification.", "check": "hasTwoF" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the focal length of the lens obtained from your graph (cm).", "answer": 15, "tolerance": 1.5, "feedback": "The lens supplied has a focal length of about 15 cm." },
+      { "id": "post2", "type": "numeric", "question": "Calculate the power of this lens in dioptre.", "answer": 6.67, "tolerance": 0.8, "feedback": "P = 100/f(cm) = 100/15 ≈ +6.7 D." },
+      { "id": "post3", "type": "mcq", "question": "The slope of your 1/u versus 1/v graph should be close to:", "options": ["+1", "−1", "0", "1/f"], "answer": 1, "feedback": "Since 1/v = −1/u + 1/f in magnitudes, the slope is −1 and the intercept is 1/f." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "1/v − 1/u = 1/f; f = uv/(u+v); m = v/u; P = 1/f(m)",
+    "assumptions": ["Thin lens", "Paraxial rays", "Chromatic aberration ignored", "Object, lens and screen coaxial"],
+    "validRange": "f = 10-20 cm; u from just beyond f to 100 cm",
+    "unitSystem": "SI; bench readings in cm, converted to m for power",
+    "edgeCases": [
+      "u = f: no real image, v infinite",
+      "u < f: virtual image, cannot be caught on the screen",
+      "u = 2f: v = 2f and m = −1",
+      "u to infinity: v approaches f"
+    ],
+    "expectedBehaviour": [
+      "1/u-1/v graph is a straight line of slope −1",
+      "Both intercepts equal 1/f",
+      "f recovered within 3% by both the mean and the graph routes"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

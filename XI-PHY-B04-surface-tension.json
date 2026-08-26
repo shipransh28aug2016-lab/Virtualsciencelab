@@ -1,0 +1,539 @@
+{
+  "id": "XI-PHY-B04",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 4,
+    "unit": "Unit VII: Properties of Bulk Matter",
+    "chapter": "Chapter-9: Mechanical Properties of Fluids",
+    "topic": "Surface energy and surface tension, angle of contact, excess of pressure across a curved surface, application of surface tension ideas to drops, bubbles and capillary rise",
+    "subtopic": "Capillary rise; measurement of surface tension of a liquid",
+    "practical": "To determine the surface tension of water by capillary rise method.",
+    "learningObjectives": [
+      "Explain capillary rise as a consequence of surface tension and the angle of contact",
+      "Measure the rise of water in capillary tubes of different bore using a travelling microscope",
+      "Verify Jurin's law, that the rise is inversely proportional to the radius of the tube",
+      "Calculate the surface tension of water from T = rhρg/2 for a zero angle of contact",
+      "Recognise the effect of impurities and of temperature on surface tension"
+    ],
+    "competencies": [
+      "Use of a travelling microscope and correct reading of its vernier",
+      "Recognising an inverse proportionality and testing it by plotting against the reciprocal",
+      "Controlling variables: keeping the liquid and temperature fixed while the bore is changed",
+      "Relating a molecular explanation (cohesion versus adhesion) to a measurable quantity"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 4 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Surface tension of water by the capillary rise method",
+  "shortTitle": "Surface Tension",
+  "objective": [
+    "To determine the surface tension of water by the capillary rise method.",
+    "To verify that the capillary rise is inversely proportional to the radius of the tube.",
+    "To observe the effect of an impurity and of temperature on the rise."
+  ],
+  "theory": {
+    "statement": "A liquid that wets glass rises in a narrow tube until the upward vertical component of the force of surface tension acting round the circle of contact balances the weight of the raised column of liquid.",
+    "derivationNote": "The force of surface tension acts along the circumference 2πr at the angle of contact θ to the wall, so its upward component is 2πrT cos θ. The weight of the raised column is πr²hρg, neglecting the small volume in the meniscus. Equating the two gives 2πrT cos θ = πr²hρg, hence T = rhρg / (2 cos θ). For pure water on clean glass θ is essentially zero and cos θ = 1, giving T = rhρg/2. Rearranged as h = (2T cos θ/ρg)(1/r), this is Jurin's law: h is inversely proportional to r, so a graph of h against 1/r is a straight line through the origin.",
+    "keyEquations": [
+      "2πrT cos θ = πr²hρg",
+      "T = rhρg / (2 cos θ)",
+      "T = rhρg / 2   (for θ ≈ 0)",
+      "h ∝ 1/r   (Jurin's law)",
+      "slope of h against 1/r = 2T cos θ / ρg"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Capillary tubes",
+      "spec": "set of four, bore radius 0.025 to 0.071 cm",
+      "why": "Different radii are needed to test the inverse relation between h and r"
+    },
+    {
+      "name": "Travelling microscope",
+      "spec": "least count 0.001 cm",
+      "why": "Reads the position of the meniscus and of the water surface without disturbing them"
+    },
+    {
+      "name": "Beaker",
+      "spec": "glass, 250 mL",
+      "why": "Holds the liquid whose surface tension is being found"
+    },
+    {
+      "name": "Clamp and stand",
+      "spec": "iron, with a capillary holder",
+      "why": "Holds the tubes vertical and steady"
+    },
+    {
+      "name": "Pointer",
+      "spec": "sharp, adjustable",
+      "why": "Its tip is set to just touch the liquid surface, fixing the reference level"
+    },
+    {
+      "name": "Thermometer",
+      "spec": "0–100 °C, least count 1 °C",
+      "why": "Surface tension depends on temperature, which must be recorded"
+    }
+  ],
+  "materials": [
+    {
+      "name": "Distilled water",
+      "spec": "clean, at room temperature",
+      "why": "The liquid under test; must be free of grease and dissolved impurity"
+    },
+    {
+      "name": "Caustic soda solution",
+      "spec": "dilute",
+      "why": "Used to clean the capillary tubes so the water wets the glass fully"
+    }
+  ],
+  "variables": [
+    {
+      "id": "tube",
+      "label": "Capillary tube",
+      "symbol": "r",
+      "unit": "cm",
+      "type": "independent",
+      "default": "t2",
+      "options": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ]
+    },
+    {
+      "id": "liquid",
+      "label": "Liquid",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "water",
+      "options": [
+        "water",
+        "soapy",
+        "mercury"
+      ]
+    },
+    {
+      "id": "tempC",
+      "label": "Temperature",
+      "symbol": "t",
+      "unit": "°C",
+      "type": "controlled",
+      "min": 10,
+      "max": 60,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "id": "cleanTube",
+      "label": "Tube cleaned",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "riseCm",
+      "label": "Capillary rise",
+      "symbol": "h",
+      "unit": "cm",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Clean the capillary tubes with caustic soda solution and rinse thoroughly with distilled water, so that the water wets the glass completely.",
+      "checkpoint": true,
+      "expects": "cleanTube"
+    },
+    {
+      "step": 2,
+      "text": "Clamp the tubes vertically with their lower ends dipping into the water in the beaker.",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Set the tip of the pointer so that it just touches the free surface of the water in the beaker.",
+      "checkpoint": false
+    },
+    {
+      "step": 4,
+      "text": "Allow the water to rise and come to rest in each tube. Note the temperature of the water.",
+      "checkpoint": true,
+      "expects": "tempC"
+    },
+    {
+      "step": 5,
+      "text": "Focus the travelling microscope on the lowest point of the concave meniscus and record the reading.",
+      "checkpoint": false
+    },
+    {
+      "step": 6,
+      "text": "Lower the microscope to the tip of the pointer, that is the water surface, and record the reading. The difference gives h.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 7,
+      "text": "Repeat for all four tubes of different bore, keeping the liquid and its temperature unchanged.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 8,
+      "text": "For each tube compute T = rhρg/2, and also plot h against 1/r to check that the graph is a straight line through the origin.",
+      "checkpoint": false
+    },
+    {
+      "step": 9,
+      "text": "Take the mean value of T and compare it with the standard value for water at that temperature.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "surface-tension",
+    "renderer": "surface-tension",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "tube",
+        "widget": "segmented",
+        "options": [
+          "t1",
+          "t2",
+          "t3",
+          "t4"
+        ]
+      },
+      {
+        "var": "liquid",
+        "widget": "segmented",
+        "options": [
+          "water",
+          "soapy",
+          "mercury"
+        ]
+      },
+      {
+        "var": "tempC",
+        "widget": "slider"
+      },
+      {
+        "var": "cleanTube",
+        "widget": "switch"
+      }
+    ],
+    "actions": [
+      {
+        "id": "dip",
+        "label": "Record the rise",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "tube",
+        "label": "Tube",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "radiusCm",
+        "label": "r",
+        "unit": "cm",
+        "decimals": 3
+      },
+      {
+        "key": "invRadius",
+        "label": "1/r",
+        "unit": "cm⁻¹",
+        "decimals": 2
+      },
+      {
+        "key": "riseCm",
+        "label": "h",
+        "unit": "cm",
+        "decimals": 2
+      },
+      {
+        "key": "product",
+        "label": "r × h",
+        "unit": "cm²",
+        "decimals": 4
+      },
+      {
+        "key": "tempC",
+        "label": "Temp",
+        "unit": "°C",
+        "decimals": 0
+      }
+    ],
+    "graph": {
+      "x": "invRadius",
+      "y": "riseCm",
+      "xLabel": "1/r (cm⁻¹)",
+      "yLabel": "h (cm)",
+      "throughOrigin": true
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "For each tube: T = r·h·ρ·g / 2, with r and h converted to metres",
+      "Mean T = ΣT / n",
+      "Check that the product r × h is the same for every tube",
+      "Slope of h against 1/r = 2T cos θ / ρg, giving a second value of T"
+    ],
+    "resultKeys": [
+      "surfaceTension",
+      "tFromGraph",
+      "productConstant"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Surface tension of water",
+    "symbol": "T",
+    "value": 0.0727,
+    "tolerance": 0.004,
+    "unit": "N·m⁻¹",
+    "secondary": {
+      "quantity": "Product r × h",
+      "value": 0.1489,
+      "tolerance": 0.01,
+      "unit": "cm²"
+    },
+    "statement": "The surface tension of water at 20 °C is about 0.073 N·m⁻¹. The product r × h is constant for all the tubes, and the graph of h against 1/r is a straight line through the origin, confirming Jurin's law."
+  },
+  "safety": [
+    "Capillary tubes are thin and break easily; handle them by the middle and never force them into the clamp.",
+    "Caustic soda solution is corrosive — wear eye protection and wash any splash immediately with plenty of water.",
+    "Mercury, if demonstrated at all, must be handled only by the teacher in a fume cupboard; its vapour is toxic.",
+    "Do not heat the beaker above 60 °C in this experiment; hot glass looks exactly like cold glass."
+  ],
+  "sourcesOfError": [
+    "A greasy or unclean tube raises the angle of contact, so the liquid rises less and T comes out too low.",
+    "The tube not being exactly vertical makes the measured length longer than the true vertical rise.",
+    "The bore may not be uniform along the length of the tube.",
+    "Neglecting the small volume of liquid in the meniscus above the flat part of the column.",
+    "Parallax while setting the microscope cross-wire on the meniscus.",
+    "Change in temperature during the experiment, since T falls as temperature rises."
+  ],
+  "viva": [
+    {
+      "question": "What is surface tension?",
+      "expectedConcept": "The force per unit length acting at right angles to an imaginary line drawn on the liquid surface, or equivalently the surface energy per unit area. Its SI unit is N·m⁻¹.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Either the force or the energy definition is acceptable if the unit is right.",
+      "commonMisconception": "Giving the unit as N·m⁻² or calling it a pressure."
+    },
+    {
+      "question": "Why does water rise in a capillary tube but mercury is depressed?",
+      "expectedConcept": "For water the adhesive force to glass exceeds the cohesive force between water molecules, so the angle of contact is less than 90°, cos θ is positive and the liquid rises. For mercury cohesion dominates, the angle of contact is about 140°, cos θ is negative and the liquid is depressed.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Sign of cos θ follows from the balance of adhesion and cohesion.",
+      "commonMisconception": "Attributing the difference to density alone."
+    },
+    {
+      "question": "State Jurin's law.",
+      "expectedConcept": "For a given liquid at a given temperature, the height to which the liquid rises in a capillary tube is inversely proportional to the radius of the tube, so the product rh is constant.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "h ∝ 1/r.",
+      "commonMisconception": "Saying h is proportional to r."
+    },
+    {
+      "question": "Why must the capillary tube be cleaned before the experiment?",
+      "expectedConcept": "Grease on the glass prevents water from wetting it, which increases the angle of contact from nearly zero to about 40°. Since the rise depends on cos θ, the water climbs less and the calculated surface tension is too small.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Impurity changes θ, not T of the water itself.",
+      "commonMisconception": "Thinking grease changes the surface tension of the water."
+    },
+    {
+      "question": "What is the angle of contact and on what does it depend?",
+      "expectedConcept": "The angle between the tangent to the liquid surface at the point of contact and the solid surface, measured inside the liquid. It depends on the nature of both the liquid and the solid, and on any impurity present, but not on the diameter of the tube.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "A property of the liquid-solid pair.",
+      "commonMisconception": "Believing it depends on the bore of the capillary."
+    },
+    {
+      "question": "How does surface tension change with temperature?",
+      "expectedConcept": "It decreases as temperature rises, because the increased thermal motion weakens the intermolecular attraction. It becomes zero at the critical temperature.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Molecular explanation.",
+      "commonMisconception": "Saying it increases with temperature."
+    },
+    {
+      "question": "Why is the weight of liquid in the meniscus neglected?",
+      "expectedConcept": "For a narrow tube the volume of liquid above the flat part of the column is only about πr³/3, which is very small compared with πr²h when h is much greater than r. A more exact treatment replaces h by (h + r/3).",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Order-of-magnitude comparison; the correction term is r/3.",
+      "commonMisconception": "Thinking the meniscus has no volume at all."
+    },
+    {
+      "question": "What would happen if the capillary tube were shorter than the height to which the water would rise?",
+      "expectedConcept": "The water rises to the top of the tube and stops. It does not overflow. Instead the radius of curvature of the meniscus increases, that is the meniscus flattens, so that the vertical component of the surface tension force exactly supports the shorter column.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "The system adjusts θ rather than spilling; no perpetual fountain.",
+      "commonMisconception": "Expecting water to flow out continuously at the top."
+    },
+    {
+      "question": "Why is a graph of h against 1/r preferred to simply averaging T?",
+      "expectedConcept": "The graph uses all the readings together, shows at a glance whether the inverse relation actually holds, and lets a single best-fit slope be found. A stray reading shows up as a point off the line rather than quietly shifting the mean.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Graphical analysis exposes systematic departures.",
+      "commonMisconception": "Treating the graph as decoration rather than as the analysis."
+    },
+    {
+      "question": "Soap is added to the water. What happens to the rise, and why?",
+      "expectedConcept": "The rise falls to less than half. Soap is a surfactant: its molecules collect at the surface and reduce the inward pull on surface molecules, lowering T from about 0.073 to roughly 0.030 N·m⁻¹. Since h is proportional to T, the column is much shorter.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "h ∝ T at fixed r.",
+      "commonMisconception": "Expecting soap to increase the rise because it 'helps water spread'."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The SI unit of surface tension is:",
+        "options": [
+          "N·m",
+          "N·m⁻¹",
+          "N·m⁻²",
+          "J·m"
+        ],
+        "answer": 1,
+        "feedback": "Surface tension is force per unit length, so N·m⁻¹. It is numerically equal to surface energy per unit area, J·m⁻²."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "If the radius of the capillary tube is doubled, the rise of water:",
+        "options": [
+          "Doubles",
+          "Halves",
+          "Stays the same",
+          "Becomes four times"
+        ],
+        "answer": 1,
+        "feedback": "By Jurin's law h ∝ 1/r, so doubling r halves h."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "For pure water on clean glass the angle of contact is taken to be:",
+        "options": [
+          "0°",
+          "45°",
+          "90°",
+          "140°"
+        ],
+        "answer": 0,
+        "feedback": "Water wets clean glass almost completely, so θ ≈ 0 and cos θ ≈ 1."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record the rise for at least three tubes of different bore.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Keep the temperature of the liquid constant across all readings.",
+        "check": "volumeConstant"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the surface tension of water you obtained (N·m⁻¹).",
+        "answer": 0.0727,
+        "tolerance": 0.005,
+        "feedback": "The accepted value for water at 20 °C is 0.0727 N·m⁻¹."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "State the value of the product r × h from your table (cm²).",
+        "answer": 0.149,
+        "tolerance": 0.012,
+        "feedback": "The product should be the same for every tube, about 0.149 cm² for water at 20 °C."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Your graph of h against 1/r passes through the origin. This shows that:",
+        "options": [
+          "h is proportional to r",
+          "h is inversely proportional to r",
+          "h does not depend on r",
+          "h is proportional to r²"
+        ],
+        "answer": 1,
+        "feedback": "A straight line through the origin when plotted against 1/r means h ∝ 1/r, which is Jurin's law."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "T = rhρg/(2 cos θ); h ∝ 1/r",
+    "assumptions": [
+      "Uniform bore over the length used",
+      "Angle of contact zero for clean water on clean glass",
+      "Hemispherical meniscus",
+      "Weight of the meniscus neglected",
+      "Constant temperature"
+    ],
+    "validRange": "r = 0.02 to 0.10 cm; h = 1 to 8 cm; temperature 10 to 60 °C",
+    "unitSystem": "r and h read in cm, converted to m; T in N·m⁻¹",
+    "edgeCases": [
+      "Greasy tube: θ rises to about 40°, rise falls by roughly 25%",
+      "Mercury: θ = 140°, cos θ negative, so a depression instead of a rise",
+      "Very wide bore: rise under 0.8 cm, percentage error large — warned",
+      "Above 60 °C evaporation disturbs the level — warned"
+    ],
+    "expectedBehaviour": [
+      "The product r × h is constant to within reading error",
+      "h against 1/r is linear through the origin, r² above 0.99",
+      "T falls linearly with temperature over the lab range",
+      "Soap solution gives less than half the rise of pure water"
+    ],
+    "testFile": "tests/batch2.test.js"
+  }
+}

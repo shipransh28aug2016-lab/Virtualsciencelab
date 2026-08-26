@@ -1,0 +1,526 @@
+{
+  "id": "XI-PHY-A08",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 8,
+    "unit": "Unit X: Oscillations and Waves",
+    "chapter": "Chapter-13: Oscillations",
+    "topic": "Simple harmonic motion; simple pendulum and derivation of its time period",
+    "subtopic": "Independence of the time period from the mass of the bob",
+    "practical": "To study variation of time period of a simple pendulum of a given length by taking bobs of same size but different masses and interpret the result.",
+    "learningObjectives": [
+      "Time a counted number of oscillations for bobs of the same size but different masses",
+      "Keep the effective length and the amplitude strictly constant while only the mass is changed",
+      "Show experimentally that the time period is independent of the mass of the bob",
+      "Explain the result from T = 2π√(L/g), in which no mass term appears",
+      "Recognise that the restoring force and the inertia both scale with mass and therefore cancel"
+    ],
+    "competencies": [
+      "Controlling variables: changing one factor and holding every other fixed",
+      "Recognising when a measured difference is smaller than experimental error",
+      "Interpreting a null result as a positive scientific finding",
+      "Relating an experimental observation to the absence of a term in a formula"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Experiment 8 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Simple Pendulum: does the time period depend on the mass of the bob?",
+  "shortTitle": "Pendulum: Mass",
+  "objective": [
+    "To find the time period of a simple pendulum of fixed length using bobs of different masses.",
+    "To interpret the result and show that the time period does not depend on the mass."
+  ],
+  "theory": {
+    "statement": "The time period of a simple pendulum is T = 2π√(L/g). The expression contains the effective length and the acceleration due to gravity, but no mass term at all, so the period should be the same for every bob of the same size whatever its mass.",
+    "derivationNote": "The restoring force on the bob displaced through a small angle θ is mg sin θ ≈ mgθ, which is proportional to the mass. The inertia opposing that force is also proportional to the mass. In Newton's second law the two occurrences of m cancel: a = −(g/L)x, independent of m. This is the same reason all bodies fall with the same acceleration under gravity. The bobs must be of the SAME SIZE so that air resistance and the position of the centre of gravity are unchanged; only then is mass the single variable.",
+    "keyEquations": [
+      "T = 2π√(L/g)",
+      "Restoring force = −mg sin θ ≈ −mgθ",
+      "ma = −mgθ  →  a = −gθ, and m cancels",
+      "T contains no mass term, so T is independent of m"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Metallic bob with hook",
+      "spec": "brass or iron, ~60 g",
+      "why": "Heavy and small, so air resistance is negligible"
+    },
+    {
+      "name": "Cotton thread",
+      "spec": "fine, strong, ~1.5 m",
+      "why": "Light and inextensible so the length stays constant"
+    },
+    {
+      "name": "Split cork",
+      "spec": "two halves",
+      "why": "Grips the thread at one definite point of suspension"
+    },
+    {
+      "name": "Clamp and stand",
+      "spec": "iron, heavy base",
+      "why": "Provides a rigid support that does not vibrate"
+    },
+    {
+      "name": "Stop clock / stop watch",
+      "spec": "least count 0.1 s",
+      "why": "Times a counted number of oscillations"
+    },
+    {
+      "name": "Metre scale",
+      "spec": "least count 0.1 cm",
+      "why": "Measures the thread length"
+    },
+    {
+      "name": "Vernier callipers",
+      "spec": "least count 0.01 cm",
+      "why": "Measures the bob diameter, half of which is added to the thread length"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "massG",
+      "label": "Mass of bob",
+      "symbol": "m",
+      "unit": "g",
+      "type": "independent",
+      "min": 20,
+      "max": 200,
+      "step": 10,
+      "default": 30
+    },
+    {
+      "id": "lengthCm",
+      "label": "Effective length L (held constant)",
+      "symbol": "L",
+      "unit": "cm",
+      "type": "controlled",
+      "min": 80,
+      "max": 120,
+      "step": 1,
+      "default": 100
+    },
+    {
+      "id": "amplitudeDeg",
+      "label": "Amplitude (held constant)",
+      "symbol": "θ₀",
+      "unit": "degree",
+      "type": "controlled",
+      "min": 2,
+      "max": 15,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "id": "oscillations",
+      "label": "Oscillations to time",
+      "symbol": "n",
+      "unit": "",
+      "type": "control",
+      "min": 10,
+      "max": 30,
+      "step": 10,
+      "default": 20
+    },
+    {
+      "id": "period",
+      "label": "Time period T",
+      "symbol": "T",
+      "unit": "s",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Set the effective length to 100 cm. This value must not change for the rest of the experiment.",
+      "checkpoint": true,
+      "expects": "lengthCm"
+    },
+    {
+      "step": 2,
+      "text": "Suspend the lightest bob. Check that all the bobs supplied are of the same size, so that only the mass differs.",
+      "checkpoint": true,
+      "expects": "massG"
+    },
+    {
+      "step": 3,
+      "text": "Displace the bob through a small angle, not more than 15°, and release it gently in one vertical plane.",
+      "checkpoint": true,
+      "expects": "amplitudeDeg"
+    },
+    {
+      "step": 4,
+      "text": "Let a few oscillations pass, then start the clock as the bob crosses the mean position.",
+      "checkpoint": false
+    },
+    {
+      "step": 5,
+      "text": "Time 20 complete oscillations and calculate T = t/n.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 6,
+      "text": "Replace the bob with a heavier one of the same size, keeping the effective length exactly the same.",
+      "checkpoint": false
+    },
+    {
+      "step": 7,
+      "text": "Repeat the timing for at least four different masses.",
+      "checkpoint": true,
+      "expects": "rows>=4"
+    },
+    {
+      "step": 8,
+      "text": "Compare the values of T. Note whether the differences are larger or smaller than your timing error.",
+      "checkpoint": false
+    },
+    {
+      "step": 9,
+      "text": "State your conclusion about the dependence of the time period on the mass of the bob.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "simple-pendulum",
+    "renderer": "simple-pendulum",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "massG",
+        "widget": "slider"
+      },
+      {
+        "var": "lengthCm",
+        "widget": "slider"
+      },
+      {
+        "var": "amplitudeDeg",
+        "widget": "slider"
+      },
+      {
+        "var": "oscillations",
+        "widget": "segmented",
+        "options": [
+          10,
+          20,
+          30
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "release",
+        "label": "Release bob",
+        "primary": true
+      },
+      {
+        "id": "startTiming",
+        "label": "Start stop clock"
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "massG",
+        "label": "Mass m",
+        "unit": "g",
+        "decimals": 0
+      },
+      {
+        "key": "lengthCm",
+        "label": "L",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "oscillations",
+        "label": "n",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "totalTime",
+        "label": "t",
+        "unit": "s",
+        "decimals": 2
+      },
+      {
+        "key": "period",
+        "label": "T = t/n",
+        "unit": "s",
+        "decimals": 3
+      }
+    ],
+    "graph": {
+      "x": "massG",
+      "y": "period",
+      "xLabel": "Mass of bob (g)",
+      "yLabel": "Time period T (s)",
+      "throughOrigin": false
+    },
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "T = t/n for each bob",
+      "Compare the values of T across the different masses",
+      "Compute the spread, the largest T minus the smallest",
+      "Compare that spread with the uncertainty in T, which is your reaction time divided by n"
+    ],
+    "resultKeys": [
+      "g",
+      "slope",
+      "secondsPendulumCm"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Acceleration due to gravity (unchanged by mass)",
+    "symbol": "g",
+    "value": 9.79,
+    "tolerance": 0.4,
+    "unit": "m·s⁻²",
+    "secondary": {
+      "quantity": "Spread of T across all masses",
+      "value": 0,
+      "tolerance": 0.03,
+      "unit": "s"
+    },
+    "statement": "The time period is the same for every bob within experimental error. The graph of T against mass is a horizontal line. This confirms that T = 2π√(L/g) contains no mass term: the restoring force and the inertia both scale with the mass and cancel."
+  },
+  "safety": [
+    "Clamp the stand firmly to the table so it cannot topple while the bob swings.",
+    "Keep the amplitude small (under 15°) — a wildly swinging bob can strike a neighbour or the stand.",
+    "Ensure nobody is standing in the plane of oscillation.",
+    "Use a bob with a secure hook; check the knot before releasing."
+  ],
+  "sourcesOfError": [
+    "Reaction time while starting and stopping the clock, reduced by timing 20 oscillations.",
+    "Using bobs of different SIZE as well as different mass, which changes air resistance and the centre of gravity.",
+    "Failing to reset the effective length after changing the bob; a different hook length alters L.",
+    "Amplitude drifting above 15° between runs.",
+    "The bob spinning or moving in an ellipse rather than a plane."
+  ],
+  "viva": [
+    {
+      "question": "Does the time period of a simple pendulum depend on the mass of the bob?",
+      "expectedConcept": "No. T = 2π√(L/g) contains no mass term. Experimentally the period is the same for every bob within the timing error.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Absence of m in the formula, confirmed by measurement.",
+      "commonMisconception": "Expecting a heavier bob to swing faster because gravity pulls it harder."
+    },
+    {
+      "question": "Why does the mass cancel out?",
+      "expectedConcept": "The restoring force is mg sin θ, proportional to the mass, and the inertia resisting that force is also proportional to the mass. In F = ma the two occurrences of m cancel, leaving an acceleration that depends only on g and L.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Gravitational mass equals inertial mass.",
+      "commonMisconception": "Saying the force is the same for all bobs."
+    },
+    {
+      "question": "Why must the bobs be of the same SIZE and not merely of different mass?",
+      "expectedConcept": "A larger bob meets more air resistance and has its centre of gravity at a different distance from the point of suspension, which changes the effective length. Both would confuse the effect being tested, so size must be held constant while mass alone is varied.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Controlling every variable except the one under test.",
+      "commonMisconception": "Assuming any set of bobs will do."
+    },
+    {
+      "question": "Your four values of T differ in the third decimal place. Does this disprove the theory?",
+      "expectedConcept": "No. The uncertainty in T is the reaction time, about 0.2 s, divided by the 20 oscillations, so roughly 0.01 s. Differences smaller than that are experimental scatter, not a real dependence on mass.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Compare the observed spread with the estimated uncertainty.",
+      "commonMisconception": "Treating any numerical difference as physically significant."
+    },
+    {
+      "question": "What would happen to the period on the Moon?",
+      "expectedConcept": "g on the Moon is about one sixth of that on Earth, so T increases by a factor of √6, about 2.45 times. The mass of the bob is still irrelevant.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "T ∝ 1/√g.",
+      "commonMisconception": "Saying it becomes six times longer."
+    },
+    {
+      "question": "On what does the time period actually depend?",
+      "expectedConcept": "Only on the effective length of the pendulum and the local acceleration due to gravity, provided the amplitude is small.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "T = 2π√(L/g).",
+      "commonMisconception": "Including mass or amplitude in the list."
+    },
+    {
+      "question": "This experiment gives a null result. Is that a failure?",
+      "expectedConcept": "No. A null result is a positive finding: it establishes that a quantity one might reasonably expect to matter in fact does not. Showing that T is independent of mass is exactly what the practical is designed to demonstrate.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "The value of a well-designed negative result.",
+      "commonMisconception": "Thinking an experiment must show a trend to be worthwhile."
+    },
+    {
+      "question": "How is this result related to Galileo's observation about falling bodies?",
+      "expectedConcept": "It is the same principle. All bodies fall with the same acceleration regardless of mass because gravitational mass and inertial mass are equal and cancel. The pendulum is a controlled, repeatable way of demonstrating that equivalence.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Equivalence of gravitational and inertial mass.",
+      "commonMisconception": "Treating the two situations as unrelated."
+    },
+    {
+      "question": "If you used a hollow bob filled with water and the water slowly leaked out, what would happen to T?",
+      "expectedConcept": "The period would first increase and then decrease. As water drains, the centre of gravity of the bob moves down, increasing the effective length and so T. Once the bob is nearly empty the centre of gravity rises again towards the centre of the shell and T returns to its original value.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Effective length tracks the centre of gravity, not the mass.",
+      "commonMisconception": "Predicting a steady change because the mass is falling steadily."
+    },
+    {
+      "question": "Why is the amplitude kept below 15°?",
+      "expectedConcept": "Only for small angles is sin θ ≈ θ, which makes the restoring force proportional to the displacement and the motion simple harmonic. At larger amplitudes the period increases and depends on the amplitude.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "The SHM approximation.",
+      "commonMisconception": "Believing amplitude never matters."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The time period of a simple pendulum depends on:",
+        "options": [
+          "The mass of the bob",
+          "The amplitude, at any angle",
+          "The effective length and g",
+          "The material of the bob"
+        ],
+        "answer": 2,
+        "feedback": "T = 2π√(L/g). Only the effective length and the local value of g appear."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The bobs used in this experiment must be of:",
+        "options": [
+          "Different sizes and different masses",
+          "The same size but different masses",
+          "The same mass but different sizes",
+          "Any size and mass"
+        ],
+        "answer": 1,
+        "feedback": "Only the mass may vary. Changing size would also change air resistance and the effective length, confounding the result."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "The mass cancels from the equation of motion because:",
+        "options": [
+          "Gravity does not act on the bob",
+          "The restoring force and the inertia are both proportional to mass",
+          "The string is massless",
+          "The amplitude is small"
+        ],
+        "answer": 1,
+        "feedback": "F = mg sinθ and F = ma, so the m on both sides cancels, leaving a = −gθ."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record the time period for at least four different masses.",
+        "check": "rows>=4"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Change the mass of the bob between readings.",
+        "check": "massVaried"
+      },
+      {
+        "id": "dur3",
+        "type": "task",
+        "question": "Keep the amplitude at or below 15° for every reading.",
+        "check": "amplitude<=15"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the time period you obtained for the lightest bob (s).",
+        "answer": 2.01,
+        "tolerance": 0.06,
+        "feedback": "For L = 100 cm, T = 2π√(1.00/9.79) ≈ 2.01 s."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "State the time period for the heaviest bob (s).",
+        "answer": 2.01,
+        "tolerance": 0.06,
+        "feedback": "The same value. The period does not depend on the mass."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Your graph of T against mass is a horizontal straight line. This shows that:",
+        "options": [
+          "T increases with mass",
+          "T decreases with mass",
+          "T is independent of mass",
+          "The experiment failed"
+        ],
+        "answer": 2,
+        "feedback": "A horizontal line means the plotted quantity does not change with the variable on the x-axis. This is the expected result, not a failure."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "T = 2π√(L/g); T is independent of m",
+    "assumptions": [
+      "Bobs of the same size, differing only in mass",
+      "Effective length held strictly constant",
+      "Amplitude below 15° so sin θ ≈ θ",
+      "Air drag negligible and identical for all bobs"
+    ],
+    "validRange": "Mass 20-200 g at a fixed length of 80-120 cm; amplitude ≤ 15°",
+    "unitSystem": "SI; bench measurements in cm and s",
+    "edgeCases": [
+      "Changing the bob must not change the effective length",
+      "The observed spread in T must be compared with the timing uncertainty, about 0.01 s",
+      "Amplitude above 15° raises T by the factor (1 + θ₀²/16) for every mass alike",
+      "A hollow bob whose contents shift changes the effective length, not the mass dependence"
+    ],
+    "expectedBehaviour": [
+      "T is identical for every mass to within timing error",
+      "The T against mass graph is horizontal",
+      "T still obeys T = 2π√(L/g) for the fixed length",
+      "Quadrupling the length would double T, for every mass alike"
+    ],
+    "testFile": "tests/batch4.test.js"
+  }
+}

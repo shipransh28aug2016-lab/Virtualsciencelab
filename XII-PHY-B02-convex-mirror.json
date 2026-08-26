@@ -1,0 +1,193 @@
+{
+  "id": "XII-PHY-B02",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 2,
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-9: Ray Optics and Optical Instruments",
+    "topic": "Reflection of light, spherical mirrors, mirror formula; refraction of light; thin lens formula, lens maker's formula; combination of thin lenses in contact",
+    "subtopic": "Focal length of a convex mirror determined with the help of an auxiliary convex lens",
+    "practical": "To find the focal length of a convex mirror, using a convex lens.",
+    "learningObjectives": [
+      "Explain why a convex mirror cannot be measured directly by the u-v method",
+      "Use a convex lens to produce a real image I₁ that serves as a virtual object",
+      "Locate the position at which the converging beam strikes the mirror normally and retraces its path",
+      "Measure the radius of curvature as the distance from that position to I₁",
+      "Obtain the focal length from f = R/2",
+      "Justify why the light returns along its own path at the null position"
+    ],
+    "competencies": [
+      "Devising an indirect measurement when a direct one is impossible",
+      "Reasoning about virtual objects and virtual images",
+      "Recognising normal incidence on a curved surface",
+      "Locating a null position rather than reading a value off a scale"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Focal length of a convex mirror using a convex lens",
+  "shortTitle": "Convex Mirror",
+  "objective": [
+    "To find the radius of curvature of a convex mirror with the help of a convex lens.",
+    "To calculate its focal length from f = R/2.",
+    "To understand why an auxiliary converging lens is needed at all."
+  ],
+  "theory": {
+    "statement": "A convex mirror always forms a virtual image, which cannot be received on a screen. Its focal length is therefore found indirectly, by using a convex lens to create a real image that the mirror can then act upon.",
+    "derivationNote": "A convex mirror is a diverging element. Whatever the position of a real object, the reflected rays diverge and only appear to come from a point behind the mirror, so the image is virtual, erect and diminished. A virtual image cannot be caught on a screen, and the whole u-v method depends on catching a real image on a screen. The measurement must therefore be made another way.\n\nThe method uses a convex lens to do the converging. With the object beyond the focus of the lens, the lens forms a real image I₁ at a measurable distance. The convex mirror is now introduced between the lens and I₁. The light arriving at the mirror is no longer a diverging beam from a real object but a converging beam heading for I₁, so I₁ behaves as a virtual object for the mirror.\n\nNow slide the mirror. There is one position at which every ray of that converging beam arrives along a line that passes through the mirror's own centre of curvature — that is, every ray strikes the surface normally. A ray striking a mirror normally is reflected straight back along itself, so the whole beam retraces its path and the final image is formed back at the object itself, coinciding with it. At that unique setting the distance from the mirror to I₁ is exactly the radius of curvature, and the focal length follows from f = R/2.",
+    "keyEquations": [
+      "A convex mirror alone gives only a virtual image, so it needs an auxiliary lens",
+      "Convex lens: 1/v − 1/u = 1/f gives the position of I₁",
+      "At the null position, R = (distance of I₁ from lens) − (distance of mirror from lens)",
+      "f = R/2",
+      "Rays incident normally on a mirror retrace their own path"
+    ]
+  },
+  "apparatus": [
+    { "name": "Convex mirror", "spec": "small aperture, mounted on an upright", "why": "The element whose focal length is required" },
+    { "name": "Convex lens", "spec": "focal length about 20 cm, shorter than the object distance", "why": "Produces the real image I₁ without which the method cannot work" },
+    { "name": "Optical bench", "spec": "four uprights, least count 0.1 cm", "why": "Holds and positions the object, lens, mirror and screen in line" },
+    { "name": "Illuminated object needle", "spec": "with a cross-wire", "why": "Provides a sharp object whose image can be judged for coincidence" },
+    { "name": "Screen", "spec": "white card on an upright", "why": "Used to locate I₁ before the mirror is introduced" },
+    { "name": "Knitting needle and half-metre scale", "spec": "", "why": "Determine the index corrections for the uprights" }
+  ],
+  "materials": [],
+  "variables": [
+    { "id": "objectDistanceCm", "label": "Object distance from the lens", "symbol": "u", "unit": "cm", "type": "independent", "min": 25, "max": 60, "step": 0.5, "default": 30 },
+    { "id": "elementPositionCm", "label": "Mirror position from the lens", "symbol": "d", "unit": "cm", "type": "independent", "min": 2, "max": 55, "step": 0.5, "default": 10 },
+    { "id": "element", "label": "Convex mirror", "symbol": "", "unit": "", "type": "control", "default": "cm25", "options": ["cm25", "cm15"] },
+    { "id": "lens", "label": "Auxiliary convex lens", "symbol": "", "unit": "", "type": "control", "default": "L20", "options": ["L20", "L15", "L25"] },
+    { "id": "radiusCm", "label": "Radius of curvature", "symbol": "R", "unit": "cm", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Mount the illuminated object, the convex lens and the screen on the bench, all at the same height and in line.", "checkpoint": true, "expects": "lens" },
+    { "step": 2, "text": "Place the object well beyond the focus of the lens and note its distance.", "checkpoint": true, "expects": "objectDistanceCm" },
+    { "step": 3, "text": "Move the screen until a sharp real image is formed, and record the position of I₁.", "checkpoint": false },
+    { "step": 4, "text": "Remove the screen and place the convex mirror between the lens and I₁, facing the lens.", "checkpoint": true, "expects": "element" },
+    { "step": 5, "text": "Slide the mirror slowly until the final image, seen beside the object, coincides with the object itself with no parallax.", "checkpoint": true, "expects": "elementPositionCm" },
+    { "step": 6, "text": "Record the mirror position. The distance from the mirror to I₁ is the radius of curvature.", "checkpoint": true, "expects": "record" },
+    { "step": 7, "text": "Repeat for at least two more object distances so that I₁ moves and the mirror position changes with it.", "checkpoint": true, "expects": "rows>=2" },
+    { "step": 8, "text": "Apply the index corrections to every reading.", "checkpoint": false },
+    { "step": 9, "text": "Calculate R for each setting, take the mean, and find f = R/2.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "auxiliary-lens",
+    "renderer": "auxiliary-lens",
+    "fps": 60,
+    "controls": [
+      { "var": "objectDistanceCm", "widget": "slider" },
+      { "var": "elementPositionCm", "widget": "slider" },
+      { "var": "element", "widget": "segmented", "options": ["cm25", "cm15"] },
+      { "var": "lens", "widget": "segmented", "options": ["L20", "L15", "L25"] }
+    ],
+    "actions": [
+      { "id": "record", "label": "Record at null position", "primary": true },
+      { "id": "reset", "label": "Reset" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "trial", "label": "No.", "unit": "", "decimals": 0 },
+      { "key": "objectDistanceCm", "label": "u", "unit": "cm", "decimals": 1 },
+      { "key": "firstImageCm", "label": "I₁ from lens", "unit": "cm", "decimals": 1 },
+      { "key": "elementPositionCm", "label": "Mirror from lens", "unit": "cm", "decimals": 1 },
+      { "key": "radiusCm", "label": "R", "unit": "cm", "decimals": 2 },
+      { "key": "focalCm", "label": "f = R/2", "unit": "cm", "decimals": 2 }
+    ],
+    "graph": { "x": "elementPositionCm", "y": "radiusCm", "xLabel": "Mirror position (cm)", "yLabel": "Radius of curvature R (cm)", "throughOrigin": false },
+    "minRows": 2
+  },
+  "calculations": {
+    "steps": [
+      "Locate I₁ with the screen and record its distance from the lens",
+      "Find the mirror position at which the image coincides with the object",
+      "R = distance of I₁ from lens − distance of mirror from lens",
+      "Repeat for several object distances and take the mean R",
+      "f = R/2"
+    ],
+    "resultKeys": ["focalLength", "radiusOfCurvature", "spread"]
+  },
+  "expectedResult": {
+    "quantity": "Focal length of the convex mirror",
+    "symbol": "f",
+    "value": 25,
+    "tolerance": 1.5,
+    "unit": "cm",
+    "secondary": { "quantity": "Radius of curvature", "value": 50, "tolerance": 3, "unit": "cm" },
+    "statement": "The radius of curvature of the given convex mirror is about 50 cm, so its focal length is about 25 cm. Every object distance gives the same value, because the radius of curvature is a property of the mirror alone."
+  },
+  "safety": [
+    "Do not use the auxiliary convex lens to focus sunlight; it concentrates enough heat to burn paper or skin and can damage the eye.",
+    "Handle the mirror and lens by their edges; fingerprints scatter light and scratches spoil the image.",
+    "The lamp housing gets hot during a long session. Let it cool before moving it.",
+    "Keep leads clear of the bench so the uprights cannot be pulled over."
+  ],
+  "sourcesOfError": [
+    "Index error between the mark on an upright and the actual pole of the mirror or the optical centre of the lens.",
+    "Judging coincidence by eye rather than by properly removing parallax.",
+    "The object, lens and mirror not being exactly at the same height or in line.",
+    "Spherical aberration if the lens or the mirror has a large aperture.",
+    "A poorly located I₁ carries its error straight into every value of R."
+  ],
+  "viva": [
+    { "question": "Why can the focal length of a convex mirror not be found directly by the u-v method?", "expectedConcept": "A convex mirror is diverging, so for any real object the reflected rays spread out and only appear to come from a point behind the mirror. The image is always virtual, erect and diminished, and a virtual image cannot be received on a screen, which is what the u-v method requires.", "difficulty": "easy", "bloom": "Understand", "answerLogic": "Always virtual, so never catchable on a screen.", "commonMisconception": "Thinking the image is simply too small or too faint to find." },
+    { "question": "What is the role of the convex lens in this experiment?", "expectedConcept": "It converges the light to form a real image I₁. When the mirror is placed before I₁, that converging beam gives the mirror a virtual object, and a diverging mirror acting on a virtual object can produce a real image that can be located.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Supplies convergence and hence a virtual object.", "commonMisconception": "Thinking the lens merely magnifies or brightens the image." },
+    { "question": "Why does the image coincide with the object at the null position?", "expectedConcept": "At that setting the converging beam is heading exactly for the mirror's centre of curvature, so every ray meets the surface along a normal. A ray incident normally is reflected straight back along itself, so the whole beam retraces its path through the lens and re-forms the image at the object.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Normal incidence means retracing.", "commonMisconception": "Believing coincidence happens when the mirror is at the focus." },
+    { "question": "What exactly does the distance between the mirror and I₁ represent?", "expectedConcept": "The radius of curvature of the convex mirror. At the null position I₁ lies at the centre of curvature, so that distance is R, and the focal length is half of it.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Distance is R, not f.", "commonMisconception": "Reporting that distance as the focal length itself." },
+    { "question": "Is the focal length of a convex mirror positive or negative?", "expectedConcept": "By the Cartesian sign convention it is positive for a convex mirror and negative for a concave one, because the focus lies behind the reflecting surface. In this experiment we measure its magnitude, and the sign is assigned from the convention afterwards.", "difficulty": "medium", "bloom": "Remember", "answerLogic": "Sign depends on the convention, magnitude on the measurement.", "commonMisconception": "Confusing mirror and lens conventions." },
+    { "question": "What happens if the object is placed inside the focus of the convex lens?", "expectedConcept": "The lens then forms a virtual image instead of a real one, so there is no I₁ for the mirror to work with and the method collapses entirely. The object must always be beyond the focal length of the auxiliary lens.", "difficulty": "medium", "bloom": "Evaluate", "answerLogic": "No real I₁, no method.", "commonMisconception": "Assuming any object position will do." },
+    { "question": "Why must the mirror be placed between the lens and I₁, not beyond it?", "expectedConcept": "Beyond I₁ the light has already converged and is diverging again, so the mirror would receive a real object and once more form only a virtual image. The mirror must intercept the beam while it is still converging.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Only a converging beam gives a virtual object.", "commonMisconception": "Thinking the position of the mirror relative to I₁ does not matter." },
+    { "question": "Where does a convex mirror form the image of a very distant object?", "expectedConcept": "At its focus, behind the mirror, virtual, erect and greatly diminished. This is why convex mirrors are used as driving mirrors and in shops: they give a wide field of view.", "difficulty": "easy", "bloom": "Apply", "answerLogic": "Virtual image at the focus behind the mirror.", "commonMisconception": "Saying the image is real, as it would be for a concave mirror." },
+    { "question": "Why is a convex mirror used as a rear-view mirror rather than a plane one?", "expectedConcept": "It always gives an erect, diminished image and covers a much wider field of view than a plane mirror of the same size, so the driver sees more of the road. The price is that objects appear smaller and therefore further away than they really are, which is why such mirrors carry a warning.", "difficulty": "medium", "bloom": "Evaluate", "answerLogic": "Wider field at the cost of apparent distance.", "commonMisconception": "Believing the image is magnified." },
+    { "question": "How would using a lens of longer focal length change your readings?", "expectedConcept": "A longer focal length puts I₁ further from the lens for the same object distance, so there is more room to place the mirror and the null position shifts outward. The radius of curvature obtained must come out the same, since it belongs to the mirror and not to the lens.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "Geometry changes, result does not.", "commonMisconception": "Expecting the measured R to depend on the auxiliary lens." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "The image formed by a convex mirror of a real object is always:", "options": ["Real and inverted", "Virtual, erect and diminished", "Real and magnified", "Virtual and magnified"], "answer": 1, "feedback": "A convex mirror is diverging, so the image is always virtual, erect and smaller than the object." },
+      { "id": "pre2", "type": "mcq", "question": "At the null position, the distance from the mirror to I₁ equals:", "options": ["The focal length f", "The radius of curvature R", "Twice the radius", "Half the focal length"], "answer": 1, "feedback": "I₁ sits at the centre of curvature, so that distance is R and f = R/2." },
+      { "id": "pre3", "type": "mcq", "question": "The convex lens is needed because:", "options": ["It magnifies the image", "It provides a converging beam so I₁ acts as a virtual object", "It corrects the colour", "It shortens the bench"], "answer": 1, "feedback": "Only a converging beam gives the mirror a virtual object, which is what lets a diverging mirror form a real image." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Record at least two null positions.", "check": "rows>=2" },
+      { "id": "dur2", "type": "task", "question": "Change the object distance between readings.", "check": "tempVaried" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the radius of curvature you obtained (cm).", "answer": 50, "tolerance": 4, "feedback": "The mirror supplied has R of about 50 cm." },
+      { "id": "post2", "type": "numeric", "question": "State the focal length of the convex mirror (cm).", "answer": 25, "tolerance": 2.5, "feedback": "f = R/2 = 25 cm." },
+      { "id": "post3", "type": "mcq", "question": "At the null position the light retraces its path because the rays strike the mirror:", "options": ["At the focus", "Normally, along the radius", "At 45 degrees", "At the pole only"], "answer": 1, "feedback": "Every ray heads for the centre of curvature, so it meets the surface along a normal and is reflected back along itself." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "R = v₁ − d at the null position; f = R/2",
+    "assumptions": [
+      "Thin lens and small-aperture mirror, so paraxial theory holds",
+      "The object lies beyond the focus of the auxiliary lens",
+      "The mirror lies between the lens and I₁",
+      "Index corrections have been applied to all readings"
+    ],
+    "validRange": "Object 25 to 60 cm from the lens; auxiliary lens f = 15 to 25 cm",
+    "unitSystem": "All distances in cm",
+    "edgeCases": [
+      "Object inside the focus of the lens: no real I₁ and the method fails — blocked",
+      "A mirror whose R exceeds the distance to I₁ cannot be positioned — warned",
+      "Away from the null position no reading may be taken — refused",
+      "The measured R must not depend on the auxiliary lens chosen"
+    ],
+    "expectedBehaviour": [
+      "The light retraces its path only at one mirror position",
+      "R is the distance from that position to I₁",
+      "f comes out at half of R",
+      "Different object distances give the same R"
+    ],
+    "testFile": "tests/batch6.test.js"
+  }
+}

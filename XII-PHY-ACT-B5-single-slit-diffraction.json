@@ -1,0 +1,516 @@
+{
+  "id": "XII-PHY-ACT-B5",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 5,
+    "kind": "activity",
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-10: Wave Optics",
+    "topic": "Wave optics: Wave front and Huygen’s principle, reflection and refraction of plane wave at a plane surface using wave fronts; Proof of laws of reflection and refraction using Huygen’s principle; Interference, Young’s double slit experiment and expression for fringe width (No derivation, final expression only), coherent sources and sustained interference of light, diffraction due to a single slit, width of central maxima (qualitative treatment only)",
+    "subtopic": "Diffraction at a single slit; positions of the minima; width of the central maximum",
+    "practical": "To observe diffraction of light due to a thin slit.",
+    "learningObjectives": [
+      "Be able to observe the diffraction pattern produced when light passes through a narrow slit",
+      "Be able to measure the width of the central maximum",
+      "Be able to show that the pattern widens as the slit is narrowed",
+      "Be able to find the wavelength of the light from the width of the central maximum"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Activity 5 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Diffraction of light at a thin slit",
+  "shortTitle": "Single-slit diffraction",
+  "objective": [
+    "To observe the diffraction pattern produced when light passes through a narrow slit.",
+    "To measure the width of the central maximum.",
+    "To show that the pattern widens as the slit is narrowed.",
+    "To find the wavelength of the light from the width of the central maximum."
+  ],
+  "theory": {
+    "statement": "Geometrical optics predicts that a narrow slit will cast a sharp shadow. What is actually seen on the screen is a broad bright band at the centre, with fainter bands either side separated by dark lines. This spreading of light into the region of geometrical shadow is diffraction, and it can only be explained if light is a wave. The most striking feature is that making the slit NARROWER makes the pattern WIDER.",
+    "derivationNote": "Every point of the wavefront in the slit acts as a source of secondary wavelets, and the pattern on the screen is the result of these wavelets interfering. Consider the light leaving the slit at an angle θ. If the slit of width a is imagined divided into two halves, the wavelets from corresponding points in the two halves differ in path by (a/2) sin θ. When this equals half a wavelength every wavelet is cancelled by a partner and the resultant is zero, which gives a sin θ = λ for the first dark fringe. Dividing the slit into four, six and more parts gives the general condition a sin θ = nλ for the nth minimum. Note carefully that this is the condition for MINIMA — it looks like the condition for maxima in the double-slit experiment, and confusing the two is the commonest error in this topic. The central maximum lies between the first minima on either side, so for small angles its width on a screen at distance D is w = 2λD/a. This single expression contains all three testable predictions: the pattern widens in inverse proportion to the slit width, in direct proportion to the screen distance, and in direct proportion to the wavelength, so red light spreads more than blue.",
+    "keyEquations": [
+      "Minima: a sin θ = nλ, for n = ±1, ±2, …",
+      "Position of the nth minimum: yₙ ≈ nλD/a for small angles",
+      "Width of the central maximum: w = 2λD/a",
+      "The central maximum is twice as wide as each secondary maximum",
+      "Narrower slit ⇒ wider pattern; longer wavelength ⇒ wider pattern"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Laser or monochromatic source",
+      "spec": "red 650 nm, green 532 nm or blue 450 nm",
+      "why": "Monochromatic light is needed or the fringes of different colours overlap and blur"
+    },
+    {
+      "name": "Set of single slits",
+      "spec": "0.05 to 0.40 mm wide",
+      "why": "The diffracting aperture; the range lets the inverse relation be tested"
+    },
+    {
+      "name": "Screen",
+      "spec": "white, 0.5 to 3 m from the slit",
+      "why": "Displays the pattern; the distance sets the scale of the fringes"
+    },
+    {
+      "name": "Millimetre scale on the screen",
+      "spec": "least count 0.2 to 1 mm",
+      "why": "Measures the positions of the minima"
+    },
+    {
+      "name": "Optical bench and holders",
+      "spec": "",
+      "why": "Keeps the slit and screen aligned and lets the distance be varied and measured"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "source",
+      "label": "Source",
+      "symbol": "λ",
+      "unit": "",
+      "type": "control",
+      "default": "red",
+      "options": [
+        "red",
+        "green",
+        "blue",
+        "sodium"
+      ]
+    },
+    {
+      "id": "slit",
+      "label": "Slit width",
+      "symbol": "a",
+      "unit": "",
+      "type": "independent",
+      "default": "a010",
+      "options": [
+        "a005",
+        "a010",
+        "a020",
+        "a040"
+      ]
+    },
+    {
+      "id": "scale",
+      "label": "Scale",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "s05",
+      "options": [
+        "s1",
+        "s05",
+        "s02"
+      ]
+    },
+    {
+      "id": "screenDistanceM",
+      "label": "Screen distance",
+      "symbol": "D",
+      "unit": "m",
+      "type": "independent",
+      "min": 0.5,
+      "max": 3,
+      "step": 0.1,
+      "default": 1.5
+    },
+    {
+      "id": "wavelength",
+      "label": "Wavelength",
+      "symbol": "λ",
+      "unit": "nm",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Mount the slit on the bench and direct the laser through it onto the screen.",
+      "checkpoint": true,
+      "expects": "slit"
+    },
+    {
+      "step": 2,
+      "text": "Darken the room and identify the broad central band and the fainter bands either side."
+    },
+    {
+      "step": 3,
+      "text": "Measure the distance from the slit to the screen.",
+      "checkpoint": true,
+      "expects": "screenDistanceM"
+    },
+    {
+      "step": 4,
+      "text": "Mark the centres of the two dark fringes either side of the central band and measure the distance between them: that is the width of the central maximum.",
+      "checkpoint": true
+    },
+    {
+      "step": 5,
+      "text": "Change to a narrower slit and repeat. Note that the pattern gets WIDER as the slit gets narrower."
+    },
+    {
+      "step": 6,
+      "text": "Take at least three readings, varying the slit width or the screen distance between them."
+    },
+    {
+      "step": 7,
+      "text": "Compute λ from w = 2λD/a for each reading and take the mean."
+    }
+  ],
+  "simulation": {
+    "model": "single-slit-diffraction",
+    "renderer": "single-slit-diffraction",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "screenDistanceM",
+        "widget": "slider"
+      },
+      {
+        "var": "slit",
+        "widget": "segmented",
+        "options": [
+          "a005",
+          "a010",
+          "a020",
+          "a040"
+        ]
+      },
+      {
+        "var": "source",
+        "widget": "segmented",
+        "options": [
+          "red",
+          "green",
+          "blue",
+          "sodium"
+        ]
+      },
+      {
+        "var": "scale",
+        "widget": "segmented",
+        "options": [
+          "s1",
+          "s05",
+          "s02"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record central width",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Reading",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "slitMm",
+        "label": "Slit width a",
+        "unit": "mm",
+        "decimals": 2
+      },
+      {
+        "key": "screenDistanceM",
+        "label": "Distance D",
+        "unit": "m",
+        "decimals": 2
+      },
+      {
+        "key": "centralWidthMm",
+        "label": "Central width w",
+        "unit": "mm",
+        "decimals": 2
+      },
+      {
+        "key": "inverseSlit",
+        "label": "1/a",
+        "unit": "mm⁻¹",
+        "decimals": 2
+      }
+    ],
+    "graph": {
+      "x": "inverseSlit",
+      "y": "centralWidthMm",
+      "xLabel": "1/a (mm⁻¹)",
+      "yLabel": "Central maximum width w (mm)",
+      "throughOrigin": true
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Measure the width w of the central maximum for each slit",
+      "Compute λ = w·a / 2D for each reading",
+      "Take the mean of the values of λ",
+      "Plot w against 1/a and confirm a straight line through the origin",
+      "Confirm that the narrowest slit gave the widest pattern"
+    ],
+    "resultKeys": [
+      "wavelength",
+      "inverseConfirmed",
+      "narrowerIsWider"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Wavelength of the light",
+    "symbol": "λ",
+    "value": 650,
+    "tolerance": 40,
+    "unit": "nm",
+    "secondary": {
+      "quantity": "Central maximum width, 0.10 mm slit at 1.5 m",
+      "value": 19.5,
+      "tolerance": 2,
+      "unit": "mm"
+    },
+    "statement": "The pattern is a broad central band with fainter bands either side, and the central band is twice the width of the others. Narrowing the slit widens the pattern: a plot of w against 1/a is a straight line through the origin. With a 0.10 mm slit at 1.5 m the red laser gives a central maximum about 19.5 mm wide, from which λ comes out at about 650 nm."
+  },
+  "safety": [
+    "NEVER look directly into the laser beam or at its specular reflection. A laser can damage the retina before the blink reflex operates.",
+    "Keep the beam below eye level and work with the beam path along the bench, not across the room.",
+    "Remove watches and rings, which can reflect the beam unexpectedly.",
+    "Switch the laser off between readings rather than leaving it running.",
+    "Warn others in the room before switching the laser on."
+  ],
+  "sourcesOfError": [
+    "The centres of the dark fringes are hard to fix precisely, since a minimum is a region of gradual darkening rather than a sharp line.",
+    "The screen not perpendicular to the beam, which stretches the pattern on one side.",
+    "The slit width quoted by the manufacturer may differ slightly from its true value.",
+    "Stray room light reducing the contrast so the outer minima cannot be seen.",
+    "Measuring to the first BRIGHT fringe instead of the first dark one.",
+    "For a wide slit the pattern is so narrow that the fringe positions carry a large percentage error."
+  ],
+  "viva": [
+    {
+      "question": "Why does light spread out after passing through a narrow slit?",
+      "expectedConcept": "Because light is a wave. By Huygens’ principle every point of the wavefront in the slit acts as a source of secondary wavelets, and these spread in all forward directions. The pattern on the screen is the result of those wavelets interfering with one another, which is something a stream of particles travelling in straight lines could never produce.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Secondary wavelets from across the slit interfere.",
+      "commonMisconception": "Explaining the spreading as light bouncing off the edges of the slit."
+    },
+    {
+      "question": "What is the condition for a minimum in single-slit diffraction?",
+      "expectedConcept": "a sin θ = nλ, with n = ±1, ±2 and so on. Dividing the slit into an even number of strips, the wavelets from each strip are cancelled exactly by those from its partner, so the resultant is zero.",
+      "difficulty": "medium",
+      "bloom": "Remember",
+      "answerLogic": "a sin θ = nλ gives the MINIMA.",
+      "commonMisconception": "Quoting it as the condition for maxima, by confusion with the double-slit experiment."
+    },
+    {
+      "question": "What happens to the pattern if the slit is made narrower?",
+      "expectedConcept": "It gets WIDER. The width of the central maximum is 2λD/a, so it is inversely proportional to the slit width: halving a doubles the width of the pattern. This is the opposite of what geometrical optics would suggest and is the clearest signature of diffraction.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "w ∝ 1/a — narrower slit, wider pattern.",
+      "commonMisconception": "Expecting a narrower slit to give a narrower patch of light."
+    },
+    {
+      "question": "Why is the central maximum twice as wide as the others?",
+      "expectedConcept": "Because it lies between the first minimum on one side and the first on the other, so it spans the range from −λ/a to +λ/a in sin θ. Every other maximum lies between two CONSECUTIVE minima, which are only λ/a apart in sin θ. The central band therefore covers twice the angular range.",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "It spans two fringe spacings, the others one.",
+      "commonMisconception": "Thinking it is wider merely because it is brighter."
+    },
+    {
+      "question": "How would the pattern change if blue light were used instead of red?",
+      "expectedConcept": "It would be narrower. The width is proportional to λ, and blue light of 450 nm has about two-thirds the wavelength of red at 650 nm, so the whole pattern shrinks in that proportion. Longer wavelengths diffract more, which is why red spreads most.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "w ∝ λ, so blue diffracts less than red.",
+      "commonMisconception": "Assuming the colour affects only the appearance and not the geometry."
+    },
+    {
+      "question": "Why must the source be monochromatic?",
+      "expectedConcept": "Because the fringe positions depend on wavelength. With white light every colour produces its own pattern of a different size, all superimposed, so the fringes overlap into coloured bands and no single minimum can be located precisely enough to measure.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Different wavelengths give differently sized patterns.",
+      "commonMisconception": "Believing white light simply gives a brighter version of the same pattern."
+    },
+    {
+      "question": "How is diffraction at a single slit different from interference at a double slit?",
+      "expectedConcept": "Double-slit interference comes from two discrete coherent sources and gives fringes of essentially equal brightness, evenly spaced. Single-slit diffraction comes from the continuous distribution of secondary sources across one aperture, and gives a bright central band with rapidly fainter subsidiary maxima. The conditions look similar but a sin θ = nλ gives minima here and maxima there.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Continuous aperture versus two discrete sources.",
+      "commonMisconception": "Treating the two conditions as interchangeable because the algebra looks alike."
+    },
+    {
+      "question": "Why is diffraction not usually noticed with everyday objects?",
+      "expectedConcept": "Because the effect is appreciable only when the aperture is comparable with the wavelength. Light has a wavelength of a few hundred nanometres, so a doorway a metre across diffracts it by an utterly negligible angle and shadows look sharp. Sound, with a wavelength of about a metre, diffracts round a doorway readily — which is why you can hear round a corner but not see round one.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Diffraction matters when the aperture approaches the wavelength.",
+      "commonMisconception": "Concluding that light does not diffract at all in everyday situations."
+    },
+    {
+      "question": "What would you see if the slit were narrower than the wavelength of the light?",
+      "expectedConcept": "No dark fringe at all. The first minimum requires sin θ = λ/a, and if λ exceeds a that would need a sine greater than 1, which is impossible. The light is diffracted through every angle and the screen is lit more or less uniformly, with no pattern to measure.",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "sin θ = λ/a has no solution when λ > a.",
+      "commonMisconception": "Expecting an infinitely wide but still fringed pattern."
+    },
+    {
+      "question": "Why must the screen be far from the slit?",
+      "expectedConcept": "Because the simple formula assumes plane wavefronts reaching the screen, which holds only when the screen distance is large compared with a²/λ. Closer than that the pattern is a Fresnel one: the central band develops internal structure and its edges are not the simple minima the formula predicts.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Fraunhofer conditions need D ≫ a²/λ.",
+      "commonMisconception": "Assuming the formula applies at any screen distance."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The condition a sin θ = nλ in single-slit diffraction gives the:",
+        "options": [
+          "Maxima",
+          "Minima",
+          "Central maximum",
+          "Critical angle"
+        ],
+        "answer": 1,
+        "feedback": "It is the condition for the dark fringes; the double-slit version gives maxima."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "If the slit is made narrower, the diffraction pattern becomes:",
+        "options": [
+          "Narrower",
+          "Wider",
+          "Unchanged",
+          "Brighter but the same width"
+        ],
+        "answer": 1,
+        "feedback": "The width goes as 2λD/a, so it is inversely proportional to the slit width."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "The central maximum is:",
+        "options": [
+          "The same width as the others",
+          "Half as wide",
+          "Twice as wide",
+          "Three times as wide"
+        ],
+        "answer": 2,
+        "feedback": "It spans two fringe spacings, while each other maximum spans one."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Take at least three readings, varying the slit or the distance.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Let the pattern come up before measuring.",
+        "check": "settled"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the wavelength you obtained, in nm.",
+        "answer": 650,
+        "tolerance": 60,
+        "feedback": "The red laser is 650 nm."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "Your plot of w against 1/a was a straight line through the origin. This confirms:",
+        "options": [
+          "w ∝ a",
+          "w ∝ 1/a",
+          "w ∝ a²",
+          "w is independent of a"
+        ],
+        "answer": 1,
+        "feedback": "A straight line against 1/a means w is inversely proportional to a."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Using blue light instead of red would make the pattern:",
+        "options": [
+          "Wider",
+          "Narrower",
+          "Unchanged",
+          "Disappear"
+        ],
+        "answer": 1,
+        "feedback": "Width is proportional to wavelength, and blue is the shorter."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Minima: a sin θ = nλ, for n = ±1, ±2, …",
+    "assumptions": [
+      "Minima: a sin θ = nλ, for n = ±1, ±2, …",
+      "Position of the nth minimum: yₙ ≈ nλD/a for small angles",
+      "Width of the central maximum: w = 2λD/a",
+      "The central maximum is twice as wide as each secondary maximum"
+    ],
+    "validRange": "The pattern is a broad central band with fainter bands either side, and the cent",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "The centres of the dark fringes are hard to fix precisely, since a minimum is a region of gradual darkening rather than a sharp line.",
+      "The screen not perpendicular to the beam, which stretches the pattern on one side.",
+      "The slit width quoted by the manufacturer may differ slightly from its true value.",
+      "Stray room light reducing the contrast so the outer minima cannot be seen."
+    ],
+    "expectedBehaviour": [
+      "The pattern is a broad central band with fainter bands either side, and the central band is twice the width of the others. Narrowing the slit widens the pattern: a plot of w against 1/a is a straight line through the origin. With a 0.10 mm slit at 1.5 m the red laser gives a central maximum about 19.5 mm wide, from which λ comes out at about 650 nm."
+    ],
+    "testFile": "tests/batch13.test.js"
+  }
+}

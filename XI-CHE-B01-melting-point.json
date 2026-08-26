@@ -1,0 +1,556 @@
+{
+  "id": "XI-CHE-B01",
+  "class": "XI",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "B",
+    "categoryTitle": "Characterization and Purification of Chemical Substances",
+    "assessmentComponent": "Content Based Experiment (06 marks)",
+    "serial": 1,
+    "unit": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques",
+    "chapter": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques",
+    "topic": "General introduction, methods of purification, qualitative and quantitative analysis, classification and IUPAC nomenclature of organic compounds",
+    "subtopic": "Melting point as a criterion of purity; depression of the melting point by an impurity; the mixed melting point test",
+    "practical": "Determination of melting point of an organic compound.",
+    "learningObjectives": [
+      "Be able to determine the melting point of a given organic compound by the capillary method",
+      "Be able to observe how an impurity lowers the melting point and broadens the melting range",
+      "Be able to use the melting point as a test of the purity of the sample"
+    ],
+    "competencies": [
+      "Performing a standard laboratory operation and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, CATEGORY B, Experiment 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Determination of the melting point of an organic compound",
+  "shortTitle": "Melting point",
+  "objective": [
+    "To determine the melting point of a given organic compound by the capillary method.",
+    "To observe how an impurity lowers the melting point and broadens the melting range.",
+    "To use the melting point as a test of the purity of the sample."
+  ],
+  "theory": {
+    "statement": "A pure crystalline organic solid melts at a sharp and characteristic temperature. An impure sample of the same compound melts LOWER, and over a range of several degrees rather than at a point. Both effects have the same cause, and together they make the melting point the standard bench test of purity.",
+    "derivationNote": "Depression of the freezing point is a colligative property: it depends on the NUMBER of dissolved particles, not on what they are. When a solid containing a soluble impurity begins to melt, that impurity dissolves in the small quantity of liquid first formed. The liquid is therefore highly concentrated in impurity at the start, so the melting point is depressed most at that moment. As melting continues the impurity is diluted through a growing volume of melt, the depression shrinks, and the remaining solid melts at a progressively higher temperature. The sample therefore melts over a RANGE, from the appearance of the first drop to the disappearance of the last crystal, and both the lowering and the broadening grow with the amount of impurity. A pure compound melts within about half a degree; a badly impure one can smear over five or more. There is a second, purely experimental effect. The thermometer reads the heating bath, while the sample inside the capillary follows it with a lag. Heat quickly and the bath is already above the sample when it melts, so the melting point is recorded too HIGH. This is a systematic error and repeating the run will not remove it; the remedy is to slow the heating to one or two degrees per minute near the expected value.",
+    "keyEquations": [
+      "Melting range = temperature at which the last crystal disappears minus that of the first drop",
+      "Depression of freezing point is proportional to the amount of dissolved impurity",
+      "A pure compound melts within about 0.5 °C",
+      "Heating too fast makes the thermometer lag, and the melting point reads high"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Thiele tube or melting point bath",
+      "spec": "with liquid paraffin",
+      "why": "The shaped tube sets up a convection current, so the bath heats evenly without stirring"
+    },
+    {
+      "name": "Capillary tubes",
+      "spec": "thin walled, sealed at one end",
+      "why": "Holds a small column of sample close against the thermometer bulb"
+    },
+    {
+      "name": "Thermometer",
+      "spec": "least count 0.5 °C, range to 250 °C",
+      "why": "A pure compound melts within half a degree, so a coarse thermometer cannot resolve the sharpness"
+    },
+    {
+      "name": "Burner and stand",
+      "spec": "with a small flame",
+      "why": "Heats the bath; the rate of heating must be controllable"
+    },
+    {
+      "name": "Rubber band or thread",
+      "spec": "",
+      "why": "Ties the capillary to the thermometer with the sample level with the bulb"
+    },
+    {
+      "name": "Organic compound",
+      "spec": "both crude and recrystallised",
+      "why": "Comparing the two is what makes this a test of purity rather than a lookup"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "compound",
+      "label": "Compound",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "naphthalene",
+      "options": [
+        "naphthalene",
+        "benzoic",
+        "urea",
+        "acetanilide"
+      ]
+    },
+    {
+      "id": "purity",
+      "label": "Sample",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "pure",
+      "options": [
+        "pure",
+        "slight",
+        "impure"
+      ]
+    },
+    {
+      "id": "bath",
+      "label": "Heating bath",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "oil",
+      "options": [
+        "oil",
+        "water"
+      ]
+    },
+    {
+      "id": "thermometer",
+      "label": "Thermometer",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "t05",
+      "options": [
+        "t1",
+        "t05",
+        "t02"
+      ]
+    },
+    {
+      "id": "heatingRate",
+      "label": "Rate of heating",
+      "symbol": "",
+      "unit": "°C/min",
+      "type": "independent",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "id": "meltingPoint",
+      "label": "Melting point",
+      "symbol": "",
+      "unit": "°C",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Powder the dry sample and pack a 2–3 mm column into the sealed end of a capillary tube.",
+      "checkpoint": true,
+      "expects": "compound"
+    },
+    {
+      "step": 2,
+      "text": "Attach the capillary to the thermometer so the sample is level with the bulb.",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Suspend the assembly in the bath, with the bulb well below the surface of the liquid.",
+      "checkpoint": true,
+      "expects": "bath"
+    },
+    {
+      "step": 4,
+      "text": "Heat rapidly at first, to within about 10 °C of the expected melting point.",
+      "checkpoint": false
+    },
+    {
+      "step": 5,
+      "text": "Slow the heating to 1–2 °C per minute so the thermometer can keep up with the sample.",
+      "checkpoint": true,
+      "expects": "heatingRate"
+    },
+    {
+      "step": 6,
+      "text": "Note the temperature at which the first drop of liquid appears, and again when the last crystal disappears.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 7,
+      "text": "Repeat with a fresh capillary; a melting point is never quoted from a single run.",
+      "checkpoint": true,
+      "expects": "rows>=2"
+    },
+    {
+      "step": 8,
+      "text": "Repeat with the crude sample and compare both the value and the width of the range.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "melting-point",
+    "renderer": "melting-point",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "heatingRate",
+        "widget": "slider"
+      },
+      {
+        "var": "compound",
+        "widget": "segmented",
+        "options": [
+          "naphthalene",
+          "benzoic",
+          "urea",
+          "acetanilide"
+        ]
+      },
+      {
+        "var": "purity",
+        "widget": "segmented",
+        "options": [
+          "pure",
+          "slight",
+          "impure"
+        ]
+      },
+      {
+        "var": "bath",
+        "widget": "segmented",
+        "options": [
+          "oil",
+          "water"
+        ]
+      },
+      {
+        "var": "thermometer",
+        "widget": "segmented",
+        "options": [
+          "t1",
+          "t05",
+          "t02"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record melting range",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "compound",
+        "label": "Compound",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "purity",
+        "label": "Sample",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "firstDropC",
+        "label": "First drop",
+        "unit": "°C",
+        "decimals": 1
+      },
+      {
+        "key": "lastCrystalC",
+        "label": "Last crystal",
+        "unit": "°C",
+        "decimals": 1
+      },
+      {
+        "key": "rangeC",
+        "label": "Range",
+        "unit": "°C",
+        "decimals": 2
+      }
+    ],
+    "graph": {
+      "x": "trial",
+      "y": "lastCrystalC",
+      "xLabel": "Trial",
+      "yLabel": "Melting point (°C)",
+      "throughOrigin": false
+    },
+    "minRows": 2
+  },
+  "calculations": {
+    "steps": [
+      "Record the temperature of the first drop and of the last crystal",
+      "The melting range is the difference between them",
+      "The melting point is quoted as that range, e.g. 80–80.5 °C",
+      "Take the mean of at least two concordant runs",
+      "Compare the range for the pure and the crude sample"
+    ],
+    "resultKeys": [
+      "meltingPoint",
+      "rangeC",
+      "sharp"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Melting point of naphthalene",
+    "symbol": "",
+    "value": 80.5,
+    "tolerance": 2,
+    "unit": "°C",
+    "secondary": {
+      "quantity": "Melting range of the pure sample",
+      "value": 0.4,
+      "tolerance": 0.6,
+      "unit": "°C"
+    },
+    "statement": "The recrystallised sample melts sharply at about 80.5 °C, within half a degree. The crude sample melts several degrees lower and over a range of two to three degrees, because a dissolved impurity depresses the freezing point in proportion to the number of particles present."
+  },
+  "safety": [
+    "Liquid paraffin at 200 °C causes severe burns; never touch the bath or the thermometer until both have cooled.",
+    "Heat the Thiele tube at the side arm only, and never point its mouth towards anyone.",
+    "Many organic solids and their vapours are harmful. Work in a well ventilated room and do not inhale the fumes.",
+    "Naphthalene is flammable and sublimes readily; keep it away from the naked flame.",
+    "Dispose of used capillaries in the sharps bin, not the ordinary waste."
+  ],
+  "sourcesOfError": [
+    "Heating too fast, so the thermometer lags behind the sample and the melting point reads high.",
+    "The sample column packed too long or too loosely, so it does not melt at one temperature.",
+    "The capillary not level with the thermometer bulb.",
+    "Damp sample: traces of solvent act as an impurity and depress the melting point.",
+    "The bath not stirred, so the thermometer and the sample are at different temperatures.",
+    "Judging the exact moment the last crystal disappears is difficult by eye."
+  ],
+  "viva": [
+    {
+      "question": "What is meant by the melting point of a substance?",
+      "expectedConcept": "The temperature at which the solid and liquid phases are in equilibrium at atmospheric pressure. For a pure crystalline solid it is sharp and characteristic, which is what makes it useful for identification.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Solid and liquid in equilibrium.",
+      "commonMisconception": "Defining it as the temperature at which the solid starts to look wet."
+    },
+    {
+      "question": "Why does an impurity LOWER the melting point?",
+      "expectedConcept": "Because depression of the freezing point is a colligative property. Dissolved particles lower the chemical potential of the liquid, so the solid and liquid come into equilibrium at a lower temperature. It depends on the number of particles, not on their identity.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Colligative depression of freezing point.",
+      "commonMisconception": "Thinking the impurity must itself have a low melting point."
+    },
+    {
+      "question": "Why does an impure sample melt over a RANGE rather than at a point?",
+      "expectedConcept": "The impurity dissolves in the first liquid formed, which is therefore highly concentrated and depresses the melting point strongly. As more solid melts the impurity is diluted through more liquid, the depression shrinks, and the rest melts at a rising temperature.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "The melt becomes progressively more dilute in impurity.",
+      "commonMisconception": "Assuming the range is just imprecision in the observation."
+    },
+    {
+      "question": "Why must the heating be slow near the melting point?",
+      "expectedConcept": "The thermometer reads the bath, while the sample inside the capillary follows with a lag. Heating fast the bath is already several degrees above the sample when it melts, so the value recorded is too high. It is a systematic error that repetition cannot remove.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "The sample lags the bath.",
+      "commonMisconception": "Thinking a faster run merely gives a less precise answer."
+    },
+    {
+      "question": "What is a mixed melting point, and what is it used for?",
+      "expectedConcept": "The melting point of an intimate mixture of the unknown with an authentic sample of a suspected compound. If the two are the same substance there is no depression and the mixture melts sharply at the same point; if they differ, each acts as an impurity in the other and the mixture melts low and broad. It is a definitive identification test.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "No depression means the two are identical.",
+      "commonMisconception": "Thinking two compounds with the same melting point must be the same substance."
+    },
+    {
+      "question": "Why is liquid paraffin used in the bath rather than water?",
+      "expectedConcept": "Water cannot be taken above 100 °C, so it can only be used for low-melting solids. Liquid paraffin is stable to well over 200 °C and covers almost the whole range of common organic solids.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "A much wider temperature range.",
+      "commonMisconception": "Believing paraffin conducts heat better than water."
+    },
+    {
+      "question": "Why is the sample packed into a short, tight column?",
+      "expectedConcept": "So that the whole of it is at one temperature and level with the thermometer bulb. A long or loosely packed column has a temperature gradient along it and melts progressively, which broadens the apparent range even for a pure sample.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "To keep the sample at a single temperature.",
+      "commonMisconception": "Thinking more sample gives a more reliable reading."
+    },
+    {
+      "question": "How would a trace of solvent left in the sample affect the result?",
+      "expectedConcept": "It acts as an impurity. The melting point would be depressed and the range broadened, and a genuinely pure compound would be judged impure. This is why the sample must be thoroughly dried before the determination.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Residual solvent behaves as an impurity.",
+      "commonMisconception": "Assuming a volatile solvent simply evaporates during heating and does no harm."
+    },
+    {
+      "question": "Two compounds have the same melting point. Are they the same substance?",
+      "expectedConcept": "Not necessarily — many different compounds melt near the same temperature. The melting point alone is suggestive, not conclusive. A mixed melting point with an authentic sample settles it: no depression means the same substance.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Melting point alone is not proof of identity.",
+      "commonMisconception": "Treating a matching melting point as a positive identification."
+    },
+    {
+      "question": "What does a sharp melting point tell you about the sample?",
+      "expectedConcept": "That it is pure, or very nearly so. A range under about half a degree means there is too little dissolved impurity to depress the freezing point measurably, which is exactly the criterion used to judge a recrystallisation.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Sharpness is the criterion of purity.",
+      "commonMisconception": "Thinking sharpness only reflects careful observation."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "An impurity in an organic solid makes it melt:",
+        "options": [
+          "Higher and sharply",
+          "Lower and over a range",
+          "At the same temperature",
+          "Not at all"
+        ],
+        "answer": 1,
+        "feedback": "Depression of freezing point is colligative, and the melt becomes progressively more dilute in impurity."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "Heating too quickly near the melting point makes the observed value:",
+        "options": [
+          "Too low",
+          "Too high",
+          "Unchanged",
+          "Zero"
+        ],
+        "answer": 1,
+        "feedback": "The sample lags behind the bath the thermometer is reading."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "A mixed melting point that shows NO depression means:",
+        "options": [
+          "The two are different compounds",
+          "The two are the same compound",
+          "The sample is wet",
+          "The thermometer is faulty"
+        ],
+        "answer": 1,
+        "feedback": "Two different substances each act as an impurity in the other and depress the melting point."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Determine the melting point at least twice.",
+        "check": "rows>=2"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Keep the heating rate at 1–2 °C per minute near the melting point.",
+        "check": "slowHeating"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the melting point of your pure naphthalene, in °C.",
+        "answer": 80.5,
+        "tolerance": 3,
+        "feedback": "About 80.5 °C, melting within half a degree."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "Your crude sample melted at 76–79 °C. This shows that:",
+        "options": [
+          "The thermometer is wrong",
+          "The sample contains a soluble impurity",
+          "It is a different compound",
+          "It was heated too slowly"
+        ],
+        "answer": 1,
+        "feedback": "An impurity lowers the melting point and broadens the range — both are seen here."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "A water bath cannot be used for benzoic acid because:",
+        "options": [
+          "Water dissolves it",
+          "Water cannot be taken above 100 °C and it melts at 122 °C",
+          "It reacts with water",
+          "The tube would crack"
+        ],
+        "answer": 1,
+        "feedback": "The bath must be able to exceed the melting point of the compound."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Melting range = temperature at which the last crystal disappears minus that of the first drop",
+    "assumptions": [
+      "Melting range = temperature at which the last crystal disappears minus that of the first drop",
+      "Depression of freezing point is proportional to the amount of dissolved impurity",
+      "A pure compound melts within about 0.5 °C",
+      "Heating too fast makes the thermometer lag, and the melting point reads high"
+    ],
+    "validRange": "The recrystallised sample melts sharply at about 80.5 °C, within half a degree. ",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Heating too fast, so the thermometer lags behind the sample and the melting point reads high.",
+      "The sample column packed too long or too loosely, so it does not melt at one temperature.",
+      "The capillary not level with the thermometer bulb.",
+      "Damp sample: traces of solvent act as an impurity and depress the melting point."
+    ],
+    "expectedBehaviour": [
+      "The recrystallised sample melts sharply at about 80.5 °C, within half a degree. The crude sample melts several degrees lower and over a range of two to three degrees, because a dissolved impurity depresses the freezing point in proportion to the number of particles present."
+    ],
+    "testFile": "tests/batch9.test.js"
+  }
+}

@@ -1,0 +1,537 @@
+{
+  "id": "XI-PHY-ACT-A6",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 6,
+    "kind": "activity",
+    "unit": "Unit IV: Work, Energy and Power",
+    "chapter": "Chapter-5: Work, Energy and Power",
+    "topic": "Work done by a constant force and a variable force; kinetic energy, work-energy theorem, power; notion of potential energy, potential energy of a spring, conservative forces; conservation of mechanical energy (kinetic and potential energies); non-conservative forces: motion in a vertical circle; elastic and inelastic collisions",
+    "subtopic": "Interconversion of potential and kinetic energy; rotational kinetic energy of a rolling body; dissipation by non-conservative forces",
+    "practical": "To study the conservation of energy of a ball rolling down on an inclined plane (using a double inclined plane).",
+    "learningObjectives": [
+      "Be able to study the conservation of energy of a ball rolling down a double inclined plane",
+      "Be able to compare the height regained on the second incline with the height of release on the first",
+      "Be able to account for the difference in terms of energy dissipated against friction"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Activity 6 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Conservation of energy of a ball on a double inclined plane",
+  "shortTitle": "Energy conservation",
+  "objective": [
+    "To study the conservation of energy of a ball rolling down a double inclined plane.",
+    "To compare the height regained on the second incline with the height of release on the first.",
+    "To account for the difference in terms of energy dissipated against friction."
+  ],
+  "theory": {
+    "statement": "A ball released from rest at a height on one incline runs down, crosses the join and climbs the other incline. If no energy were lost, it would rise to exactly the height from which it was released, whatever the angles of the two inclines. In practice it rises slightly less, and the shortfall measures the mechanical energy dissipated.",
+    "derivationNote": "At the moment of release the ball has potential energy and no kinetic energy. At the bottom all of that has become kinetic energy, but for a ROLLING ball this is shared between translation and rotation. For a solid sphere the moment of inertia is two fifths of the mass times the square of the radius and, rolling without slipping, the speed equals the angular speed times the radius, so the total kinetic energy is seven tenths of the mass times the square of the speed. The speed at the bottom is therefore the square root of ten g h divided by seven, not the square root of two g h. About two sevenths of the kinetic energy is rotational. Climbing the second incline reverses the process, and since the rotational energy converts back as well, the ideal height regained equals the height of release regardless of either angle: the ball simply returns to its own level. The measured height is always a little less because friction and rolling resistance do negative work along the whole path, converting mechanical energy into heat. Energy is still conserved: it has merely left the mechanical system, which is precisely what makes friction a non-conservative force.",
+    "keyEquations": [
+      "Potential energy at release = mass times g times the release height",
+      "For a rolling solid sphere the kinetic energy is seven tenths of the mass times the square of the speed",
+      "Speed at the bottom = square root of ten g h divided by seven",
+      "Ideally the height regained equals the height of release, whatever the angles",
+      "Energy dissipated = mass times g times the difference in the two heights"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Double inclined plane",
+      "spec": "two grooved boards hinged at the base, angles adjustable",
+      "why": "The ball runs down one incline and up the other; the groove keeps it on a straight path"
+    },
+    {
+      "name": "Steel ball or marble",
+      "spec": "smooth, of known mass",
+      "why": "The rolling body whose energy is followed"
+    },
+    {
+      "name": "Scale along each incline",
+      "spec": "graduated in mm",
+      "why": "Measures the release height and the height regained"
+    },
+    {
+      "name": "Set square and spirit level",
+      "spec": "",
+      "why": "Sets the angles and confirms the base is horizontal"
+    },
+    {
+      "name": "Physical balance",
+      "spec": "least count 10 mg",
+      "why": "Finds the mass of the ball, needed to express the energies in joule"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "releaseHeightCm",
+      "label": "Release height",
+      "symbol": "h1",
+      "unit": "cm",
+      "type": "independent",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "id": "angle1Deg",
+      "label": "Angle of first incline",
+      "symbol": "theta1",
+      "unit": "deg",
+      "type": "control",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "default": 25
+    },
+    {
+      "id": "angle2Deg",
+      "label": "Angle of second incline",
+      "symbol": "theta2",
+      "unit": "deg",
+      "type": "control",
+      "min": 10,
+      "max": 45,
+      "step": 5,
+      "default": 25
+    },
+    {
+      "id": "track",
+      "label": "Track surface",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "polished",
+      "options": [
+        "polished",
+        "plain",
+        "rough"
+      ]
+    },
+    {
+      "id": "ball",
+      "label": "Ball",
+      "symbol": "m",
+      "unit": "",
+      "type": "control",
+      "default": "steel",
+      "options": [
+        "steel",
+        "glass",
+        "brass"
+      ]
+    },
+    {
+      "id": "ratio",
+      "label": "Height ratio",
+      "symbol": "h2/h1",
+      "unit": "",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Set up the double inclined plane with its base horizontal and both boards at equal angles.",
+      "checkpoint": true,
+      "expects": "angle1Deg"
+    },
+    {
+      "step": 2,
+      "text": "Weigh the ball and note its mass.",
+      "checkpoint": true,
+      "expects": "ball"
+    },
+    {
+      "step": 3,
+      "text": "Mark a release height on the first incline and note it against the scale.",
+      "checkpoint": true,
+      "expects": "releaseHeightCm"
+    },
+    {
+      "step": 4,
+      "text": "Hold the ball at that mark and release it gently from rest, without any push.",
+      "checkpoint": false
+    },
+    {
+      "step": 5,
+      "text": "Watch the second incline and mark the highest point the ball reaches. Record the two heights.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 6,
+      "text": "Repeat at least three times from the same height to check that the highest point is reproducible.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 7,
+      "text": "Repeat from different release heights, and again with a rougher track.",
+      "checkpoint": false
+    },
+    {
+      "step": 8,
+      "text": "Calculate the ratio of the two heights, the energy at each end and the energy dissipated.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "energy-conservation",
+    "renderer": "energy-conservation",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "releaseHeightCm",
+        "widget": "slider"
+      },
+      {
+        "var": "angle1Deg",
+        "widget": "slider"
+      },
+      {
+        "var": "angle2Deg",
+        "widget": "slider"
+      },
+      {
+        "var": "track",
+        "widget": "segmented",
+        "options": [
+          "polished",
+          "plain",
+          "rough"
+        ]
+      },
+      {
+        "var": "ball",
+        "widget": "segmented",
+        "options": [
+          "steel",
+          "glass",
+          "brass"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Release and record",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "h1",
+        "label": "Release h1",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "h2",
+        "label": "Regained h2",
+        "unit": "cm",
+        "decimals": 2
+      },
+      {
+        "key": "ratio",
+        "label": "h2/h1",
+        "unit": "",
+        "decimals": 3
+      },
+      {
+        "key": "pe1",
+        "label": "Energy in",
+        "unit": "mJ",
+        "decimals": 2
+      },
+      {
+        "key": "pe2",
+        "label": "Energy out",
+        "unit": "mJ",
+        "decimals": 2
+      },
+      {
+        "key": "lostMJ",
+        "label": "Energy lost",
+        "unit": "mJ",
+        "decimals": 2
+      }
+    ],
+    "graph": {
+      "x": "h1",
+      "y": "h2",
+      "xLabel": "Release height h1 (cm)",
+      "yLabel": "Height regained h2 (cm)",
+      "throughOrigin": true
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Potential energy at release = mass times g times the release height",
+      "Potential energy at the highest point of the climb = mass times g times the height regained",
+      "Energy dissipated = the difference between the two",
+      "Fraction of mechanical energy retained = the ratio of the two heights",
+      "For a rolling solid sphere, two sevenths of the kinetic energy at the join is rotational"
+    ],
+    "resultKeys": [
+      "ratio",
+      "percentRetained",
+      "energyLost"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Fraction of mechanical energy retained",
+    "symbol": "h2/h1",
+    "value": 0.886,
+    "tolerance": 0.05,
+    "unit": "",
+    "secondary": {
+      "quantity": "Energy dissipated as a percentage",
+      "value": 11.4,
+      "tolerance": 5,
+      "unit": "%"
+    },
+    "statement": "On the polished track the ball returns to about 89 percent of its release height, so roughly a ninth of the mechanical energy has been dissipated against friction. The ratio is much the same from any release height, and falls markedly on a rough track. The ball never rises above its starting height, which would require energy to be created."
+  },
+  "safety": [
+    "Clamp the inclined planes so they cannot slip or topple while the ball is running.",
+    "Keep the floor clear: a steel ball that leaves the track rolls a long way and is a serious trip hazard.",
+    "Do not release the ball from a height so great that it leaves the groove at the join.",
+    "Retrieve escaped balls at once rather than at the end of the experiment."
+  ],
+  "sourcesOfError": [
+    "Judging the highest point reached by eye, since the ball is at rest there only for an instant.",
+    "The ball may slip rather than roll at the start, changing the share of rotational energy.",
+    "Energy is lost in the impact at the join between the two inclines.",
+    "The groove may not be uniformly smooth along its whole length.",
+    "The ball may be given a slight push at release instead of being let go from rest.",
+    "Air resistance, though small, is not exactly zero."
+  ],
+  "viva": [
+    {
+      "question": "State the law of conservation of mechanical energy.",
+      "expectedConcept": "In the absence of non-conservative forces such as friction, the total mechanical energy of a system, the sum of its kinetic and potential energies, remains constant.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Kinetic plus potential energy is constant without friction.",
+      "commonMisconception": "Omitting the condition that no non-conservative force acts."
+    },
+    {
+      "question": "Ideally, how high should the ball rise on the second incline?",
+      "expectedConcept": "To exactly the height from which it was released, whatever the angles of the two inclines. The angles determine how long the journey takes and how fast the ball moves, but not the height it can regain.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Same height, independent of angles.",
+      "commonMisconception": "Expecting a steeper second incline to give a lower rise."
+    },
+    {
+      "question": "Why does the ball not return to its original height?",
+      "expectedConcept": "Friction and rolling resistance do negative work along the whole path, converting part of the mechanical energy into heat in the ball and the track. That energy is not destroyed but it is no longer mechanical, so it cannot lift the ball.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Non-conservative work removes mechanical energy.",
+      "commonMisconception": "Saying energy is destroyed or lost outright."
+    },
+    {
+      "question": "For a rolling ball, is the speed at the bottom the square root of two g h?",
+      "expectedConcept": "No. A rolling ball also spins, so part of the potential energy becomes rotational kinetic energy. For a solid sphere the speed is the square root of ten g h divided by seven, about 85 percent of the sliding value. A sliding block would arrive faster.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Rotational energy takes a share.",
+      "commonMisconception": "Applying the sliding formula to a rolling body."
+    },
+    {
+      "question": "What fraction of the kinetic energy of a rolling solid sphere is rotational?",
+      "expectedConcept": "Two sevenths, about 29 percent. The rotational part is one fifth of the mass times the square of the speed and the translational part is one half, so the rotational share is two sevenths of the total.",
+      "difficulty": "hard",
+      "bloom": "Apply",
+      "answerLogic": "Two sevenths for a solid sphere.",
+      "commonMisconception": "Assuming the energy divides equally between the two forms."
+    },
+    {
+      "question": "Why is friction called a non-conservative force?",
+      "expectedConcept": "Because the work it does depends on the path taken, not merely on the start and end points, and the energy it removes cannot be recovered by reversing the motion. A conservative force such as gravity returns the energy when the body comes back.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Path-dependent, irreversible.",
+      "commonMisconception": "Thinking non-conservative means energy is not conserved overall."
+    },
+    {
+      "question": "Could the ball ever rise higher than its release point?",
+      "expectedConcept": "No. That would require more mechanical energy at the end than at the start, which would mean energy had been created. Whatever the angles or the surfaces, the height regained can at best equal the height of release.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Would violate conservation of energy.",
+      "commonMisconception": "Believing a steep second incline could somehow launch it higher."
+    },
+    {
+      "question": "Where has the lost energy gone?",
+      "expectedConcept": "It has become heat in the ball, the track and the surrounding air, together with a very small amount of sound. Total energy is conserved; it is only the MECHANICAL energy of the ball that has decreased.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Converted to heat and sound.",
+      "commonMisconception": "Saying it has simply disappeared."
+    },
+    {
+      "question": "What difference would you expect if the ball slid instead of rolling?",
+      "expectedConcept": "A sliding block reaches the bottom faster, since none of its energy goes into rotation, but sliding friction is far larger than rolling resistance so it would lose much more energy and rise to a much lower height.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Faster arrival, greater dissipation.",
+      "commonMisconception": "Assuming sliding must be more efficient because it is simpler."
+    },
+    {
+      "question": "Why should the ball be released from rest rather than pushed?",
+      "expectedConcept": "A push adds kinetic energy that is not accounted for in the potential energy at release, so the ball arrives with more energy than the release height implies and may even rise above it on the far side. The initial energy must be purely potential for the comparison to be valid.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Any push adds unmeasured energy.",
+      "commonMisconception": "Thinking a gentle push does not matter."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "A ball released from a height on a frictionless double incline rises on the far side to:",
+        "options": [
+          "Half the height",
+          "The same height",
+          "Twice the height",
+          "Zero"
+        ],
+        "answer": 1,
+        "feedback": "With no energy lost, the ball regains exactly its original height whatever the angles."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "For a solid sphere rolling without slipping, the speed at the bottom of a slope is:",
+        "options": [
+          "The square root of two g h",
+          "The square root of ten g h over seven",
+          "The square root of g h",
+          "Twice g h"
+        ],
+        "answer": 1,
+        "feedback": "Part of the energy becomes rotational, so the speed is lower than the sliding value."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "Friction is described as a non-conservative force because:",
+        "options": [
+          "It is very weak",
+          "The work it does depends on the path and cannot be recovered",
+          "It acts only on rough surfaces",
+          "It does no work"
+        ],
+        "answer": 1,
+        "feedback": "Its work is path-dependent and converts mechanical energy irreversibly into heat."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Release the ball at least three times and record the heights.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Try more than one release height to test whether the ratio is constant.",
+        "check": "variedHeight"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the fraction of mechanical energy retained on the polished track.",
+        "answer": 0.886,
+        "tolerance": 0.07,
+        "feedback": "About 0.89: the ball returns to roughly 89 percent of its release height."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "What percentage of the kinetic energy of a rolling solid sphere is rotational?",
+        "answer": 28.6,
+        "tolerance": 3,
+        "feedback": "Two sevenths, about 29 percent."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "You switched to a rough track and the ratio fell sharply. This shows that:",
+        "options": [
+          "Energy was destroyed",
+          "More mechanical energy was converted to heat",
+          "Gravity changed",
+          "The ball became heavier"
+        ],
+        "answer": 1,
+        "feedback": "A rougher surface does more negative work, converting more mechanical energy into heat. Total energy is still conserved."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Potential energy at release = mass times g times the release height",
+    "assumptions": [
+      "Potential energy at release = mass times g times the release height",
+      "For a rolling solid sphere the kinetic energy is seven tenths of the mass times the square of the speed",
+      "Speed at the bottom = square root of ten g h divided by seven",
+      "Ideally the height regained equals the height of release, whatever the angles"
+    ],
+    "validRange": "On the polished track the ball returns to about 89 percent of its release height",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Judging the highest point reached by eye, since the ball is at rest there only for an instant.",
+      "The ball may slip rather than roll at the start, changing the share of rotational energy.",
+      "Energy is lost in the impact at the join between the two inclines.",
+      "The groove may not be uniformly smooth along its whole length."
+    ],
+    "expectedBehaviour": [
+      "On the polished track the ball returns to about 89 percent of its release height, so roughly a ninth of the mechanical energy has been dissipated against friction. The ratio is much the same from any release height, and falls markedly on a rough track. The ball never rises above its starting height, which would require energy to be created."
+    ],
+    "testFile": "tests/batch9.test.js"
+  }
+}

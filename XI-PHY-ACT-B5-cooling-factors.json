@@ -1,0 +1,574 @@
+{
+  "id": "XI-PHY-ACT-B5",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 5,
+    "kind": "activity",
+    "unit": "Unit VIII: Thermodynamics",
+    "chapter": "Chapter-10: Thermal Properties of Matter",
+    "topic": "Heat, temperature, thermal expansion; specific heat capacity; calorimetry; change of state - latent heat capacity; heat transfer-conduction, convection and radiation; Newton’s law of cooling",
+    "subtopic": "Newton’s law of cooling; dependence of the cooling constant on area, mass, specific heat capacity and the nature of the surface",
+    "practical": "To study the factors affecting the rate of loss of heat of a liquid.",
+    "learningObjectives": [
+      "Be able to study how a hot liquid cools, and to verify Newton’s law of cooling",
+      "Be able to find the cooling constant from the slope of a logarithmic plot",
+      "Be able to find out what that constant depends on: the surface, the volume and the liquid"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Activity 5 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Factors affecting the rate of loss of heat of a liquid",
+  "shortTitle": "Rate of cooling",
+  "objective": [
+    "To study how a hot liquid cools, and to verify Newton’s law of cooling.",
+    "To find the cooling constant from the slope of a logarithmic plot.",
+    "To find out what that constant depends on: the surface, the volume and the liquid."
+  ],
+  "theory": {
+    "statement": "Newton’s law of cooling says the rate of loss of heat is proportional to the excess of temperature over the surroundings. What the law does not say, and what this activity finds out, is what the constant of proportionality depends on.",
+    "derivationNote": "Writing the cooling constant as the heat transfer coefficient times the exposed area, divided by the mass times the specific heat capacity, makes every dependence visible at once. The rate rises with the exposed AREA, because heat escapes through the surface. It falls with the MASS and with the specific heat capacity, because a large thermal capacity has more energy to give up for each degree it falls. It rises with the emissive quality of the SURFACE: a dull black vessel radiates far better than a polished one, which is why a shiny surface is used to keep things hot. And of course it rises with the temperature EXCESS, which is the law itself. Because the constant depends on the ratio of area to volume, and area grows as the square of a length while volume grows as the cube, a small vessel cools faster than a large one of the same shape. That is why a cup of tea cools in minutes and a bathtub takes hours. Experimentally, integrating the law gives an exponential approach to the surrounding temperature, so a plot of the logarithm of the excess temperature against time is a straight line whose slope is minus the cooling constant. That straight line is the proper test of the law, because a curve on the log plot would mean the law had failed.",
+    "keyEquations": [
+      "Rate of cooling is proportional to the excess of temperature over the surroundings",
+      "Cooling constant = heat transfer coefficient times area, divided by mass times specific heat capacity",
+      "Excess temperature falls exponentially with time",
+      "A plot of the logarithm of the excess against time is a straight line of slope minus the cooling constant"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Calorimeters of different finish",
+      "spec": "dull black, dull grey and polished, of the same size",
+      "why": "Comparing them isolates the effect of the surface on the rate of loss"
+    },
+    {
+      "name": "Thermometer",
+      "spec": "least count 0.5 °C",
+      "why": "Records the temperature of the liquid at intervals"
+    },
+    {
+      "name": "Stopwatch",
+      "spec": "least count 0.1 s",
+      "why": "Times the readings"
+    },
+    {
+      "name": "Stirrer",
+      "spec": "to fit the calorimeter",
+      "why": "Keeps the liquid at one uniform temperature"
+    },
+    {
+      "name": "Measuring cylinder",
+      "spec": "500 mL",
+      "why": "Fixes the volume of liquid, which determines the thermal capacity"
+    },
+    {
+      "name": "Lid for the calorimeter",
+      "spec": "with a hole for the thermometer",
+      "why": "Reduces the exposed area and suppresses evaporation, to test the effect of area"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "liquid",
+      "label": "Liquid",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "water",
+      "options": [
+        "water",
+        "oil",
+        "glycerine"
+      ]
+    },
+    {
+      "id": "surface",
+      "label": "Surface finish",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "dullBlack",
+      "options": [
+        "dullBlack",
+        "dullGrey",
+        "polished"
+      ]
+    },
+    {
+      "id": "cover",
+      "label": "Cover",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "open",
+      "options": [
+        "open",
+        "lid"
+      ]
+    },
+    {
+      "id": "volumeCm3",
+      "label": "Volume of liquid",
+      "symbol": "V",
+      "unit": "cm³",
+      "type": "independent",
+      "min": 100,
+      "max": 500,
+      "step": 50,
+      "default": 200
+    },
+    {
+      "id": "startExcessC",
+      "label": "Starting excess",
+      "symbol": "Δθ",
+      "unit": "°C",
+      "type": "independent",
+      "min": 0,
+      "max": 70,
+      "step": 5,
+      "default": 45
+    },
+    {
+      "id": "roomTempC",
+      "label": "Room temperature",
+      "symbol": "θ₀",
+      "unit": "°C",
+      "type": "control",
+      "min": 18,
+      "max": 40,
+      "step": 2,
+      "default": 28
+    },
+    {
+      "id": "interval",
+      "label": "Reading interval",
+      "symbol": "",
+      "unit": "s",
+      "type": "control",
+      "min": 15,
+      "max": 90,
+      "step": 15,
+      "default": 30
+    },
+    {
+      "id": "coolingConstant",
+      "label": "Cooling constant",
+      "symbol": "k",
+      "unit": "s⁻¹",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Measure out a known volume of the liquid and heat it well above room temperature.",
+      "checkpoint": true,
+      "expects": "volumeCm3"
+    },
+    {
+      "step": 2,
+      "text": "Pour it into the calorimeter and note the temperature of the room.",
+      "checkpoint": true,
+      "expects": "roomTempC"
+    },
+    {
+      "step": 3,
+      "text": "Suspend the thermometer so its bulb is in the liquid but not touching the vessel.",
+      "checkpoint": false
+    },
+    {
+      "step": 4,
+      "text": "Start the stopwatch and record the temperature every half minute, stirring gently.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 5,
+      "text": "Continue until the liquid is only a few degrees above the room.",
+      "checkpoint": true,
+      "expects": "rows>=5"
+    },
+    {
+      "step": 6,
+      "text": "Calculate the excess over room temperature for each reading, and its natural logarithm.",
+      "checkpoint": false
+    },
+    {
+      "step": 7,
+      "text": "Plot the logarithm of the excess against time and find the slope.",
+      "checkpoint": false
+    },
+    {
+      "step": 8,
+      "text": "Repeat with a different surface, volume or liquid, changing only ONE at a time.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "cooling-factors",
+    "renderer": "cooling-factors",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "volumeCm3",
+        "widget": "slider"
+      },
+      {
+        "var": "startExcessC",
+        "widget": "slider"
+      },
+      {
+        "var": "roomTempC",
+        "widget": "slider"
+      },
+      {
+        "var": "interval",
+        "widget": "slider"
+      },
+      {
+        "var": "liquid",
+        "widget": "segmented",
+        "options": [
+          "water",
+          "oil",
+          "glycerine"
+        ]
+      },
+      {
+        "var": "surface",
+        "widget": "segmented",
+        "options": [
+          "dullBlack",
+          "dullGrey",
+          "polished"
+        ]
+      },
+      {
+        "var": "cover",
+        "widget": "segmented",
+        "options": [
+          "open",
+          "lid"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record temperature",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Reading",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "timeS",
+        "label": "Time",
+        "unit": "s",
+        "decimals": 0
+      },
+      {
+        "key": "tempC",
+        "label": "Temperature",
+        "unit": "°C",
+        "decimals": 2
+      },
+      {
+        "key": "excessC",
+        "label": "Excess",
+        "unit": "°C",
+        "decimals": 2
+      },
+      {
+        "key": "lnExcess",
+        "label": "ln(excess)",
+        "unit": "",
+        "decimals": 4
+      },
+      {
+        "key": "surface",
+        "label": "Surface",
+        "unit": "",
+        "decimals": 0
+      }
+    ],
+    "graph": {
+      "x": "timeS",
+      "y": "excessC",
+      "xLabel": "Time t (s)",
+      "yLabel": "Excess temperature (°C)",
+      "throughOrigin": false
+    },
+    "minRows": 5
+  },
+  "calculations": {
+    "steps": [
+      "Excess = temperature of the liquid minus the temperature of the room",
+      "Take the natural logarithm of the excess for each reading",
+      "Plot the logarithm against time: a straight line verifies Newton’s law",
+      "The cooling constant is minus the slope of that line",
+      "Repeat with one factor changed, and compare the two constants"
+    ],
+    "resultKeys": [
+      "coolingConstant",
+      "halfLifeMin",
+      "r2"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Cooling constant for 200 cm³ of water in an open dull calorimeter",
+    "symbol": "k",
+    "value": 0.00089,
+    "tolerance": 0.0002,
+    "unit": "per second",
+    "secondary": {
+      "quantity": "Time for the excess to halve",
+      "value": 13,
+      "tolerance": 4,
+      "unit": "min"
+    },
+    "statement": "The logarithm of the excess temperature falls linearly with time, verifying Newton’s law. The cooling constant is about nine parts in ten thousand per second, so the excess halves in roughly thirteen minutes. A dull black vessel cools about three times as fast as a polished one, and doubling the volume slows the cooling appreciably."
+  },
+  "safety": [
+    "Hot liquids scald. Pour carefully and use a cloth or tongs to handle the calorimeter.",
+    "Cooking oil heated too far can smoke and catch fire: keep it well below its smoke point.",
+    "Do not leave a thermometer standing unsupported in a vessel; it will topple and break.",
+    "Wipe up spills at once, since a wet floor is a hazard."
+  ],
+  "sourcesOfError": [
+    "The room temperature may drift during a run lasting many minutes.",
+    "A draught or an open window makes the cooling irregular and faster.",
+    "The thermometer bulb may touch the vessel and read its temperature instead of the liquid’s.",
+    "Evaporation removes heat as well as conduction and radiation, especially from an open vessel.",
+    "The liquid may not be stirred enough to stay at a uniform temperature.",
+    "Changing more than one factor at a time makes it impossible to say which caused the difference."
+  ],
+  "viva": [
+    {
+      "question": "State Newton’s law of cooling.",
+      "expectedConcept": "The rate of loss of heat of a body is proportional to the excess of its temperature over that of the surroundings, provided the excess is small. It leads to an exponential fall of the excess with time.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Rate of loss proportional to excess temperature.",
+      "commonMisconception": "Saying the temperature falls at a constant rate."
+    },
+    {
+      "question": "Why is the logarithm of the excess plotted rather than the excess itself?",
+      "expectedConcept": "Because the excess falls exponentially, and taking logarithms turns an exponential into a straight line. A straight line is easy to test for and its slope gives the cooling constant directly; judging whether a curve is the right exponential by eye is not possible.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Linearise the exponential to get the constant.",
+      "commonMisconception": "Trying to read the constant off the curved plot."
+    },
+    {
+      "question": "On what does the cooling constant depend?",
+      "expectedConcept": "On the exposed surface area, the mass and specific heat capacity of the liquid, and the nature of the surface. It rises with area and with the emissivity of the surface; it falls as the thermal capacity rises. It does not depend on the starting temperature.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Area, thermal capacity and surface finish.",
+      "commonMisconception": "Thinking a hotter start gives a bigger constant."
+    },
+    {
+      "question": "Why does a dull black vessel cool faster than a polished one?",
+      "expectedConcept": "A dull black surface is a much better emitter of radiation than a polished one, so it loses heat by radiation far more readily. A good emitter is also a good absorber, which is why a polished flask keeps a drink hot or cold.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Good emitters radiate better.",
+      "commonMisconception": "Thinking the colour affects conduction rather than radiation."
+    },
+    {
+      "question": "Why does a larger volume of liquid cool more slowly?",
+      "expectedConcept": "The cooling constant depends on the ratio of area to volume. Area grows as the square of a length but volume as the cube, so a bigger vessel has less surface per unit of contents. There is more energy to lose and proportionally less surface to lose it through.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Area to volume ratio falls as size rises.",
+      "commonMisconception": "Assuming a bigger vessel has more area so must cool faster."
+    },
+    {
+      "question": "Why must only one factor be changed at a time?",
+      "expectedConcept": "Because otherwise a difference in the result cannot be attributed to any one cause. If the surface and the volume were both changed between runs, a change in the cooling constant could be due to either, and the experiment would prove nothing.",
+      "difficulty": "easy",
+      "bloom": "Apply",
+      "answerLogic": "Control every variable but one.",
+      "commonMisconception": "Thinking a bigger overall change makes the result clearer."
+    },
+    {
+      "question": "Does the cooling constant depend on how hot the liquid was to start with?",
+      "expectedConcept": "No, within the range where Newton’s law holds. A hotter start means a faster initial rate of loss, but the CONSTANT is unchanged; the curve is simply a taller version of the same exponential.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "The constant is a property of the apparatus, not of the start.",
+      "commonMisconception": "Confusing the rate of cooling with the cooling constant."
+    },
+    {
+      "question": "Why does covering the calorimeter slow the cooling?",
+      "expectedConcept": "A lid reduces the exposed surface area, and it also greatly suppresses evaporation, which carries away latent heat. Both effects reduce the rate of loss, so the cooling constant falls.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Less area and less evaporation.",
+      "commonMisconception": "Thinking the lid traps heat by insulation alone."
+    },
+    {
+      "question": "For what range of temperatures is Newton’s law valid?",
+      "expectedConcept": "For small excesses over the surroundings, typically up to thirty or forty degrees. Far above that, radiation follows the fourth-power law of Stefan and the loss is faster than a single exponential predicts, so the log plot bends away from a straight line.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Valid for small excess temperatures.",
+      "commonMisconception": "Assuming it holds at any temperature difference."
+    },
+    {
+      "question": "Two identical vessels hold water and cooking oil at the same temperature. Which cools faster?",
+      "expectedConcept": "The oil. Its specific heat capacity is less than half that of water, so for the same mass it has far less energy to give up per degree, and the same rate of heat loss produces a much faster fall in temperature.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Lower specific heat capacity cools faster.",
+      "commonMisconception": "Expecting water to cool faster because it is denser."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Newton’s law of cooling states that the rate of loss of heat is proportional to:",
+        "options": [
+          "The temperature of the body",
+          "The excess over the surroundings",
+          "The square of the temperature",
+          "The time"
+        ],
+        "answer": 1,
+        "feedback": "It is the excess over the surroundings that drives the heat loss."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "A plot of the logarithm of the excess temperature against time is:",
+        "options": [
+          "A curve",
+          "A straight line",
+          "A parabola",
+          "A horizontal line"
+        ],
+        "answer": 1,
+        "feedback": "Taking logarithms turns the exponential decay into a straight line."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "Which vessel loses heat fastest?",
+        "options": [
+          "Polished silver",
+          "Dull black",
+          "Shiny aluminium",
+          "They are the same"
+        ],
+        "answer": 1,
+        "feedback": "A dull black surface is the best emitter of radiation."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Take at least five readings as the liquid cools.",
+        "check": "rows>=5"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Change one factor and take a second set of readings.",
+        "check": "factorVaried"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the time in which the excess temperature halves, in minutes.",
+        "answer": 13,
+        "tolerance": 5,
+        "feedback": "About thirteen minutes for 200 cm³ of water in an open dull calorimeter."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "You doubled the volume of liquid. The cooling constant:",
+        "options": [
+          "Doubled",
+          "Fell",
+          "Was unchanged",
+          "Became zero"
+        ],
+        "answer": 1,
+        "feedback": "A larger vessel has less surface per unit volume, so it cools more slowly."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "A polished calorimeter cools more slowly than a dull black one because:",
+        "options": [
+          "It is heavier",
+          "A polished surface is a poor emitter of radiation",
+          "It holds more liquid",
+          "It conducts better"
+        ],
+        "answer": 1,
+        "feedback": "Emissivity governs radiative loss; polished surfaces radiate poorly."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Rate of cooling is proportional to the excess of temperature over the surroundings",
+    "assumptions": [
+      "Rate of cooling is proportional to the excess of temperature over the surroundings",
+      "Cooling constant = heat transfer coefficient times area, divided by mass times specific heat capacity",
+      "Excess temperature falls exponentially with time",
+      "A plot of the logarithm of the excess against time is a straight line of slope minus the cooling constant"
+    ],
+    "validRange": "The logarithm of the excess temperature falls linearly with time, verifying Newt",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "The room temperature may drift during a run lasting many minutes.",
+      "A draught or an open window makes the cooling irregular and faster.",
+      "The thermometer bulb may touch the vessel and read its temperature instead of the liquid’s.",
+      "Evaporation removes heat as well as conduction and radiation, especially from an open vessel."
+    ],
+    "expectedBehaviour": [
+      "The logarithm of the excess temperature falls linearly with time, verifying Newton’s law. The cooling constant is about nine parts in ten thousand per second, so the excess halves in roughly thirteen minutes. A dull black vessel cools about three times as fast as a polished one, and doubling the volume slows the cooling appreciably."
+    ],
+    "testFile": "tests/batch9.test.js"
+  }
+}

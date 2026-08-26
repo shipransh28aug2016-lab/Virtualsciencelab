@@ -1,0 +1,197 @@
+{
+  "id": "XI-PHY-B10",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 10,
+    "unit": "Unit X: Oscillations and Waves",
+    "chapter": "Chapter-14: Waves",
+    "topic": "Wave motion; speed of a travelling wave; principle of superposition of waves; reflection of waves; standing waves in strings and organ pipes, fundamental mode and harmonics; beats",
+    "subtopic": "Resonance in a closed air column; end correction; determination of the speed of sound",
+    "practical": "To find the speed of sound in air at room temperature using a resonance tube by two resonance positions.",
+    "learningObjectives": [
+      "Set up a resonance tube and locate the first and second resonance positions by ear",
+      "Recognise that a closed pipe supports only odd harmonics",
+      "Understand the end correction and why the antinode lies above the open end",
+      "Calculate the speed of sound from v = 2f(l₂ − l₁), a formula in which the end correction cancels",
+      "Determine the end correction separately as e = (l₂ − 3l₁)/2",
+      "Correct the observed speed to the standard temperature"
+    ],
+    "competencies": [
+      "Detecting a maximum by ear and locating it reproducibly",
+      "Choosing apparatus so that both required measurements are actually attainable",
+      "Designing a measurement that eliminates a systematic correction rather than estimating it",
+      "Relating a measured wavelength to a wave speed through the frequency"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 10 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Speed of sound in air by a resonance tube",
+  "shortTitle": "Resonance Tube",
+  "objective": [
+    "To find the first and second resonance positions of an air column for a tuning fork of known frequency.",
+    "To calculate the speed of sound in air at room temperature.",
+    "To determine the end correction of the resonance tube."
+  ],
+  "theory": {
+    "statement": "An air column closed at one end by the water surface and open at the other resonates with a tuning fork when its length is such that a standing wave with a node at the water surface and an antinode at the open end can be set up in it.",
+    "derivationNote": "For a closed pipe the node must be at the closed end and the antinode at the open end, so the shortest resonating column is a quarter of a wavelength. The antinode does not lie exactly at the rim but a small distance above it, called the end correction e, of about 0.6 times the radius of the tube. Hence for the first resonance l₁ + e = λ/4. Because a closed pipe supports only odd harmonics, the next resonance is at three quarters of a wavelength: l₂ + e = 3λ/4, not at twice the first length. Subtracting the two relations eliminates the end correction entirely: l₂ − l₁ = λ/2, so λ = 2(l₂ − l₁) and v = fλ = 2f(l₂ − l₁). This is why the two-position method is preferred: the end correction, which is awkward to estimate, cancels exactly. It can nevertheless be found afterwards from e = (l₂ − 3l₁)/2. The speed obtained should be compared with 331.3 + 0.606t metres per second, the accepted value at t degrees Celsius.",
+    "keyEquations": [
+      "First resonance: l₁ + e = λ/4",
+      "Second resonance: l₂ + e = 3λ/4",
+      "λ = 2(l₂ − l₁)",
+      "v = 2f(l₂ − l₁)",
+      "End correction e = (l₂ − 3l₁)/2",
+      "v(t) = 331.3 + 0.606 t  (t in °C)"
+    ]
+  },
+  "apparatus": [
+    { "name": "Resonance tube", "spec": "one metre long, uniform bore, with a movable water reservoir", "why": "The air column whose length can be adjusted by raising or lowering the reservoir" },
+    { "name": "Tuning forks", "spec": "256, 320, 384 and 512 Hz, of known frequency", "why": "The source of sound; a higher frequency is needed so both resonances fit in the tube" },
+    { "name": "Rubber hammer", "spec": "or a rubber pad", "why": "Strikes the fork without damaging it; striking on a hard surface produces unwanted overtones" },
+    { "name": "Metre scale", "spec": "fixed beside the tube, least count 0.1 cm", "why": "Reads the length of the air column at resonance" },
+    { "name": "Thermometer", "spec": "0–50 °C", "why": "The speed of sound depends on temperature, which must be recorded" },
+    { "name": "Plumb line and clamp stand", "spec": "", "why": "Ensures the tube is exactly vertical" }
+  ],
+  "materials": [
+    { "name": "Water", "spec": "clean", "why": "Forms the closed end of the air column; its level sets the column length" }
+  ],
+  "variables": [
+    { "id": "airColumnCm", "label": "Air column length", "symbol": "l", "unit": "cm", "type": "independent", "min": 2, "max": 98, "step": 0.1, "default": 16 },
+    { "id": "fork", "label": "Tuning fork", "symbol": "f", "unit": "Hz", "type": "control", "default": "f512", "options": ["f256", "f288", "f320", "f384", "f512"] },
+    { "id": "tempC", "label": "Room temperature", "symbol": "t", "unit": "°C", "type": "controlled", "min": 10, "max": 45, "step": 1, "default": 27 },
+    { "id": "airColumnAtResonance", "label": "Resonating length", "symbol": "l", "unit": "cm", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Set the resonance tube exactly vertical using the plumb line, and note the room temperature.", "checkpoint": true, "expects": "tempC" },
+    { "step": 2, "text": "Raise the reservoir so that the water level is near the top of the tube, leaving only a short air column.", "checkpoint": false },
+    { "step": 3, "text": "Strike the tuning fork on the rubber pad and hold it horizontally, about a centimetre above the open end, with its prongs vibrating in a vertical plane.", "checkpoint": true, "expects": "fork" },
+    { "step": 4, "text": "Lower the water level slowly and listen. The sound grows louder, reaches a maximum and then fades. Fix the level at the maximum.", "checkpoint": true, "expects": "airColumnCm" },
+    { "step": 5, "text": "Note the length of the air column at this first resonance position, l₁.", "checkpoint": true, "expects": "record" },
+    { "step": 6, "text": "Continue lowering the water level and listen for the next maximum. This is the second resonance position, l₂.", "checkpoint": false },
+    { "step": 7, "text": "Record both positions at least twice each, approaching once from above and once from below, and take the mean.", "checkpoint": true, "expects": "rows>=3" },
+    { "step": 8, "text": "Calculate the speed of sound from v = 2f(l₂ − l₁). Note that the end correction does not appear in this formula.", "checkpoint": false },
+    { "step": 9, "text": "Find the end correction separately from e = (l₂ − 3l₁)/2 and compare it with 0.6 times the radius of the tube.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "resonance-tube",
+    "renderer": "resonance-tube",
+    "fps": 60,
+    "controls": [
+      { "var": "airColumnCm", "widget": "slider" },
+      { "var": "fork", "widget": "segmented", "options": ["f256", "f288", "f320", "f384", "f512"] },
+      { "var": "tempC", "widget": "slider" }
+    ],
+    "actions": [
+      { "id": "record", "label": "Record resonance", "primary": true },
+      { "id": "reset", "label": "Reset" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "trial", "label": "No.", "unit": "", "decimals": 0 },
+      { "key": "resonanceNumber", "label": "Resonance", "unit": "", "decimals": 0 },
+      { "key": "airColumnCm", "label": "Length l", "unit": "cm", "decimals": 1 },
+      { "key": "frequency", "label": "f", "unit": "Hz", "decimals": 0 },
+      { "key": "tempC", "label": "Temp", "unit": "°C", "decimals": 0 }
+    ],
+    "graph": { "x": "resonanceNumber", "y": "airColumnCm", "xLabel": "Resonance number", "yLabel": "Air column length (cm)", "throughOrigin": false },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Mean of the first resonance readings gives l₁",
+      "Mean of the second resonance readings gives l₂",
+      "Wavelength λ = 2(l₂ − l₁)",
+      "Speed of sound v = 2f(l₂ − l₁), with lengths in metres",
+      "End correction e = (l₂ − 3l₁)/2",
+      "Compare with the accepted v = 331.3 + 0.606t"
+    ],
+    "resultKeys": ["speed", "endCorrection", "wavelengthCm"]
+  },
+  "expectedResult": {
+    "quantity": "Speed of sound in air",
+    "symbol": "v",
+    "value": 347.7,
+    "tolerance": 8,
+    "unit": "m·s⁻¹",
+    "secondary": { "quantity": "End correction", "value": 0.96, "tolerance": 0.4, "unit": "cm" },
+    "statement": "The speed of sound in air at 27 °C is about 348 m·s⁻¹, in good agreement with the accepted value from v = 331.3 + 0.606t. The second resonance occurs at approximately three times the first length plus twice the end correction, confirming that a closed pipe supports only odd harmonics."
+  },
+  "safety": [
+    "Strike the tuning fork on a rubber pad only. Striking it on the bench or on the tube damages the fork and can chip the glass.",
+    "Never touch the vibrating prongs to the rim of the tube; the glass may crack and the vibration stops at once.",
+    "Handle the long glass tube carefully and keep the stand clamped so it cannot topple.",
+    "Wipe up any spilt water immediately.",
+    "Do not hold the fork so close that a prong strikes the tube while vibrating."
+  ],
+  "sourcesOfError": [
+    "Judging the position of maximum loudness by ear is subjective and carries an uncertainty of a millimetre or two.",
+    "The bore of the tube may not be perfectly uniform along its length.",
+    "The tube not being exactly vertical makes the measured length longer than the true air column.",
+    "The frequency stamped on the fork may differ slightly from its actual frequency.",
+    "Background noise in the laboratory masks the maximum.",
+    "The temperature of the air inside the tube may differ from the room temperature recorded."
+  ],
+  "viva": [
+    { "question": "Why does the air column resonate only at particular lengths?", "expectedConcept": "Resonance occurs when the natural frequency of the air column matches the frequency of the fork. A standing wave can only form when the column length allows a node at the closed water surface and an antinode at the open end, which happens at odd multiples of a quarter wavelength.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Boundary conditions select the allowed lengths.", "commonMisconception": "Thinking the sound is simply louder in a longer tube." },
+    { "question": "Why is the second resonance at about three times the first length, not twice?", "expectedConcept": "A pipe closed at one end supports only odd harmonics, because a node is required at the closed end and an antinode at the open end. The successive resonating lengths are therefore λ/4, 3λ/4, 5λ/4 and so on. There is no resonance at 2λ/4.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Only odd harmonics in a closed pipe.", "commonMisconception": "Expecting the second resonance at twice the first length, as for an open pipe." },
+    { "question": "What is the end correction and why does it arise?", "expectedConcept": "The antinode is not formed exactly at the open end of the tube but a small distance above it, because the air just outside the rim also takes part in the vibration. That distance is the end correction, roughly 0.6 times the radius of the tube.", "difficulty": "medium", "bloom": "Remember", "answerLogic": "e ≈ 0.6 r.", "commonMisconception": "Believing the antinode is exactly at the rim." },
+    { "question": "Why is the two-position method preferred to using a single resonance?", "expectedConcept": "Because the end correction cancels. Subtracting l₁ + e = λ/4 from l₂ + e = 3λ/4 gives l₂ − l₁ = λ/2 with no e in it. Using a single resonance would require an estimate of e, which is itself uncertain and would carry straight into the result.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "The systematic correction is eliminated rather than estimated.", "commonMisconception": "Thinking the second reading is merely a repeat for averaging." },
+    { "question": "Why should a fork of high frequency be used with a one-metre tube?", "expectedConcept": "A low-frequency fork has a long wavelength. Its second resonance, at three quarters of a wavelength, may need more than a metre of air column and so cannot be found in the tube at all. A 512 Hz fork gives both resonances comfortably within a metre.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "3λ/4 must fit inside the tube.", "commonMisconception": "Assuming any fork will work." },
+    { "question": "How does the speed of sound in air depend on temperature?", "expectedConcept": "It increases with temperature, by about 0.61 m/s for each degree Celsius rise. This is because the speed is proportional to the square root of the absolute temperature, the molecules moving faster at higher temperature.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "v ∝ √T, giving the linear approximation near room temperature.", "commonMisconception": "Thinking the speed of sound depends on the pressure of the air." },
+    { "question": "Does the speed of sound depend on the loudness or the pitch of the note?", "expectedConcept": "No. The speed depends only on the medium and its temperature. Loudness is the amplitude and pitch is the frequency; changing either alters the wavelength so that the product fλ, which is the speed, stays the same.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "v = fλ with v fixed by the medium.", "commonMisconception": "Believing a higher-pitched sound travels faster." },
+    { "question": "Why must the tuning fork be struck on a rubber pad?", "expectedConcept": "Striking it on a hard surface excites overtones as well as the fundamental, so the fork no longer emits a single clean frequency, and the impact may also damage the prongs and alter the stamped frequency.", "difficulty": "easy", "bloom": "Apply", "answerLogic": "Preserving a pure fundamental.", "commonMisconception": "Thinking it is only about avoiding noise." },
+    { "question": "What would change if the experiment were done with a wider tube?", "expectedConcept": "The end correction would be larger, since it is about 0.6 times the radius, so each individual resonance length would be slightly shorter. The calculated speed would be unchanged, because the two-position formula does not contain the end correction at all.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "e depends on r, but v does not depend on e in this method.", "commonMisconception": "Expecting the measured speed of sound to change with the tube diameter." },
+    { "question": "You find l₁ = 16.0 cm with a 512 Hz fork. Estimate the speed of sound roughly.", "expectedConcept": "Ignoring the end correction, λ ≈ 4 × 16.0 = 64 cm = 0.64 m, so v ≈ 512 × 0.64 ≈ 328 m/s. This underestimates the true value because the end correction has been neglected, which is exactly why the two-position method is used.", "difficulty": "hard", "bloom": "Apply", "answerLogic": "Single-resonance estimate, and awareness that it reads low.", "commonMisconception": "Reporting the single-resonance value as the final answer." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "In a pipe closed at one end, the shortest resonating air column is:", "options": ["λ/2", "λ/4", "λ", "3λ/4"], "answer": 1, "feedback": "A node at the closed end and an antinode at the open end require a minimum of a quarter wavelength." },
+      { "id": "pre2", "type": "mcq", "question": "A closed pipe supports:", "options": ["All harmonics", "Only even harmonics", "Only odd harmonics", "Only the fundamental"], "answer": 2, "feedback": "The boundary conditions permit only odd multiples of the fundamental, so the resonating lengths are λ/4, 3λ/4, 5λ/4 and so on." },
+      { "id": "pre3", "type": "mcq", "question": "The speed of sound in air at 0 °C is about:", "options": ["331 m/s", "343 m/s", "300 m/s", "3 × 10⁸ m/s"], "answer": 0, "feedback": "v = 331.3 m/s at 0 °C, rising by about 0.61 m/s per degree, so about 343 m/s at 20 °C." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Record both the first AND the second resonance position.", "check": "hasTwoF" },
+      { "id": "dur2", "type": "task", "question": "Take at least three resonance readings in all.", "check": "rows>=3" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the speed of sound you obtained (m/s).", "answer": 347.7, "tolerance": 12, "feedback": "At 27 °C the accepted value is 331.3 + 0.606 × 27 = 347.7 m/s." },
+      { "id": "post2", "type": "numeric", "question": "State the end correction you calculated (cm).", "answer": 0.96, "tolerance": 0.5, "feedback": "e = (l₂ − 3l₁)/2, which should come out near 0.6 r = 0.96 cm for a tube of 1.6 cm radius." },
+      { "id": "post3", "type": "mcq", "question": "The formula v = 2f(l₂ − l₁) is preferred because:", "options": ["It is easier to remember", "The end correction cancels out", "It needs only one reading", "It works for open pipes too"], "answer": 1, "feedback": "Subtracting the two resonance conditions eliminates e entirely, so no estimate of the end correction is needed." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "l₁ + e = λ/4; l₂ + e = 3λ/4; v = 2f(l₂ − l₁); e = (l₂ − 3l₁)/2",
+    "assumptions": [
+      "Tube uniform in bore",
+      "Antinode lies a distance e above the open end",
+      "Water surface acts as a perfectly reflecting closed end",
+      "Tuning fork frequency is exactly as marked",
+      "Air in the tube is at the recorded room temperature"
+    ],
+    "validRange": "Frequency 256 to 512 Hz; tube 100 cm; temperature 10 to 45 °C",
+    "unitSystem": "Lengths in cm converted to m; frequency in Hz; speed in m/s",
+    "edgeCases": [
+      "Only odd harmonics exist, so l₂ ≈ 3l₁ + 2e, never 2l₁",
+      "A 256 Hz fork gives no second resonance in a one-metre tube — warned",
+      "Away from a resonance the sound is faint — warned",
+      "Recording only one of the two resonances gives no result — blocked"
+    ],
+    "expectedBehaviour": [
+      "l₂ − l₁ equals exactly half a wavelength",
+      "The end correction cancels in the two-position formula",
+      "A higher-frequency fork resonates at a shorter column",
+      "The speed rises by 0.606 m/s per degree Celsius"
+    ],
+    "testFile": "tests/batch3.test.js"
+  }
+}

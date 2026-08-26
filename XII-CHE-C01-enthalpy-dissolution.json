@@ -1,0 +1,494 @@
+{
+  "id": "XII-CHE-C01",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "C",
+    "categoryTitle": "Thermochemistry",
+    "assessmentComponent": "Content Based Experiment",
+    "serial": 1,
+    "unit": "Unit III: Chemical Thermodynamics",
+    "chapter": "Chapter-4: Chemical Thermodynamics",
+    "topic": "Enthalpy changes accompanying physical and chemical change",
+    "subtopic": "Enthalpy of solution, calorimetry, Hess’s law",
+    "practical": "Enthalpy of dissolution of Copper Sulphate or Potassium Nitrate.",
+    "learningObjectives": [
+      "Be able to measure the temperature change when a weighed salt dissolves in a known mass of water",
+      "Be able to calculate the enthalpy of dissolution per mole from q = m·c·ΔT",
+      "Be able to show that dissolution may be endothermic or exothermic depending on the salt",
+      "Be able to obtain the enthalpy of hydration of anhydrous copper sulphate by Hess’s law"
+    ],
+    "competencies": [
+      "Performing a standard laboratory operation and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, CATEGORY C, Experiment 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Enthalpy of dissolution of copper sulphate or potassium nitrate",
+  "shortTitle": "Enthalpy of dissolution",
+  "objective": [
+    "To measure the temperature change when a weighed salt dissolves in a known mass of water.",
+    "To calculate the enthalpy of dissolution per mole from q = m·c·ΔT.",
+    "To show that dissolution may be endothermic or exothermic depending on the salt.",
+    "To obtain the enthalpy of hydration of anhydrous copper sulphate by Hess’s law."
+  ],
+  "theory": {
+    "statement": "When a salt dissolves, the lattice must be broken apart, which absorbs energy, and the separated ions become hydrated, which releases energy. The enthalpy of dissolution is the sum of the two, and its SIGN depends on which is larger. For potassium nitrate the lattice energy dominates, so the water cools and ΔH is positive. For anhydrous copper sulphate the hydration energy dominates, so the water warms strongly and ΔH is negative. The heat exchanged is found from q = m·c·ΔT, where m must include the water equivalent of the calorimeter itself, and the molar enthalpy is ΔH = −q/n. Measuring both CuSO₄ and CuSO₄·5H₂O gives, by difference, the enthalpy of hydration of the anhydrous salt — a quantity that cannot be measured directly at all.",
+    "keyEquations": [
+      "q = m·c·ΔT, with c = 4.18 J g⁻¹ K⁻¹",
+      "ΔH = −q / n, in kJ mol⁻¹",
+      "m = mass of solution + water equivalent of the calorimeter",
+      "ΔH(dissolution) = lattice enthalpy + hydration enthalpy",
+      "By Hess: ΔH(hydration) = ΔH(anhydrous) − ΔH(hydrated) ≈ −78 kJ mol⁻¹"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Polystyrene cup calorimeter with lid",
+      "why": "Polystyrene conducts heat badly, so nearly all the heat stays in the liquid where the thermometer can detect it."
+    },
+    {
+      "name": "Thermometer reading to 0.1 °C",
+      "why": "The whole result rests on a temperature difference of a few degrees, so the least count limits the accuracy directly."
+    },
+    {
+      "name": "Stirrer",
+      "why": "The liquid must be at one uniform temperature before the maximum is read."
+    },
+    {
+      "name": "Measuring cylinder",
+      "why": "The mass of liquid is taken from its volume, so the volume must be measured accurately."
+    },
+    {
+      "name": "Chemical balance",
+      "why": "The enthalpy is per MOLE, so the mass of solute has to be weighed rather than estimated."
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "mode",
+      "label": "Experiment",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "dissolution",
+      "options": [
+        "dissolution"
+      ]
+    },
+    {
+      "id": "solute",
+      "label": "Salt",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "kno3",
+      "options": [
+        "kno3",
+        "nh4cl",
+        "cuso4",
+        "cuso4_5h2o"
+      ]
+    },
+    {
+      "id": "massG",
+      "label": "Mass of salt",
+      "symbol": "m",
+      "unit": "g",
+      "type": "independent",
+      "min": 0,
+      "max": 12,
+      "step": 0.5,
+      "default": 5
+    },
+    {
+      "id": "waterCm3",
+      "label": "Water",
+      "symbol": "V",
+      "unit": "cm³",
+      "type": "control",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "default": 100
+    },
+    {
+      "id": "calorimeter",
+      "label": "Calorimeter",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "polystyrene",
+      "options": [
+        "polystyrene",
+        "vacuum",
+        "glass"
+      ]
+    },
+    {
+      "id": "correctForCalorimeter",
+      "label": "Correct for water equivalent",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "scale",
+      "label": "Thermometer",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "t01",
+      "options": [
+        "t1",
+        "t05",
+        "t01"
+      ]
+    },
+    {
+      "id": "enthalpy",
+      "label": "Enthalpy of dissolution",
+      "symbol": "ΔH",
+      "unit": "kJ mol⁻¹",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    "Measure 100 cm³ of distilled water into the polystyrene cup and record its steady temperature.",
+    "Weigh out about 5 g of the salt accurately.",
+    "Add the salt all at once, replace the lid and stir continuously.",
+    "Follow the thermometer and record the maximum or minimum temperature reached.",
+    "Calculate q = m·c·ΔT, including the water equivalent of the calorimeter in m.",
+    "Divide by the moles of salt to obtain ΔH, and give it the correct sign.",
+    "Repeat with the other copper sulphate salt and take the difference to find the enthalpy of hydration."
+  ],
+  "simulation": {
+    "model": "calorimetry",
+    "renderer": "calorimetry",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "solute",
+        "label": "Salt",
+        "widget": "segmented",
+        "options": [
+          "kno3",
+          "nh4cl",
+          "cuso4",
+          "cuso4_5h2o"
+        ]
+      },
+      {
+        "var": "massG",
+        "label": "Mass of salt",
+        "widget": "slider"
+      },
+      {
+        "var": "waterCm3",
+        "label": "Water",
+        "widget": "slider"
+      },
+      {
+        "var": "calorimeter",
+        "label": "Calorimeter",
+        "widget": "segmented",
+        "options": [
+          "polystyrene",
+          "vacuum",
+          "glass"
+        ]
+      },
+      {
+        "var": "correctForCalorimeter",
+        "label": "Correct for water equivalent",
+        "widget": "switch"
+      },
+      {
+        "var": "scale",
+        "label": "Thermometer",
+        "widget": "segmented",
+        "options": [
+          "t1",
+          "t05",
+          "t01"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record ΔT",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "system",
+        "label": "Salt"
+      },
+      {
+        "key": "initialC",
+        "label": "Initial T",
+        "unit": "°C",
+        "decimals": 1
+      },
+      {
+        "key": "finalC",
+        "label": "Final T",
+        "unit": "°C",
+        "decimals": 1
+      },
+      {
+        "key": "deltaC",
+        "label": "ΔT",
+        "unit": "°C",
+        "decimals": 2
+      },
+      {
+        "key": "moles",
+        "label": "Moles",
+        "unit": "mol",
+        "decimals": 4
+      },
+      {
+        "key": "enthalpyKJ",
+        "label": "ΔH",
+        "unit": "kJ mol⁻¹",
+        "decimals": 2
+      }
+    ],
+    "graph": null,
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Find ΔT as the final temperature minus the initial temperature.",
+      "Add the water equivalent of the calorimeter to the mass of the solution.",
+      "Compute q = m·c·ΔT with c = 4.18 J g⁻¹ K⁻¹.",
+      "Find the moles of salt from its mass and molar mass.",
+      "Compute ΔH = −q/n in kJ mol⁻¹, and check the sign against whether the water warmed or cooled."
+    ],
+    "resultKeys": [
+      "meanKJ",
+      "percentError"
+    ]
+  },
+  "expectedResult": {
+    "statement": "Potassium nitrate cools the water, giving ΔH of about +35 kJ mol⁻¹, while anhydrous copper sulphate warms it strongly, giving about −66.5 kJ mol⁻¹. The pentahydrate is mildly endothermic at about +11.7 kJ mol⁻¹. Subtracting the two copper sulphate values gives the enthalpy of hydration of the anhydrous salt, close to −78 kJ mol⁻¹, by Hess’s law.",
+    "value": 34.9,
+    "unit": "kJ mol⁻¹",
+    "tolerancePct": 15
+  },
+  "safety": [
+    "Copper sulphate is harmful if swallowed and irritates the skin; wash hands after use.",
+    "Do not taste or smell any of the salts.",
+    "Handle the thermometer gently: a broken bulb in a calorimeter ends the experiment.",
+    "Dispose of copper salt solutions as directed, not down an open drain."
+  ],
+  "sourcesOfError": [
+    "Ignoring the water equivalent of the calorimeter, which makes every enthalpy too small in magnitude.",
+    "Reading the temperature before the salt has fully dissolved, so the change is incomplete.",
+    "Losing heat to the room during a slow dissolution, particularly with a glass vessel.",
+    "Failing to stir, so the thermometer reads a local temperature rather than the mean.",
+    "Reporting the magnitude without the sign, which loses the distinction between endothermic and exothermic."
+  ],
+  "viva": [
+    {
+      "question": "Why does potassium nitrate cool the water as it dissolves?",
+      "expectedConcept": "The energy needed to break the lattice exceeds the energy released when the ions are hydrated, so the difference is taken from the water.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "Lattice energy exceeds hydration energy.",
+      "commonMisconception": "That endothermic dissolution means the salt is not really dissolving."
+    },
+    {
+      "question": "Why is anhydrous copper sulphate strongly exothermic?",
+      "expectedConcept": "It is not yet hydrated, so the large hydration energy is released in full as it dissolves.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "Hydration dominates for the anhydrous salt.",
+      "commonMisconception": "That the two copper sulphates should behave alike."
+    },
+    {
+      "question": "How do you obtain the enthalpy of hydration from these two results?",
+      "expectedConcept": "By Hess’s law: subtract the enthalpy of dissolution of the hydrated salt from that of the anhydrous salt.",
+      "difficulty": "hard",
+      "bloom": "Apply",
+      "answerLogic": "A Hess cycle through the solution.",
+      "commonMisconception": "That hydration enthalpy can be measured directly."
+    },
+    {
+      "question": "Why can the enthalpy of hydration not be measured directly?",
+      "expectedConcept": "You cannot add water to a solid one formula unit at a time and measure only that step; the salt would simply dissolve.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "The step is experimentally inaccessible.",
+      "commonMisconception": "That any enthalpy change can be measured directly if you try hard enough."
+    },
+    {
+      "question": "What sign does ΔH take when the temperature rises?",
+      "expectedConcept": "Negative. Heat has been released by the system to the surroundings.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Exothermic is negative.",
+      "commonMisconception": "That a rising thermometer means a positive ΔH."
+    },
+    {
+      "question": "Why must the salt be added all at once?",
+      "expectedConcept": "Adding it slowly spreads the heat effect over a long time, during which heat leaks to the room and the peak is never reached.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "To keep the change fast compared with the leak.",
+      "commonMisconception": "That slow addition is gentler and therefore better."
+    },
+    {
+      "question": "Why is a polystyrene cup used rather than a glass beaker?",
+      "expectedConcept": "Polystyrene has a low thermal conductivity and a small water equivalent, so little heat is lost to the vessel or the room.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Insulation and low heat capacity.",
+      "commonMisconception": "That glass is better because it is a laboratory material."
+    },
+    {
+      "question": "What is the water equivalent of a calorimeter?",
+      "expectedConcept": "The mass of water that would absorb the same heat as the calorimeter for the same temperature rise.",
+      "difficulty": "medium",
+      "bloom": "Remember",
+      "answerLogic": "An equivalent mass of water.",
+      "commonMisconception": "That it is the mass of water actually in the calorimeter."
+    },
+    {
+      "question": "What happens to your answer if you ignore the water equivalent?",
+      "expectedConcept": "You divide by too small a mass, so the magnitude of the enthalpy comes out too small.",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "The vessel absorbs heat that is then unaccounted for.",
+      "commonMisconception": "That the error cancels out."
+    },
+    {
+      "question": "Why is the specific heat capacity of the solution taken as that of water?",
+      "expectedConcept": "The solutions are dilute, so their heat capacity differs from water by far less than the other experimental errors.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "A justified approximation for dilute solutions.",
+      "commonMisconception": "That the two are exactly equal."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The enthalpy of dissolution is the sum of:",
+        "options": [
+          "Two exothermic terms",
+          "Lattice enthalpy and hydration enthalpy",
+          "Two endothermic terms",
+          "Heat capacity and mass"
+        ],
+        "answer": 1,
+        "feedback": "Breaking the lattice absorbs energy; hydrating the ions releases it. The sign depends on which is larger."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "If the water cools as a salt dissolves, ΔH is:",
+        "options": [
+          "Negative",
+          "Positive",
+          "Zero",
+          "Undefined"
+        ],
+        "answer": 1,
+        "feedback": "The system absorbed heat from the water, so the process is endothermic and ΔH is positive."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Take at least three runs, so a single spoiled reading does not decide the answer.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Measure both copper sulphate salts to obtain the hydration enthalpy.",
+        "check": "rows>=3"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "Ignoring the water equivalent makes the calculated ΔH:",
+        "options": [
+          "Too large in magnitude",
+          "Too small in magnitude",
+          "Unchanged",
+          "Change sign"
+        ],
+        "answer": 1,
+        "feedback": "You divide by too small a mass, so q and therefore ΔH come out too small."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "State the enthalpy of dissolution of KNO₃ you obtained, in kJ mol⁻¹.",
+        "answer": 34.9,
+        "tolerance": 6,
+        "feedback": "The accepted value is about +34.9 kJ mol⁻¹, positive because dissolution is endothermic."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "q = m·c·ΔT, with c = 4.18 J g⁻¹ K⁻¹",
+    "assumptions": [
+      "q = m·c·ΔT, with c = 4.18 J g⁻¹ K⁻¹",
+      "ΔH = −q / n, in kJ mol⁻¹",
+      "m = mass of solution + water equivalent of the calorimeter",
+      "ΔH(dissolution) = lattice enthalpy + hydration enthalpy"
+    ],
+    "validRange": "Potassium nitrate cools the water, giving ΔH of about +35 kJ mol⁻¹, while anhydr",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Ignoring the water equivalent of the calorimeter, which makes every enthalpy too small in magnitude.",
+      "Reading the temperature before the salt has fully dissolved, so the change is incomplete.",
+      "Losing heat to the room during a slow dissolution, particularly with a glass vessel.",
+      "Failing to stir, so the thermometer reads a local temperature rather than the mean."
+    ],
+    "expectedBehaviour": [
+      "Potassium nitrate cools the water, giving ΔH of about +35 kJ mol⁻¹, while anhydrous copper sulphate warms it strongly, giving about −66.5 kJ mol⁻¹. The pentahydrate is mildly endothermic at about +11.7 kJ mol⁻¹. Subtracting the two copper sulphate values gives the enthalpy of hydration of the anhydrous salt, close to −78 kJ mol⁻¹, by Hess’s law."
+    ],
+    "testFile": "tests/batch16.test.js"
+  }
+}

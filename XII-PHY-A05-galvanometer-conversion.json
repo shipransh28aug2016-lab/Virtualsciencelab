@@ -1,0 +1,539 @@
+{
+  "id": "XII-PHY-A05",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 5,
+    "unit": "Unit III: Magnetic Effects of Current and Magnetism",
+    "chapter": "Chapter-4: Moving Charges and Magnetism",
+    "topic": "Concept of magnetic field, Oersted's experiment; Biot-Savart law; Ampere's law; force on a current-carrying conductor; torque on a current loop; moving coil galvanometer, its current sensitivity and conversion to ammeter and voltmeter",
+    "subtopic": "Conversion of a galvanometer into a voltmeter or an ammeter of a desired range",
+    "practical": "To convert the given galvanometer (of known resistance and figure of merit) into a voltmeter of desired range and to verify the same. OR To convert the given galvanometer into an ammeter of desired range and to verify the same.",
+    "learningObjectives": [
+      "Use the galvanometer resistance and figure of merit found in the previous experiment",
+      "Calculate the shunt needed to convert the galvanometer into an ammeter of a given range",
+      "Calculate the series resistance needed to convert it into a voltmeter of a given range",
+      "Explain why an ammeter must have a very low resistance and a voltmeter a very high one",
+      "Verify the converted instrument against a standard meter",
+      "Recognise that conversion can raise the range of an ammeter but never lower it"
+    ],
+    "competencies": [
+      "Designing a measuring instrument to a specification",
+      "Reasoning about how inserting a meter disturbs the circuit it measures",
+      "Applying the current-divider and potential-divider ideas to a practical end",
+      "Checking a designed instrument against a standard"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Experiment 5 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Converting a galvanometer into an ammeter or a voltmeter of a desired range",
+  "shortTitle": "Galvanometer Conversion",
+  "objective": [
+    "To convert a galvanometer of known resistance and figure of merit into an ammeter of a desired range.",
+    "To convert the same galvanometer into a voltmeter of a desired range.",
+    "To verify each converted instrument against a standard meter."
+  ],
+  "theory": {
+    "statement": "A galvanometer gives full-scale deflection for a very small current. To measure larger currents a low resistance is connected in parallel to carry most of the current; to measure voltages a high resistance is connected in series so that only a tiny current flows.",
+    "derivationNote": "Let the galvanometer have resistance G and give full-scale deflection at a current Ig = nk, where n is the number of divisions and k the figure of merit.\n\nTo make an AMMETER of range I, a shunt S is connected in parallel. At full scale the galvanometer carries Ig and the shunt must carry the rest, I − Ig. The two branches share the same potential difference, so Ig·G = (I − Ig)·S, giving S = Ig·G/(I − Ig). Because Ig is tiny compared with I, the shunt comes out very small, often a fraction of an ohm. The resistance of the finished ammeter is the parallel combination GS/(G + S), which is smaller still — and that is exactly what is wanted, because an ammeter goes in series with the circuit and must not add resistance to it.\n\nTo make a VOLTMETER of range V, a resistance R is connected in series. At full scale the whole of V must appear across R and G together while the current is Ig, so V = Ig(R + G) and R = V/Ig − G. Since Ig is tiny, R comes out very large, thousands of ohms. The finished voltmeter has resistance R + G, which is large — again exactly what is wanted, because a voltmeter goes in parallel with the component and must draw as little current as possible.\n\nOne limit is worth noticing. A shunt can only ever divert current away from the coil, so conversion can increase the range of an ammeter but never reduce it below Ig. Asking for a range smaller than the galvanometer already has is impossible, and the formula signals this by returning a negative shunt.",
+    "keyEquations": [
+      "Ig = n·k, the current for full-scale deflection",
+      "Ammeter of range I: S = Ig·G/(I − Ig), connected in PARALLEL",
+      "Resistance of the converted ammeter = GS/(G + S), very small",
+      "Voltmeter of range V: R = V/Ig − G, connected in SERIES",
+      "Resistance of the converted voltmeter = R + G, very large"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Moving-coil galvanometer",
+      "spec": "of known resistance and figure of merit from experiment A4",
+      "why": "The instrument being converted"
+    },
+    {
+      "name": "Resistance box",
+      "spec": "0 to 10000 Ω",
+      "why": "Provides the large series resistance for the voltmeter conversion"
+    },
+    {
+      "name": "Shunt wire",
+      "spec": "thick copper or manganin of known resistance per unit length",
+      "why": "Provides the very small parallel resistance for the ammeter conversion"
+    },
+    {
+      "name": "Standard ammeter",
+      "spec": "0-1 A",
+      "why": "The reference against which the converted ammeter is verified"
+    },
+    {
+      "name": "Standard voltmeter",
+      "spec": "0-3 V",
+      "why": "The reference against which the converted voltmeter is verified"
+    },
+    {
+      "name": "Rheostat",
+      "spec": "",
+      "why": "Varies the current or voltage smoothly during verification"
+    },
+    {
+      "name": "Battery, key and connecting wires",
+      "spec": "2 V accumulator",
+      "why": "Supplies the circuit for testing"
+    },
+    {
+      "name": "Screw gauge",
+      "spec": "least count 0.001 cm",
+      "why": "Measures the diameter of the shunt wire so its resistance can be computed"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "conversion",
+      "label": "Convert into",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "ammeter",
+      "options": [
+        "ammeter",
+        "voltmeter"
+      ]
+    },
+    {
+      "id": "targetRange",
+      "label": "Desired range",
+      "symbol": "",
+      "unit": "A or V",
+      "type": "independent",
+      "min": 0.1,
+      "max": 15,
+      "step": 0.1,
+      "default": 1
+    },
+    {
+      "id": "galvanometer",
+      "label": "Galvanometer",
+      "symbol": "G",
+      "unit": "",
+      "type": "control",
+      "default": "g1",
+      "options": [
+        "g1",
+        "g2",
+        "g3"
+      ]
+    },
+    {
+      "id": "resistanceR",
+      "label": "Series resistance in the test circuit",
+      "symbol": "R",
+      "unit": "Ω",
+      "type": "controlled",
+      "min": 500,
+      "max": 10000,
+      "step": 100,
+      "default": 3000
+    },
+    {
+      "id": "testValue",
+      "label": "Value applied when verifying",
+      "symbol": "",
+      "unit": "A or V",
+      "type": "independent",
+      "min": 0,
+      "max": 15,
+      "step": 0.05,
+      "default": 0.5
+    },
+    {
+      "id": "requiredResistance",
+      "label": "Resistance required",
+      "symbol": "",
+      "unit": "Ω",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Write down the galvanometer resistance G and the figure of merit k found in the previous experiment.",
+      "checkpoint": true,
+      "expects": "galvanometer"
+    },
+    {
+      "step": 2,
+      "text": "Calculate the full-scale current Ig = nk, where n is the number of divisions on the scale.",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Decide whether you are making an ammeter or a voltmeter, and choose the range required.",
+      "checkpoint": true,
+      "expects": "conversion"
+    },
+    {
+      "step": 4,
+      "text": "For an ammeter, calculate the shunt S = IgG/(I − Ig). For a voltmeter, calculate the series resistance R = V/Ig − G.",
+      "checkpoint": true,
+      "expects": "targetRange"
+    },
+    {
+      "step": 5,
+      "text": "Connect that resistance in parallel for an ammeter, or in series for a voltmeter.",
+      "checkpoint": false
+    },
+    {
+      "step": 6,
+      "text": "Connect the converted instrument together with the corresponding standard meter in the test circuit.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 7,
+      "text": "Vary the rheostat and compare the converted instrument with the standard at several points across the range.",
+      "checkpoint": true,
+      "expects": "rows>=2"
+    },
+    {
+      "step": 8,
+      "text": "Tabulate the two readings and find the difference at each point.",
+      "checkpoint": false
+    },
+    {
+      "step": 9,
+      "text": "State the resistance used and confirm that the converted instrument reads correctly over its full range.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "galvanometer",
+    "renderer": "galvanometer",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "conversion",
+        "widget": "segmented",
+        "options": [
+          "ammeter",
+          "voltmeter"
+        ]
+      },
+      {
+        "var": "targetRange",
+        "widget": "slider"
+      },
+      {
+        "var": "galvanometer",
+        "widget": "segmented",
+        "options": [
+          "g1",
+          "g2",
+          "g3"
+        ]
+      },
+      {
+        "var": "resistanceR",
+        "widget": "slider"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record deflection",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "No.",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "resistanceR",
+        "label": "R in circuit",
+        "unit": "Ω",
+        "decimals": 0
+      },
+      {
+        "key": "deflection",
+        "label": "θ",
+        "unit": "div",
+        "decimals": 1
+      },
+      {
+        "key": "currentMicroA",
+        "label": "I through coil",
+        "unit": "µA",
+        "decimals": 2
+      }
+    ],
+    "graph": {
+      "x": "trial",
+      "y": "deflection",
+      "xLabel": "Reading number",
+      "yLabel": "Deflection (div)",
+      "throughOrigin": false
+    },
+    "minRows": 2
+  },
+  "calculations": {
+    "steps": [
+      "Ig = n·k from the previous experiment",
+      "For an ammeter of range I: S = Ig·G/(I − Ig)",
+      "For a voltmeter of range V: R = V/Ig − G",
+      "Resistance of the finished ammeter = GS/(G + S); of the voltmeter = R + G",
+      "Compare the converted instrument with the standard at several points"
+    ],
+    "resultKeys": [
+      "requiredResistance",
+      "meterResistance",
+      "fullScaleCurrentMicroA"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Shunt resistance for a 1 A ammeter",
+    "symbol": "S",
+    "value": 0.0468,
+    "tolerance": 0.006,
+    "unit": "Ω",
+    "secondary": {
+      "quantity": "Series resistance for a 3 V voltmeter",
+      "value": 3786,
+      "tolerance": 250,
+      "unit": "Ω"
+    },
+    "statement": "Converting the galvanometer into a 1 A ammeter needs a shunt of about 0.047 Ω in parallel, and the finished ammeter has almost no resistance of its own. Converting it into a 3 V voltmeter needs about 3790 Ω in series, and the finished voltmeter has a resistance of some 3850 Ω. The converted instruments agree with the standard meters across the range."
+  },
+  "safety": [
+    "A galvanometer being converted is still a galvanometer. Never connect it to a source without the calculated shunt or series resistance already in place.",
+    "Check the polarity before closing the key; a reversed connection drives the pointer against the stop.",
+    "Use a shunt of adequate thickness for an ammeter. A thin wire carrying the full current will overheat.",
+    "Open the key immediately if the pointer goes off scale.",
+    "Do not exceed the range for which the instrument was designed."
+  ],
+  "sourcesOfError": [
+    "Any error in G or k from the previous experiment carries straight through into the calculated resistance.",
+    "The shunt for an ammeter is a fraction of an ohm, so the resistance of the leads and joints is no longer negligible.",
+    "Contact resistance at the plugs of the resistance box.",
+    "Heating of the shunt while carrying the full current, which changes its resistance.",
+    "The standard meter used for verification has its own limited accuracy.",
+    "Reading the converted scale by eye when the divisions are not marked in the new units."
+  ],
+  "viva": [
+    {
+      "question": "How is a galvanometer converted into an ammeter?",
+      "expectedConcept": "By connecting a small resistance, called a shunt, in parallel with it. The shunt carries most of the current while the galvanometer carries only its small full-scale current. S = IgG/(I − Ig).",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Parallel low resistance, correct formula.",
+      "commonMisconception": "Saying a resistance is added in series."
+    },
+    {
+      "question": "How is it converted into a voltmeter?",
+      "expectedConcept": "By connecting a high resistance in series, so that the desired voltage across the combination drives only the full-scale current through the coil. R = V/Ig − G.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Series high resistance, correct formula.",
+      "commonMisconception": "Confusing it with the ammeter case."
+    },
+    {
+      "question": "Why must an ammeter have a very low resistance?",
+      "expectedConcept": "An ammeter is connected in series with the circuit whose current is being measured. Any resistance it adds reduces that current, so the act of measuring changes the very thing being measured. Keeping its resistance far below the circuit resistance makes that disturbance negligible.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Minimising the disturbance to the circuit.",
+      "commonMisconception": "Thinking it is to protect the meter."
+    },
+    {
+      "question": "Why must a voltmeter have a very high resistance?",
+      "expectedConcept": "A voltmeter is connected in parallel with the component. If its resistance were comparable to that component, it would draw a significant current and lower the potential difference it is trying to measure. A high resistance draws almost nothing and leaves the circuit undisturbed.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Minimising the current drawn.",
+      "commonMisconception": "Assuming high resistance is simply for safety."
+    },
+    {
+      "question": "An ideal ammeter and an ideal voltmeter have what resistances?",
+      "expectedConcept": "An ideal ammeter has zero resistance and an ideal voltmeter infinite resistance. Real instruments only approach these, which is why a converted ammeter is made as low and a converted voltmeter as high as possible.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Zero and infinite.",
+      "commonMisconception": "Getting the two the wrong way round."
+    },
+    {
+      "question": "Can a galvanometer be converted into an ammeter reading less than its full-scale current?",
+      "expectedConcept": "No. A shunt only ever diverts current away from the coil, so it can raise the range but never lower it. Asking for a range below Ig makes the denominator I − Ig negative, and the formula returns a negative shunt, which is the algebra saying the request is impossible.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Recognises the physical limit and how the formula expresses it.",
+      "commonMisconception": "Assuming any range can be achieved with the right resistance."
+    },
+    {
+      "question": "What happens to the shunt resistance if a wider ammeter range is wanted?",
+      "expectedConcept": "It becomes smaller. More of the current must be diverted around the coil, so the parallel path must be an easier one. For a 5 A range the shunt is about a fifth of what it is for 1 A.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "S falls as I rises.",
+      "commonMisconception": "Expecting a larger range to need a larger resistance."
+    },
+    {
+      "question": "Why does the converted instrument need to be verified against a standard?",
+      "expectedConcept": "The calculated resistance depends on G and k measured in an earlier experiment, each with its own uncertainty, and on the shunt or box being exactly the value stated. Comparing against a standard meter at several points across the range checks the whole chain and reveals any systematic offset.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Independent check of a propagated calculation.",
+      "commonMisconception": "Trusting the calculation without testing it."
+    },
+    {
+      "question": "Why is the resistance of the shunt so critical for an ammeter but not for a voltmeter?",
+      "expectedConcept": "The shunt is a fraction of an ohm, so stray resistance in the leads and joints, which is also a fraction of an ohm, is a large percentage of it. The voltmeter resistance is thousands of ohms, so the same stray resistance is utterly negligible by comparison.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Relative size of the stray resistance.",
+      "commonMisconception": "Thinking lead resistance matters equally in both."
+    },
+    {
+      "question": "Does converting a galvanometer change its sensitivity?",
+      "expectedConcept": "The coil still needs the same current Ig for full-scale deflection, so the instrument itself is unchanged. What changes is what the scale now represents: each division stands for a much larger current or voltage in the external circuit, so the converted instrument is less sensitive to the quantity it now reads.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Distinguishes coil sensitivity from the instrument range.",
+      "commonMisconception": "Thinking the coil itself becomes less sensitive."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "To convert a galvanometer into an ammeter you connect:",
+        "options": [
+          "A high resistance in series",
+          "A low resistance in parallel",
+          "A high resistance in parallel",
+          "A low resistance in series"
+        ],
+        "answer": 1,
+        "feedback": "A shunt in parallel carries most of the current, leaving the coil its small full-scale current."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "An ideal voltmeter has:",
+        "options": [
+          "Zero resistance",
+          "Infinite resistance",
+          "Resistance equal to the circuit",
+          "Negative resistance"
+        ],
+        "answer": 1,
+        "feedback": "It must draw no current at all, so its resistance must be infinite."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "For a wider ammeter range, the shunt resistance must be:",
+        "options": [
+          "Larger",
+          "Smaller",
+          "Unchanged",
+          "Zero"
+        ],
+        "answer": 1,
+        "feedback": "More current must be diverted, so the parallel path must be an easier one."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Take at least two verification readings.",
+        "check": "rows>=2"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Change the test circuit between readings.",
+        "check": "tempVaried"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the shunt resistance needed for a 1 A ammeter (Ω).",
+        "answer": 0.0468,
+        "tolerance": 0.01,
+        "feedback": "S = IgG/(I − Ig) ≈ 0.047 Ω for the 60 Ω galvanometer."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "State the series resistance needed for a 3 V voltmeter (Ω).",
+        "answer": 3786,
+        "tolerance": 400,
+        "feedback": "R = V/Ig − G ≈ 3790 Ω."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "The converted ammeter has a resistance of about 0.047 Ω. This is desirable because:",
+        "options": [
+          "It makes the meter cheaper",
+          "An ammeter in series must not add resistance to the circuit",
+          "It increases the deflection",
+          "It protects the shunt"
+        ],
+        "answer": 1,
+        "feedback": "An ammeter goes in series, so any resistance it adds would change the current it is measuring."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Ig = n·k; ammeter S = Ig·G/(I − Ig); voltmeter R = V/Ig − G",
+    "assumptions": [
+      "G and k are known accurately from the half-deflection experiment",
+      "The shunt and the resistance box have their stated values",
+      "Lead and contact resistances are negligible beside the series resistance",
+      "The coil deflection stays proportional to the current after conversion"
+    ],
+    "validRange": "Ammeter ranges above the full-scale current, up to a few ampere; voltmeter ranges 1 to 15 V",
+    "unitSystem": "Resistance in ohm, current in ampere, voltage in volt",
+    "edgeCases": [
+      "An ammeter range below Ig is impossible — the formula returns null and the experiment warns",
+      "A voltmeter range so small it needs no series resistance is refused",
+      "The shunt is a fraction of an ohm, so lead resistance is no longer negligible",
+      "A wider range needs a smaller shunt but a larger series resistance"
+    ],
+    "expectedBehaviour": [
+      "The converted ammeter has a resistance well below one ohm",
+      "The converted voltmeter has a resistance of thousands of ohms",
+      "Increasing the ammeter range decreases the shunt",
+      "Increasing the voltmeter range increases the series resistance"
+    ],
+    "testFile": "tests/batch5.test.js"
+  }
+}

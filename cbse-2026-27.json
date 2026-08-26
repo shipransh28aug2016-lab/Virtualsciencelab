@@ -1,0 +1,696 @@
+{
+  "curriculumYear": "2026-27",
+  "board": "CBSE",
+  "contentVersion": "1.1.0",
+  "lastVerified": "2026-08-18",
+  "verifiedBy": "curriculum-audit/phase-A",
+  "sources": [
+    {
+      "id": "cbse-042-2026-27",
+      "title": "PHYSICS Subject Code 042, Class XI-XII (2026-27)",
+      "publisher": "Central Board of Secondary Education (cbseacademic.nic.in)",
+      "url": "https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+      "retrieved": "2026-08-18",
+      "authority": "primary"
+    },
+    {
+      "id": "cbse-043-2026-27",
+      "title": "CHEMISTRY Subject Code 043, Classes XI-XII (2026-27)",
+      "publisher": "Central Board of Secondary Education (cbseacademic.nic.in)",
+      "url": "https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+      "retrieved": "2026-08-18",
+      "authority": "primary"
+    }
+  ],
+  "subjects": [
+    {
+      "subject": "Physics",
+      "subjectCode": "042",
+      "prescribedBooks": [
+        "Physics Part-I & Part-II, Textbook for Class XI, NCERT",
+        "Laboratory Manual of Physics, Class XI, NCERT",
+        "Physics Part-I & Part-II, Textbook for Class XII, NCERT",
+        "Laboratory Manual of Physics, Class XII, NCERT"
+      ],
+      "classes": [
+        {
+          "class": "XI",
+          "theoryMarks": 70,
+          "practicalMarks": 30,
+          "practicalDurationHours": 3,
+          "recordRequirement": "At least 8 Experiments (4 from each section) and 6 Activities (3 from each section), plus one project.",
+          "evaluationScheme": [
+            {
+              "item": "Two experiments, one from each section",
+              "marks": 14
+            },
+            {
+              "item": "Practical record (experiments and activities)",
+              "marks": 5
+            },
+            {
+              "item": "One activity from any section",
+              "marks": 3
+            },
+            {
+              "item": "Investigatory Project",
+              "marks": 3
+            },
+            {
+              "item": "Viva on experiments, activities and project",
+              "marks": 5
+            }
+          ],
+          "units": [
+            {
+              "unit": "I",
+              "title": "Physical World and Measurement",
+              "marks": 23,
+              "chapters": [
+                "Chapter-1: Units and Measurements"
+              ]
+            },
+            {
+              "unit": "II",
+              "title": "Kinematics",
+              "marks": 23,
+              "chapters": [
+                "Chapter-2: Motion in a Straight Line",
+                "Chapter-3: Motion in a Plane"
+              ]
+            },
+            {
+              "unit": "III",
+              "title": "Laws of Motion",
+              "marks": 23,
+              "chapters": [
+                "Chapter-4: Laws of Motion"
+              ]
+            },
+            {
+              "unit": "IV",
+              "title": "Work, Energy and Power",
+              "marks": 17,
+              "chapters": [
+                "Chapter-5: Work, Energy and Power"
+              ]
+            },
+            {
+              "unit": "V",
+              "title": "Motion of System of Particles and Rigid Body",
+              "marks": 17,
+              "chapters": [
+                "Chapter-6: System of Particles and Rotational Motion"
+              ]
+            },
+            {
+              "unit": "VI",
+              "title": "Gravitation",
+              "marks": 17,
+              "chapters": [
+                "Chapter-7: Gravitation"
+              ]
+            },
+            {
+              "unit": "VII",
+              "title": "Properties of Bulk Matter",
+              "marks": 20,
+              "chapters": [
+                "Chapter-8: Mechanical Properties of Solids",
+                "Chapter-9: Mechanical Properties of Fluids",
+                "Chapter-10: Thermal Properties of Matter"
+              ]
+            },
+            {
+              "unit": "VIII",
+              "title": "Thermodynamics",
+              "marks": 20,
+              "chapters": [
+                "Chapter-11: Thermodynamics"
+              ]
+            },
+            {
+              "unit": "IX",
+              "title": "Behaviour of Perfect Gases and Kinetic Theory of Gases",
+              "marks": 20,
+              "chapters": [
+                "Chapter-12: Kinetic Theory"
+              ]
+            },
+            {
+              "unit": "X",
+              "title": "Oscillations and Waves",
+              "marks": 10,
+              "chapters": [
+                "Chapter-13: Oscillations",
+                "Chapter-14: Waves"
+              ]
+            }
+          ],
+          "practicals": {
+            "A": {
+              "experiments": [
+                "To measure diameter of a small spherical/cylindrical body and to measure internal diameter and depth of a given beaker/calorimeter using Vernier Callipers and hence find its volume.",
+                "To measure diameter of a given wire and thickness of a given sheet using screw gauge.",
+                "To determine volume of an irregular lamina using screw gauge.",
+                "To determine radius of curvature of a given spherical surface by a spherometer.",
+                "To determine the mass of two different objects using a beam balance.",
+                "To find the weight of a given body using parallelogram law of vectors.",
+                "Using a simple pendulum, plot its L-T^2 graph and use it to find the effective length of second's pendulum.",
+                "To study variation of time period of a simple pendulum of a given length by taking bobs of same size but different masses and interpret the result.",
+                "To study the relationship between force of limiting friction and normal reaction and to find the co-efficient of friction between a block and a horizontal surface.",
+                "To find the downward force, along an inclined plane, acting on a roller due to gravitational pull of the earth and study its relationship with the angle of inclination by plotting graph between force and sin(theta)."
+              ],
+              "activities": [
+                "To make a paper scale of given least count, e.g., 0.2 cm, 0.5 cm.",
+                "To determine mass of a given body using a metre scale by principle of moments.",
+                "To plot a graph for a given set of data, with proper choice of scales and error bars.",
+                "To measure the force of limiting friction for rolling of a roller on a horizontal plane.",
+                "To study the variation in range of a projectile with angle of projection.",
+                "To study the conservation of energy of a ball rolling down on an inclined plane (using a double inclined plane).",
+                "To study dissipation of energy of a simple pendulum by plotting a graph between square of amplitude and time."
+              ]
+            },
+            "B": {
+              "experiments": [
+                "To determine Young's modulus of elasticity of the material of a given wire.",
+                "To find the force constant of a helical spring by plotting a graph between load and extension.",
+                "To study the variation in volume with pressure for a sample of air at constant temperature by plotting graphs between P and V, and between P and 1/V.",
+                "To determine the surface tension of water by capillary rise method.",
+                "To determine the coefficient of viscosity of a given viscous liquid by measuring terminal velocity of a given spherical body.",
+                "To study the relationship between the temperature of a hot body and time by plotting a cooling curve.",
+                "To determine specific heat capacity of a given solid by method of mixtures.",
+                "To study the relation between frequency and length of a given wire under constant tension using sonometer.",
+                "To study the relation between the length of a given wire and tension for constant frequency using sonometer.",
+                "To find the speed of sound in air at room temperature using a resonance tube by two resonance positions."
+              ],
+              "activities": [
+                "To observe change of state and plot a cooling curve for molten wax.",
+                "To observe and explain the effect of heating on a bi-metallic strip.",
+                "To note the change in level of liquid in a container on heating and interpret the observations.",
+                "To study the effect of detergent on surface tension of water by observing capillary rise.",
+                "To study the factors affecting the rate of loss of heat of a liquid.",
+                "To study the effect of load on depression of a suitably clamped metre scale loaded at (i) its end (ii) in the middle.",
+                "To observe the decrease in pressure with increase in velocity of a fluid."
+              ]
+            }
+          }
+        },
+        {
+          "class": "XII",
+          "theoryMarks": 70,
+          "practicalMarks": 30,
+          "practicalDurationHours": 3,
+          "recordRequirement": "At least 8 Experiments (4 from each section) and 6 Activities (3 from each section), plus one project.",
+          "evaluationScheme": [
+            {
+              "item": "Two experiments, one from each section",
+              "marks": 14
+            },
+            {
+              "item": "Practical record (experiments and activities)",
+              "marks": 5
+            },
+            {
+              "item": "One activity from any section",
+              "marks": 3
+            },
+            {
+              "item": "Investigatory Project",
+              "marks": 3
+            },
+            {
+              "item": "Viva on experiments, activities and project",
+              "marks": 5
+            }
+          ],
+          "units": [
+            {
+              "unit": "I",
+              "title": "Electrostatics",
+              "marks": 16,
+              "chapters": [
+                "Chapter-1: Electric Charges and Fields",
+                "Chapter-2: Electrostatic Potential and Capacitance"
+              ]
+            },
+            {
+              "unit": "II",
+              "title": "Current Electricity",
+              "marks": 16,
+              "chapters": [
+                "Chapter-3: Current Electricity"
+              ]
+            },
+            {
+              "unit": "III",
+              "title": "Magnetic Effects of Current and Magnetism",
+              "marks": 17,
+              "chapters": [
+                "Chapter-4: Moving Charges and Magnetism",
+                "Chapter-5: Magnetism and Matter"
+              ]
+            },
+            {
+              "unit": "IV",
+              "title": "Electromagnetic Induction and Alternating Currents",
+              "marks": 17,
+              "chapters": [
+                "Chapter-6: Electromagnetic Induction",
+                "Chapter-7: Alternating Current"
+              ]
+            },
+            {
+              "unit": "V",
+              "title": "Electromagnetic Waves",
+              "marks": 18,
+              "chapters": [
+                "Chapter-8: Electromagnetic Waves"
+              ]
+            },
+            {
+              "unit": "VI",
+              "title": "Optics",
+              "marks": 18,
+              "chapters": [
+                "Chapter-9: Ray Optics and Optical Instruments",
+                "Chapter-10: Wave Optics"
+              ]
+            },
+            {
+              "unit": "VII",
+              "title": "Dual Nature of Radiation and Matter",
+              "marks": 12,
+              "chapters": [
+                "Chapter-11: Dual Nature of Radiation and Matter"
+              ]
+            },
+            {
+              "unit": "VIII",
+              "title": "Atoms and Nuclei",
+              "marks": 12,
+              "chapters": [
+                "Chapter-12: Atoms",
+                "Chapter-13: Nuclei"
+              ]
+            },
+            {
+              "unit": "IX",
+              "title": "Electronic Devices",
+              "marks": 7,
+              "chapters": [
+                "Chapter-14: Semiconductor Electronics"
+              ]
+            }
+          ],
+          "practicals": {
+            "A": {
+              "experiments": [
+                "To determine resistivity of two / three wires by plotting a graph for potential difference versus current.",
+                "To find resistance of a given wire / standard resistor using metre bridge.",
+                "To verify the laws of combination (series) of resistances using a metre bridge. OR To verify the laws of combination (parallel) of resistances using a metre bridge.",
+                "To determine resistance of a galvanometer by half-deflection method and to find its figure of merit.",
+                "To convert the given galvanometer (of known resistance and figure of merit) into a voltmeter of desired range and to verify the same. OR To convert the given galvanometer into an ammeter of desired range and to verify the same.",
+                "To find the frequency of AC mains with a sonometer."
+              ],
+              "activities": [
+                "To measure the resistance and impedance of an inductor with or without iron core.",
+                "To measure resistance, voltage (AC/DC), current (AC) and check continuity of a given circuit using multimeter.",
+                "To assemble a household circuit comprising three bulbs, three (on/off) switches, a fuse and a power source.",
+                "To assemble the components of a given electrical circuit.",
+                "To study the variation in potential drop with length of a wire for a steady current.",
+                "To draw the diagram of a given open circuit comprising at least a battery, resistor/rheostat, key, ammeter and voltmeter; mark and correct components not connected in proper order."
+              ]
+            },
+            "B": {
+              "experiments": [
+                "To find the value of v for different values of u in case of a concave mirror and to find the focal length.",
+                "To find the focal length of a convex mirror, using a convex lens.",
+                "To find the focal length of a convex lens by plotting graphs between u and v or between 1/u and 1/v.",
+                "To find the focal length of a concave lens, using a convex lens.",
+                "To determine angle of minimum deviation for a given prism by plotting a graph between angle of incidence and angle of deviation.",
+                "To determine refractive index of a glass slab using a travelling microscope.",
+                "To find the refractive index of a liquid using convex lens and plane mirror.",
+                "To find the refractive index of a liquid using a concave mirror and a plane mirror.",
+                "To draw the I-V characteristic curve for a p-n junction diode in forward and reverse bias."
+              ],
+              "activities": [
+                "To identify a diode, an LED, a resistor and a capacitor from a mixed collection of such items.",
+                "Use of multimeter to see the unidirectional flow of current in case of a diode and an LED and check whether a given electronic component is in working order.",
+                "To study effect of intensity of light (by varying distance of the source) on an LDR.",
+                "To observe refraction and lateral deviation of a beam of light incident obliquely on a glass slab.",
+                "To observe diffraction of light due to a thin slit.",
+                "To study the nature and size of the image formed by a (i) convex lens, or (ii) concave mirror, on a screen by using a candle and a screen.",
+                "To obtain a lens combination with the specified focal length by using two lenses from the given set of lenses."
+              ]
+            }
+          }
+        }
+      ],
+      "practicalStructure": "sections"
+    },
+    {
+      "subject": "Chemistry",
+      "subjectCode": "043",
+      "practicalStructure": "categories",
+      "practicalNote": "Chemistry practicals are organised as lettered CATEGORIES (A, B, C...), not Section A/B as in Physics. Micro-chemical methods should be used wherever possible.",
+      "prescribedBooks": [
+        "Chemistry Part-I, Class-XI, Published by NCERT",
+        "Chemistry Part-II, Class-XI, Published by NCERT",
+        "Chemistry Part-I, Class-XII, Published by NCERT",
+        "Chemistry Part-II, Class-XII, Published by NCERT"
+      ],
+      "classes": [
+        {
+          "class": "XI",
+          "theoryMarks": 70,
+          "practicalMarks": 30,
+          "practicalDurationHours": 3,
+          "recordRequirement": "Volumetric analysis, salt analysis, one content-based experiment, a project, and a maintained class record with viva.",
+          "evaluationScheme": [
+            {
+              "item": "Volumetric Analysis",
+              "marks": 8
+            },
+            {
+              "item": "Salt Analysis",
+              "marks": 8
+            },
+            {
+              "item": "Content Based Experiment",
+              "marks": 6
+            },
+            {
+              "item": "Project Work",
+              "marks": 4
+            },
+            {
+              "item": "Class record and viva",
+              "marks": 4
+            }
+          ],
+          "units": [
+            {
+              "unit": "1",
+              "title": "Some Basic Concepts of Chemistry",
+              "marks": 7
+            },
+            {
+              "unit": "2",
+              "title": "Structure of Atom",
+              "marks": 9
+            },
+            {
+              "unit": "3",
+              "title": "Classification of Elements and Periodicity in Properties",
+              "marks": 6
+            },
+            {
+              "unit": "4",
+              "title": "Chemical Bonding and Molecular Structure",
+              "marks": 7
+            },
+            {
+              "unit": "5",
+              "title": "Chemical Thermodynamics",
+              "marks": 9
+            },
+            {
+              "unit": "6",
+              "title": "Equilibrium",
+              "marks": 7
+            },
+            {
+              "unit": "7",
+              "title": "Redox Reactions",
+              "marks": 4
+            },
+            {
+              "unit": "8",
+              "title": "Organic Chemistry: Some Basic Principles and Techniques",
+              "marks": 11
+            },
+            {
+              "unit": "9",
+              "title": "Hydrocarbons",
+              "marks": 10
+            }
+          ],
+          "formativeOnlyTopics": [
+            "s & p Block Elements - electronic configuration, atomic & ionic radii, ionization enthalpy, hydration enthalpy and general trends across periods and down groups; unique behaviour of the first element in each group.",
+            "The Gaseous State - qualitative treatment of gas laws, ideal gas equation and deviations from it."
+          ],
+          "practicals": {
+            "A": {
+              "title": "Basic Laboratory Techniques",
+              "experiments": [
+                "Cutting glass tube and glass rod",
+                "Bending a glass tube",
+                "Drawing out a glass jet",
+                "Boring a cork"
+              ],
+              "activities": []
+            },
+            "B": {
+              "title": "Characterization and Purification of Chemical Substances",
+              "experiments": [
+                "Determination of melting point of an organic compound.",
+                "Determination of boiling point of an organic compound.",
+                "Crystallization of impure sample of any one of the following: Alum, Copper Sulphate, Benzoic Acid."
+              ],
+              "activities": []
+            },
+            "C": {
+              "title": "Experiments based on pH",
+              "experiments": [
+                "Determination of pH of some solutions obtained from fruit juices, solution of known and varied concentrations of acids, bases and salts using pH paper or universal indicator.",
+                "Comparing the pH of solutions of strong and weak acids of same concentration.",
+                "Study the pH change in the titration of a strong base using a universal indicator.",
+                "Study the pH change by common-ion in case of weak acids and weak bases."
+              ],
+              "activities": []
+            },
+            "D": {
+              "title": "Chemical Equilibrium",
+              "experiments": [
+                "Study the shift in equilibrium between ferric ions and thiocyanate ions by increasing/decreasing the concentration of either of the ions.",
+                "Study the shift in equilibrium between [Co(H2O)6]2+ and chloride ions by changing the concentration of either of the ions."
+              ],
+              "activities": []
+            },
+            "E": {
+              "title": "Quantitative Estimation",
+              "experiments": [
+                "Using a mechanical balance/electronic balance.",
+                "Preparation of standard solution of Oxalic acid.",
+                "Determination of strength of a given solution of Sodium hydroxide by titrating it against standard solution of Oxalic acid.",
+                "Preparation of standard solution of Sodium carbonate.",
+                "Determination of strength of a given solution of hydrochloric acid by titrating it against standard Sodium Carbonate solution."
+              ],
+              "activities": []
+            },
+            "F": {
+              "title": "Qualitative Analysis",
+              "experiments": [
+                "Determination of one anion and one cation in a given salt. Cations: Pb2+, Cu2+, Al3+, Fe3+, Mn2+, Ni2+, Zn2+, Co2+, Ca2+, Sr2+, Ba2+, Mg2+, NH4+. Anions: CO3 2-, S2-, SO3 2-, NO3-, NO2-, Cl-, Br-, I-, SO4 2-, PO4 3-, CH3COO-. (Insoluble salts excluded)",
+                "Detection of Nitrogen, Sulphur, Chlorine in organic compounds."
+              ],
+              "activities": []
+            }
+          },
+          "projects": [
+            "Checking the bacterial contamination in drinking water by testing sulphide ion",
+            "Study of the methods of purification of water",
+            "Testing the hardness, presence of Iron, Fluoride, Chloride, etc., depending upon the regional variation in drinking water",
+            "Investigation of the foaming capacity of different washing soaps and the effect of addition of Sodium carbonate on it",
+            "Study the acidity of different samples of tea leaves.",
+            "Determination of the rate of evaporation of different liquids",
+            "Study the effect of acids and bases on the tensile strength of fibers.",
+            "Study of acidity of fruit and vegetable juices."
+          ]
+        },
+        {
+          "class": "XII",
+          "theoryMarks": 70,
+          "practicalMarks": 30,
+          "practicalDurationHours": 3,
+          "recordRequirement": "Volumetric analysis, salt analysis, one content-based experiment, a project, and a maintained class record with viva.",
+          "evaluationScheme": [
+            {
+              "item": "Volumetric Analysis",
+              "marks": 8
+            },
+            {
+              "item": "Salt Analysis",
+              "marks": 8
+            },
+            {
+              "item": "Content Based Experiment",
+              "marks": 6
+            },
+            {
+              "item": "Project Work",
+              "marks": 4
+            },
+            {
+              "item": "Class record and viva",
+              "marks": 4
+            }
+          ],
+          "units": [
+            {
+              "unit": "1",
+              "title": "Solutions",
+              "marks": 7
+            },
+            {
+              "unit": "2",
+              "title": "Electrochemistry",
+              "marks": 9
+            },
+            {
+              "unit": "3",
+              "title": "Chemical Kinetics",
+              "marks": 7
+            },
+            {
+              "unit": "4",
+              "title": "d- and f-Block Elements",
+              "marks": 7
+            },
+            {
+              "unit": "5",
+              "title": "Coordination Compounds",
+              "marks": 7
+            },
+            {
+              "unit": "6",
+              "title": "Haloalkanes and Haloarenes",
+              "marks": 6
+            },
+            {
+              "unit": "7",
+              "title": "Alcohols, Phenols and Ethers",
+              "marks": 6
+            },
+            {
+              "unit": "8",
+              "title": "Aldehydes, Ketones and Carboxylic Acids",
+              "marks": 8
+            },
+            {
+              "unit": "9",
+              "title": "Amines",
+              "marks": 6
+            },
+            {
+              "unit": "10",
+              "title": "Biomolecules",
+              "marks": 7
+            }
+          ],
+          "practicals": {
+            "A": {
+              "title": "Surface Chemistry",
+              "experiments": [
+                "Preparation of one lyophilic and one lyophobic sol. Lyophilic sol - starch, egg albumin and gum. Lyophobic sol - aluminium hydroxide, ferric hydroxide, arsenous sulphide.",
+                "Dialysis of sol-prepared in (a) above.",
+                "Study of the role of emulsifying agents in stabilizing the emulsion of different oils."
+              ],
+              "activities": []
+            },
+            "B": {
+              "title": "Chemical Kinetics",
+              "experiments": [
+                "Effect of concentration and temperature on the rate of reaction between Sodium Thiosulphate and Hydrochloric acid.",
+                "Study of reaction rates of any one of the following: Reaction of Iodide ion with Hydrogen Peroxide at room temperature using different concentration of Iodide ions; Reaction between Potassium Iodate (KIO3) and Sodium Sulphate (Na2SO3) using starch solution as indicator (clock reaction)."
+              ],
+              "activities": []
+            },
+            "C": {
+              "title": "Thermochemistry",
+              "experiments": [
+                "Enthalpy of dissolution of Copper Sulphate or Potassium Nitrate.",
+                "Enthalpy of neutralization of strong acid (HCl) and strong base (NaOH).",
+                "Determination of enthalpy change during interaction (Hydrogen bond formation) between Acetone and Chloroform."
+              ],
+              "activities": []
+            },
+            "D": {
+              "title": "Electrochemistry",
+              "experiments": [
+                "Variation of cell potential in Zn/Zn2+ || Cu2+/Cu with change in concentration of electrolytes (CuSO4 or ZnSO4) at room temperature."
+              ],
+              "activities": []
+            },
+            "E": {
+              "title": "Chromatography",
+              "experiments": [
+                "Separation of pigments from extracts of leaves and flowers by paper chromatography and determination of Rf values.",
+                "Separation of constituents present in an inorganic mixture containing two cations only (constituents having large difference in Rf values to be provided)."
+              ],
+              "activities": []
+            },
+            "F": {
+              "title": "Preparation of Inorganic Compounds",
+              "experiments": [
+                "Preparation of double salt of Ferrous Ammonium Sulphate or Potash Alum.",
+                "Preparation of Potassium Ferric Oxalate."
+              ],
+              "activities": []
+            },
+            "G": {
+              "title": "Preparation of Organic Compounds",
+              "experiments": [
+                "Preparation of Acetanilide",
+                "Preparation of Di-benzal acetone",
+                "Preparation of p-Nitroacetanilide",
+                "Preparation of Aniline yellow or 2-Naphthol Aniline dye"
+              ],
+              "activities": []
+            },
+            "H": {
+              "title": "Tests for the functional groups present in organic compounds",
+              "experiments": [
+                "Tests for unsaturation, alcoholic, phenolic, aldehydic, ketonic, carboxylic and amino (primary) groups."
+              ],
+              "activities": []
+            },
+            "I": {
+              "title": "Characteristic tests of carbohydrates, fats and proteins",
+              "experiments": [
+                "Characteristic tests of carbohydrates, fats and proteins in pure samples and their detection in given foodstuffs."
+              ],
+              "activities": []
+            },
+            "J": {
+              "title": "Determination of concentration/molarity of KMnO4 solution",
+              "experiments": [
+                "Determination of concentration/molarity of KMnO4 solution by titrating it against a standard solution of Oxalic acid.",
+                "Determination of concentration/molarity of KMnO4 solution by titrating it against a standard solution of Ferrous Ammonium Sulphate."
+              ],
+              "activities": []
+            },
+            "K": {
+              "title": "Qualitative analysis",
+              "experiments": [
+                "Determination of one anion and one cation in a given salt. Cations: Pb2+, Cu2+, Al3+, Fe3+, Mn2+, Ni2+, Zn2+, Co2+, Ca2+, Sr2+, Ba2+, Mg2+, NH4+. Anions: CO3 2-, S2-, SO3 2-, NO3-, NO2-, Cl-, Br-, I-, SO4 2-, PO4 3-, CH3COO-, C2O4 2-. (Insoluble salts excluded)"
+              ],
+              "activities": []
+            }
+          },
+          "projects": [
+            "Study of the presence of oxalate ions in guava fruit at different stages of ripening.",
+            "Study of quantity of casein present in different samples of milk.",
+            "Preparation of soybean milk and its comparison with the natural milk with respect to curd formation, effect of temperature, etc.",
+            "Study of the effect of Potassium Bisulphate as food preservative under various conditions.",
+            "Study of digestion of starch by salivary amylase and effect of pH and temperature on it.",
+            "Comparative study of the rate of fermentation of wheat flour, gram flour, potato juice, carrot juice, etc.",
+            "Extraction of essential oils present in Saunf (aniseed), Ajwain (carom), Illaichi (cardamom).",
+            "Study of common food adulterants in fat, oil, butter, sugar, turmeric powder, chili powder and pepper."
+          ]
+        }
+      ]
+    }
+  ]
+}

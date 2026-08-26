@@ -1,0 +1,427 @@
+{
+  "id": "XII-PHY-ACT-B1",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 1,
+    "kind": "activity",
+    "unit": "Unit IX: Electronic Devices",
+    "chapter": "Chapter-14: Semiconductor Electronics",
+    "topic": "Semiconductor diode, LED, and passive components",
+    "learningObjectives": [
+      "Be able to examine a mixed collection of electronic components and identify each one",
+      "Be able to use an ohmmeter in both directions as the test that distinguishes them",
+      "Be able to justify each identification from the evidence rather than from appearance"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Activity 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Identifying a diode, an LED, a resistor and a capacitor",
+  "shortTitle": "Identifying components",
+  "objective": [
+    "To examine a mixed collection of electronic components and identify each one.",
+    "To use an ohmmeter in both directions as the test that distinguishes them.",
+    "To justify each identification from the evidence rather than from appearance."
+  ],
+  "theory": {
+    "statement": "Four kinds of component in a school kit can be told apart by what an ohmmeter does when its probes are reversed. A resistor has no polarity, so it reads the same both ways. A diode is a p-n junction: it conducts when forward-biased and blocks when reverse-biased, so it reads low one way and open the other. An LED is also a junction, but its forward voltage is about 1.8 V rather than 0.7 V, so its forward reading is markedly higher. A capacitor blocks steady current in both directions, but while it charges from the meter’s internal cell the needle kicks and then falls back.",
+    "keyEquations": [
+      "A resistor reads the same resistance whichever way round the probes go.",
+      "A junction conducts one way only — that asymmetry is what identifies a diode or an LED.",
+      "An LED’s forward reading is much higher than a diode’s, because its junction needs more voltage.",
+      "A capacitor reads open in the steady state, but the initial kick separates it from a break.",
+      "Appearance is not evidence: several components in the tray look like each other."
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Mixed tray of components",
+      "why": "The specimens to be identified; several are deliberately ambiguous to look at."
+    },
+    {
+      "name": "Digital multimeter on the ohms range",
+      "why": "Supplies a small current from its own cell, so the component can be tested out of circuit."
+    },
+    {
+      "name": "Crocodile-clip leads",
+      "why": "Hold the component so both hands are free and the probes do not slip."
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "specimen",
+      "label": "Specimen",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "s1",
+      "options": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8"
+      ]
+    },
+    {
+      "id": "test",
+      "label": "Test",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "forward",
+      "options": [
+        "look",
+        "forward",
+        "reverse"
+      ]
+    },
+    {
+      "id": "identification",
+      "label": "This component is a",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "resistor",
+      "options": [
+        "resistor",
+        "diode",
+        "led",
+        "capacitor"
+      ]
+    },
+    {
+      "id": "identity",
+      "label": "Component identified",
+      "symbol": "",
+      "unit": "",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    "Take a specimen from the tray and look at its body. Note the shape, any bands and any printed code.",
+    "Clip it to the meter on the ohms range and read the resistance.",
+    "Reverse the connections and read it again. This second reading is the one that matters.",
+    "If the needle kicks and falls back, watch it carefully — that is a capacitor charging.",
+    "Decide what the component is, using both readings and not the appearance alone.",
+    "Record the identification and repeat until all four kinds have been found."
+  ],
+  "simulation": {
+    "model": "component-id",
+    "renderer": "component-id",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "specimen",
+        "label": "Specimen",
+        "widget": "segmented",
+        "options": [
+          "s1",
+          "s2",
+          "s3",
+          "s4",
+          "s5",
+          "s6",
+          "s7",
+          "s8"
+        ]
+      },
+      {
+        "var": "test",
+        "label": "Test",
+        "widget": "segmented",
+        "options": [
+          "look",
+          "forward",
+          "reverse"
+        ]
+      },
+      {
+        "var": "identification",
+        "label": "This component is a",
+        "widget": "segmented",
+        "options": [
+          "resistor",
+          "diode",
+          "led",
+          "capacitor"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record identification",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Reading",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "specimen",
+        "label": "Specimen"
+      },
+      {
+        "key": "forward",
+        "label": "Ohms one way"
+      },
+      {
+        "key": "reverse",
+        "label": "Ohms reversed"
+      },
+      {
+        "key": "kick",
+        "label": "Needle kick"
+      },
+      {
+        "key": "identification",
+        "label": "Identified as"
+      },
+      {
+        "key": "correct",
+        "label": "Correct"
+      }
+    ],
+    "graph": null,
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "Compare the two ohmmeter readings for each specimen.",
+      "Equal and finite both ways → resistor.",
+      "Low one way, open the other → a junction: diode if the forward reading is low, LED if it is high.",
+      "Open both ways with an initial kick → capacitor."
+    ],
+    "resultKeys": [
+      "typesIdentified",
+      "accuracyPct"
+    ]
+  },
+  "expectedResult": {
+    "statement": "All four kinds can be identified from the ohmmeter readings alone. The resistors read the same both ways; the diodes and LEDs read one way only; the capacitors read open both ways. The two junction devices are separated by the size of the forward reading, which reflects a forward voltage of about 0.7 V for silicon against about 1.8 V for a light-emitting junction.",
+    "value": null,
+    "unit": null,
+    "tolerancePct": null
+  },
+  "safety": [
+    "Test components out of circuit only. An ohmmeter applied to a live circuit gives a meaningless reading and may damage the meter.",
+    "Discharge any large capacitor before handling it; a charged capacitor can hold a painful voltage.",
+    "Do not force component legs into the clips — repeated bending snaps them."
+  ],
+  "sourcesOfError": [
+    "Judging by appearance instead of testing: several specimens look like each other.",
+    "Testing in one direction only, which cannot distinguish a junction from a resistor.",
+    "Missing the brief kick of a small capacitor and calling it a broken component.",
+    "Touching both probes with the fingers, so body resistance appears in parallel with the component.",
+    "Expecting an LED to light on the ohms range; usually there is too little current."
+  ],
+  "viva": [
+    {
+      "question": "Which single test separates a resistor from a diode?",
+      "expectedConcept": "Reversing the probes: a resistor reads the same both ways, a diode does not.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Reversing the probes: a resistor reads the same both ways, a diode does not.",
+      "commonMisconception": "That the reading in one direction is enough."
+    },
+    {
+      "question": "Both a diode and an LED conduct one way only. How do you tell them apart with an ohmmeter?",
+      "expectedConcept": "The forward reading is much higher for an LED, because its junction needs about 1.8 V rather than 0.7 V.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "The forward reading is much higher for an LED, because its junction needs about 1.8 V rather than 0.7 V.",
+      "commonMisconception": "That an LED must light up to be recognised."
+    },
+    {
+      "question": "A specimen reads open circuit both ways. What could it be?",
+      "expectedConcept": "A capacitor, or a broken component. The initial kick as it charges distinguishes them.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "A capacitor, or a broken component. The initial kick as it charges distinguishes them.",
+      "commonMisconception": "That open circuit always means faulty."
+    },
+    {
+      "question": "Why does a capacitor show a kick and then fall back to open?",
+      "expectedConcept": "The meter’s cell charges the capacitor; current flows only while the charge builds, then stops.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "The meter’s cell charges the capacitor; current flows only while the charge builds, then stops.",
+      "commonMisconception": "That a capacitor conducts steadily at DC."
+    },
+    {
+      "question": "Why is a small ceramic capacitor harder to identify than an electrolytic one?",
+      "expectedConcept": "Its capacitance is far smaller, so it charges almost instantly and the kick is too brief to see.",
+      "difficulty": "hard",
+      "bloom": "Understand",
+      "answerLogic": "Its capacitance is far smaller, so it charges almost instantly and the kick is too brief to see.",
+      "commonMisconception": "That all capacitors behave identically on test."
+    },
+    {
+      "question": "What does the marking 104 on a small disc mean?",
+      "expectedConcept": "10 followed by four zeros picofarad, that is 100 nF.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "10 followed by four zeros picofarad, that is 100 nF.",
+      "commonMisconception": "That it is a serial number or a resistance code."
+    },
+    {
+      "question": "Why must components be tested out of circuit?",
+      "expectedConcept": "Other components in parallel provide alternative paths, so the reading is not that of the component alone.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Other components in parallel provide alternative paths, so the reading is not that of the component alone.",
+      "commonMisconception": "That an ohmmeter always reads the component it touches."
+    },
+    {
+      "question": "What physical difference gives an LED its higher forward voltage?",
+      "expectedConcept": "A wider band gap, chosen so that the recombination energy is emitted as visible light.",
+      "difficulty": "hard",
+      "bloom": "Understand",
+      "answerLogic": "A wider band gap, chosen so that the recombination energy is emitted as visible light.",
+      "commonMisconception": "That the colour comes from the plastic lens."
+    },
+    {
+      "question": "A student identifies a component as a resistor after one reading of 470 Ω. What is missing?",
+      "expectedConcept": "The reverse reading. A forward-biased diode could also read a few hundred ohms.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "The reverse reading. A forward-biased diode could also read a few hundred ohms.",
+      "commonMisconception": "That a plausible resistance value proves it is a resistor."
+    },
+    {
+      "question": "How can you tell which leg of an LED is the anode without a meter?",
+      "expectedConcept": "The longer leg is the anode; the flat on the rim marks the cathode.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "The longer leg is the anode; the flat on the rim marks the cathode.",
+      "commonMisconception": "That LEDs are not polarised."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Which property of a p-n junction makes it identifiable with an ohmmeter?",
+        "options": [
+          "It has a fixed resistance",
+          "It conducts in one direction only",
+          "It stores charge",
+          "It emits light"
+        ],
+        "answer": 1,
+        "feedback": "A p-n junction is the only thing in the tray that conducts one way and blocks the other."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "A resistor connected the other way round reads:",
+        "options": [
+          "A higher value",
+          "A lower value",
+          "The same value",
+          "Open circuit"
+        ],
+        "answer": 2,
+        "feedback": "A resistor has no polarity, so reversing the probes changes nothing."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Test each specimen in BOTH directions before naming it.",
+        "check": "rows>=4"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Identify at least four different specimens from the tray.",
+        "check": "rows>=4"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "Why is the forward reading of an LED higher than that of a silicon diode?",
+        "options": [
+          "It is physically bigger",
+          "Its junction needs a larger forward voltage",
+          "It has more resistance in its leads",
+          "The meter is faulty"
+        ],
+        "answer": 1,
+        "feedback": "A wider band gap means a larger forward drop, and the light that comes with it."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "The safest way to identify an unmarked component is to:",
+        "options": [
+          "Judge by its shape",
+          "Measure it in both directions",
+          "Assume it matches the others in the tray",
+          "Connect it to a supply"
+        ],
+        "answer": 1,
+        "feedback": "One reading cannot distinguish a resistor from a forward-biased junction."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "A resistor reads the same resistance whichever way round the probes go.",
+    "assumptions": [
+      "A resistor reads the same resistance whichever way round the probes go.",
+      "A junction conducts one way only — that asymmetry is what identifies a diode or an LED.",
+      "An LED’s forward reading is much higher than a diode’s, because its junction needs more voltage.",
+      "A capacitor reads open in the steady state, but the initial kick separates it from a break."
+    ],
+    "validRange": "All four kinds can be identified from the ohmmeter readings alone. The resistors",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Judging by appearance instead of testing: several specimens look like each other.",
+      "Testing in one direction only, which cannot distinguish a junction from a resistor.",
+      "Missing the brief kick of a small capacitor and calling it a broken component.",
+      "Touching both probes with the fingers, so body resistance appears in parallel with the component."
+    ],
+    "expectedBehaviour": [
+      "All four kinds can be identified from the ohmmeter readings alone. The resistors read the same both ways; the diodes and LEDs read one way only; the capacitors read open both ways. The two junction devices are separated by the size of the forward reading, which reflects a forward voltage of about 0.7 V for silicon against about 1.8 V for a light-emitting junction."
+    ],
+    "testFile": "tests/batch14.test.js"
+  }
+}

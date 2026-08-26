@@ -1,0 +1,197 @@
+{
+  "id": "XI-PHY-A10",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 10,
+    "unit": "Unit III: Laws of Motion",
+    "chapter": "Chapter-4: Laws of Motion",
+    "topic": "Intuitive concept of force; Inertia, Newton's first law of motion; momentum and Newton's second law of motion; impulse; Newton's third law of motion; equilibrium of concurrent forces; static and kinetic friction, laws of friction, rolling friction, lubrication",
+    "subtopic": "Resolution of weight into components along and perpendicular to an inclined plane; equilibrium on an incline; rolling friction",
+    "practical": "To find the downward force, along an inclined plane, acting on a roller due to gravitational pull of the earth and study its relationship with the angle of inclination by plotting graph between force and sin(theta).",
+    "learningObjectives": [
+      "Resolve the weight of a body into components along and perpendicular to an inclined plane",
+      "Measure the force needed to hold a roller in equilibrium on the plane",
+      "Vary the angle of inclination and record the balancing force at each angle",
+      "Plot the force against sin θ and obtain a straight line through the origin",
+      "Find the weight of the roller from the slope of that line",
+      "Explain why the graph is plotted against sin θ rather than against θ"
+    ],
+    "competencies": [
+      "Resolving a vector along chosen directions to simplify a problem",
+      "Choosing the variable to plot so that a relationship becomes a straight line",
+      "Interpreting the slope of a graph as a physical quantity",
+      "Recognising the small residual effect of rolling friction in the intercept"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Experiment 10 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Downward force along an inclined plane and its variation with sin θ",
+  "shortTitle": "Inclined plane",
+  "objective": [
+    "To find the downward force acting along an inclined plane on a roller due to the gravitational pull of the earth.",
+    "To study how that force varies with the angle of inclination.",
+    "To plot a graph of force against sin θ and find the weight of the roller from its slope."
+  ],
+  "theory": {
+    "statement": "A roller resting on an inclined plane is pulled vertically downwards by its weight W. This weight can be resolved into two perpendicular components: one along the plane, tending to make the roller run down, and one perpendicular to the plane, pressing it against the surface. Only the component along the plane has to be balanced to keep the roller at rest.",
+    "derivationNote": "If the plane makes an angle θ with the horizontal, the component of the weight along the plane is W sin θ and the component perpendicular to it is W cos θ. To hold the roller in equilibrium, a force F applied up the plane, through a string over a pulley, must balance the component along the plane, so F = W sin θ. A graph of F against sin θ is therefore a straight line passing through the origin, and its slope is the weight W of the roller. Plotting F against θ instead would give a curve, because sin θ is not proportional to θ except for very small angles; choosing sin θ as the variable is what makes the relationship linear and the slope meaningful. A roller is specified rather than a block because it rolls, and rolling friction is very much smaller than sliding friction. For a sliding block the balancing force would be W(sin θ + μ cos θ), which is not proportional to sin θ and gives a line lifted off the origin.",
+    "keyEquations": [
+      "Component of weight along the plane = W sin θ",
+      "Component perpendicular to the plane = W cos θ",
+      "At equilibrium, F = W sin θ",
+      "Slope of the F against sin θ graph = W",
+      "For a sliding block, F = W(sin θ + μ cos θ)"
+    ]
+  },
+  "apparatus": [
+    { "name": "Inclined plane", "spec": "with a protractor or angle scale, and adjustable inclination", "why": "Provides the surface whose angle can be varied and measured" },
+    { "name": "Roller", "spec": "metal cylinder with a hook, 150 to 400 gwt", "why": "The body whose downward force along the plane is studied; it rolls, so friction is small" },
+    { "name": "Pulley", "spec": "clamped at the top of the plane, low friction", "why": "Turns the vertical pull of the pan into a pull directed up along the plane" },
+    { "name": "Pan and weight box", "spec": "slotted weights from 0.5 g", "why": "Applies the balancing force in small measurable steps" },
+    { "name": "Thread", "spec": "fine, strong, inextensible", "why": "Connects the roller to the pan, parallel to the surface of the plane" },
+    { "name": "Spirit level and metre scale", "spec": "", "why": "Set the base horizontal and check the angle of inclination" }
+  ],
+  "materials": [],
+  "variables": [
+    { "id": "angleDeg", "label": "Angle of inclination", "symbol": "θ", "unit": "°", "type": "independent", "min": 5, "max": 60, "step": 1, "default": 30 },
+    { "id": "panGwt", "label": "Weight in the pan", "symbol": "F", "unit": "gwt", "type": "independent", "min": 0, "max": 400, "step": 0.5, "default": 0 },
+    { "id": "roller", "label": "Roller", "symbol": "W", "unit": "", "type": "control", "default": "r250", "options": ["r250", "r400", "r150"] },
+    { "id": "body", "label": "Body on the plane", "symbol": "", "unit": "", "type": "control", "default": "roller", "options": ["roller", "block"] },
+    { "id": "forceN", "label": "Force along the plane", "symbol": "F", "unit": "N", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Set the base of the inclined plane horizontal with a spirit level, and clamp the pulley at the top so that the thread will run parallel to the surface.", "checkpoint": false },
+    { "step": 2, "text": "Weigh the roller and the pan, and note their values.", "checkpoint": false },
+    { "step": 3, "text": "Set the plane to a small angle, about 10°, and read the angle from the protractor.", "checkpoint": true, "expects": "angleDeg" },
+    { "step": 4, "text": "Place the roller on the plane and attach the thread over the pulley to the pan. Check that the thread is parallel to the surface.", "checkpoint": false },
+    { "step": 5, "text": "Add weights to the pan in small steps until the roller just stays at rest without running down or being pulled up.", "checkpoint": true, "expects": "panGwt" },
+    { "step": 6, "text": "Note the total weight in the pan; this is the force along the plane. Record the reading.", "checkpoint": true, "expects": "record" },
+    { "step": 7, "text": "Increase the angle in steps of about 8° or 10° and repeat, taking at least five readings up to about 60°.", "checkpoint": true, "expects": "rows>=3" },
+    { "step": 8, "text": "For each reading calculate sin θ.", "checkpoint": false },
+    { "step": 9, "text": "Plot F against sin θ, draw the best straight line through the origin, and find its slope, which is the weight of the roller.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "inclined-plane",
+    "renderer": "inclined-plane",
+    "fps": 60,
+    "controls": [
+      { "var": "angleDeg", "widget": "slider" },
+      { "var": "panGwt", "widget": "slider" },
+      { "var": "roller", "widget": "segmented", "options": ["r250", "r400", "r150"] },
+      { "var": "body", "widget": "segmented", "options": ["roller", "block"] }
+    ],
+    "actions": [
+      { "id": "record", "label": "Record balance", "primary": true },
+      { "id": "reset", "label": "Reset" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "trial", "label": "Trial", "unit": "", "decimals": 0 },
+      { "key": "angleDeg", "label": "Angle θ", "unit": "°", "decimals": 1 },
+      { "key": "sinTheta", "label": "sin θ", "unit": "", "decimals": 4 },
+      { "key": "panGwt", "label": "Force F", "unit": "gwt", "decimals": 1 },
+      { "key": "forceN", "label": "Force F", "unit": "N", "decimals": 3 },
+      { "key": "body", "label": "Body", "unit": "", "decimals": 0 }
+    ],
+    "graph": { "x": "sinTheta", "y": "panGwt", "xLabel": "sin θ", "yLabel": "Force along the plane F (gwt)", "throughOrigin": true },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "For each angle, calculate sin θ",
+      "F is the total weight in the pan, including the pan itself",
+      "Plot F against sin θ",
+      "The best line through the origin has slope W, the weight of the roller",
+      "Weight in newton = (W / 1000) × g"
+    ],
+    "resultKeys": ["weightGwt", "weightN", "r2"]
+  },
+  "expectedResult": {
+    "quantity": "Weight of the roller from the slope",
+    "symbol": "W",
+    "value": 250,
+    "tolerance": 12,
+    "unit": "gwt",
+    "secondary": { "quantity": "Weight in newton", "value": 2.448, "tolerance": 0.12, "unit": "N" },
+    "statement": "The graph of the balancing force against sin θ is a straight line passing close to the origin, showing that the downward force along the plane is proportional to sin θ. Its slope gives the weight of the roller, about 250 gram-weight or 2.45 N. The small positive intercept is the residue of rolling friction."
+  },
+  "safety": [
+    "Clamp the inclined plane and the pulley securely so that neither can slip while the weights are being added.",
+    "Keep hands and feet clear below the pan and below the lower end of the plane.",
+    "Stop the roller before it reaches the bottom of the plane if it starts to run down.",
+    "Do not raise the plane so steeply that the roller can jump the guide rails.",
+    "Add weights gently; dropping them jerks the roller into motion and spoils the reading."
+  ],
+  "sourcesOfError": [
+    "The threshold of balance is judged by eye, and there is a real range of pan weights over which the roller appears to stay put.",
+    "Rolling friction is small but not zero, so the line has a small positive intercept.",
+    "The thread may not be exactly parallel to the surface of the plane, so only its component along the plane balances the roller.",
+    "The pulley is not perfectly frictionless.",
+    "The angle read from the protractor may be in error, and sin θ changes rapidly with θ at small angles.",
+    "The weight of the pan may be forgotten in the applied force."
+  ],
+  "viva": [
+    { "question": "What are the components of the weight of a body on an inclined plane?", "expectedConcept": "W sin θ acting down along the plane, and W cos θ acting perpendicular to it and pressing the body against the surface.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Resolution along and perpendicular to the plane.", "commonMisconception": "Interchanging sine and cosine." },
+    { "question": "Why is the graph plotted against sin θ rather than against θ?", "expectedConcept": "Because F is proportional to sin θ, not to θ. Plotting against sin θ gives a straight line whose slope is the weight, while plotting against θ gives a curve from which no simple quantity can be read.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "Choose the variable that linearises the relation.", "commonMisconception": "Thinking sin θ is proportional to θ, which is only true for small angles." },
+    { "question": "What does the slope of the F against sin θ graph represent?", "expectedConcept": "The weight of the roller. Since F = W sin θ, the slope of F against sin θ is W.", "difficulty": "easy", "bloom": "Understand", "answerLogic": "Compare with y = mx.", "commonMisconception": "Calling the slope the mass rather than the weight." },
+    { "question": "Why should the graph pass through the origin?", "expectedConcept": "When θ = 0 the plane is horizontal and sin θ = 0, so there is no component of the weight along the plane and no force is needed to hold the body. Zero on one axis must correspond to zero on the other.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "A horizontal plane needs no balancing force.", "commonMisconception": "Drawing a best-fit line with a large intercept and still calling the slope W." },
+    { "question": "Why is a roller used rather than a sliding block?", "expectedConcept": "Rolling friction is very much smaller than sliding friction. With a roller, the balancing force is very nearly the true component W sin θ. A block would need W(sin θ + μ cos θ), which is not proportional to sin θ and would give a line with a large intercept and a wrong slope.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Rolling friction is negligible; sliding friction is not.", "commonMisconception": "Assuming a roller has no friction at all." },
+    { "question": "What would the force be if the plane were vertical?", "expectedConcept": "At θ = 90°, sin θ = 1, so F = W. The whole weight acts along the plane and the body simply hangs from the string.", "difficulty": "easy", "bloom": "Apply", "answerLogic": "sin 90° = 1.", "commonMisconception": "Thinking the force becomes infinite." },
+    { "question": "Why must the thread be parallel to the inclined surface?", "expectedConcept": "Only the component of the applied force along the plane balances the weight component. If the thread is at an angle to the surface, part of the pull is wasted lifting the roller off the plane, and the measured force is larger than the true value.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Only the along-plane component balances.", "commonMisconception": "Thinking the direction of the string does not matter as long as it is taut." },
+    { "question": "What is the normal reaction on the roller and how does it change with θ?", "expectedConcept": "The normal reaction equals W cos θ, the component of the weight perpendicular to the plane. It decreases as the plane is raised, becoming zero when the plane is vertical.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "R = W cos θ.", "commonMisconception": "Thinking the normal reaction always equals the full weight." },
+    { "question": "Your graph has a small positive intercept on the force axis. What does it mean?", "expectedConcept": "It is the small extra force needed to overcome rolling friction, which is present even when the plane is almost horizontal. A large intercept would mean the body was sliding rather than rolling, or that the pulley was stiff.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "The intercept measures the friction residue.", "commonMisconception": "Dismissing the intercept as pure measurement error." },
+    { "question": "Would the slope change if a heavier roller were used?", "expectedConcept": "Yes. The slope is the weight of the roller, so a heavier roller gives a steeper line. The graph would still be straight and still pass through the origin, because the relationship F = W sin θ is unchanged.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Slope is W itself.", "commonMisconception": "Expecting the slope to stay the same because the physics is the same." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "The component of the weight along an inclined plane of angle θ is:", "options": ["W cos θ", "W sin θ", "W tan θ", "W"], "answer": 1, "feedback": "W sin θ acts along the plane; W cos θ is perpendicular to it." },
+      { "id": "pre2", "type": "mcq", "question": "The slope of a graph of F against sin θ gives:", "options": ["The angle of the plane", "The coefficient of friction", "The weight of the roller", "The mass of the pan"], "answer": 2, "feedback": "Since F = W sin θ, comparing with y = mx shows the slope is W." },
+      { "id": "pre3", "type": "mcq", "question": "A roller is used instead of a block because:", "options": ["It is heavier", "Rolling friction is much smaller than sliding friction", "It is easier to hold", "Rollers have no weight component along the plane"], "answer": 1, "feedback": "The experiment measures W sin θ, so any friction is an unwanted extra. Rolling friction is small enough to neglect." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Record the balancing force at three or more different angles.", "check": "rows>=3" },
+      { "id": "dur2", "type": "task", "question": "Change the angle of inclination between readings.", "check": "angleVaried" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the weight of the roller from the slope, in gram-weight.", "answer": 250, "tolerance": 15, "feedback": "The slope of the F against sin θ line is the weight, about 250 gwt for this roller." },
+      { "id": "post2", "type": "numeric", "question": "Express that weight in newton.", "answer": 2.448, "tolerance": 0.15, "feedback": "(250/1000) × 9.792 = 2.45 N." },
+      { "id": "post3", "type": "mcq", "question": "You repeated the experiment with a sliding block. The graph then:", "options": ["Was identical", "Had a clear positive intercept and a steeper slope", "Passed exactly through the origin", "Became horizontal"], "answer": 1, "feedback": "A block needs W(sin θ + μ cos θ). The μW cos θ term lifts the line off the origin and the fitted slope no longer gives the weight." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "F = W sin θ; slope of F against sin θ = W; for a sliding block F = W(sin θ + μ cos θ)",
+    "assumptions": [
+      "The roller rolls rather than slides, so rolling friction is small",
+      "The string is parallel to the inclined surface",
+      "The pulley is frictionless and the string inextensible",
+      "The plane is rigid and does not sag",
+      "The weight of the pan is included in the applied force"
+    ],
+    "validRange": "Angle 10° to 60°; roller 150 to 400 gwt; weights to the nearest 0.5 g",
+    "unitSystem": "Forces as gram-weight, converted to newton; angles in degrees",
+    "edgeCases": [
+      "At θ = 0 no force is needed, so the line passes through the origin",
+      "At θ = 90° the whole weight acts along the plane",
+      "A string not parallel to the plane inflates the measured force",
+      "Rolling friction gives a small positive intercept",
+      "A sliding block breaks the proportionality altogether"
+    ],
+    "expectedBehaviour": [
+      "F against sin θ is a straight line through the origin with r² above 0.99",
+      "The slope recovers the weight of the roller for all three rollers",
+      "The intercept is small for the roller and large for the sliding block",
+      "The model refuses a result if the angle was never changed between readings"
+    ],
+    "testFile": "tests/batch7.test.js"
+  }
+}

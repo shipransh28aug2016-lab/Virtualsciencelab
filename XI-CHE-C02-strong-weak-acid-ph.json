@@ -1,0 +1,202 @@
+{
+  "id": "XI-CHE-C02",
+  "class": "XI",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "C",
+    "serial": 2,
+    "categoryTitle": "Experiments based on pH",
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 6: Equilibrium — Ionic Equilibrium",
+    "topic": "Ionic equilibrium: ionization of acids and bases, strong and weak electrolytes, degree of ionization, ionization constant of weak acids, ionic product of water, pH scale",
+    "subtopic": "Comparison of strong and weak acids at equal concentration; degree of dissociation; Ostwald's dilution law",
+    "practical": "Comparing the pH of solutions of strong and weak acids of same concentration.",
+    "assessmentComponent": "Content Based Experiment (06 marks)",
+    "learningObjectives": [
+      "Measure the pH of a strong acid and a weak acid prepared at exactly the same concentration",
+      "Explain the difference in pH in terms of the degree of ionisation rather than concentration",
+      "Calculate the hydrogen ion concentration of each solution from its measured pH",
+      "Determine the degree of dissociation and the ionisation constant of the weak acid from the measured pH",
+      "Show that dilution raises the pH of a strong acid by exactly one unit per tenfold dilution, but a weak acid by less",
+      "Relate the observations to Ostwald's dilution law"
+    ],
+    "competencies": [
+      "Designing a fair comparison by holding concentration constant across two samples",
+      "Reasoning quantitatively from an observed pH back to an equilibrium constant",
+      "Distinguishing concentration from the strength of an acid, a persistent conceptual confusion",
+      "Predicting and then testing the effect of dilution on each type of acid"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Classes XI-XII Curriculum 2026-27, PRACTICAL SYLLABUS, C. Experiments based on pH, item 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Comparing the pH of strong and weak acids of the same concentration",
+  "shortTitle": "Strong vs Weak Acid",
+  "objective": [
+    "To compare the pH of hydrochloric acid and acetic acid solutions of the same concentration.",
+    "To calculate the degree of dissociation and the ionisation constant of the weak acid.",
+    "To compare the effect of dilution on a strong and on a weak acid."
+  ],
+  "theory": {
+    "statement": "The strength of an acid is not the same thing as its concentration. Concentration is how much acid has been dissolved; strength is how completely that acid ionises in solution. Two acids at exactly the same concentration can therefore give very different pH values.",
+    "derivationNote": "A strong acid such as hydrochloric acid ionises completely, so a 0.1 M solution gives [H⁺] = 0.1 M and pH = 1. A weak acid such as acetic acid ionises only slightly, and the equilibrium CH₃COOH ⇌ CH₃COO⁻ + H⁺ is governed by Ka = [H⁺][A⁻]/[HA]. Writing x for [H⁺] and C for the concentration, Ka = x²/(C − x), which for a slightly ionised acid reduces to x = √(Ka·C). For acetic acid, Ka = 1.8 × 10⁻⁵, so at C = 0.1 M, [H⁺] = √(1.8 × 10⁻⁶) = 1.34 × 10⁻³ M and pH = 2.87, nearly two units higher than the strong acid. Working backwards, the measured pH gives [H⁺], and the degree of dissociation α = [H⁺]/C, from which Ka = Cα²/(1 − α). Ostwald's dilution law follows: α increases on dilution, roughly as the inverse square root of the concentration, so the pH of a weak acid rises by less than one unit per tenfold dilution, whereas that of a strong acid rises by exactly one.",
+    "keyEquations": [
+      "Strong acid: [H⁺] = C, so pH = −log C",
+      "Weak acid: Ka = x²/(C − x), giving [H⁺] ≈ √(Ka·C)",
+      "Degree of dissociation α = [H⁺]/C",
+      "Ostwald's dilution law: Ka = Cα²/(1 − α)",
+      "pH = −log₁₀[H⁺]"
+    ]
+  },
+  "apparatus": [
+    { "name": "Test tubes", "spec": "borosilicate, 15 mL, in a stand", "why": "Each acid is tested in its own clean tube to avoid cross-contamination" },
+    { "name": "pH meter", "spec": "digital, calibrated with standard buffers", "why": "Resolves 0.01 pH unit, needed to distinguish the two acids reliably" },
+    { "name": "Universal indicator", "spec": "with standard colour chart", "why": "Shows the difference visually, though only to about half a pH unit" },
+    { "name": "Volumetric flasks", "spec": "100 mL, class A", "why": "Prepare both acids at exactly the same concentration, which is the whole point of the comparison" },
+    { "name": "Pipette and filler", "spec": "10 mL", "why": "Transfers accurate volumes for the successive dilutions" },
+    { "name": "Wash bottle", "spec": "with distilled water", "why": "Rinses glassware between samples" }
+  ],
+  "materials": [
+    { "name": "Hydrochloric acid", "spec": "0.1 M, standardised", "why": "A strong monobasic acid, completely ionised" },
+    { "name": "Acetic acid", "spec": "0.1 M, Ka = 1.8 × 10⁻⁵", "why": "A weak monobasic acid at the SAME concentration, the basis of the comparison" },
+    { "name": "Citric acid", "spec": "0.1 M, Ka = 7.4 × 10⁻⁴", "why": "A second weak acid, stronger than acetic, to show that weak acids differ among themselves" },
+    { "name": "Distilled water", "spec": "freshly boiled and cooled", "why": "Used for dilution; dissolved carbon dioxide would make it slightly acidic" }
+  ],
+  "variables": [
+    { "id": "sample", "label": "Acid", "symbol": "", "unit": "", "type": "independent", "default": "hcl", "options": ["hcl", "acetic", "citric", "h2so4"] },
+    { "id": "dilution", "label": "Dilution factor", "symbol": "", "unit": "×", "type": "independent", "min": 1, "max": 1000, "step": 1, "default": 1 },
+    { "id": "method", "label": "Method", "symbol": "", "unit": "", "type": "control", "default": "meter", "options": ["paper", "universal", "meter"] },
+    { "id": "tempC", "label": "Temperature", "symbol": "t", "unit": "°C", "type": "controlled", "min": 15, "max": 40, "step": 1, "default": 25 },
+    { "id": "pH", "label": "pH", "symbol": "pH", "unit": "", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Prepare 0.1 M solutions of hydrochloric acid and of acetic acid, taking care that both are at exactly the same concentration.", "checkpoint": true, "expects": "sample" },
+    { "step": 2, "text": "Calibrate the pH meter with standard buffer solutions of pH 4 and pH 7.", "checkpoint": true, "expects": "method" },
+    { "step": 3, "text": "Rinse a clean test tube with a little of the hydrochloric acid, then take about 10 mL of it in the tube.", "checkpoint": false },
+    { "step": 4, "text": "Measure and record the pH of the hydrochloric acid.", "checkpoint": true, "expects": "record" },
+    { "step": 5, "text": "Rinse the electrode with distilled water and repeat with the acetic acid of the same concentration.", "checkpoint": false },
+    { "step": 6, "text": "Compare the two values. Account for the difference in terms of the extent of ionisation, not the amount of acid present.", "checkpoint": false },
+    { "step": 7, "text": "Dilute each acid ten times and a hundred times and measure the pH again at each dilution.", "checkpoint": true, "expects": "dilution" },
+    { "step": 8, "text": "Record at least four readings in all, covering both acids.", "checkpoint": true, "expects": "rows>=4" },
+    { "step": 9, "text": "Calculate [H⁺], the degree of dissociation and Ka for the weak acid, and compare the change in pH per tenfold dilution for the two acids.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "ph-determination",
+    "renderer": "ph-determination",
+    "fps": 30,
+    "controls": [
+      { "var": "sample", "widget": "segmented", "options": ["hcl", "acetic", "citric", "h2so4"] },
+      { "var": "method", "widget": "segmented", "options": ["paper", "universal", "meter"] },
+      { "var": "dilution", "widget": "slider" }
+    ],
+    "actions": [
+      { "id": "record", "label": "Record pH", "primary": true },
+      { "id": "reset", "label": "Reset" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "sample", "label": "Acid", "unit": "", "decimals": 0 },
+      { "key": "concentration", "label": "Conc.", "unit": "mol/L", "decimals": 4 },
+      { "key": "method", "label": "Method", "unit": "", "decimals": 0 },
+      { "key": "pH", "label": "pH", "unit": "", "decimals": 2 },
+      { "key": "hIon", "label": "[H⁺]", "unit": "mol/L", "decimals": 6 },
+      { "key": "nature", "label": "Nature", "unit": "", "decimals": 0 }
+    ],
+    "graph": { "x": "index", "y": "pH", "xLabel": "Sample tested", "yLabel": "pH", "throughOrigin": false },
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "[H⁺] = 10^(−pH) for each solution",
+      "For the strong acid, check that [H⁺] equals the concentration",
+      "For the weak acid, degree of dissociation α = [H⁺]/C",
+      "Ionisation constant Ka = Cα²/(1 − α)",
+      "Compare the change in pH per tenfold dilution for the two acids"
+    ],
+    "resultKeys": ["mostAcidic", "mostAcidicPH", "dilutionCheck"]
+  },
+  "expectedResult": {
+    "quantity": "pH of 0.1 M hydrochloric acid",
+    "symbol": "pH",
+    "value": 1.0,
+    "tolerance": 0.4,
+    "unit": "",
+    "secondary": { "quantity": "pH of 0.1 M acetic acid", "value": 2.87, "tolerance": 0.5, "unit": "" },
+    "statement": "Although both acids are 0.1 M, hydrochloric acid gives a pH of about 1 while acetic acid gives about 2.9. The strong acid is completely ionised, so its hydrogen ion concentration equals its molar concentration, whereas acetic acid is only about 1.3 per cent ionised. The difference is one of strength, not of concentration."
+  },
+  "safety": [
+    "Even 0.1 M acids irritate the skin and eyes; wear eye protection and rinse any splash at once with plenty of water.",
+    "Glacial acetic acid, if used to prepare the solution, is corrosive and has a pungent vapour. Handle it only in a fume cupboard.",
+    "Never pipette any acid by mouth; always use a pipette filler.",
+    "Add acid to water when diluting, never water to acid.",
+    "Rinse the pH electrode with distilled water between samples and never let its bulb dry out."
+  ],
+  "sourcesOfError": [
+    "The two acids not being at exactly the same concentration, which invalidates the whole comparison.",
+    "A pH meter that has not been calibrated with standard buffers drifts and reads systematically high or low.",
+    "Carry-over of the previous solution if the electrode or the tube is not rinsed properly.",
+    "Distilled water that has absorbed carbon dioxide is slightly acidic and biases dilutions.",
+    "Universal indicator resolves only about half a pH unit, too coarse to distinguish closely similar acids.",
+    "Temperature differing from 25 °C changes Ka and Kw slightly."
+  ],
+  "viva": [
+    { "question": "Distinguish clearly between the concentration and the strength of an acid.", "expectedConcept": "Concentration is the amount of acid dissolved per litre of solution and is fixed by how the solution was made up. Strength is the extent to which the dissolved acid ionises to give hydrogen ions, and is a property of the acid itself. A concentrated solution of a weak acid can have a higher pH than a dilute solution of a strong acid.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "Amount dissolved versus fraction ionised.", "commonMisconception": "Using the words concentrated and strong interchangeably." },
+    { "question": "Both solutions are 0.1 M, yet their pH values differ by nearly two units. Explain.", "expectedConcept": "Hydrochloric acid is a strong acid and ionises completely, so [H⁺] = 0.1 M and pH = 1. Acetic acid is weak and only about 1.3 per cent ionised, giving [H⁺] = 1.34 × 10⁻³ M and pH = 2.87. The number of moles dissolved is the same; the number of hydrogen ions released is not.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Degree of ionisation differs.", "commonMisconception": "Suspecting the solutions were made up wrongly." },
+    { "question": "Calculate the degree of dissociation of 0.1 M acetic acid from its pH of 2.87.", "expectedConcept": "[H⁺] = 10⁻²·⁸⁷ = 1.35 × 10⁻³ M. The degree of dissociation α = [H⁺]/C = 1.35 × 10⁻³ / 0.1 = 0.0135, that is about 1.35 per cent.", "difficulty": "hard", "bloom": "Apply", "answerLogic": "α = [H⁺]/C.", "commonMisconception": "Reporting α as 1.35 rather than 0.0135, or forgetting to divide by C." },
+    { "question": "State Ostwald's dilution law.", "expectedConcept": "For a weak electrolyte, Ka = Cα²/(1 − α). When α is small this reduces to α = √(Ka/C), so the degree of dissociation increases as the solution is diluted, in inverse proportion to the square root of the concentration.", "difficulty": "hard", "bloom": "Remember", "answerLogic": "The relation plus its dilution consequence.", "commonMisconception": "Stating it without the (1 − α) denominator or without the dilution interpretation." },
+    { "question": "On tenfold dilution, does the pH of the two acids rise by the same amount?", "expectedConcept": "No. The strong acid rises by exactly one unit, since [H⁺] falls by a factor of ten. The weak acid rises by only about half a unit, because dilution also increases its degree of dissociation, which partly offsets the fall in concentration.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "α increases on dilution for a weak acid only.", "commonMisconception": "Expecting both to rise by one unit." },
+    { "question": "Why is a pH meter preferred to universal indicator for this experiment?", "expectedConcept": "Universal indicator resolves only about half a pH unit and depends on a subjective colour match. The differences being investigated here, particularly between two weak acids or between successive dilutions, are of that order, so a meter reading to 0.01 unit is needed for a reliable comparison.", "difficulty": "medium", "bloom": "Evaluate", "answerLogic": "Resolution must be finer than the effect being measured.", "commonMisconception": "Assuming any pH method is as good as another." },
+    { "question": "Which conducts electricity better, 0.1 M HCl or 0.1 M acetic acid, and why?", "expectedConcept": "Hydrochloric acid, by a wide margin. Electrical conductivity depends on the number of ions in solution. HCl is fully ionised whereas acetic acid is only about one per cent ionised, so it provides far fewer ions to carry the current.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Conductivity tracks ion concentration, so it tracks the degree of ionisation.", "commonMisconception": "Thinking equal concentrations must conduct equally." },
+    { "question": "Citric acid has Ka = 7.4 × 10⁻⁴ and acetic acid Ka = 1.8 × 10⁻⁵. Which has the lower pH at the same concentration?", "expectedConcept": "Citric acid. A larger ionisation constant means the equilibrium lies further towards the ions, so more hydrogen ions are released and the pH is lower. Weak acids are not all equally weak.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Larger Ka means greater ionisation.", "commonMisconception": "Treating all weak acids as equivalent." },
+    { "question": "Would adding sodium acetate to the acetic acid raise or lower its pH?", "expectedConcept": "It would raise the pH. The added acetate ions push the equilibrium CH₃COOH ⇌ CH₃COO⁻ + H⁺ back to the left, suppressing the ionisation of the acid and lowering the hydrogen ion concentration. This is the common ion effect.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Le Chatelier applied to the ionisation equilibrium.", "commonMisconception": "Expecting the pH to fall because more solute has been added." },
+    { "question": "Why must the distilled water used for dilution be freshly boiled and cooled?", "expectedConcept": "Ordinary distilled water absorbs carbon dioxide from the air, which dissolves to form carbonic acid and makes the water slightly acidic, with a pH of about 5.6. Boiling expels the dissolved gas, so the water used for dilution is genuinely neutral and does not bias the measured pH.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "Dissolved CO₂ is itself a weak acid.", "commonMisconception": "Assuming distilled water always has pH exactly 7." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "Two solutions are both 0.1 M, one of HCl and one of CH₃COOH. Which statement is correct?", "options": ["Both have the same pH", "HCl has the higher pH", "CH₃COOH has the higher pH", "Neither can be measured"], "answer": 2, "feedback": "Acetic acid is only partly ionised, so it releases fewer hydrogen ions and its pH is higher, about 2.9 against 1 for HCl." },
+      { "id": "pre2", "type": "mcq", "question": "The degree of dissociation of a weak acid on dilution:", "options": ["Increases", "Decreases", "Stays the same", "Becomes zero"], "answer": 0, "feedback": "By Ostwald's dilution law α = √(Ka/C), so α increases as C falls. This is why a weak acid's pH rises by less than one unit per tenfold dilution." },
+      { "id": "pre3", "type": "mcq", "question": "A 'strong' acid is one that:", "options": ["Is highly concentrated", "Ionises completely in solution", "Has a large molar mass", "Is corrosive"], "answer": 1, "feedback": "Strength refers to the extent of ionisation, which is a property of the acid, not to how much of it has been dissolved." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Test at least four samples in all, covering both acids.", "check": "rows>=4" },
+      { "id": "dur2", "type": "task", "question": "Test the strong and the weak acid at the SAME concentration.", "check": "correctIndicator" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the pH of 0.1 M hydrochloric acid that you measured.", "answer": 1.0, "tolerance": 0.5, "feedback": "A completely ionised 0.1 M acid gives [H⁺] = 0.1 M and pH = 1." },
+      { "id": "post2", "type": "numeric", "question": "State the pH of 0.1 M acetic acid that you measured.", "answer": 2.87, "tolerance": 0.6, "feedback": "[H⁺] = √(Ka·C) = √(1.8 × 10⁻⁵ × 0.1) = 1.34 × 10⁻³ M, so pH = 2.87." },
+      { "id": "post3", "type": "mcq", "question": "The degree of dissociation of 0.1 M acetic acid is closest to:", "options": ["100%", "13.5%", "1.35%", "0.0135%"], "answer": 2, "feedback": "α = [H⁺]/C = 1.34 × 10⁻³ / 0.1 = 0.0134, that is about 1.35 per cent ionised." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "Strong acid [H⁺] = C; weak acid Ka = x²/(C−x); α = [H⁺]/C; Ostwald Ka = Cα²/(1−α)",
+    "assumptions": [
+      "Temperature 298 K, so Kw = 1.0 × 10⁻¹⁴",
+      "Activity coefficients taken as unity",
+      "Hydrochloric acid is completely ionised",
+      "The two acids are prepared at exactly the same concentration",
+      "The pH meter has been calibrated with standard buffers"
+    ],
+    "validRange": "Concentration 10⁻⁴ to 1 mol/L; pH 0 to 7",
+    "unitSystem": "Concentration in mol/L; pH dimensionless",
+    "edgeCases": [
+      "A strong acid diluted below 10⁻⁶ M approaches pH 7 but never exceeds it",
+      "Citric acid, though weak, is far more ionised than acetic at the same concentration",
+      "Sulphuric acid is dibasic, so a 0.1 M solution gives pH below 1",
+      "pH paper cannot resolve the difference between successive dilutions — warned"
+    ],
+    "expectedBehaviour": [
+      "The weak acid pH exceeds the strong acid pH by at least 1.5 units at equal concentration",
+      "Tenfold dilution raises the strong acid pH by exactly 1.00",
+      "Tenfold dilution raises the weak acid pH by about 0.5",
+      "A larger Ka gives a lower pH at the same concentration"
+    ],
+    "testFile": "tests/batch2.test.js"
+  }
+}

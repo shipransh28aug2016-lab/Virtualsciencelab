@@ -1,0 +1,197 @@
+{
+  "id": "XI-PHY-B03",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 3,
+    "unit": "Unit IX: Behaviour of Perfect Gases and Kinetic Theory of Gases",
+    "chapter": "Chapter-12: Kinetic Theory",
+    "topic": "Equation of state of a perfect gas, work done in compressing a gas; kinetic theory of gases, assumptions, concept of pressure",
+    "subtopic": "Boyle's law: variation of the volume of a fixed mass of gas with pressure at constant temperature",
+    "practical": "To study the variation in volume with pressure for a sample of air at constant temperature by plotting graphs between P and V, and between P and 1/V.",
+    "learningObjectives": [
+      "Trap a fixed mass of air and vary its pressure by changing the mercury level",
+      "Measure the volume of the trapped air as the length of the air column in a uniform tube",
+      "Plot pressure against volume and recognise the curve as a hyperbola",
+      "Plot pressure against the reciprocal of volume and obtain a straight line through the origin",
+      "Verify that the product of pressure and volume is constant at constant temperature",
+      "Explain why the temperature must be held constant for the law to hold"
+    ],
+    "competencies": [
+      "Recognising that a curved graph can be straightened by plotting against a reciprocal",
+      "Distinguishing a relationship that is merely decreasing from one that is inversely proportional",
+      "Controlling temperature as a variable during a mechanical measurement",
+      "Assessing constancy of a product against experimental scatter"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 3 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Boyle's law: variation of volume with pressure at constant temperature",
+  "shortTitle": "Boyle's Law",
+  "objective": [
+    "To study how the volume of a fixed mass of air varies with pressure at constant temperature.",
+    "To plot graphs of P against V and of P against 1/V.",
+    "To verify that PV is constant."
+  ],
+  "theory": {
+    "statement": "Boyle's law states that at constant temperature the volume of a given mass of gas is inversely proportional to its pressure. Equivalently, the product of pressure and volume is a constant.",
+    "derivationNote": "The apparatus traps a fixed mass of dry air in the closed limb of a U-tube above a mercury thread. The pressure of the trapped air is the atmospheric pressure plus the difference in the mercury levels: raising the open limb increases the pressure and compresses the air, while lowering it does the reverse. Because the tube is of uniform bore, the volume of the trapped air is proportional to the length of the air column, so that length may be used directly in place of the volume. Boyle's law predicts PV = constant, so P = k(1/V). A graph of P against V is a rectangular hyperbola, which is difficult to test by eye. A graph of P against 1/V, however, is a straight line passing through the origin, and its slope equals the constant PV. This is why the second graph is the real test of the law. Kinetic theory explains the result: reducing the volume increases the number of molecules per unit volume, so more collisions occur with each unit area of wall each second and the pressure rises in proportion.",
+    "keyEquations": [
+      "PV = constant at constant temperature",
+      "P₁V₁ = P₂V₂",
+      "P = k × (1/V), so P against 1/V is a straight line of slope k",
+      "Pressure of trapped air = atmospheric pressure + difference in mercury levels",
+      "Volume ∝ length of the air column, for a tube of uniform bore"
+    ]
+  },
+  "apparatus": [
+    { "name": "Boyle's law apparatus", "spec": "closed and open limbs of uniform bore joined at the base", "why": "Traps a fixed mass of air whose pressure can be varied by moving the mercury" },
+    { "name": "Mercury", "spec": "clean and dry", "why": "Its high density gives a large pressure change over a manageable height, and it does not wet the glass" },
+    { "name": "Metre scales", "spec": "two, fixed beside each limb, least count 0.1 cm", "why": "Read the mercury levels in both limbs and the length of the air column" },
+    { "name": "Fortin's barometer", "spec": "", "why": "Gives the atmospheric pressure on the day, which is added to the level difference" },
+    { "name": "Thermometer", "spec": "0-50 °C", "why": "Confirms that the temperature stays constant throughout" },
+    { "name": "Levelling screws and plumb line", "spec": "", "why": "Ensure the tubes are vertical, so the level difference is a true vertical height" }
+  ],
+  "materials": [],
+  "variables": [
+    { "id": "levelDifferenceCm", "label": "Mercury level difference", "symbol": "Δh", "unit": "cm", "type": "independent", "min": -50, "max": 50, "step": 1, "default": 0 },
+    { "id": "tempC", "label": "Temperature", "symbol": "t", "unit": "°C", "type": "controlled", "min": 20, "max": 35, "step": 1, "default": 27 },
+    { "id": "atmosphericCm", "label": "Atmospheric pressure", "symbol": "P₀", "unit": "cm Hg", "type": "controlled", "min": 70, "max": 78, "step": 0.5, "default": 76 },
+    { "id": "quickCompression", "label": "Compress quickly", "symbol": "", "unit": "", "type": "control", "default": false },
+    { "id": "volumeCm3", "label": "Volume of trapped air", "symbol": "V", "unit": "cm³", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Check with the plumb line that both limbs are vertical, and read the barometer to obtain the atmospheric pressure.", "checkpoint": true, "expects": "atmosphericCm" },
+    { "step": 2, "text": "Note the temperature of the room. It must stay constant for the whole experiment.", "checkpoint": true, "expects": "tempC" },
+    { "step": 3, "text": "Adjust the open limb until the mercury stands at the same level in both limbs. The trapped air is then at exactly atmospheric pressure.", "checkpoint": false },
+    { "step": 4, "text": "Measure the length of the trapped air column and record it with the corresponding pressure.", "checkpoint": true, "expects": "record" },
+    { "step": 5, "text": "Raise the open limb slowly so that the mercury rises and the air is compressed. Wait a minute for the temperature to settle before reading.", "checkpoint": true, "expects": "levelDifferenceCm" },
+    { "step": 6, "text": "Record the new level difference and the new length of the air column.", "checkpoint": false },
+    { "step": 7, "text": "Repeat for at least six different positions, some with the open limb raised and some with it lowered.", "checkpoint": true, "expects": "rows>=5" },
+    { "step": 8, "text": "For each reading calculate the pressure, the volume and their product. Check whether the product is constant.", "checkpoint": false },
+    { "step": 9, "text": "Plot P against V, which gives a curve, and then P against 1/V, which should give a straight line through the origin.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "boyles-law",
+    "renderer": "boyles-law",
+    "fps": 45,
+    "controls": [
+      { "var": "levelDifferenceCm", "widget": "slider" },
+      { "var": "tempC", "widget": "slider" },
+      { "var": "atmosphericCm", "widget": "slider" },
+      { "var": "quickCompression", "widget": "switch" }
+    ],
+    "actions": [
+      { "id": "record", "label": "Record P and V", "primary": true },
+      { "id": "reset", "label": "Reset" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "trial", "label": "No.", "unit": "", "decimals": 0 },
+      { "key": "levelDifferenceCm", "label": "Δh", "unit": "cm", "decimals": 1 },
+      { "key": "pressureCm", "label": "P", "unit": "cm Hg", "decimals": 1 },
+      { "key": "columnLengthCm", "label": "Length", "unit": "cm", "decimals": 1 },
+      { "key": "volumeCm3", "label": "V", "unit": "cm³", "decimals": 2 },
+      { "key": "invVolume", "label": "1/V", "unit": "cm⁻³", "decimals": 5 },
+      { "key": "product", "label": "P × V", "unit": "", "decimals": 1 }
+    ],
+    "graph": { "x": "invVolume", "y": "pressureCm", "xLabel": "1/V (cm⁻³)", "yLabel": "Pressure P (cm of Hg)", "throughOrigin": true },
+    "minRows": 5
+  },
+  "calculations": {
+    "steps": [
+      "Pressure of trapped air P = atmospheric pressure + level difference",
+      "Volume V = length of air column × area of bore",
+      "Compute the product P × V for every reading",
+      "Plot P against 1/V; the slope of the line is the constant PV",
+      "Check that the line passes through the origin"
+    ],
+    "resultKeys": ["meanProduct", "slope", "spreadPercent"]
+  },
+  "expectedResult": {
+    "quantity": "The constant product PV",
+    "symbol": "PV",
+    "value": 1140,
+    "tolerance": 60,
+    "unit": "cm Hg · cm³",
+    "secondary": { "quantity": "Spread of PV across all readings", "value": 0, "tolerance": 4, "unit": "%" },
+    "statement": "The product of pressure and volume is the same for every reading within experimental error. The P against V graph is a hyperbola, while the P against 1/V graph is a straight line passing through the origin whose slope equals the constant PV. Boyle's law is verified."
+  },
+  "safety": [
+    "Mercury and its vapour are toxic. Never touch mercury with bare hands and never leave the apparatus open.",
+    "Report any spillage at once; scattered droplets must be collected by the teacher, not swept up.",
+    "Work in a well ventilated room and wash your hands thoroughly afterwards.",
+    "Raise and lower the limb slowly. A sudden movement can force mercury out of the open end.",
+    "Do not warm any part of the apparatus, both because mercury vapour pressure rises and because the experiment requires constant temperature."
+  ],
+  "sourcesOfError": [
+    "Compressing the gas quickly warms it, so the process is not isothermal and the reading drifts.",
+    "The bore of the tube may not be perfectly uniform, so length is not exactly proportional to volume.",
+    "Air dissolved in or trapped beneath the mercury alters the mass of gas being studied.",
+    "Parallax while reading the mercury levels against the scales.",
+    "The tubes not being exactly vertical, so the measured level difference is not the true vertical height.",
+    "Change of room temperature during the experiment."
+  ],
+  "viva": [
+    { "question": "State Boyle's law.", "expectedConcept": "At constant temperature, the volume of a given mass of gas is inversely proportional to its pressure, so that PV is constant.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Must include both the fixed mass and the constant temperature conditions.", "commonMisconception": "Omitting the constant-temperature condition." },
+    { "question": "Why is a graph of P against 1/V plotted as well as P against V?", "expectedConcept": "The P against V graph is a hyperbola, and it is very hard to judge by eye whether a curve is a true hyperbola or merely some other decreasing curve. Plotting P against 1/V converts the relationship into a straight line through the origin, which can be tested at a glance and whose slope gives the constant.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "Linearisation makes the law testable.", "commonMisconception": "Thinking the second graph is just a repetition of the first." },
+    { "question": "How is the pressure of the trapped air found?", "expectedConcept": "It equals the atmospheric pressure plus the difference in the mercury levels. If the level in the open limb is higher, the difference is added; if lower, it is subtracted.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "P = P₀ ± Δh with the correct sign.", "commonMisconception": "Taking the level difference alone as the pressure and forgetting the atmosphere." },
+    { "question": "Why may the length of the air column be used instead of its volume?", "expectedConcept": "The tube is of uniform bore, so the volume is the length multiplied by a constant area of cross-section. Since a constant factor cancels from both sides of PV = constant, the length may be used directly.", "difficulty": "easy", "bloom": "Understand", "answerLogic": "Volume proportional to length for uniform bore.", "commonMisconception": "Believing the area must be measured." },
+    { "question": "Explain Boyle's law from kinetic theory.", "expectedConcept": "Pressure arises from molecular collisions with the walls. Reducing the volume at constant temperature packs the same number of molecules into a smaller space without changing their average speed, so collisions with each unit area of wall occur more frequently and the pressure rises in inverse proportion to the volume.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Collision frequency per unit area scales as number density.", "commonMisconception": "Saying the molecules move faster when compressed, which would mean a temperature change." },
+    { "question": "What happens if the gas is compressed quickly?", "expectedConcept": "Work is done on the gas and it warms, so the process is adiabatic rather than isothermal. Boyle's law does not then apply, and the volume reading drifts as the gas cools back to room temperature. The limb must be moved slowly and time allowed before each reading.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "Adiabatic compression breaks the constant-temperature condition.", "commonMisconception": "Assuming speed of operation cannot affect the result." },
+    { "question": "Why is mercury used rather than water?", "expectedConcept": "Mercury is about 13.6 times as dense as water, so a given pressure change needs a column only a fraction as tall and the apparatus stays a manageable size. Mercury also does not wet glass, gives a clean well-defined meniscus, and does not evaporate appreciably into the trapped gas.", "difficulty": "medium", "bloom": "Evaluate", "answerLogic": "Density, non-wetting and low volatility.", "commonMisconception": "Citing only the density." },
+    { "question": "Does Boyle's law hold at very high pressures?", "expectedConcept": "No. At high pressure the molecules are close together, so their own volume is no longer negligible compared with the container and the intermolecular forces become significant. The gas then departs from ideal behaviour and PV is no longer constant.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "The ideal-gas assumptions fail.", "commonMisconception": "Treating Boyle's law as exact under all conditions." },
+    { "question": "The product PV in your table varies by two per cent. Has the law failed?", "expectedConcept": "No. Two per cent is comparable with the combined uncertainty in reading the mercury levels and the air column to 0.1 cm. The law is verified if the scatter in PV is no larger than the experimental error.", "difficulty": "medium", "bloom": "Evaluate", "answerLogic": "Compare scatter with the estimated uncertainty.", "commonMisconception": "Expecting the product to be identical to every decimal place." },
+    { "question": "A bubble rises from the bottom of a lake. What happens to its volume?", "expectedConcept": "It expands. As the bubble rises the pressure of the water above it falls, and by Boyle's law the volume increases in inverse proportion, assuming the temperature is roughly constant. This is why divers are told never to hold their breath while ascending.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Falling pressure means rising volume.", "commonMisconception": "Thinking the bubble shrinks under the weight of water above." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "According to Boyle's law, if the pressure of a fixed mass of gas is doubled at constant temperature, its volume:", "options": ["Doubles", "Halves", "Stays the same", "Becomes four times"], "answer": 1, "feedback": "PV is constant, so doubling P must halve V." },
+      { "id": "pre2", "type": "mcq", "question": "A graph of pressure against volume for a gas at constant temperature is:", "options": ["A straight line through the origin", "A rectangular hyperbola", "A parabola", "A horizontal line"], "answer": 1, "feedback": "PV = constant is the equation of a rectangular hyperbola. Plotting P against 1/V straightens it." },
+      { "id": "pre3", "type": "mcq", "question": "The pressure of the trapped air equals:", "options": ["The level difference only", "Atmospheric pressure only", "Atmospheric pressure plus or minus the level difference", "Atmospheric pressure divided by the level difference"], "answer": 2, "feedback": "The mercury column adds to or subtracts from the atmospheric pressure depending on which limb stands higher." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Record at least five different pressures.", "check": "rows>=5" },
+      { "id": "dur2", "type": "task", "question": "Keep the temperature constant throughout the run.", "check": "volumeConstant" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the mean value of the product P × V from your table.", "answer": 1140, "tolerance": 80, "feedback": "For the sample used, PV comes out at about 1140 cm Hg · cm³ at every pressure." },
+      { "id": "post2", "type": "mcq", "question": "Your P against 1/V graph is a straight line through the origin. This shows that:", "options": ["P is proportional to V", "P is inversely proportional to V", "P does not depend on V", "P is proportional to V²"], "answer": 1, "feedback": "A straight line through the origin when plotted against 1/V means P ∝ 1/V, which is Boyle's law." },
+      { "id": "post3", "type": "mcq", "question": "You raised the open limb quickly and the reading kept drifting. This is because:", "options": ["Mercury takes time to flow", "The gas was warmed by the compression and is cooling again", "The scale is faulty", "Air is leaking in"], "answer": 1, "feedback": "Rapid compression does work on the gas and warms it. Boyle's law needs constant temperature, so the limb must be moved slowly and time allowed before reading." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "PV = constant; P = k(1/V); P = P₀ ± Δh",
+    "assumptions": [
+      "Temperature of the trapped air stays constant",
+      "Tube of uniform bore, so volume is proportional to column length",
+      "The trapped air behaves as an ideal gas over this range",
+      "No air leaks past the mercury",
+      "Atmospheric pressure is steady during the experiment"
+    ],
+    "validRange": "Level difference −40 to +40 cm; total pressure 36 to 116 cm of mercury",
+    "unitSystem": "Pressure in cm of mercury, volume in cm³",
+    "edgeCases": [
+      "A P-V graph is a hyperbola and fits a straight line badly; P against 1/V fits well",
+      "Quick compression is adiabatic, not isothermal — warned",
+      "Readings clustered near atmospheric pressure give no useful spread — warned",
+      "A near-zero pressure would break the mercury thread — blocked"
+    ],
+    "expectedBehaviour": [
+      "The product PV is the same for every reading to within 4%",
+      "Halving the volume doubles the pressure",
+      "P against 1/V is straight with r² above 0.998 and passes through the origin",
+      "The slope of that line equals the constant PV"
+    ],
+    "testFile": "tests/batch4.test.js"
+  }
+}

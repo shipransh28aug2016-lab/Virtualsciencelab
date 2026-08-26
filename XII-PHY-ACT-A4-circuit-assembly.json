@@ -1,0 +1,593 @@
+{
+  "id": "XII-PHY-ACT-A4",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 4,
+    "kind": "activity",
+    "unit": "Unit III: Current Electricity",
+    "chapter": "Chapter-3: Current Electricity",
+    "topic": "Electric current, flow of electric charges in a metallic conductor, drift velocity, mobility and their relation with electric current; Ohm’s law, V-I characteristics, electrical resistivity and conductivity, temperature dependence of resistance, internal resistance of a cell, potential difference and emf of a cell, combination of cells, Kirchhoff’s rules, Wheatstone bridge",
+    "subtopic": "Translating a circuit diagram into apparatus: ammeter in series, voltmeter in parallel, rheostat as a variable arm",
+    "practical": "To assemble the components of a given electrical circuit.",
+    "learningObjectives": [
+      "Be able to translate a given circuit diagram into a correctly connected circuit",
+      "Be able to connect the ammeter in series and the voltmeter in parallel with the load",
+      "Be able to wire the rheostat so that moving the slider actually varies the current",
+      "Be able to verify the assembly by recovering the resistance of the load from the readings"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Activity 4 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Assembling the components of a given electrical circuit",
+  "shortTitle": "Circuit assembly",
+  "objective": [
+    "To translate a given circuit diagram into a correctly connected circuit.",
+    "To connect the ammeter in series and the voltmeter in parallel with the load.",
+    "To wire the rheostat so that moving the slider actually varies the current.",
+    "To verify the assembly by recovering the resistance of the load from the readings."
+  ],
+  "theory": {
+    "statement": "A circuit diagram is a set of instructions written in symbols, and assembling the circuit means translating each symbol into a real component connected in the right place. The two instruments are the usual stumbling block, because their requirements are exactly opposite: an ammeter must carry the current, so it goes in the path; a voltmeter must not disturb the circuit, so it goes across the component. Get them the wrong way round and the circuit fails in two quite different, and quite recognisable, ways.",
+    "derivationNote": "An ammeter is built with a very low resistance, of the order of a tenth of an ohm, so that inserting it into the circuit barely changes the current it is there to measure. Connected instead across the load, that low resistance carries almost all the current and the load is bypassed: the circuit becomes a near short, the current is very large and the voltmeter reads almost nothing. A voltmeter is built the opposite way, with a resistance of the order of ten kilohm, so that it draws almost no current from the two points it is bridging. Placed in series, that huge resistance chokes the current to a few hundred microampere and almost the whole supply voltage appears across the meter. The rheostat is a third common error. It varies resistance only when the circuit uses one end terminal together with the sliding contact, so that moving the slider changes the length of track included. Connected across the two end terminals it is a fixed resistor of its full value and the slider does nothing at all. Finally, the key is kept open while the circuit is built, so that any mistake is discovered by inspection and not by the smell of a burning meter.",
+    "keyEquations": [
+      "Correct circuit: I = V/(R_load + R_rheostat + R_ammeter + r)",
+      "Ammeter in parallel: the load is bypassed through about 0.1 Ω",
+      "Voltmeter in series: about 10 kΩ enters the path and the current all but vanishes",
+      "Check of the assembly: R = V/I should return the value of the load"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Cell or battery",
+      "spec": "1.5 V, 3 V or 6 V",
+      "why": "The source; its emf and internal resistance set the current"
+    },
+    {
+      "name": "Resistor or lamp",
+      "spec": "10, 22 or 47 Ω, or a 6 V lamp",
+      "why": "The load whose current and potential difference are measured"
+    },
+    {
+      "name": "Ammeter",
+      "spec": "0 to 1 A, low resistance",
+      "why": "Measures the current; must be in series"
+    },
+    {
+      "name": "Voltmeter",
+      "spec": "0 to 5 V, high resistance",
+      "why": "Measures the potential difference; must be in parallel"
+    },
+    {
+      "name": "Rheostat",
+      "spec": "0 to 50 Ω sliding",
+      "why": "Varies the current, when connected using one end terminal and the slider"
+    },
+    {
+      "name": "One-way key",
+      "spec": "",
+      "why": "Keeps the circuit dead while it is being assembled and checked"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "load",
+      "label": "Load",
+      "symbol": "R",
+      "unit": "",
+      "type": "control",
+      "default": "r22",
+      "options": [
+        "r10",
+        "r22",
+        "r47",
+        "lamp"
+      ]
+    },
+    {
+      "id": "cell",
+      "label": "Cell",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "c30",
+      "options": [
+        "c15",
+        "c30",
+        "c60"
+      ]
+    },
+    {
+      "id": "ammeterMode",
+      "label": "Ammeter connection",
+      "symbol": "",
+      "unit": "",
+      "type": "wiring",
+      "default": "series",
+      "options": [
+        "series",
+        "parallel"
+      ]
+    },
+    {
+      "id": "voltmeterMode",
+      "label": "Voltmeter connection",
+      "symbol": "",
+      "unit": "",
+      "type": "wiring",
+      "default": "parallel",
+      "options": [
+        "parallel",
+        "series"
+      ]
+    },
+    {
+      "id": "polarity",
+      "label": "Meter polarity",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "correct",
+      "options": [
+        "correct",
+        "reversed"
+      ]
+    },
+    {
+      "id": "rheostatMode",
+      "label": "Rheostat wiring",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "variable",
+      "options": [
+        "variable",
+        "full"
+      ]
+    },
+    {
+      "id": "keyState",
+      "label": "Key while wiring",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "open",
+      "options": [
+        "open",
+        "closed"
+      ]
+    },
+    {
+      "id": "rheostatOhm",
+      "label": "Rheostat setting",
+      "symbol": "",
+      "unit": "Ω",
+      "type": "independent",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "id": "resistance",
+      "label": "Resistance of load",
+      "symbol": "R",
+      "unit": "Ω",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Study the given diagram and identify every symbol before picking up a wire.",
+      "checkpoint": true,
+      "expects": "load"
+    },
+    {
+      "step": 2,
+      "text": "Keep the key OPEN throughout the assembly, so that no mistake is live as it is made.",
+      "checkpoint": true,
+      "expects": "keyState"
+    },
+    {
+      "step": 3,
+      "text": "Connect the cell, key, rheostat, ammeter and load in one series loop.",
+      "checkpoint": true,
+      "expects": "ammeterMode"
+    },
+    {
+      "step": 4,
+      "text": "Connect the voltmeter ACROSS the load only, in parallel with it.",
+      "checkpoint": true,
+      "expects": "voltmeterMode"
+    },
+    {
+      "step": 5,
+      "text": "Wire the rheostat using one end terminal and the sliding contact, so the slider varies the resistance in circuit."
+    },
+    {
+      "step": 6,
+      "text": "Check every connection against the diagram, then close the key and read both meters."
+    },
+    {
+      "step": 7,
+      "text": "Move the slider and take at least three readings at different settings. Compute V/I each time — it should return the resistance of the load."
+    }
+  ],
+  "simulation": {
+    "model": "circuit-assembly",
+    "renderer": "circuit-assembly",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "rheostatOhm",
+        "widget": "slider"
+      },
+      {
+        "var": "ammeterMode",
+        "widget": "wiring",
+        "options": [
+          "series",
+          "parallel"
+        ]
+      },
+      {
+        "var": "voltmeterMode",
+        "widget": "wiring",
+        "options": [
+          "parallel",
+          "series"
+        ]
+      },
+      {
+        "var": "polarity",
+        "widget": "segmented",
+        "options": [
+          "correct",
+          "reversed"
+        ]
+      },
+      {
+        "var": "rheostatMode",
+        "widget": "segmented",
+        "options": [
+          "variable",
+          "full"
+        ]
+      },
+      {
+        "var": "keyState",
+        "widget": "segmented",
+        "options": [
+          "open",
+          "closed"
+        ]
+      },
+      {
+        "var": "load",
+        "widget": "segmented",
+        "options": [
+          "r10",
+          "r22",
+          "r47",
+          "lamp"
+        ]
+      },
+      {
+        "var": "cell",
+        "widget": "segmented",
+        "options": [
+          "c15",
+          "c30",
+          "c60"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record V and I",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Reading",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "rheostatOhm",
+        "label": "Rheostat",
+        "unit": "Ω",
+        "decimals": 0
+      },
+      {
+        "key": "currentA",
+        "label": "Current I",
+        "unit": "A",
+        "decimals": 3
+      },
+      {
+        "key": "voltageV",
+        "label": "Voltage V",
+        "unit": "V",
+        "decimals": 2
+      }
+    ],
+    "graph": {
+      "x": "currentA",
+      "y": "voltageV",
+      "xLabel": "Current I (A)",
+      "yLabel": "Voltage V (V)",
+      "throughOrigin": true
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Check that the ammeter is in series and the voltmeter across the load",
+      "Take readings of V and I at three or more rheostat settings",
+      "Compute V/I for each reading",
+      "Average them to obtain the resistance of the load",
+      "Compare with the marked value of the resistor: agreement confirms the assembly"
+    ],
+    "resultKeys": [
+      "resistance",
+      "percentError",
+      "rheostatWorks"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Resistance of the load recovered from the readings",
+    "symbol": "R",
+    "value": 22,
+    "tolerance": 2,
+    "unit": "Ω",
+    "secondary": {
+      "quantity": "Current at the middle rheostat setting",
+      "value": 0.1,
+      "tolerance": 0.05,
+      "unit": "A"
+    },
+    "statement": "With the ammeter in series, the voltmeter across the load and the rheostat wired as a variable arm, V/I returns the marked value of the resistor to within a couple of per cent, and the current falls smoothly as the rheostat resistance is increased. Any of the standard wrong connections prevents this: the ammeter across the load nearly short-circuits the supply, and the voltmeter in series reduces the current to a few hundred microampere."
+  },
+  "safety": [
+    "Keep the key open while the circuit is being assembled and checked.",
+    "Never connect an ammeter across a cell or across a component: it is a short circuit and will damage the meter.",
+    "Check the polarity of both meters before closing the key, so the needles are not driven backwards.",
+    "Start with the rheostat at its maximum resistance, so the first current is the smallest.",
+    "Open the key between readings so the cell and the load do not heat unnecessarily."
+  ],
+  "sourcesOfError": [
+    "Interchanging the ammeter and the voltmeter, which is the commonest single mistake in the whole practical course.",
+    "Reversed meter terminals, which drive the needle backwards against its stop.",
+    "The rheostat connected across its two end terminals, so the slider has no effect.",
+    "Loose connections at the terminals, giving intermittent readings.",
+    "The internal resistance of the cell, which makes V/I slightly larger than the marked value of the resistor.",
+    "Reading the meters before the needles have settled."
+  ],
+  "viva": [
+    {
+      "question": "Why is the ammeter connected in series and the voltmeter in parallel?",
+      "expectedConcept": "An ammeter must have the current pass through it, so it goes in the path, and it is built with a very low resistance so it does not reduce that current. A voltmeter measures the potential difference between two points without disturbing them, so it bridges them and is built with a very high resistance so it draws almost no current.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Low resistance in line; high resistance across.",
+      "commonMisconception": "Believing either meter can be connected either way with a correction applied."
+    },
+    {
+      "question": "What happens if the ammeter is connected across the resistor?",
+      "expectedConcept": "The ammeter’s very low resistance is placed in parallel with the load, so almost all the current bypasses the resistor and flows through the meter. The circuit becomes a near short, a very large current flows, and the meter is damaged. The voltmeter, meanwhile, reads almost nothing.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "It bypasses the load and shorts the supply.",
+      "commonMisconception": "Expecting it simply to read a larger current with no other consequence."
+    },
+    {
+      "question": "What happens if the voltmeter is connected in series?",
+      "expectedConcept": "Its ten kilohm or so of resistance enters the current path and chokes the current to a few hundred microampere. Practically nothing flows, the load does nothing, and almost the entire supply voltage appears across the voltmeter itself rather than across the component.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "A high resistance in the path stops the current.",
+      "commonMisconception": "Expecting the circuit to work normally with a slightly lower current."
+    },
+    {
+      "question": "How should a rheostat be connected so that it can vary the current?",
+      "expectedConcept": "Using one END terminal together with the SLIDING contact, so that moving the slider changes the length of resistance wire included in the circuit. Connected across the two end terminals it is simply a fixed resistor of its full value and the slider does nothing.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "One end terminal plus the slider.",
+      "commonMisconception": "Connecting both end terminals and wondering why the slider has no effect."
+    },
+    {
+      "question": "Why is the key kept open while the circuit is being assembled?",
+      "expectedConcept": "So that no connection is live as it is made. With the key open a wrong connection is a harmless mistake to be found by checking against the diagram; with it closed, the same mistake immediately passes current and can burn out a meter or flatten the cell.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Assemble dead, check, then energise.",
+      "commonMisconception": "Closing the key early to see whether the circuit works as it is built."
+    },
+    {
+      "question": "Why is the rheostat set to maximum resistance before the key is first closed?",
+      "expectedConcept": "Because that gives the smallest possible current on the first closure. If something is wrong, the damage is least; if all is well, the current can then be increased in a controlled way while watching the ammeter.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Maximum resistance means minimum first current.",
+      "commonMisconception": "Starting at zero resistance for a large, easily read deflection."
+    },
+    {
+      "question": "Your V/I comes out slightly larger than the marked value of the resistor. Why?",
+      "expectedConcept": "Because the readings include a little more than the resistor itself: the resistance of the ammeter, of the connecting leads, and the internal resistance of the cell all add to the measured total. Each is small, but together they push V/I a per cent or two above the marked value.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Meter, lead and internal resistances all add.",
+      "commonMisconception": "Assuming any discrepancy must be a reading error."
+    },
+    {
+      "question": "How would you tell, from the meters alone, that the rheostat is wired wrongly?",
+      "expectedConcept": "Move the slider from one end to the other and watch the ammeter. If the current does not change at all, the rheostat is connected across its full track and the slider is doing nothing. Both meters otherwise read perfectly sensible values, which is what makes this fault easy to miss.",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "Sensible readings that never change.",
+      "commonMisconception": "Believing a wrongly wired rheostat gives obviously wrong readings."
+    },
+    {
+      "question": "Why does a moving-coil meter have a definite polarity?",
+      "expectedConcept": "Because its deflection depends on the direction of the current through the coil in the field of a permanent magnet. Reverse the current and the torque reverses, driving the needle backwards against its stop where it can read nothing and can be bent.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "The torque direction follows the current direction.",
+      "commonMisconception": "Assuming any meter will simply read the magnitude regardless of direction."
+    },
+    {
+      "question": "A circuit gives a perfectly steady reading which is nonetheless wrong. What kinds of fault do that?",
+      "expectedConcept": "Systematic ones: a wrongly wired rheostat that never varies, a meter on the wrong range, a resistor of a different value from the one intended. Random faults such as a loose contact produce jumping readings that draw attention to themselves. A steady wrong reading looks like data, which is precisely why the circuit must be checked against the diagram before any of it is believed.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Systematic faults produce steady, believable, wrong numbers.",
+      "commonMisconception": "Trusting a reading because it is stable and repeatable."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "An ammeter is connected in series because:",
+        "options": [
+          "It has a high resistance",
+          "The current must pass through it",
+          "It measures potential difference",
+          "It protects the circuit"
+        ],
+        "answer": 1,
+        "feedback": "Current is measured by letting it flow through the meter."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "A voltmeter has a very high resistance so that:",
+        "options": [
+          "It reads a larger voltage",
+          "It draws almost no current from the circuit",
+          "It can be used in series",
+          "It is more sensitive to current"
+        ],
+        "answer": 1,
+        "feedback": "A high resistance means the meter barely disturbs the circuit it examines."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "A rheostat varies the current when connected using:",
+        "options": [
+          "Both end terminals",
+          "One end terminal and the slider",
+          "The slider alone",
+          "Any two terminals"
+        ],
+        "answer": 1,
+        "feedback": "Only then does moving the slider change the resistance in circuit."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Take at least three readings at different rheostat settings.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Check the connections before closing the key.",
+        "check": "settled"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the resistance of the load you recovered from V/I, in Ω.",
+        "answer": 22,
+        "tolerance": 3,
+        "feedback": "The marked value is 22 Ω."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "An ammeter connected across the resistor would:",
+        "options": [
+          "Read zero",
+          "Read the correct current",
+          "Nearly short-circuit the supply",
+          "Read the voltage"
+        ],
+        "answer": 2,
+        "feedback": "Its low resistance bypasses the load and a very large current flows."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "You move the rheostat slider and the ammeter reading does not change. This means:",
+        "options": [
+          "The cell is flat",
+          "The rheostat is wired across its full track",
+          "The ammeter is broken",
+          "The load is short-circuited"
+        ],
+        "answer": 1,
+        "feedback": "Across both end terminals it is a fixed resistor and the slider does nothing."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Correct circuit: I = V/(R_load + R_rheostat + R_ammeter + r)",
+    "assumptions": [
+      "Correct circuit: I = V/(R_load + R_rheostat + R_ammeter + r)",
+      "Ammeter in parallel: the load is bypassed through about 0.1 Ω",
+      "Voltmeter in series: about 10 kΩ enters the path and the current all but vanishes",
+      "Check of the assembly: R = V/I should return the value of the load"
+    ],
+    "validRange": "With the ammeter in series, the voltmeter across the load and the rheostat wired",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Interchanging the ammeter and the voltmeter, which is the commonest single mistake in the whole practical course.",
+      "Reversed meter terminals, which drive the needle backwards against its stop.",
+      "The rheostat connected across its two end terminals, so the slider has no effect.",
+      "Loose connections at the terminals, giving intermittent readings."
+    ],
+    "expectedBehaviour": [
+      "With the ammeter in series, the voltmeter across the load and the rheostat wired as a variable arm, V/I returns the marked value of the resistor to within a couple of per cent, and the current falls smoothly as the rheostat resistance is increased. Any of the standard wrong connections prevents this: the ammeter across the load nearly short-circuits the supply, and the voltmeter in series reduces the current to a few hundred microampere."
+    ],
+    "testFile": "tests/batch12.test.js"
+  }
+}

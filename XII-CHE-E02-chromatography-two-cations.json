@@ -1,0 +1,486 @@
+{
+  "id": "XII-CHE-E02",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "E",
+    "categoryTitle": "Chromatography",
+    "assessmentComponent": "Content Based Experiment",
+    "serial": 2,
+    "unit": "Unit VIII: Analytical and separation techniques",
+    "chapter": "Chromatography",
+    "topic": "Paper chromatography of inorganic ions",
+    "subtopic": "Rf difference and resolution",
+    "practical": "Separation of constituents present in an inorganic mixture containing two cations only (constituents having large difference in Rf values to be provided).",
+    "learningObjectives": [
+      "Be able to separate two metal cations from a mixture on chromatography paper",
+      "Be able to locate the colourless spots by spraying a suitable developing reagent",
+      "Be able to determine the Rf value of each cation",
+      "Be able to show that separation succeeds only when the two Rf values differ appreciably"
+    ],
+    "competencies": [
+      "Performing a standard laboratory operation and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, CATEGORY C, Experiment 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Separation of two cations from an inorganic mixture by paper chromatography",
+  "shortTitle": "Chromatography of cations",
+  "objective": [
+    "To separate two metal cations from a mixture on chromatography paper.",
+    "To locate the colourless spots by spraying a suitable developing reagent.",
+    "To determine the Rf value of each cation.",
+    "To show that separation succeeds only when the two Rf values differ appreciably."
+  ],
+  "theory": {
+    "statement": "The same partition that separates leaf pigments will separate metal ions, but with two differences. First, the ions are charged and hydrated, so the mobile phase must be an acidic aqueous solvent in which they travel as chloro-complexes; a non-polar solvent leaves them sitting at the origin. Second, most of the spots are colourless once dry, so the chromatogram has to be DEVELOPED — sprayed with a reagent that forms a coloured compound where each ion has landed. Potassium ferrocyanide turns Fe³⁺ blue; ammonia turns Cu²⁺ deep blue. The syllabus specifies that the two cations provided must differ appreciably in Rf, and the reason is visible on the paper: two spots less than about half a centimetre apart merge into one and neither can be measured. Fe³⁺ and Cu²⁺, at roughly 0.86 and 0.30, separate cleanly. Co²⁺ and Ni²⁺, at 0.54 and 0.47, do not — and seeing that failure is the most instructive part of the experiment.",
+    "keyEquations": [
+      "Rf = distance travelled by the ion / distance travelled by the solvent front",
+      "Two spots are resolved only if their separation on the paper exceeds about 0.5 cm",
+      "Separation on paper = (Rf₁ − Rf₂) × distance travelled by the front",
+      "Fe³⁺ ≈ 0.86 and Cu²⁺ ≈ 0.30 in acetone : conc. HCl 8:2"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Chromatography paper strip",
+      "why": "The paper holds water in its fibres; that trapped water is the stationary phase the components partition against."
+    },
+    {
+      "name": "Glass jar with a lid",
+      "why": "The chamber must stay saturated with solvent vapour, otherwise the paper dries as the solvent climbs and the front becomes ragged."
+    },
+    {
+      "name": "Capillary tube",
+      "why": "A small, concentrated spot is essential. A large spot spreads into a smear and no clean Rf can be measured."
+    },
+    {
+      "name": "Metre rule graduated in mm",
+      "why": "Rf is a ratio of two measured distances, so both must be read to the same precision."
+    },
+    {
+      "name": "Pencil",
+      "why": "Pencil marks do not dissolve. Ink would itself separate and run up the paper with the sample."
+    },
+    {
+      "name": "Atomiser with developing reagent",
+      "why": "Most cation spots are invisible; a reagent that forms a coloured complex is needed to locate them."
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "sample",
+      "label": "Mixture",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "copperIron",
+      "options": [
+        "copperIron",
+        "nickelCobalt"
+      ]
+    },
+    {
+      "id": "solvent",
+      "label": "Solvent",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "acetoneHcl",
+      "options": [
+        "acetoneHcl",
+        "butanol",
+        "petAcetone"
+      ]
+    },
+    {
+      "id": "runMinutes",
+      "label": "Run time",
+      "symbol": "t",
+      "unit": "min",
+      "type": "independent",
+      "min": 0,
+      "max": 45,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "id": "solventLevelCm",
+      "label": "Solvent level",
+      "symbol": "h",
+      "unit": "cm",
+      "type": "control",
+      "min": 0.5,
+      "max": 3,
+      "step": 0.1,
+      "default": 1
+    },
+    {
+      "id": "spotLineCm",
+      "label": "Spotting line",
+      "symbol": "",
+      "unit": "cm",
+      "type": "control",
+      "min": 0.5,
+      "max": 3,
+      "step": 0.5,
+      "default": 2
+    },
+    {
+      "id": "scale",
+      "label": "Rule",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "r01",
+      "options": [
+        "r01",
+        "r005"
+      ]
+    },
+    {
+      "id": "rf",
+      "label": "Rf value",
+      "symbol": "Rf",
+      "unit": "",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    "Draw a pencil line 2 cm from the bottom of the strip and spot the mixture on it with a capillary tube.",
+    "Dry the spot, then place the strip in a jar containing acetone and concentrated hydrochloric acid in the ratio 8 : 2, keeping the solvent below the spot.",
+    "Close the jar and let the solvent climb until the front nears the top, then remove and mark the front in pencil.",
+    "Dry the strip completely in a fume cupboard.",
+    "Spray with the developing reagent to make each cation visible as a coloured spot.",
+    "Measure to the centre of each coloured spot and to the solvent front.",
+    "Calculate the Rf of each cation and identify it from the colour and the Rf.",
+    "Repeat with a longer run and confirm that the Rf values are unchanged."
+  ],
+  "simulation": {
+    "model": "chromatography",
+    "renderer": "chromatography",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "sample",
+        "label": "Mixture",
+        "widget": "segmented",
+        "options": [
+          "copperIron",
+          "nickelCobalt"
+        ]
+      },
+      {
+        "var": "solvent",
+        "label": "Solvent",
+        "widget": "segmented",
+        "options": [
+          "acetoneHcl",
+          "butanol",
+          "petAcetone"
+        ]
+      },
+      {
+        "var": "runMinutes",
+        "label": "Run time",
+        "widget": "slider"
+      },
+      {
+        "var": "solventLevelCm",
+        "label": "Solvent level",
+        "widget": "slider"
+      },
+      {
+        "var": "spotLineCm",
+        "label": "Spotting line",
+        "widget": "slider"
+      },
+      {
+        "var": "scale",
+        "label": "Rule",
+        "widget": "segmented",
+        "options": [
+          "r01",
+          "r005"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Develop and measure",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "sample",
+        "label": "Mixture"
+      },
+      {
+        "key": "frontCm",
+        "label": "Solvent front",
+        "unit": "cm",
+        "decimals": 2
+      },
+      {
+        "key": "spots",
+        "label": "Spots",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "topComponent",
+        "label": "Faster ion"
+      },
+      {
+        "key": "topDistanceCm",
+        "label": "Distance",
+        "unit": "cm",
+        "decimals": 2
+      },
+      {
+        "key": "topRf",
+        "label": "Rf",
+        "unit": "",
+        "decimals": 3
+      },
+      {
+        "key": "resolvedText",
+        "label": "Separated"
+      }
+    ],
+    "graph": null,
+    "minRows": 2
+  },
+  "calculations": {
+    "steps": [
+      "Measure the distance from the pencil line to the solvent front.",
+      "Measure to the centre of each developed spot.",
+      "Divide each spot distance by the front distance to obtain its Rf.",
+      "Identify each cation from its Rf and the colour the reagent produced.",
+      "Check that the two spots are far enough apart to be counted as separated."
+    ],
+    "resultKeys": [
+      "componentCount",
+      "worstErrorPct"
+    ]
+  },
+  "expectedResult": {
+    "statement": "In acetone with concentrated hydrochloric acid, Fe³⁺ travels near Rf 0.86 and Cu²⁺ near 0.30, so the two are widely separated and each can be identified from its Rf and the colour its reagent produces. A pair such as Co²⁺ and Ni²⁺, whose Rf values are 0.54 and 0.47, does not separate: the spots overlap, which is exactly why the syllabus requires a mixture whose components differ appreciably in Rf.",
+    "value": 0.86,
+    "unit": "",
+    "tolerancePct": 10
+  },
+  "safety": [
+    "Concentrated hydrochloric acid is corrosive and its vapour is irritating: measure it in a fume cupboard.",
+    "Acetone is highly flammable; there must be no naked flame in the room.",
+    "Spray the developing reagent inside a fume cupboard, never towards another student.",
+    "Wear gloves and eye protection throughout, and wash any splash immediately with plenty of water."
+  ],
+  "sourcesOfError": [
+    "Choosing two cations whose Rf values are too close, so the spots never resolve.",
+    "Using a non-polar solvent, in which the ions barely move from the origin.",
+    "Spraying too much reagent, so the spots run together and their centres cannot be located.",
+    "Failing to dry the strip before spraying, which smears the developed colour.",
+    "Letting the solvent level cover the spot, which removes the sample altogether."
+  ],
+  "viva": [
+    {
+      "question": "Why must an acidic aqueous solvent be used for cations?",
+      "expectedConcept": "The ions travel as chloro-complexes formed with the hydrochloric acid. In a non-polar solvent they remain hydrated and stay at the origin.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "They move as chloro-complexes formed in the acid.",
+      "commonMisconception": "That any solvent will move an ion because ions are soluble in everything."
+    },
+    {
+      "question": "Why does the chromatogram need to be developed with a reagent?",
+      "expectedConcept": "Most cation spots are colourless when dry, so a reagent is sprayed to form a coloured complex that shows where each ion has landed.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "The spots are invisible until a colour is formed.",
+      "commonMisconception": "That the reagent causes the separation itself."
+    },
+    {
+      "question": "Why does the syllabus insist on a large difference in Rf?",
+      "expectedConcept": "The separation on the paper is the Rf difference times the front distance. If the difference is small the spots overlap and neither can be measured.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Otherwise the spots overlap and cannot be resolved.",
+      "commonMisconception": "That any two different ions will always separate given enough time."
+    },
+    {
+      "question": "How would you confirm which spot is Fe³⁺?",
+      "expectedConcept": "Spray with potassium ferrocyanide: Fe³⁺ gives an intense Prussian blue, and the Rf near 0.86 agrees.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Prussian blue with potassium ferrocyanide, plus the Rf.",
+      "commonMisconception": "That the colour of the original solution is enough."
+    },
+    {
+      "question": "Two spots overlap. What would you change first?",
+      "expectedConcept": "Use a solvent system in which the two ions differ more in Rf; simply running longer scales both distances and does not improve the ratio much.",
+      "difficulty": "hard",
+      "bloom": "Create",
+      "answerLogic": "Change the solvent system, not just the run time.",
+      "commonMisconception": "That running the paper much longer always resolves any pair."
+    },
+    {
+      "question": "What is the role of the paper here?",
+      "expectedConcept": "The water held in its fibres is the stationary phase, against which each ion partitions as the solvent carries it upward.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "It holds the stationary aqueous phase.",
+      "commonMisconception": "That the paper filters the ions by size."
+    },
+    {
+      "question": "Why must the spot be above the solvent level?",
+      "expectedConcept": "If the solvent covers the spot, the sample dissolves off into the trough instead of being carried up the paper, and nothing separates.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "The sample would wash away into the reservoir.",
+      "commonMisconception": "That the spot must touch the solvent to start moving."
+    },
+    {
+      "question": "Why is the line drawn in pencil and not in ink?",
+      "expectedConcept": "Ink is itself a mixture of dyes and would separate and travel up the paper, confusing the chromatogram.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Ink would run; graphite will not.",
+      "commonMisconception": "That pencil is only used because it is easier to see."
+    },
+    {
+      "question": "Why is the jar kept closed during the run?",
+      "expectedConcept": "A closed jar becomes saturated with solvent vapour, so solvent does not evaporate from the paper surface and the front rises evenly.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "To saturate the chamber with vapour.",
+      "commonMisconception": "That it is only to stop the smell escaping."
+    },
+    {
+      "question": "Can Rf ever be greater than one?",
+      "expectedConcept": "No. The component is carried by the solvent, so it can never travel further than the solvent front, and the ratio cannot exceed one.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "A component cannot outrun the solvent carrying it.",
+      "commonMisconception": "That a very soluble substance can move ahead of the front."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Cations are made visible on the chromatogram by:",
+        "options": [
+          "Heating the paper",
+          "Spraying a reagent that forms a coloured complex",
+          "Viewing under a microscope",
+          "Their natural colour when dry"
+        ],
+        "answer": 1,
+        "feedback": "Most cation spots are colourless once dry and must be developed with a reagent."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The syllabus requires two cations with a large difference in Rf because:",
+        "options": [
+          "They react otherwise",
+          "Close Rf values give overlapping spots",
+          "It saves solvent",
+          "The paper is too short"
+        ],
+        "answer": 1,
+        "feedback": "Spots closer than about half a centimetre merge and cannot be measured separately."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Run at least two chromatograms before drawing a conclusion.",
+        "check": "rows>=2"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Confirm that the two spots are clearly separated before measuring.",
+        "check": "rows>=2"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "Co²⁺ and Ni²⁺ have Rf values of 0.54 and 0.47. On a 10 cm run their spots will be:",
+        "options": [
+          "10 cm apart",
+          "About 0.7 cm apart and barely resolved",
+          "Completely separate",
+          "At the solvent front"
+        ],
+        "answer": 1,
+        "feedback": "The separation is (0.54 − 0.47) × 10 cm = 0.7 cm, which is only marginally resolvable."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "Fe³⁺ moves 8.6 cm and the front moves 10.0 cm. What is its Rf?",
+        "answer": 0.86,
+        "tolerance": 0.03,
+        "feedback": "Rf = 8.6 / 10.0 = 0.86."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Rf = distance travelled by the ion / distance travelled by the solvent front",
+    "assumptions": [
+      "Rf = distance travelled by the ion / distance travelled by the solvent front",
+      "Two spots are resolved only if their separation on the paper exceeds about 0.5 cm",
+      "Separation on paper = (Rf₁ − Rf₂) × distance travelled by the front",
+      "Fe³⁺ ≈ 0.86 and Cu²⁺ ≈ 0.30 in acetone : conc. HCl 8:2"
+    ],
+    "validRange": "In acetone with concentrated hydrochloric acid, Fe³⁺ travels near Rf 0.86 and Cu",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Choosing two cations whose Rf values are too close, so the spots never resolve.",
+      "Using a non-polar solvent, in which the ions barely move from the origin.",
+      "Spraying too much reagent, so the spots run together and their centres cannot be located.",
+      "Failing to dry the strip before spraying, which smears the developed colour."
+    ],
+    "expectedBehaviour": [
+      "In acetone with concentrated hydrochloric acid, Fe³⁺ travels near Rf 0.86 and Cu²⁺ near 0.30, so the two are widely separated and each can be identified from its Rf and the colour its reagent produces. A pair such as Co²⁺ and Ni²⁺, whose Rf values are 0.54 and 0.47, does not separate: the spots overlap, which is exactly why the syllabus requires a mixture whose components differ appreciably in Rf."
+    ],
+    "testFile": "tests/batch17.test.js"
+  }
+}

@@ -1,0 +1,512 @@
+{
+  "id": "XI-PHY-ACT-B7",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 7,
+    "kind": "activity",
+    "unit": "Unit VII: Properties of Bulk Matter",
+    "chapter": "Chapter-9: Mechanical Properties of Fluids",
+    "topic": "Pressure due to a fluid column; Pascal’s law and its applications; effect of gravity on fluid pressure; viscosity, Stokes’ law, terminal velocity, streamline and turbulent flow, critical velocity, Bernoulli’s theorem and its applications; surface energy and surface tension, angle of contact, excess of pressure across a curved surface, application of surface tension ideas to drops, bubbles and capillary rise",
+    "subtopic": "Equation of continuity; Bernoulli’s theorem; the Venturi effect",
+    "practical": "To observe the decrease in pressure with increase in velocity of a fluid.",
+    "learningObjectives": [
+      "Be able to observe that the pressure of a flowing fluid falls where its velocity rises",
+      "Be able to measure the pressure difference between a wide section and a narrow throat",
+      "Be able to show that the pressure difference is proportional to the square of the flow rate"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Activity 7 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Decrease in pressure with increase in the velocity of a fluid",
+  "shortTitle": "Bernoulli and pressure",
+  "objective": [
+    "To observe that the pressure of a flowing fluid falls where its velocity rises.",
+    "To measure the pressure difference between a wide section and a narrow throat.",
+    "To show that the pressure difference is proportional to the square of the flow rate."
+  ],
+  "theory": {
+    "statement": "Water flows through a horizontal tube that narrows in the middle. The same volume must pass every cross-section each second, so where the tube is narrow the water must travel faster. A manometer tapped into the throat then stands LOWER than one tapped into the wide section: where the flow is fast, the pressure is low. Most students expect the opposite, and that is exactly why the activity is set.",
+    "derivationNote": "The equation of continuity says the area times the velocity is the same at every section, because the liquid is incompressible and none is lost. So halving the area doubles the speed. Bernoulli’s theorem is the statement of energy conservation for a streamline flow: along a stream tube the sum of the pressure, the kinetic energy per unit volume and the potential energy per unit volume is constant. For a horizontal tube the potential term is the same everywhere and drops out, leaving the pressure plus one half the density times the square of the velocity as a constant. Speeding the water up therefore takes energy, and in a horizontal tube the only place that energy can come from is the pressure. Hence the pressure difference is one half the density times the difference of the squares of the two velocities. Because both velocities are proportional to the volume flow rate, the pressure difference is proportional to the SQUARE of the flow rate: doubling the flow quadruples the drop. All of this assumes the flow is streamline. If the Reynolds number at the throat rises above a few thousand the flow becomes turbulent, energy is dissipated in eddies, the manometer reading fluctuates, and the simple analysis no longer holds.",
+    "keyEquations": [
+      "Equation of continuity: area times velocity is the same at every section",
+      "Bernoulli, horizontal: pressure plus half the density times the velocity squared is constant",
+      "Pressure difference = half the density times the difference of the squares of the velocities",
+      "The pressure difference is proportional to the square of the flow rate"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Venturi tube",
+      "spec": "wide bore with an interchangeable narrow throat",
+      "why": "Forces the water to speed up at a known reduction of area"
+    },
+    {
+      "name": "Vertical manometer tubes",
+      "spec": "tapped into the wide section and the throat",
+      "why": "Compare the pressure at the two sections directly, as a difference in water level"
+    },
+    {
+      "name": "Constant head tank",
+      "spec": "with an overflow",
+      "why": "Gives a steady flow; a varying head makes the manometer reading fluctuate"
+    },
+    {
+      "name": "Measuring cylinder and stopwatch",
+      "spec": "",
+      "why": "Measure the volume flow rate by collecting water for a timed interval"
+    },
+    {
+      "name": "Millimetre scale behind the manometer",
+      "spec": "",
+      "why": "Reads the difference in level between the two limbs"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "throat",
+      "label": "Throat",
+      "symbol": "A₂",
+      "unit": "",
+      "type": "control",
+      "default": "t035",
+      "options": [
+        "t100",
+        "t060",
+        "t035",
+        "t020",
+        "tNone"
+      ]
+    },
+    {
+      "id": "flowRateCm3PerS",
+      "label": "Flow rate",
+      "symbol": "Q",
+      "unit": "cm³/s",
+      "type": "independent",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 12
+    },
+    {
+      "id": "manometer",
+      "label": "Manometer liquid",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "water",
+      "options": [
+        "water",
+        "mercury"
+      ]
+    },
+    {
+      "id": "pressureDrop",
+      "label": "Pressure difference",
+      "symbol": "Δp",
+      "unit": "Pa",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Set up the Venturi tube horizontally and connect it to the constant head tank.",
+      "checkpoint": true,
+      "expects": "throat"
+    },
+    {
+      "step": 2,
+      "text": "Let the water flow until the levels in the manometer limbs are steady.",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Note which limb stands lower, and relate that to where the water is moving faster.",
+      "checkpoint": false
+    },
+    {
+      "step": 4,
+      "text": "Measure the volume flow rate by collecting the outflow for a timed interval.",
+      "checkpoint": true,
+      "expects": "flowRateCm3PerS"
+    },
+    {
+      "step": 5,
+      "text": "Read the difference in level between the two limbs and record it.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 6,
+      "text": "Repeat for at least three different flow rates.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 7,
+      "text": "Change the throat for a narrower one and observe the effect at the same flow rate.",
+      "checkpoint": false
+    },
+    {
+      "step": 8,
+      "text": "Plot the pressure difference against the square of the flow rate and find the slope.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "bernoulli-pressure",
+    "renderer": "bernoulli-pressure",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "flowRateCm3PerS",
+        "widget": "slider"
+      },
+      {
+        "var": "throat",
+        "widget": "segmented",
+        "options": [
+          "t100",
+          "t060",
+          "t035",
+          "t020",
+          "tNone"
+        ]
+      },
+      {
+        "var": "manometer",
+        "widget": "segmented",
+        "options": [
+          "water",
+          "mercury"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record manometer",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "flowRateCm3PerS",
+        "label": "Flow rate Q",
+        "unit": "cm³/s",
+        "decimals": 1
+      },
+      {
+        "key": "flowSquared",
+        "label": "Q²",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "wideVelocity",
+        "label": "v₁",
+        "unit": "m/s",
+        "decimals": 3
+      },
+      {
+        "key": "throatVelocity",
+        "label": "v₂",
+        "unit": "m/s",
+        "decimals": 3
+      },
+      {
+        "key": "manometerMm",
+        "label": "Manometer",
+        "unit": "mm",
+        "decimals": 1
+      },
+      {
+        "key": "pressureDropPa",
+        "label": "Δp",
+        "unit": "Pa",
+        "decimals": 1
+      }
+    ],
+    "graph": {
+      "x": "flowSquared",
+      "y": "pressureDropPa",
+      "xLabel": "Square of the flow rate",
+      "yLabel": "Pressure difference (Pa)",
+      "throughOrigin": true
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Velocity at each section = flow rate divided by the area of that section",
+      "Pressure difference = manometer height times density times g",
+      "Plot the pressure difference against the SQUARE of the flow rate",
+      "The graph is a straight line through the origin, confirming the square law",
+      "The slope, with the two areas, gives the density of the flowing liquid"
+    ],
+    "resultKeys": [
+      "densityFromSlope",
+      "maxThroatVelocity",
+      "streamline"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Density of the flowing liquid recovered from the slope",
+    "symbol": "ρ",
+    "value": 997,
+    "tolerance": 80,
+    "unit": "kg/m³",
+    "secondary": {
+      "quantity": "Pressure drop at 12 cm³/s through the 0.35 cm² throat",
+      "value": 5.9,
+      "tolerance": 2.5,
+      "unit": "mm of water"
+    },
+    "statement": "The limb tapped into the throat stands lower than the one in the wide section, showing that the pressure falls where the velocity rises. The pressure difference is proportional to the square of the flow rate, and the slope of that line returns the density of water as about 1000 kg per cubic metre, confirming Bernoulli’s theorem."
+  },
+  "safety": [
+    "Water and electricity do not mix: keep the apparatus well away from sockets and mains equipment.",
+    "Wipe up spills at once; a wet floor is a slipping hazard.",
+    "Secure all tubing connections, since a hose that comes adrift under head soaks the whole bench.",
+    "Do not exceed the rated head of the manometer, or the liquid will be blown out of the limb."
+  ],
+  "sourcesOfError": [
+    "The flow may not be truly steady if the head is not constant.",
+    "At high flow rates the flow becomes turbulent and the manometer reading fluctuates.",
+    "Viscous losses along the tube add a pressure drop that Bernoulli’s equation does not account for.",
+    "Air bubbles trapped in a manometer limb give a false reading.",
+    "The tube may not be exactly horizontal, so a height term enters as well.",
+    "The tappings may not be flush with the wall, disturbing the flow they are meant to sample."
+  ],
+  "viva": [
+    {
+      "question": "State the equation of continuity.",
+      "expectedConcept": "For an incompressible fluid in steady flow, the product of the cross-sectional area and the velocity is the same at every section of the tube. It expresses conservation of mass: the same volume must pass every section each second.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Area times velocity is constant.",
+      "commonMisconception": "Thinking the velocity is the same everywhere."
+    },
+    {
+      "question": "Why does the pressure fall where the tube narrows?",
+      "expectedConcept": "The water must speed up to get the same volume through a smaller area. Speeding it up requires energy, and in a horizontal tube the only available source is the pressure. So the pressure at the throat is lower, which is Bernoulli’s theorem applied to a horizontal stream tube.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Kinetic energy is gained at the expense of pressure.",
+      "commonMisconception": "Expecting a constriction to squeeze the water and RAISE the pressure."
+    },
+    {
+      "question": "State Bernoulli’s theorem.",
+      "expectedConcept": "For streamline flow of a non-viscous incompressible fluid, the sum of the pressure, the kinetic energy per unit volume and the potential energy per unit volume is constant along a streamline. It is the statement of conservation of energy for a flowing fluid.",
+      "difficulty": "medium",
+      "bloom": "Remember",
+      "answerLogic": "Pressure plus kinetic plus potential energy per unit volume is constant.",
+      "commonMisconception": "Omitting the conditions of streamline, non-viscous flow."
+    },
+    {
+      "question": "How does the pressure difference depend on the flow rate?",
+      "expectedConcept": "It is proportional to the SQUARE of the flow rate, because it depends on the difference of the squares of the velocities and both velocities are proportional to the flow. Doubling the flow therefore quadruples the pressure drop.",
+      "difficulty": "hard",
+      "bloom": "Apply",
+      "answerLogic": "Proportional to the square of the flow rate.",
+      "commonMisconception": "Expecting the drop simply to double when the flow doubles."
+    },
+    {
+      "question": "What happens if the throat is the same size as the rest of the tube?",
+      "expectedConcept": "Nothing at all. With no reduction in area there is no increase in velocity, so by Bernoulli the pressures at the two tappings are equal and the manometer limbs stand level. The effect exists only because the tube narrows.",
+      "difficulty": "easy",
+      "bloom": "Evaluate",
+      "answerLogic": "No constriction means no speed-up and no pressure difference.",
+      "commonMisconception": "Expecting some difference simply because the water is moving."
+    },
+    {
+      "question": "Why must the flow be streamline for this analysis to hold?",
+      "expectedConcept": "Bernoulli’s theorem in this form assumes energy is conserved along a streamline. In turbulent flow energy is dissipated in eddies and as heat, the reading fluctuates, and the measured drop exceeds the prediction. The Reynolds number tells you which regime you are in.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Turbulence dissipates energy and breaks the assumption.",
+      "commonMisconception": "Assuming Bernoulli always applies to any moving fluid."
+    },
+    {
+      "question": "Give a practical application of this effect.",
+      "expectedConcept": "The aerofoil, where faster flow over the curved upper surface gives lower pressure and hence lift. Also the carburettor, the filter pump, the spray gun, the Venturi flow meter, and the way a fast train draws nearby objects towards the track.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Aerofoils, spray guns, Venturi meters.",
+      "commonMisconception": "Thinking it is only a laboratory curiosity."
+    },
+    {
+      "question": "Why is a mercury manometer less suitable here than a water one?",
+      "expectedConcept": "Mercury is 13.6 times denser, so the same pressure difference moves it only a thirteenth as far. For the small pressure differences in this activity the mercury reading would be a millimetre or two, which wastes the resolution of the scale.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "A denser liquid gives a smaller, less readable deflection.",
+      "commonMisconception": "Assuming mercury is always the better manometer liquid."
+    },
+    {
+      "question": "Why must the tube be horizontal?",
+      "expectedConcept": "So that the potential energy term in Bernoulli’s equation is the same at both tappings and cancels. If one tapping were higher than the other, part of the difference in level would be due to height rather than to velocity, and the two effects could not be separated.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "To eliminate the height term.",
+      "commonMisconception": "Thinking the tube is horizontal only for convenience."
+    },
+    {
+      "question": "A ball is held up in a jet of air. Explain using this effect.",
+      "expectedConcept": "Air moves fastest where it flows around the sides of the ball, so the pressure there is reduced. If the ball starts to leave the jet, the faster air on the side still in the jet gives a lower pressure there, and the higher pressure outside pushes it back in.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Fast flow gives low pressure, which restores the ball.",
+      "commonMisconception": "Explaining it purely as the jet pushing the ball upwards."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Where a tube narrows, the velocity of the fluid:",
+        "options": [
+          "Falls",
+          "Rises",
+          "Stays the same",
+          "Becomes zero"
+        ],
+        "answer": 1,
+        "feedback": "The same volume must pass each second, so a smaller area means a higher speed."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "Where the velocity of a fluid is high, the pressure is:",
+        "options": [
+          "High",
+          "Low",
+          "Unchanged",
+          "Zero"
+        ],
+        "answer": 1,
+        "feedback": "Kinetic energy is gained at the expense of pressure energy."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "The pressure difference across a Venturi throat is proportional to:",
+        "options": [
+          "The flow rate",
+          "The square of the flow rate",
+          "The square root of the flow rate",
+          "The area"
+        ],
+        "answer": 1,
+        "feedback": "It depends on the difference of the squares of the velocities."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record the manometer reading at three or more flow rates.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Vary the flow rate between readings.",
+        "check": "flowVaried"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the density of water recovered from the slope, in kg per cubic metre.",
+        "answer": 997,
+        "tolerance": 120,
+        "feedback": "About 1000 kg/m³, which confirms Bernoulli’s theorem describes the data."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "The limb tapped into the throat stands LOWER. This shows that:",
+        "options": [
+          "The tube is blocked",
+          "Pressure falls where the velocity rises",
+          "Water is denser at the throat",
+          "The manometer is faulty"
+        ],
+        "answer": 1,
+        "feedback": "That is precisely the Venturi effect, and it is the opposite of what most people expect."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "You doubled the flow rate. The pressure difference became:",
+        "options": [
+          "Twice as large",
+          "Four times as large",
+          "Half as large",
+          "Unchanged"
+        ],
+        "answer": 1,
+        "feedback": "The drop is proportional to the square of the flow rate."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Equation of continuity: area times velocity is the same at every section",
+    "assumptions": [
+      "Equation of continuity: area times velocity is the same at every section",
+      "Bernoulli, horizontal: pressure plus half the density times the velocity squared is constant",
+      "Pressure difference = half the density times the difference of the squares of the velocities",
+      "The pressure difference is proportional to the square of the flow rate"
+    ],
+    "validRange": "The limb tapped into the throat stands lower than the one in the wide section, s",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "The flow may not be truly steady if the head is not constant.",
+      "At high flow rates the flow becomes turbulent and the manometer reading fluctuates.",
+      "Viscous losses along the tube add a pressure drop that Bernoulli’s equation does not account for.",
+      "Air bubbles trapped in a manometer limb give a false reading."
+    ],
+    "expectedBehaviour": [
+      "The limb tapped into the throat stands lower than the one in the wide section, showing that the pressure falls where the velocity rises. The pressure difference is proportional to the square of the flow rate, and the slope of that line returns the density of water as about 1000 kg per cubic metre, confirming Bernoulli’s theorem."
+    ],
+    "testFile": "tests/batch9.test.js"
+  }
+}

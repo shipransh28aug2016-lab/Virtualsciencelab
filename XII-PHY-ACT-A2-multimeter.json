@@ -1,0 +1,582 @@
+{
+  "id": "XII-PHY-ACT-A2",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 2,
+    "kind": "activity",
+    "unit": "Unit III: Current Electricity",
+    "chapter": "Chapter-3: Current Electricity",
+    "topic": "Electric current, flow of electric charges in a metallic conductor, drift velocity, mobility and their relation with electric current; Ohm’s law, V-I characteristics, electrical resistivity and conductivity, temperature dependence of resistance, internal resistance of a cell, potential difference and emf of a cell, combination of cells, Kirchhoff’s rules, Wheatstone bridge",
+    "subtopic": "Practical measurement: the voltmeter in parallel and the ammeter in series; measuring resistance on a dead circuit; continuity testing",
+    "practical": "To measure resistance, voltage (AC/DC), current (AC) and check continuity of a given circuit using multimeter.",
+    "learningObjectives": [
+      "Be able to select the correct function and range on a multimeter before making a measurement",
+      "Be able to measure resistance, DC voltage, AC voltage and alternating current correctly",
+      "Be able to test the continuity of a conductor and identify a broken lead",
+      "Be able to recognise why an ammeter must never be connected across a live supply"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Activity 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Use of a multimeter to measure resistance, voltage, current and continuity",
+  "shortTitle": "Using a multimeter",
+  "objective": [
+    "To select the correct function and range on a multimeter before making a measurement.",
+    "To measure resistance, DC voltage, AC voltage and alternating current correctly.",
+    "To test the continuity of a conductor and identify a broken lead.",
+    "To recognise why an ammeter must never be connected across a live supply."
+  ],
+  "theory": {
+    "statement": "A multimeter will answer almost any question about a circuit, but only if it is asked properly. The skill in this activity is not reading the display: it is choosing the function, choosing the range, and connecting the probes the right way round before anything is switched on. Get any of those wrong and the instrument returns a wrong answer, no answer, or — in one particular case — destroys its own fuse.",
+    "derivationNote": "A voltage range must not disturb the circuit it examines, so it is built with a very high input resistance, typically ten megohm, and is connected ACROSS the component in parallel with it. A current range has to carry the current being measured, so it is built with a very low resistance and is inserted IN SERIES, which means breaking the circuit to put it in. These two requirements are opposites, and that is why the single most damaging mistake is to leave the meter on a current range and connect it across a supply: the low resistance is then the only thing limiting the current, an enormous current flows, and the internal fuse blows. Resistance is measured differently again. The ohmmeter passes a small current from its own internal cell through the component and infers the resistance from the voltage produced, so any external voltage present will corrupt the result — the circuit must be dead and, ideally, the component isolated. Continuity is simply a resistance test with a buzzer on the low-resistance end, used to answer a yes-or-no question about whether a path exists. Finally, DC and AC ranges are not interchangeable: a DC range responds to the mean of the waveform, which is zero for a sinusoid, while an AC range is calibrated to display the RMS value.",
+    "keyEquations": [
+      "Voltmeter: connected in parallel, very high input resistance",
+      "Ammeter: connected in series, very low resistance",
+      "Ohmmeter: uses its own internal cell, so the circuit must be dead",
+      "For a sinusoid, V_rms = V_peak / √2, and AC ranges are calibrated in RMS",
+      "Continuity: a conducting path reads near zero ohm; a break reads open circuit"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Digital multimeter",
+      "spec": "with V⎓, V∼, A∼, Ω and continuity functions",
+      "why": "The instrument whose use is the object of the activity"
+    },
+    {
+      "name": "Test leads",
+      "spec": "red and black, with probes",
+      "why": "Red to the positive or the function socket, black to the common socket"
+    },
+    {
+      "name": "Carbon resistors",
+      "spec": "470 Ω and 100 kΩ",
+      "why": "Components of known value for the resistance ranges"
+    },
+    {
+      "name": "Dry cell and DC supply",
+      "spec": "1.5 V cell, 12 V regulated supply",
+      "why": "Live DC sources for the voltage ranges"
+    },
+    {
+      "name": "Low-voltage AC supply",
+      "spec": "12 V RMS",
+      "why": "A live AC source, to show that DC and AC ranges are not interchangeable"
+    },
+    {
+      "name": "Lamp in a circuit",
+      "spec": "on the AC supply, drawing about 0.25 A",
+      "why": "A working circuit in which a current can be measured in series"
+    },
+    {
+      "name": "Connecting leads, one broken internally",
+      "spec": "",
+      "why": "The continuity test has to find the fault that the eye cannot see"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "target",
+      "label": "Test point",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "resistor",
+      "options": [
+        "resistor",
+        "resistorHigh",
+        "battery",
+        "supplyDc",
+        "supplyAc",
+        "lampCircuit",
+        "brokenWire",
+        "goodWire"
+      ]
+    },
+    {
+      "id": "func",
+      "label": "Function",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "ohm",
+      "options": [
+        "vdc",
+        "vac",
+        "aac",
+        "ohm",
+        "cont"
+      ]
+    },
+    {
+      "id": "connection",
+      "label": "Probes",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "parallel",
+      "options": [
+        "parallel",
+        "series"
+      ]
+    },
+    {
+      "id": "voltageRange",
+      "label": "Voltage range",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "r20",
+      "options": [
+        "r2",
+        "r20",
+        "r250"
+      ]
+    },
+    {
+      "id": "currentRange",
+      "label": "Current range",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "r02",
+      "options": [
+        "r02",
+        "r10"
+      ]
+    },
+    {
+      "id": "resistanceRange",
+      "label": "Resistance range",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "r2k",
+      "options": [
+        "r2k",
+        "r200k"
+      ]
+    },
+    {
+      "id": "reading",
+      "label": "Reading",
+      "symbol": "",
+      "unit": "",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Choose what you are going to test, then set the function dial BEFORE touching the probes to it.",
+      "checkpoint": true,
+      "expects": "func"
+    },
+    {
+      "step": 2,
+      "text": "For a resistance, make sure the circuit is dead. Put the meter on Ω, choose a range above the expected value, and touch the probes across the component.",
+      "checkpoint": true
+    },
+    {
+      "step": 3,
+      "text": "For a voltage, select V⎓ for a direct source or V∼ for an alternating one, and connect the probes ACROSS the source, in parallel."
+    },
+    {
+      "step": 4,
+      "text": "For a current, select A∼, break the circuit, and insert the meter IN LINE so the current flows through it. Never place it across a supply.",
+      "checkpoint": true,
+      "expects": "connection"
+    },
+    {
+      "step": 5,
+      "text": "For continuity, select the buzzer symbol and touch the probes to the two ends of the conductor. A sound means a complete path."
+    },
+    {
+      "step": 6,
+      "text": "If the display shows an overload, step up to a higher range. If the reading occupies only a tiny part of the scale, step down for a finer value."
+    },
+    {
+      "step": 7,
+      "text": "Record at least four readings using at least three different functions of the meter."
+    }
+  ],
+  "simulation": {
+    "model": "multimeter",
+    "renderer": "multimeter",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "target",
+        "widget": "segmented",
+        "options": [
+          "resistor",
+          "resistorHigh",
+          "battery",
+          "supplyDc",
+          "supplyAc",
+          "lampCircuit",
+          "brokenWire",
+          "goodWire"
+        ]
+      },
+      {
+        "var": "func",
+        "widget": "segmented",
+        "options": [
+          "vdc",
+          "vac",
+          "aac",
+          "ohm",
+          "cont"
+        ]
+      },
+      {
+        "var": "connection",
+        "widget": "segmented",
+        "options": [
+          "parallel",
+          "series"
+        ]
+      },
+      {
+        "var": "voltageRange",
+        "widget": "segmented",
+        "options": [
+          "r2",
+          "r20",
+          "r250"
+        ]
+      },
+      {
+        "var": "currentRange",
+        "widget": "segmented",
+        "options": [
+          "r02",
+          "r10"
+        ]
+      },
+      {
+        "var": "resistanceRange",
+        "widget": "segmented",
+        "options": [
+          "r2k",
+          "r200k"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record reading",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Reading",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "target",
+        "label": "Test point",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "func",
+        "label": "Function",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "range",
+        "label": "Range",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "connection",
+        "label": "Probes",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "reading",
+        "label": "Display",
+        "unit": "",
+        "decimals": 0
+      }
+    ],
+    "graph": null,
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "For each test point, state which function of the meter is the correct one and why",
+      "Check that a voltage was measured in parallel and a current in series",
+      "Confirm that every resistance reading was taken on a dead circuit",
+      "Identify the broken lead from its continuity reading",
+      "Note, for each reading, whether the range chosen made best use of the display"
+    ],
+    "resultKeys": [
+      "functionsUsed",
+      "correctReadings",
+      "foundBreak"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Functions of the meter used correctly",
+    "symbol": "",
+    "value": 4,
+    "tolerance": 1,
+    "unit": "functions",
+    "secondary": {
+      "quantity": "Resistance of the carbon resistor",
+      "value": 470,
+      "tolerance": 25,
+      "unit": "Ω"
+    },
+    "statement": "The 470 Ω resistor reads 470 Ω on the 2 kΩ range; the dry cell reads about 1.53 V on V⎓; the 12 V AC supply reads about 12 V on V∼ but essentially zero on V⎓; the lamp circuit carries about 0.25 A measured in series on A∼; and the suspect lead shows an open circuit on continuity while the sound lead buzzes at a fraction of an ohm."
+  },
+  "safety": [
+    "Set the function and the range before the probes touch anything, not after.",
+    "Never connect a current range across a live supply. It is a short circuit: it blows the internal fuse and can damage the source.",
+    "Switch off and isolate the circuit before measuring any resistance.",
+    "Treat every source as live until the meter has shown otherwise. A DC range reads nearly zero on an AC supply, which does not mean the supply is safe.",
+    "Start on the highest range when the size of the quantity is not known, and step down.",
+    "Inspect the leads for damaged insulation before use; a broken lead is exactly what this activity is about."
+  ],
+  "sourcesOfError": [
+    "Leaving the meter on a current range from the previous measurement and connecting it across a supply.",
+    "Measuring resistance without isolating the component, so that the circuit’s own voltage corrupts the reading.",
+    "Using a DC range on an alternating supply and concluding from the near-zero reading that the supply is dead.",
+    "Choosing a range far above the value, so that resolution is lost and a four-figure reading becomes a one-figure one.",
+    "The resistance of the test leads adds to any low resistance being measured, which matters for continuity work.",
+    "A weak internal cell in the meter biases the resistance ranges without giving any obvious sign."
+  ],
+  "viva": [
+    {
+      "question": "Why is a voltmeter connected in parallel and an ammeter in series?",
+      "expectedConcept": "A voltmeter must measure the potential difference across a component without disturbing it, so it is built with a very high resistance and placed across the component where it draws almost no current. An ammeter must have the current pass through it, so it is placed in the circuit path and built with a very low resistance so that it does not reduce the current it is measuring.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "High R across; low R in line.",
+      "commonMisconception": "Believing the two can be interchanged if the reading is then converted."
+    },
+    {
+      "question": "What happens if an ammeter is connected across a battery, and why?",
+      "expectedConcept": "It short-circuits the battery. A current range has a deliberately very low resistance, so connected directly across a source it presents almost no opposition and a very large current flows, limited only by the internal resistance of the source. The internal fuse of the meter blows, and the battery or supply may be damaged too.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "Low meter resistance across a source is a short circuit.",
+      "commonMisconception": "Expecting the meter simply to show a large current rather than being damaged."
+    },
+    {
+      "question": "Why must a circuit be dead before its resistance is measured?",
+      "expectedConcept": "Because the ohmmeter makes its measurement by passing a small current from its own internal cell through the component and measuring the resulting voltage. Any voltage already present in the circuit adds to or opposes that internal source, so the meter infers a resistance that has nothing to do with the component.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "The ohmmeter supplies its own current.",
+      "commonMisconception": "Thinking the meter measures resistance passively, without driving anything."
+    },
+    {
+      "question": "A 12 V AC supply is measured on the DC voltage range. What is read, and why?",
+      "expectedConcept": "Approximately zero. A DC range responds to the mean value of the waveform, and over a complete cycle a sinusoid spends as long positive as negative, so its mean is zero. The supply is fully live and fully dangerous, but the meter, asked the wrong question, reports nothing.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "A sinusoid has zero mean.",
+      "commonMisconception": "Concluding from a zero reading that the circuit is dead."
+    },
+    {
+      "question": "What does an AC voltage range actually display?",
+      "expectedConcept": "The RMS value, which for a sinusoid is the peak divided by √2. RMS is used because it is the value of a direct voltage that would dissipate the same power in a resistance, so it is the figure that matters for anything the supply is used to do.",
+      "difficulty": "medium",
+      "bloom": "Remember",
+      "answerLogic": "AC ranges are calibrated in RMS.",
+      "commonMisconception": "Assuming the display shows the peak value."
+    },
+    {
+      "question": "How does the continuity test differ from a resistance measurement?",
+      "expectedConcept": "Not at all in principle: both pass a small current and measure the opposition. Continuity simply adds a buzzer that sounds below a threshold of a few tens of ohm, so the answer to \"is there a path here\" can be had by ear while the probes and the eyes are busy elsewhere.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Continuity is a resistance test with an audible threshold.",
+      "commonMisconception": "Thinking continuity is a separate kind of electrical measurement."
+    },
+    {
+      "question": "The display shows a leading 1 with the other digits blank. What does that mean?",
+      "expectedConcept": "It is the overload indication: the quantity is larger than the selected range can display. It is not a reading and must not be recorded as one. The correct response is to switch to a higher range.",
+      "difficulty": "easy",
+      "bloom": "Apply",
+      "answerLogic": "Overload, not a measurement.",
+      "commonMisconception": "Recording the overload display as a numerical value."
+    },
+    {
+      "question": "Why start on the highest range when the size of a quantity is unknown?",
+      "expectedConcept": "Because an unknown quantity may be far larger than expected, and on a low range that means an overload — at best a wasted reading, at worst a damaged instrument. Starting high is always safe; the range can then be stepped down until the display uses most of its digits.",
+      "difficulty": "easy",
+      "bloom": "Apply",
+      "answerLogic": "High range first, then step down.",
+      "commonMisconception": "Starting on the most sensitive range to get the best resolution immediately."
+    },
+    {
+      "question": "Why does measuring a 470 Ω resistor on the 200 kΩ range give a poor reading?",
+      "expectedConcept": "Because the display has a fixed number of digits spread over the whole range. On 200 kΩ, 470 Ω occupies less than a hundredth of the scale, so the significant figures fall off the bottom and a value that could have been read to four figures is reported to one or two.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Too coarse a range wastes resolution.",
+      "commonMisconception": "Assuming the reading is equally accurate on any range that displays it."
+    },
+    {
+      "question": "A lead looks perfect but the circuit does not work. How would you check it?",
+      "expectedConcept": "Disconnect it, set the meter to continuity, and touch a probe to each end. A sound lead buzzes and shows a fraction of an ohm; a lead broken inside its insulation shows an open circuit and stays silent. This is a fault the eye cannot find, and it is the reason the continuity function exists.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Continuity finds breaks hidden inside insulation.",
+      "commonMisconception": "Judging a lead sound because its insulation is undamaged."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "An ammeter should be connected:",
+        "options": [
+          "In parallel with the component",
+          "In series with the component",
+          "Across the supply",
+          "Either way"
+        ],
+        "answer": 1,
+        "feedback": "Current must flow through the meter, so it goes in series."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "Before measuring resistance in a circuit you must:",
+        "options": [
+          "Raise the supply voltage",
+          "Switch off and isolate the circuit",
+          "Select the AC range",
+          "Short the probes together"
+        ],
+        "answer": 1,
+        "feedback": "The ohmmeter uses its own internal cell, so any external voltage corrupts the reading."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "A 12 V AC supply measured on the DC voltage range will read approximately:",
+        "options": [
+          "12 V",
+          "17 V",
+          "0 V",
+          "8.5 V"
+        ],
+        "answer": 2,
+        "feedback": "A DC range responds to the mean, and a sinusoid averages to zero."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Take at least four readings using at least three different functions.",
+        "check": "rows>=4"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Set the function before connecting the probes.",
+        "check": "settled"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the resistance of the carbon resistor you measured, in Ω.",
+        "answer": 470,
+        "tolerance": 30,
+        "feedback": "The nominal value is 470 Ω."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "Connecting a current range directly across a 12 V supply would:",
+        "options": [
+          "Read 12 A",
+          "Read zero",
+          "Short the supply and blow the fuse",
+          "Read the supply voltage"
+        ],
+        "answer": 2,
+        "feedback": "A current range has a very low resistance, so across a source it is a short circuit."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "The suspect lead showed an open circuit on continuity. This means:",
+        "options": [
+          "The lead is sound",
+          "The lead is broken inside its insulation",
+          "The meter is faulty",
+          "The range was too low"
+        ],
+        "answer": 1,
+        "feedback": "No conducting path exists, though the insulation looks perfect from outside."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Voltmeter: connected in parallel, very high input resistance",
+    "assumptions": [
+      "Voltmeter: connected in parallel, very high input resistance",
+      "Ammeter: connected in series, very low resistance",
+      "Ohmmeter: uses its own internal cell, so the circuit must be dead",
+      "For a sinusoid, V_rms = V_peak / √2, and AC ranges are calibrated in RMS"
+    ],
+    "validRange": "The 470 Ω resistor reads 470 Ω on the 2 kΩ range; the dry cell reads about 1.53 ",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Leaving the meter on a current range from the previous measurement and connecting it across a supply.",
+      "Measuring resistance without isolating the component, so that the circuit’s own voltage corrupts the reading.",
+      "Using a DC range on an alternating supply and concluding from the near-zero reading that the supply is dead.",
+      "Choosing a range far above the value, so that resolution is lost and a four-figure reading becomes a one-figure one."
+    ],
+    "expectedBehaviour": [
+      "The 470 Ω resistor reads 470 Ω on the 2 kΩ range; the dry cell reads about 1.53 V on V⎓; the 12 V AC supply reads about 12 V on V∼ but essentially zero on V⎓; the lamp circuit carries about 0.25 A measured in series on A∼; and the suspect lead shows an open circuit on continuity while the sound lead buzzes at a fraction of an ohm."
+    ],
+    "testFile": "tests/batch11.test.js"
+  }
+}

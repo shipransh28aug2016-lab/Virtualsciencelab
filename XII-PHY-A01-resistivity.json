@@ -1,0 +1,181 @@
+{
+  "id": "XII-PHY-A01",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 1,
+    "unit": "Unit II: Current Electricity",
+    "chapter": "Chapter-3: Current Electricity",
+    "topic": "Ohm's law, electrical resistance, V-I characteristics, resistivity and conductivity",
+    "subtopic": "Determination of resistivity from a V-I graph",
+    "practical": "To determine resistivity of two / three wires by plotting a graph for potential difference versus current.",
+    "learningObjectives": [
+      "Set up a circuit with a battery, rheostat, ammeter, voltmeter and specimen wire correctly",
+      "Take corresponding readings of potential difference and current",
+      "Plot a V-I graph and verify Ohm's law for the given wire",
+      "Determine the resistance from the slope and hence the resistivity using R = ρL/A",
+      "Compare the resistivity of two or three different wires"
+    ],
+    "competencies": [
+      "Correct connection of measuring instruments: ammeter in series, voltmeter in parallel",
+      "Reading instruments to their least count and avoiding parallax",
+      "Graphical determination of resistance and propagation to resistivity",
+      "Distinguishing between resistance (geometry dependent) and resistivity (material property)"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Experiment 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Resistivity of wires from a V-I graph",
+  "shortTitle": "Resistivity (V-I graph)",
+  "objective": [
+    "To plot a graph of potential difference versus current for a given wire.",
+    "To determine its resistance from the slope of the graph.",
+    "To calculate the resistivity of the material of the wire."
+  ],
+  "theory": {
+    "statement": "Ohm's law states that the current flowing through a conductor is directly proportional to the potential difference across its ends, provided its physical conditions such as temperature remain unchanged. Hence V = IR, where the constant R is the resistance.",
+    "derivationNote": "A graph of V against I is therefore a straight line through the origin whose slope equals R. The resistance of a uniform wire is R = ρL/A, where L is its length and A = πD²/4 its area of cross-section. Hence ρ = RA/L = RπD²/(4L). Resistivity depends only on the material, not on the length or thickness.",
+    "keyEquations": ["V = IR", "R = slope of the V-I graph", "A = πD²/4", "ρ = RA/L = RπD²/(4L)"]
+  },
+  "apparatus": [
+    { "name": "Specimen wire", "spec": "constantan or nichrome", "why": "The conductor whose resistivity is measured" },
+    { "name": "Battery / battery eliminator", "spec": "2-6 V", "why": "Drives a steady current through the circuit" },
+    { "name": "Ammeter", "spec": "0-1.5 A, least count 0.02 A", "why": "Measures the current; connected IN SERIES" },
+    { "name": "Voltmeter", "spec": "0-5 V, least count 0.05 V", "why": "Measures the p.d. across the wire; connected IN PARALLEL" },
+    { "name": "Rheostat", "spec": "0-20 Ω", "why": "Varies the current so several readings can be taken" },
+    { "name": "One-way key", "spec": "plug key", "why": "Breaks the circuit between readings so the wire does not heat" },
+    { "name": "Screw gauge", "spec": "least count 0.001 cm", "why": "Measures the diameter of the wire" },
+    { "name": "Metre scale", "spec": "least count 0.1 cm", "why": "Measures the length of the wire between the terminals" },
+    { "name": "Sand paper", "spec": "fine", "why": "Cleans the insulating oxide layer from the wire ends" }
+  ],
+  "materials": [],
+  "variables": [
+    { "id": "wire", "label": "Specimen wire", "symbol": "", "unit": "", "type": "control", "options": ["constantan", "nichrome", "copper"], "default": "constantan" },
+    { "id": "rheostatFrac", "label": "Rheostat setting", "symbol": "", "unit": "", "type": "independent", "min": 0, "max": 1, "step": 0.05, "default": 0.5 },
+    { "id": "lengthCm", "label": "Length of wire", "symbol": "L", "unit": "cm", "type": "control", "min": 20, "max": 150, "step": 10, "default": 100 },
+    { "id": "diameterMm", "label": "Diameter of wire", "symbol": "D", "unit": "mm", "type": "control", "min": 0.2, "max": 1.0, "step": 0.05, "default": 0.4 },
+    { "id": "emf", "label": "Battery e.m.f.", "symbol": "E", "unit": "V", "type": "control", "min": 1.5, "max": 6, "step": 0.5, "default": 3 },
+    { "id": "ammeterMode", "label": "Ammeter connection", "symbol": "", "unit": "", "type": "wiring", "options": ["series", "parallel"], "default": "series" },
+    { "id": "voltmeterMode", "label": "Voltmeter connection", "symbol": "", "unit": "", "type": "wiring", "options": ["parallel", "series"], "default": "parallel" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Clean the ends of the specimen wire with sand paper and measure its length L and diameter D.", "checkpoint": false },
+    { "step": 2, "text": "Connect the ammeter IN SERIES with the wire, battery, key and rheostat.", "checkpoint": true, "expects": "ammeterMode=series" },
+    { "step": 3, "text": "Connect the voltmeter IN PARALLEL across the two ends of the specimen wire.", "checkpoint": true, "expects": "voltmeterMode=parallel" },
+    { "step": 4, "text": "Insert the key and adjust the rheostat so a small current flows. Note the ammeter and voltmeter readings.", "checkpoint": true, "expects": "record" },
+    { "step": 5, "text": "Shift the rheostat and take at least five sets of readings over the working range.", "checkpoint": true, "expects": "rows>=5" },
+    { "step": 6, "text": "Take the key out between readings so the wire does not become hot.", "checkpoint": false },
+    { "step": 7, "text": "Plot V on the y-axis against I on the x-axis and draw the best-fit straight line through the origin.", "checkpoint": false },
+    { "step": 8, "text": "Find the slope; this is the resistance R. Calculate ρ = RπD²/(4L).", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "resistivity",
+    "renderer": "resistivity",
+    "fps": 45,
+    "controls": [
+      { "var": "rheostatFrac", "widget": "slider" },
+      { "var": "wire", "widget": "segmented", "options": ["constantan", "nichrome", "copper"] },
+      { "var": "lengthCm", "widget": "slider" },
+      { "var": "diameterMm", "widget": "slider" },
+      { "var": "emf", "widget": "slider" },
+      { "var": "ammeterMode", "widget": "wiring", "options": ["series", "parallel"] },
+      { "var": "voltmeterMode", "widget": "wiring", "options": ["parallel", "series"] }
+    ],
+    "actions": [
+      { "id": "record", "label": "Note readings", "primary": true },
+      { "id": "reset", "label": "Reset circuit" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "current", "label": "I", "unit": "A", "decimals": 2 },
+      { "key": "voltage", "label": "V", "unit": "V", "decimals": 2 },
+      { "key": "ratio", "label": "V/I", "unit": "Ω", "decimals": 2 }
+    ],
+    "graph": { "x": "current", "y": "voltage", "xLabel": "Current I (A)", "yLabel": "Potential difference V (V)", "throughOrigin": true },
+    "minRows": 5
+  },
+  "calculations": {
+    "steps": [
+      "Slope of the V-I graph gives R in ohm",
+      "Area of cross-section A = πD²/4",
+      "Resistivity ρ = R·A/L"
+    ],
+    "resultKeys": ["resistance", "rho", "r2"]
+  },
+  "expectedResult": {
+    "quantity": "Resistivity of the material of the wire",
+    "symbol": "ρ",
+    "value": 4.9e-7,
+    "tolerance": 5e-8,
+    "unit": "Ω·m",
+    "statement": "The V-I graph is a straight line through the origin, verifying Ohm's law. The slope gives the resistance and the resistivity of constantan is found to be about 4.9 × 10⁻⁷ Ω·m."
+  },
+  "safety": [
+    "Take the key out of the circuit between readings — a continuously flowing current heats the wire and changes its resistance.",
+    "Never connect the ammeter in parallel with the wire: it will short-circuit the cell and can be damaged.",
+    "Do not exceed the range of the ammeter or the voltmeter.",
+    "Check that all connections are tight; loose connections cause sparking and unsteady readings."
+  ],
+  "sourcesOfError": [
+    "Heating of the wire raises its resistance, so the graph curves upward at large currents.",
+    "Zero error in the ammeter or voltmeter not corrected.",
+    "Parallax error while reading the pointer of a moving-coil meter.",
+    "Resistance of the connecting wires and of loose contacts included in the measurement.",
+    "The voltmeter draws a small current, so the ammeter reads slightly more than the current in the wire."
+  ],
+  "viva": [
+    { "question": "State Ohm's law and its condition of validity.", "expectedConcept": "The current through a conductor is directly proportional to the potential difference across it, provided physical conditions such as temperature remain constant.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "V = IR with the constant-temperature condition.", "commonMisconception": "Stating V = IR without the condition on temperature." },
+    { "question": "Why is the ammeter connected in series and the voltmeter in parallel?", "expectedConcept": "An ammeter has very low resistance and must carry the whole current, so it goes in series; a voltmeter has very high resistance and must not divert current, so it goes across the component in parallel.", "difficulty": "easy", "bloom": "Understand", "answerLogic": "Resistance of the meters.", "commonMisconception": "Reversing the two, which short-circuits the wire or chokes the current." },
+    { "question": "What is resistivity? On what factors does it depend?", "expectedConcept": "Resistivity is the resistance of a conductor of unit length and unit area of cross-section. It depends on the nature of the material and its temperature, but not on the length or thickness of the specimen.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "ρ = RA/L.", "commonMisconception": "Saying resistivity depends on the length or area of the wire." },
+    { "question": "What does the slope of the V-I graph give?", "expectedConcept": "The slope of the potential difference versus current graph is the resistance of the wire in ohm.", "difficulty": "easy", "bloom": "Apply", "answerLogic": "V = IR.", "commonMisconception": "Taking the slope of the I-V graph as R instead of 1/R." },
+    { "question": "Why is constantan or nichrome used rather than copper for this experiment?", "expectedConcept": "They have a much higher resistivity and a very low temperature coefficient of resistance, so they give a measurable p.d. and their resistance hardly changes on heating.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "High ρ, low α.", "commonMisconception": "Thinking copper is avoided only because it is expensive." },
+    { "question": "Why should the key be taken out between readings?", "expectedConcept": "To prevent the wire from heating. A rise in temperature increases the resistance and the V-I graph would no longer be a straight line.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "Temperature dependence of resistance.", "commonMisconception": "Saying it is only to save the battery." },
+    { "question": "What is the effect on resistance if the wire is stretched to twice its length?", "expectedConcept": "The length doubles and the area halves, so the resistance becomes four times the original value; the resistivity is unchanged.", "difficulty": "hard", "bloom": "Apply", "answerLogic": "Volume constant: R ∝ L²." , "commonMisconception": "Saying the resistance simply doubles." },
+    { "question": "Two wires of the same material have different diameters. Do they have the same resistance? The same resistivity?", "expectedConcept": "Their resistances differ because R depends on the area of cross-section, but their resistivities are equal since it is the same material at the same temperature.", "difficulty": "medium", "bloom": "Evaluate", "answerLogic": "R geometry dependent, ρ material property.", "commonMisconception": "Assuming a thicker wire has a smaller resistivity." },
+    { "question": "Why must the V-I graph pass through the origin?", "expectedConcept": "When no current flows there can be no potential difference across a pure resistance, so the line must start at the origin. An intercept indicates a zero error or a thermo-emf.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "V = 0 when I = 0.", "commonMisconception": "Accepting a visible intercept as normal." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "An ammeter must be connected:", "options": ["In parallel with the component", "In series with the component", "Across the battery", "Anywhere in the circuit"], "answer": 1, "feedback": "An ammeter has almost no resistance and must carry the full current, so it goes in series." },
+      { "id": "pre2", "type": "mcq", "question": "The resistivity of a wire depends on:", "options": ["Its length", "Its area of cross-section", "The material and temperature", "The current through it"], "answer": 2, "feedback": "Resistivity is a property of the material at a given temperature, independent of the dimensions of the specimen." },
+      { "id": "pre3", "type": "mcq", "question": "The instrument used to measure the diameter of the wire is:", "options": ["Metre scale", "Screw gauge", "Spherometer", "Voltmeter"], "answer": 1, "feedback": "A screw gauge with least count 0.001 cm is needed for a wire less than a millimetre thick." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Connect the ammeter in series and the voltmeter in parallel.", "check": "wiringCorrect" },
+      { "id": "dur2", "type": "task", "question": "Record at least five sets of readings at different rheostat settings.", "check": "rows>=5" },
+      { "id": "dur3", "type": "task", "question": "Check that your V/I ratio stays nearly constant.", "check": "ratioStable" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the resistance of the wire obtained from your graph (Ω).", "answer": 3.9, "tolerance": 0.6, "feedback": "For a 100 cm constantan wire of diameter 0.4 mm, R is about 3.9 Ω." },
+      { "id": "post2", "type": "mcq", "question": "Your V-I graph is a straight line through the origin. This verifies:", "options": ["Joule's law", "Ohm's law", "Kirchhoff's law", "Faraday's law"], "answer": 1, "feedback": "Direct proportionality between V and I is exactly Ohm's law." },
+      { "id": "post3", "type": "mcq", "question": "If you halve the length of the wire, the resistivity you calculate should:", "options": ["Halve", "Double", "Stay the same", "Become four times"], "answer": 2, "feedback": "Resistance halves, but ρ = RA/L is unchanged because it is a property of the material." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "V = IR; R = slope of V-I; ρ = RπD²/(4L)",
+    "assumptions": ["Wire is ohmic over the range used", "Temperature constant unless heating is enabled", "Ammeter resistance negligible, voltmeter resistance very large", "Contact and lead resistance neglected"],
+    "validRange": "V 0-6 V, I 0-1.5 A, L 20-150 cm, D 0.20-1.00 mm",
+    "unitSystem": "SI; L in cm and D in mm on the bench, converted to m for ρ",
+    "edgeCases": [
+      "I = 0 must give V = 0",
+      "Ammeter in parallel short-circuits the wire — blocked with explanation",
+      "Voltmeter in series chokes the current to nearly zero — blocked with explanation",
+      "High current heats the wire and curves the graph"
+    ],
+    "expectedBehaviour": [
+      "V directly proportional to I at constant temperature",
+      "R doubles when the length doubles; R quarters when the diameter doubles",
+      "ρ unchanged by geometry, recovered within 5%"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

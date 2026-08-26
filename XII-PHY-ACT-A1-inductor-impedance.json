@@ -1,0 +1,559 @@
+{
+  "id": "XII-PHY-ACT-A1",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 1,
+    "kind": "activity",
+    "unit": "Unit IV: Electromagnetic Induction and Alternating Currents",
+    "chapter": "Chapter-7: Alternating Current",
+    "topic": "Alternating currents, peak and RMS value of alternating current/voltage; reactance and impedance; LC oscillations (qualitative treatment only), LCR series circuit (phasors only), resonance, power in AC circuits, power factor, wattless current",
+    "subtopic": "Inductive reactance X_L = 2πfL; impedance of a coil Z = √(R² + X_L²); the effect of an iron core on inductance",
+    "practical": "To measure the resistance and impedance of an inductor with or without iron core.",
+    "learningObjectives": [
+      "Be able to measure the resistance of an inductor by passing a steady direct current through it",
+      "Be able to measure its impedance by passing an alternating current of known frequency",
+      "Be able to separate the inductive reactance from the resistance and hence find the inductance",
+      "Be able to observe how inserting an iron core changes the impedance but not the resistance"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Activity 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Resistance and impedance of an inductor, with and without an iron core",
+  "shortTitle": "Inductor impedance",
+  "objective": [
+    "To measure the resistance of an inductor by passing a steady direct current through it.",
+    "To measure its impedance by passing an alternating current of known frequency.",
+    "To separate the inductive reactance from the resistance and hence find the inductance.",
+    "To observe how inserting an iron core changes the impedance but not the resistance."
+  ],
+  "theory": {
+    "statement": "A coil of wire opposes a direct current only by the resistance of the copper it is wound from. Faced with an alternating current it opposes far more strongly, because the continually changing current induces a back-emf in the coil itself. The extra opposition is the inductive reactance, and it grows with both the frequency and the inductance. Measuring the same coil twice, once on DC and once on AC, separates the two effects and yields the inductance.",
+    "derivationNote": "On a steady direct current dI/dt is zero, so no emf is induced anywhere in the coil and it behaves as a plain length of wire: R = V_dc/I_dc gives the resistance of the winding and nothing else. On an alternating current of frequency f the coil develops a back-emf of magnitude L·dI/dt, which for a sinusoidal current amounts to an opposition of X_L = 2πfL ohm. This reactance and the resistance do not simply add, because the voltage across a pure inductance leads the current by a quarter of a cycle while the voltage across a resistance is in step with it. Represented as phasors they lie at right angles, so they combine as the two sides of a right-angled triangle whose hypotenuse is the impedance: Z = √(R² + X_L²), where Z = V_ac/I_ac. Rearranging, X_L = √(Z² − R²), and the inductance follows as L = X_L/2πf. Subtracting R from Z arithmetically instead of in quadrature is the standard error and always gives too small a value of L. Sliding an iron core into the coil raises the flux linkage for the same current and so multiplies the inductance; the resistance of the copper is untouched, which is why the DC reading does not move.",
+    "keyEquations": [
+      "On DC: R = V_dc / I_dc, since a steady current induces no back-emf",
+      "On AC: Z = V_ac / I_ac",
+      "X_L = 2πfL, the inductive reactance in ohm",
+      "Z = √(R² + X_L²), because R and X_L are in quadrature",
+      "X_L = √(Z² − R²) and hence L = X_L / 2πf"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Inductor coil",
+      "spec": "air-cored solenoid, 400 to 1600 turns",
+      "why": "The component under test; more turns give more inductance and more wire resistance"
+    },
+    {
+      "name": "Iron core",
+      "spec": "soft iron rod and a laminated closed core",
+      "why": "Raises the inductance by increasing the flux linkage; laminations suppress eddy currents"
+    },
+    {
+      "name": "DC supply",
+      "spec": "regulated, 0 to 12 V",
+      "why": "Gives a steady current so that only the resistance limits it"
+    },
+    {
+      "name": "AC supply",
+      "spec": "low voltage, known frequency",
+      "why": "Gives a changing current so that the reactance appears"
+    },
+    {
+      "name": "Ammeter",
+      "spec": "AC/DC, least count 0.002 to 0.01 A",
+      "why": "Measures the current in each case"
+    },
+    {
+      "name": "Voltmeter",
+      "spec": "AC/DC, least count 0.1 V",
+      "why": "Measures the voltage applied across the coil"
+    },
+    {
+      "name": "Rheostat and key",
+      "spec": "",
+      "why": "Sets the working current and isolates the circuit between readings"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "coil",
+      "label": "Inductor",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "medium",
+      "options": [
+        "small",
+        "medium",
+        "large"
+      ]
+    },
+    {
+      "id": "core",
+      "label": "Core",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "air",
+      "options": [
+        "air",
+        "rod",
+        "laminated"
+      ]
+    },
+    {
+      "id": "supply",
+      "label": "Supply",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "dc",
+      "options": [
+        "dc",
+        "ac"
+      ]
+    },
+    {
+      "id": "ammeter",
+      "label": "Ammeter",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "a5",
+      "options": [
+        "a10",
+        "a5",
+        "a2"
+      ]
+    },
+    {
+      "id": "voltageV",
+      "label": "Supply voltage",
+      "symbol": "V",
+      "unit": "V",
+      "type": "independent",
+      "min": 0,
+      "max": 12,
+      "step": 0.5,
+      "default": 6
+    },
+    {
+      "id": "frequencyHz",
+      "label": "AC frequency",
+      "symbol": "f",
+      "unit": "Hz",
+      "type": "control",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "default": 50
+    },
+    {
+      "id": "inductance",
+      "label": "Inductance",
+      "symbol": "L",
+      "unit": "H",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Connect the coil in series with the ammeter, the key and the DC supply, with the voltmeter across the coil.",
+      "checkpoint": true,
+      "expects": "supply"
+    },
+    {
+      "step": 2,
+      "text": "Set a few volts, close the key and wait for the ammeter to settle. The coil opposes any change of current, so the needle takes a moment to come to rest."
+    },
+    {
+      "step": 3,
+      "text": "Record the voltage and the current. Their ratio is the resistance R of the winding, because a steady current induces no back-emf.",
+      "checkpoint": true
+    },
+    {
+      "step": 4,
+      "text": "Now change over to the AC supply at the same voltage, leaving everything else as it was.",
+      "checkpoint": true,
+      "expects": "supply"
+    },
+    {
+      "step": 5,
+      "text": "Record the voltage and current again. This ratio is the impedance Z, which will be markedly larger."
+    },
+    {
+      "step": 6,
+      "text": "Slide the iron core into the coil and repeat both readings. Note that the DC reading is unchanged while the AC current falls sharply."
+    },
+    {
+      "step": 7,
+      "text": "Calculate X_L = √(Z² − R²) and then L = X_L / 2πf. Do not subtract R from Z directly."
+    }
+  ],
+  "simulation": {
+    "model": "inductor-impedance",
+    "renderer": "inductor-impedance",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "voltageV",
+        "widget": "slider"
+      },
+      {
+        "var": "frequencyHz",
+        "widget": "slider"
+      },
+      {
+        "var": "supply",
+        "widget": "segmented",
+        "options": [
+          "dc",
+          "ac"
+        ]
+      },
+      {
+        "var": "core",
+        "widget": "segmented",
+        "options": [
+          "air",
+          "rod",
+          "laminated"
+        ]
+      },
+      {
+        "var": "coil",
+        "widget": "segmented",
+        "options": [
+          "small",
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "var": "ammeter",
+        "widget": "segmented",
+        "options": [
+          "a10",
+          "a5",
+          "a2"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record reading",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Reading",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "supply",
+        "label": "Supply",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "core",
+        "label": "Core",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "voltageV",
+        "label": "Voltage V",
+        "unit": "V",
+        "decimals": 2
+      },
+      {
+        "key": "currentA",
+        "label": "Current I",
+        "unit": "A",
+        "decimals": 3
+      },
+      {
+        "key": "oppositionOhm",
+        "label": "V / I",
+        "unit": "Ω",
+        "decimals": 2
+      }
+    ],
+    "graph": {
+      "x": "currentA",
+      "y": "voltageV",
+      "xLabel": "Current I (A)",
+      "yLabel": "Voltage V (V)",
+      "throughOrigin": true
+    },
+    "minRows": 2
+  },
+  "calculations": {
+    "steps": [
+      "From the DC readings, R = V_dc / I_dc — the resistance of the winding alone",
+      "From the AC readings, Z = V_ac / I_ac — the impedance of the coil",
+      "Subtract in quadrature: X_L = √(Z² − R²)",
+      "Find the inductance from L = X_L / 2πf",
+      "Repeat with the iron core in place and compare the two values of L"
+    ],
+    "resultKeys": [
+      "resistance",
+      "impedance",
+      "reactance",
+      "inductance"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Inductance of the coil",
+    "symbol": "L",
+    "value": 0.085,
+    "tolerance": 0.02,
+    "unit": "H",
+    "secondary": {
+      "quantity": "Resistance of the winding",
+      "value": 8.6,
+      "tolerance": 1,
+      "unit": "Ω"
+    },
+    "statement": "The DC reading gives the resistance of the winding, about 8.6 Ω for the 800-turn coil. On AC at 50 Hz the same coil shows an impedance of about 28 Ω, and subtracting in quadrature leaves a reactance of about 26.5 Ω, so L is about 0.085 H. Inserting the laminated core raises the impedance roughly nine-fold while the DC resistance stays exactly where it was."
+  },
+  "safety": [
+    "Switch off and discharge the circuit before changing any connection.",
+    "A coil carrying a steady direct current is limited only by its own low resistance, so start at a low voltage and raise it gradually while watching the ammeter.",
+    "Do not exceed the current rating of the ammeter; a coil across a supply can draw several amperes.",
+    "The winding warms in use. Let it cool between readings, and do not leave the key closed longer than a reading needs.",
+    "Handle the laminated core carefully: its edges are sharp and it can pinch fingers as it is drawn into the coil."
+  ],
+  "sourcesOfError": [
+    "The winding warms as the current flows, and the resistance of copper rises with temperature, so R drifts upward during a long run.",
+    "The ammeter and voltmeter are not ideal; at low currents the voltmeter draws a noticeable fraction of the current.",
+    "Reading the meter before the current has settled gives a value that is too low, because the coil opposes the rise of current.",
+    "The stated frequency of the AC supply may be a nominal value rather than a measured one, and L depends directly on it.",
+    "Iron cores are lossy: eddy currents and hysteresis add an apparent resistance on AC that is not present on DC.",
+    "Subtracting R from Z arithmetically rather than in quadrature is a systematic mistake that always makes L too small."
+  ],
+  "viva": [
+    {
+      "question": "Why does the coil pass a much larger current on DC than on AC at the same voltage?",
+      "expectedConcept": "On DC the current is steady, so dI/dt is zero and no back-emf is induced. The only opposition is the resistance of the copper, which is a few ohm. On AC the current changes continually, the coil induces a back-emf against that change, and the total opposition is the impedance, which is far larger.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "No changing current means no back-emf, so only R opposes.",
+      "commonMisconception": "Believing the coil has a different resistance on AC and on DC."
+    },
+    {
+      "question": "Why is X_L found from √(Z² − R²) and not from Z − R?",
+      "expectedConcept": "Because the voltage across a pure inductance leads the current by 90° while the voltage across a resistance is in phase with it. As phasors, R and X_L are at right angles, so they combine as the perpendicular sides of a right-angled triangle whose hypotenuse is Z. Quantities at right angles add in quadrature, not arithmetically.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "R and X_L are perpendicular phasors.",
+      "commonMisconception": "Treating the impedance as the plain sum of resistance and reactance."
+    },
+    {
+      "question": "What happens to the DC reading when the iron core is inserted, and why?",
+      "expectedConcept": "Nothing at all. The core raises the inductance by increasing the flux linked for a given current, but inductance opposes only a CHANGE of current. A steady direct current is not changing, so there is no back-emf and the coil is just a length of copper wire whose resistance the core does not affect.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "The core acts on changing flux; DC has none.",
+      "commonMisconception": "Expecting the core to change the DC resistance because it changes the coil."
+    },
+    {
+      "question": "How does the inductive reactance depend on frequency?",
+      "expectedConcept": "It is directly proportional: X_L = 2πfL. Doubling the frequency doubles the reactance, because the current changes twice as fast and so induces twice the back-emf. This is why an inductor passes low frequencies readily and blocks high ones, and is used as a choke.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "X_L = 2πfL, a straight proportionality.",
+      "commonMisconception": "Thinking reactance depends on frequency inversely, as a capacitor’s does."
+    },
+    {
+      "question": "Why is the core laminated rather than solid?",
+      "expectedConcept": "A changing magnetic flux induces circulating eddy currents in any conducting core. In a solid block those currents are large and dissipate energy as heat. Laminating the core into thin sheets insulated from one another breaks the paths available to the eddy currents, so the loss is much reduced while the magnetic properties are retained.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Laminations interrupt eddy-current paths.",
+      "commonMisconception": "Thinking laminations are only for ease of manufacture."
+    },
+    {
+      "question": "Why does a straight iron rod raise the inductance far less than a closed laminated core?",
+      "expectedConcept": "Because the magnetic circuit still has to close through the air outside the coil. The long air return path has a high reluctance which dominates the total, so the effective permeability is only a few times that of air. A closed core keeps the whole flux path in iron and achieves a much larger multiplication.",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "The air return path dominates the reluctance.",
+      "commonMisconception": "Expecting the intrinsic μ_r of iron, in the thousands, to apply to an open rod."
+    },
+    {
+      "question": "What is the phase angle between the applied voltage and the current in this coil?",
+      "expectedConcept": "It is φ = tan⁻¹(X_L/R), lying between 0 and 90°. For a coil with X_L much larger than R the angle approaches 90° and the current lags the voltage by nearly a quarter of a cycle. A pure resistance would give 0° and a pure inductance exactly 90°.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "tan φ = X_L / R.",
+      "commonMisconception": "Assuming the phase difference is always exactly 90° for any coil."
+    },
+    {
+      "question": "Why must the ammeter reading be taken only after the needle has settled?",
+      "expectedConcept": "Because the coil opposes any change in the current through it, so when the key is closed the current rises towards its final value over a time of order L/R rather than instantly. A reading taken during that rise is lower than the steady value and gives too large a value of Z.",
+      "difficulty": "easy",
+      "bloom": "Apply",
+      "answerLogic": "The current rises with time constant L/R.",
+      "commonMisconception": "Assuming the current reaches its final value the moment the key is closed."
+    },
+    {
+      "question": "If a student swapped the DC and AC rows in the table, what would go wrong?",
+      "expectedConcept": "The derivation would find the \"AC\" ratio smaller than the \"DC\" ratio. Since Z must exceed R for any real inductor, Z² − R² would be negative and the reactance imaginary. The calculation cannot proceed, which is itself the clue that the readings have been mislabelled.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Z must always exceed R.",
+      "commonMisconception": "Taking the square root of a negative number and reporting the magnitude."
+    },
+    {
+      "question": "Would this method work for a coil of negligible resistance?",
+      "expectedConcept": "It would, and it would be simpler: with R near zero the impedance is essentially the reactance itself, so L follows directly from Z/2πf. Real coils always have some resistance, though, because they are wound from wire of finite conductivity, so the two-supply method is needed in practice.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "With R ≈ 0, Z ≈ X_L.",
+      "commonMisconception": "Believing the DC measurement is unnecessary for every coil."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "A steady direct current flows through an inductor. The back-emf induced in it is:",
+        "options": [
+          "Equal to the applied voltage",
+          "Zero",
+          "Larger than on AC",
+          "Equal to IR"
+        ],
+        "answer": 1,
+        "feedback": "A steady current means dI/dt = 0, so no emf is induced."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The inductive reactance of a coil is given by:",
+        "options": [
+          "2πfL",
+          "L / 2πf",
+          "1 / 2πfL",
+          "2πf / L"
+        ],
+        "answer": 0,
+        "feedback": "X_L = 2πfL, rising in direct proportion to the frequency."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "For a coil of resistance R and reactance X_L, the impedance is:",
+        "options": [
+          "R + X_L",
+          "√(R² + X_L²)",
+          "√(X_L² − R²)",
+          "R · X_L"
+        ],
+        "answer": 1,
+        "feedback": "R and X_L are in quadrature, so they combine as the sides of a right-angled triangle."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Take at least one reading on DC and one on AC.",
+        "check": "rows>=2"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Wait for the ammeter to settle before recording each reading.",
+        "check": "settled"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the resistance of the winding you found from the DC reading, in Ω.",
+        "answer": 8.6,
+        "tolerance": 1.5,
+        "feedback": "About 8.6 Ω for the 800-turn coil."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "State the inductance of the air-cored coil, in millihenry.",
+        "answer": 85,
+        "tolerance": 20,
+        "feedback": "About 85 mH."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Inserting the iron core changed:",
+        "options": [
+          "Both R and Z",
+          "Only the DC resistance R",
+          "Only the AC impedance Z",
+          "Neither"
+        ],
+        "answer": 2,
+        "feedback": "The core acts on the changing flux, so it raises Z while leaving R untouched."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "On DC: R = V_dc / I_dc, since a steady current induces no back-emf",
+    "assumptions": [
+      "On DC: R = V_dc / I_dc, since a steady current induces no back-emf",
+      "On AC: Z = V_ac / I_ac",
+      "X_L = 2πfL, the inductive reactance in ohm",
+      "Z = √(R² + X_L²), because R and X_L are in quadrature"
+    ],
+    "validRange": "The DC reading gives the resistance of the winding, about 8.6 Ω for the 800-turn",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "The winding warms as the current flows, and the resistance of copper rises with temperature, so R drifts upward during a long run.",
+      "The ammeter and voltmeter are not ideal; at low currents the voltmeter draws a noticeable fraction of the current.",
+      "Reading the meter before the current has settled gives a value that is too low, because the coil opposes the rise of current.",
+      "The stated frequency of the AC supply may be a nominal value rather than a measured one, and L depends directly on it."
+    ],
+    "expectedBehaviour": [
+      "The DC reading gives the resistance of the winding, about 8.6 Ω for the 800-turn coil. On AC at 50 Hz the same coil shows an impedance of about 28 Ω, and subtracting in quadrature leaves a reactance of about 26.5 Ω, so L is about 0.085 H. Inserting the laminated core raises the impedance roughly nine-fold while the DC resistance stays exactly where it was."
+    ],
+    "testFile": "tests/batch11.test.js"
+  }
+}

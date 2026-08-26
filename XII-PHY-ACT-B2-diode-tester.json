@@ -1,0 +1,444 @@
+{
+  "id": "XII-PHY-ACT-B2",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 2,
+    "kind": "activity",
+    "unit": "Unit IX: Electronic Devices",
+    "chapter": "Chapter-14: Semiconductor Electronics",
+    "topic": "Semiconductor diode, forward and reverse bias, LED",
+    "learningObjectives": [
+      "Be able to show with a multimeter that a diode and an LED conduct in one direction only",
+      "Be able to read the forward voltage drop and use it to identify the material of the junction",
+      "Be able to judge whether a given component is working, open or short-circuited"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Activity 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Unidirectional flow in a diode and an LED, and testing working order",
+  "shortTitle": "Testing a diode with a multimeter",
+  "objective": [
+    "To show with a multimeter that a diode and an LED conduct in one direction only.",
+    "To read the forward voltage drop and use it to identify the material of the junction.",
+    "To judge whether a given component is working, open or short-circuited."
+  ],
+  "theory": {
+    "statement": "A p-n junction conducts when it is forward-biased and blocks when it is reverse-biased. A multimeter on its diode range drives a small current through the junction and displays the forward voltage drop, which is about 0.7 V for silicon and about 1.8 to 2.0 V for a light-emitting diode. A healthy junction therefore shows a reading one way and an open-circuit indication the other. There are only two ways it can fail, and they are opposites: an OPEN junction conducts in neither direction, and a SHORTED junction conducts in both, with almost no voltage drop.",
+    "keyEquations": [
+      "Forward bias conducts, reverse bias blocks: this is rectification.",
+      "The forward drop is a property of the material, so it identifies the junction.",
+      "An open fault gives no conduction either way.",
+      "A short fault gives conduction both ways at nearly zero ohms.",
+      "A verdict needs both directions; one reading can never establish a fault."
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Digital multimeter with a diode range",
+      "why": "The diode range supplies enough voltage to forward-bias an LED and reads the forward drop directly."
+    },
+    {
+      "name": "Silicon diodes, good and faulty",
+      "why": "To establish the healthy pattern and then to recognise departures from it."
+    },
+    {
+      "name": "LEDs, good and faulty",
+      "why": "To show that a light-emitting junction has a larger forward drop."
+    },
+    {
+      "name": "Test leads with fine probes",
+      "why": "Component legs are close together; blunt probes short them."
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "component",
+      "label": "Component",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "d1",
+      "options": [
+        "d1",
+        "d2",
+        "d3",
+        "l1",
+        "l2",
+        "l3"
+      ]
+    },
+    {
+      "id": "func",
+      "label": "Meter range",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "diode",
+      "options": [
+        "ohm",
+        "diode"
+      ]
+    },
+    {
+      "id": "polarity",
+      "label": "Connected",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "forward",
+      "options": [
+        "forward",
+        "reverse"
+      ]
+    },
+    {
+      "id": "verdict",
+      "label": "Verdict",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "good",
+      "options": [
+        "good",
+        "open",
+        "short"
+      ]
+    },
+    {
+      "id": "health",
+      "label": "Working order",
+      "symbol": "",
+      "unit": "",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    "Set the meter to its diode-test range.",
+    "Connect a known-good diode with its anode to the positive probe and read the display.",
+    "Reverse it and read again. Note that it conducts one way only.",
+    "Repeat with a good LED and compare the forward drops.",
+    "Now take each remaining component and test it in both directions.",
+    "Decide whether it is working, open or shorted, and record the verdict with both readings."
+  ],
+  "simulation": {
+    "model": "diode-tester",
+    "renderer": "diode-tester",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "component",
+        "label": "Component",
+        "widget": "segmented",
+        "options": [
+          "d1",
+          "d2",
+          "d3",
+          "l1",
+          "l2",
+          "l3"
+        ]
+      },
+      {
+        "var": "func",
+        "label": "Meter range",
+        "widget": "segmented",
+        "options": [
+          "ohm",
+          "diode"
+        ]
+      },
+      {
+        "var": "polarity",
+        "label": "Connected",
+        "widget": "segmented",
+        "options": [
+          "forward",
+          "reverse"
+        ]
+      },
+      {
+        "var": "verdict",
+        "label": "Verdict",
+        "widget": "segmented",
+        "options": [
+          "good",
+          "open",
+          "short"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record verdict",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Reading",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "component",
+        "label": "Component"
+      },
+      {
+        "key": "forward",
+        "label": "Forward"
+      },
+      {
+        "key": "reverse",
+        "label": "Reverse"
+      },
+      {
+        "key": "unidirectional",
+        "label": "One-way flow"
+      },
+      {
+        "key": "verdict",
+        "label": "Verdict"
+      },
+      {
+        "key": "correct",
+        "label": "Correct"
+      }
+    ],
+    "graph": null,
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "For each component, compare the forward and reverse readings.",
+      "Reading one way, open the other → the junction is healthy.",
+      "Open both ways → the junction is open-circuit.",
+      "Conducting both ways at a very low value → the junction is shorted."
+    ],
+    "resultKeys": [
+      "accuracyPct",
+      "faultsFound"
+    ]
+  },
+  "expectedResult": {
+    "statement": "A healthy diode reads about 0.7 V forward and open reverse; a healthy LED reads about 1.8 to 2.0 V forward and open reverse. Both therefore show unidirectional flow. A faulty component departs from this in one of exactly two ways: open in both directions, or conducting in both directions at nearly zero volts. Recognising which of the two has occurred is the object of the second half of the activity.",
+    "value": null,
+    "unit": null,
+    "tolerancePct": null
+  },
+  "safety": [
+    "Test components out of circuit. In circuit, a parallel path can make a good component look shorted.",
+    "Never use the diode range on a live circuit; the meter supplies its own voltage and the reading is meaningless.",
+    "Do not exceed the current rating of an LED when testing it outside the meter."
+  ],
+  "sourcesOfError": [
+    "Testing in one direction only, which cannot establish either one-way flow or a fault.",
+    "Using the ohms range on an LED, where the meter may not supply enough voltage to make it conduct.",
+    "Testing in circuit, where a parallel component provides another path.",
+    "Confusing an open junction with a capacitor, since both read open.",
+    "Holding both probes and the component legs, so body resistance shunts the reading."
+  ],
+  "viva": [
+    {
+      "question": "What does unidirectional flow mean for a diode?",
+      "expectedConcept": "It conducts when forward-biased and blocks when reverse-biased.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "It conducts when forward-biased and blocks when reverse-biased.",
+      "commonMisconception": "That a diode resists current in one direction but still passes some."
+    },
+    {
+      "question": "Why does the diode range show a voltage rather than a resistance?",
+      "expectedConcept": "The forward drop is a property of the junction, whereas an apparent resistance depends on the meter.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "The forward drop is a property of the junction, whereas an apparent resistance depends on the meter.",
+      "commonMisconception": "That the two ranges give equivalent information."
+    },
+    {
+      "question": "A component reads 0.002 V forward and 0.002 V reverse. What is wrong?",
+      "expectedConcept": "The junction is shorted: it conducts both ways with no barrier, so it now behaves as a wire.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "The junction is shorted: it conducts both ways with no barrier, so it now behaves as a wire.",
+      "commonMisconception": "That a low reading always means good conduction and therefore a healthy component."
+    },
+    {
+      "question": "A component reads OL in both directions. What are the possibilities?",
+      "expectedConcept": "An open junction, or a component that is not a junction at all, such as a capacitor.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "An open junction, or a component that is not a junction at all, such as a capacitor.",
+      "commonMisconception": "That OL always means the meter is on the wrong range."
+    },
+    {
+      "question": "Why might a good LED fail to light on the ohms range?",
+      "expectedConcept": "The ohms range supplies too little current and often too little voltage to reach the forward drop.",
+      "difficulty": "hard",
+      "bloom": "Understand",
+      "answerLogic": "The ohms range supplies too little current and often too little voltage to reach the forward drop.",
+      "commonMisconception": "That a dark LED is a dead LED."
+    },
+    {
+      "question": "How does the forward drop tell you the material?",
+      "expectedConcept": "Germanium is about 0.3 V, silicon about 0.7 V, a light-emitting junction 1.8 V or more.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Germanium is about 0.3 V, silicon about 0.7 V, a light-emitting junction 1.8 V or more.",
+      "commonMisconception": "That every diode drops 0.7 V."
+    },
+    {
+      "question": "Why must the component be out of circuit?",
+      "expectedConcept": "Parallel components offer other paths, so the meter measures the network rather than the diode.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Parallel components offer other paths, so the meter measures the network rather than the diode.",
+      "commonMisconception": "That the meter isolates whatever its probes touch."
+    },
+    {
+      "question": "What is the practical use of one-way conduction?",
+      "expectedConcept": "Rectification: converting alternating current to direct current.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Rectification: converting alternating current to direct current.",
+      "commonMisconception": "That diodes are only protective devices."
+    },
+    {
+      "question": "A student declares a diode faulty after one forward reading of OL. What is missing?",
+      "expectedConcept": "The reverse reading, and a check that the component was the right way round in the first place.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "The reverse reading, and a check that the component was the right way round in the first place.",
+      "commonMisconception": "That a single OL proves a fault."
+    },
+    {
+      "question": "Why are open and short the only two failure modes considered here?",
+      "expectedConcept": "A junction either still blocks and conducts as designed, or it has broken open, or it has fused into a conductor.",
+      "difficulty": "hard",
+      "bloom": "Understand",
+      "answerLogic": "A junction either still blocks and conducts as designed, or it has broken open, or it has fused into a conductor.",
+      "commonMisconception": "That components fail in arbitrary partial ways that a meter cannot classify."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "A healthy silicon diode on the diode range reads about:",
+        "options": [
+          "0.0 V forward",
+          "0.7 V forward",
+          "1.8 V forward",
+          "12 V forward"
+        ],
+        "answer": 1,
+        "feedback": "Silicon junctions drop about 0.7 V; germanium about 0.3 V and an LED 1.8 V or more."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "Reverse-biasing a healthy junction gives:",
+        "options": [
+          "The same reading",
+          "A larger reading",
+          "An open-circuit indication",
+          "A negative reading"
+        ],
+        "answer": 2,
+        "feedback": "A healthy junction blocks in reverse, so the meter shows OL."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Show one-way conduction on a known-good component first.",
+        "check": "rows>=1"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Test at least three different components and give a verdict on each.",
+        "check": "rows>=3"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "The forward drop of an LED exceeds that of a silicon diode because:",
+        "options": [
+          "It is larger",
+          "Its band gap is wider",
+          "It carries more current",
+          "It has a lens"
+        ],
+        "answer": 1,
+        "feedback": "The wider gap sets both the larger forward drop and the photon energy."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "Testing a diode in circuit may mislead because:",
+        "options": [
+          "The meter reads too slowly",
+          "A parallel path carries current",
+          "The diode heats up",
+          "The range is wrong"
+        ],
+        "answer": 1,
+        "feedback": "In circuit the meter reads the network, not the diode alone."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Forward bias conducts, reverse bias blocks: this is rectification.",
+    "assumptions": [
+      "Forward bias conducts, reverse bias blocks: this is rectification.",
+      "The forward drop is a property of the material, so it identifies the junction.",
+      "An open fault gives no conduction either way.",
+      "A short fault gives conduction both ways at nearly zero ohms."
+    ],
+    "validRange": "A healthy diode reads about 0.7 V forward and open reverse; a healthy LED reads ",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Testing in one direction only, which cannot establish either one-way flow or a fault.",
+      "Using the ohms range on an LED, where the meter may not supply enough voltage to make it conduct.",
+      "Testing in circuit, where a parallel component provides another path.",
+      "Confusing an open junction with a capacitor, since both read open."
+    ],
+    "expectedBehaviour": [
+      "A healthy diode reads about 0.7 V forward and open reverse; a healthy LED reads about 1.8 to 2.0 V forward and open reverse. Both therefore show unidirectional flow. A faulty component departs from this in one of exactly two ways: open in both directions, or conducting in both directions at nearly zero volts. Recognising which of the two has occurred is the object of the second half of the activity."
+    ],
+    "testFile": "tests/batch14.test.js"
+  }
+}

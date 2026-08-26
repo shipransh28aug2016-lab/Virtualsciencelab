@@ -1,0 +1,590 @@
+{
+  "id": "XI-CHE-B03",
+  "class": "XI",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "B",
+    "categoryTitle": "Characterization and Purification of Chemical Substances",
+    "assessmentComponent": "Content Based Experiment (06 marks)",
+    "serial": 3,
+    "unit": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques",
+    "chapter": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques",
+    "topic": "General introduction, methods of purification, qualitative and quantitative analysis, classification and IUPAC nomenclature of organic compounds",
+    "subtopic": "Crystallisation as a method of purification; choice of solvent; the minimum volume principle; yield against purity",
+    "practical": "Crystallization of impure sample of any one of the following: Alum, Copper Sulphate, Benzoic Acid.",
+    "learningObjectives": [
+      "Be able to purify an impure sample of alum, copper sulphate or benzoic acid by crystallisation",
+      "Be able to obtain well formed crystals and calculate the percentage recovery",
+      "Be able to judge the success of the purification from the melting point of the product"
+    ],
+    "competencies": [
+      "Performing a standard laboratory operation and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, CATEGORY B, Experiment 3 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Crystallisation of an impure sample",
+  "shortTitle": "Crystallisation",
+  "objective": [
+    "To purify an impure sample of alum, copper sulphate or benzoic acid by crystallisation.",
+    "To obtain well formed crystals and calculate the percentage recovery.",
+    "To judge the success of the purification from the melting point of the product."
+  ],
+  "theory": {
+    "statement": "Crystallisation purifies a solid because solubility depends on temperature, and it does so differently for the compound and for the impurities mixed with it. The compound is dissolved in the minimum volume of hot solvent, the hot solution is filtered, and it is then cooled slowly. The compound comes out as crystals; the impurities stay behind in the mother liquor.",
+    "derivationNote": "The key is that there is far more of the compound than of the impurity. On cooling, the solution becomes supersaturated with respect to the compound, which therefore crystallises out; but the impurity was present in such small amount that even the cold liquor is nowhere near saturated with it, so it simply stays dissolved and is thrown away with the mother liquor. Two quantities matter and they pull against each other. The YIELD is limited by whatever remains dissolved in the cold liquor, and that mass is proportional to the volume of solvent used. This is why the compound must be dissolved in the MINIMUM volume of hot solvent: every extra millilitre is more product discarded. The PURITY is limited by how fast the solution cools. Crystals grown slowly are large and well formed and reject impurity from the lattice as they grow; a solution crashed out in ice gives a fine powder whose mass traps mother liquor between the particles and carries the impurity down with it. So a high yield of impure solid and a smaller yield of pure crystals are the two ends of a genuine trade-off, and the melting point of the product is what decides whether the recrystallisation succeeded.",
+    "keyEquations": [
+      "Mass left in the mother liquor = solubility at the cold temperature × volume of solvent",
+      "Yield = mass dissolved − mass left in the mother liquor",
+      "Percentage recovery = (mass of crystals ÷ mass of pure compound taken) × 100",
+      "Slow cooling gives large crystals of high purity; rapid cooling gives fine impure powder"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Beaker and glass rod",
+      "spec": "250 mL",
+      "why": "Dissolves the sample in hot solvent, with stirring"
+    },
+    {
+      "name": "Wire gauze, tripod and burner",
+      "spec": "",
+      "why": "Heats the solution to near boiling to dissolve the sample"
+    },
+    {
+      "name": "Funnel and fluted filter paper",
+      "spec": "kept hot",
+      "why": "Removes insoluble dirt while the solution is still hot, before anything crystallises"
+    },
+    {
+      "name": "Crystallising dish",
+      "spec": "shallow",
+      "why": "Lets the filtrate cool slowly and undisturbed so large crystals can grow"
+    },
+    {
+      "name": "Buchner funnel and filter pump",
+      "spec": "",
+      "why": "Separates the crystals from the mother liquor and sucks them dry"
+    },
+    {
+      "name": "Balance",
+      "spec": "least count 0.01 g",
+      "why": "Weighs the crude sample and the dry product, which gives the percentage recovery"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "compound",
+      "label": "Compound",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "copperSulphate",
+      "options": [
+        "alum",
+        "copperSulphate",
+        "benzoic"
+      ]
+    },
+    {
+      "id": "crude",
+      "label": "Crude sample",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "moderate",
+      "options": [
+        "light",
+        "moderate",
+        "heavy"
+      ]
+    },
+    {
+      "id": "cooling",
+      "label": "Cooling",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "slow",
+      "options": [
+        "slow",
+        "bench",
+        "ice"
+      ]
+    },
+    {
+      "id": "filtration",
+      "label": "Hot filtration",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "hot",
+      "options": [
+        "hot",
+        "none"
+      ]
+    },
+    {
+      "id": "massG",
+      "label": "Mass of crude sample",
+      "symbol": "",
+      "unit": "g",
+      "type": "control",
+      "min": 3,
+      "max": 15,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "id": "solventMl",
+      "label": "Volume of solvent",
+      "symbol": "",
+      "unit": "mL",
+      "type": "independent",
+      "min": 10,
+      "max": 150,
+      "step": 2,
+      "default": 14
+    },
+    {
+      "id": "crystallisationTempC",
+      "label": "Crystallising temperature",
+      "symbol": "",
+      "unit": "°C",
+      "type": "independent",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "default": 20
+    },
+    {
+      "id": "recovery",
+      "label": "Percentage recovery",
+      "symbol": "",
+      "unit": "%",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Weigh the crude sample accurately and transfer it to a beaker.",
+      "checkpoint": true,
+      "expects": "massG"
+    },
+    {
+      "step": 2,
+      "text": "Add the solvent a little at a time, warming and stirring, until just enough has been added to dissolve it all.",
+      "checkpoint": true,
+      "expects": "solventMl"
+    },
+    {
+      "step": 3,
+      "text": "Bring the solution almost to the boil to be sure everything is in solution.",
+      "checkpoint": false
+    },
+    {
+      "step": 4,
+      "text": "Filter the HOT solution through a fluted paper to remove insoluble matter.",
+      "checkpoint": true,
+      "expects": "filtration"
+    },
+    {
+      "step": 5,
+      "text": "Cover the filtrate and let it cool slowly and undisturbed so crystals grow.",
+      "checkpoint": true,
+      "expects": "cooling"
+    },
+    {
+      "step": 6,
+      "text": "Filter off the crystals, wash with a little COLD solvent and dry them between filter papers.",
+      "checkpoint": false
+    },
+    {
+      "step": 7,
+      "text": "Weigh the dry crystals and calculate the percentage recovery. Record the result.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 8,
+      "text": "Determine the melting point of the product and compare it with that of the crude sample.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "crystallisation",
+    "renderer": "crystallisation",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "massG",
+        "widget": "slider"
+      },
+      {
+        "var": "solventMl",
+        "widget": "slider"
+      },
+      {
+        "var": "crystallisationTempC",
+        "widget": "slider"
+      },
+      {
+        "var": "compound",
+        "widget": "segmented",
+        "options": [
+          "alum",
+          "copperSulphate",
+          "benzoic"
+        ]
+      },
+      {
+        "var": "crude",
+        "widget": "segmented",
+        "options": [
+          "light",
+          "moderate",
+          "heavy"
+        ]
+      },
+      {
+        "var": "cooling",
+        "widget": "segmented",
+        "options": [
+          "slow",
+          "bench",
+          "ice"
+        ]
+      },
+      {
+        "var": "filtration",
+        "widget": "segmented",
+        "options": [
+          "hot",
+          "none"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Weigh the crystals",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "compound",
+        "label": "Compound",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "crudeMassG",
+        "label": "Crude taken",
+        "unit": "g",
+        "decimals": 2
+      },
+      {
+        "key": "solventMl",
+        "label": "Solvent",
+        "unit": "mL",
+        "decimals": 0
+      },
+      {
+        "key": "crystalMassG",
+        "label": "Crystals",
+        "unit": "g",
+        "decimals": 2
+      },
+      {
+        "key": "recoveryPct",
+        "label": "Recovery",
+        "unit": "%",
+        "decimals": 1
+      },
+      {
+        "key": "meltingPointC",
+        "label": "M.p. of product",
+        "unit": "°C",
+        "decimals": 1
+      }
+    ],
+    "graph": {
+      "x": "solventMl",
+      "y": "recoveryPct",
+      "xLabel": "Volume of solvent (mL)",
+      "yLabel": "Recovery (%)",
+      "throughOrigin": false
+    },
+    "minRows": 2
+  },
+  "calculations": {
+    "steps": [
+      "Mass of pure compound in the crude sample = mass taken × (100 − impurity %) ÷ 100",
+      "Mass left dissolved = solubility at the cold temperature × volume of solvent ÷ 100",
+      "Yield = mass dissolved − mass left in the mother liquor",
+      "Percentage recovery = (mass of crystals ÷ mass of pure compound) × 100",
+      "Judge the purity from the melting point of the dried product"
+    ],
+    "resultKeys": [
+      "recovery",
+      "crystalMass",
+      "meltingPoint"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Percentage recovery from the minimum volume of hot solvent",
+    "symbol": "",
+    "value": 60,
+    "tolerance": 15,
+    "unit": "%",
+    "secondary": {
+      "quantity": "Melting point of the purified product",
+      "value": 110,
+      "tolerance": 3,
+      "unit": "°C"
+    },
+    "statement": "Dissolving in the minimum volume of hot solvent and cooling slowly gives large, well formed crystals with a recovery of about 60 per cent. The product melts close to the accepted value, showing the impurity has been left behind in the mother liquor. Using more solvent raises the loss; crash-cooling raises the yield but lowers the purity."
+  },
+  "safety": [
+    "Hot saturated solutions scald badly and are worse than boiling water because they crystallise on the skin.",
+    "Handle the hot beaker with tongs or a cloth, never with bare hands.",
+    "Copper sulphate is harmful if swallowed and is toxic to aquatic life; do not pour it down the sink.",
+    "Filter hot solutions with care: a funnel that blocks can overflow suddenly.",
+    "Wear eye protection throughout, especially while filtering hot liquid."
+  ],
+  "sourcesOfError": [
+    "Using more solvent than the minimum, so much of the product stays dissolved and is lost.",
+    "Cooling too quickly, giving fine crystals that trap mother liquor and remain impure.",
+    "Failing to filter the hot solution, so insoluble dirt is collected with the crystals.",
+    "Washing the crystals with warm rather than cold solvent, dissolving away part of the yield.",
+    "Incomplete drying, so the weighed mass includes retained solvent.",
+    "Loss of crystals on the filter paper and the sides of the beaker during transfer."
+  ],
+  "viva": [
+    {
+      "question": "On what property does crystallisation as a method of purification depend?",
+      "expectedConcept": "On the difference in solubility with temperature. The compound must be much more soluble hot than cold, so that it crystallises out on cooling, while the impurities remain dissolved because there was never enough of them to saturate the liquor.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Solubility varies with temperature.",
+      "commonMisconception": "Thinking the impurity must be insoluble."
+    },
+    {
+      "question": "Why must the compound be dissolved in the MINIMUM volume of hot solvent?",
+      "expectedConcept": "Because the mass that stays dissolved in the cold mother liquor is proportional to its volume. Every extra millilitre of solvent holds more product in solution when cold, and that product is thrown away with the liquor. The minimum volume gives the maximum yield.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Excess solvent means product lost in the liquor.",
+      "commonMisconception": "Thinking more solvent simply takes longer to crystallise."
+    },
+    {
+      "question": "Why is the hot solution filtered before it is allowed to cool?",
+      "expectedConcept": "To remove insoluble dirt while everything soluble is still in solution. If the solution were cooled first, the crystals and the dirt would come out together and could not be separated. Filtering hot also prevents the compound crystallising in the funnel.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Remove insoluble matter before anything crystallises.",
+      "commonMisconception": "Believing hot filtration is only to make filtering faster."
+    },
+    {
+      "question": "Why does slow cooling give purer crystals than rapid cooling?",
+      "expectedConcept": "Crystals that grow slowly have time to arrange themselves into a regular lattice and reject foreign molecules as they grow. Rapid cooling gives a shower of tiny crystals that trap mother liquor between and within them, so the impurity is carried down with the product.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Slow growth rejects impurity from the lattice.",
+      "commonMisconception": "Assuming faster crystallisation is simply more efficient."
+    },
+    {
+      "question": "What properties should a good solvent for crystallisation have?",
+      "expectedConcept": "It should dissolve the compound freely when hot and only sparingly when cold, dissolve the impurities either very well or not at all, not react with the compound, and be reasonably volatile so it can be removed from the crystals by drying.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Large solubility difference between hot and cold.",
+      "commonMisconception": "Choosing the solvent in which the compound dissolves best overall."
+    },
+    {
+      "question": "Why are the crystals washed with COLD solvent?",
+      "expectedConcept": "To rinse away the mother liquor clinging to their surfaces, which carries the impurity, without dissolving the crystals themselves. Warm solvent would dissolve an appreciable part of the product and reduce the yield.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Cold solvent removes liquor without dissolving product.",
+      "commonMisconception": "Thinking the wash is only to make the crystals look clean."
+    },
+    {
+      "question": "What is mother liquor?",
+      "expectedConcept": "The solution left after the crystals have separated. It is saturated with the compound at the temperature of crystallisation and holds essentially all the soluble impurity, which is why discarding it is what accomplishes the purification.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "The saturated liquid left after crystallisation.",
+      "commonMisconception": "Thinking it is waste that contains nothing of interest."
+    },
+    {
+      "question": "How do you judge whether the crystallisation has succeeded?",
+      "expectedConcept": "By the melting point of the dried product. A sharp melting point at the accepted value shows the impurity has been removed; a low or broad one shows it has not. Appearance alone is not enough, since fine powder can look clean and still be impure.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "A sharp melting point at the literature value.",
+      "commonMisconception": "Judging purity by how attractive the crystals look."
+    },
+    {
+      "question": "Why can the percentage recovery never be one hundred per cent?",
+      "expectedConcept": "Because the mother liquor is saturated with the compound at the crystallising temperature, so a fixed mass of product must remain dissolved in it and is lost. Further losses occur on the filter paper and the walls of the vessel.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "The saturated liquor always retains some product.",
+      "commonMisconception": "Expecting all the compound to crystallise if cooled far enough."
+    },
+    {
+      "question": "Would you prefer a high yield or a high purity, and why?",
+      "expectedConcept": "For a purification, purity — that is the object of the operation. A large yield of material no purer than the starting sample has achieved nothing. Yield can be improved afterwards by recovering a second crop from the concentrated mother liquor, though that crop is always less pure.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Purity is the point; yield can be recovered separately.",
+      "commonMisconception": "Judging the experiment a success purely on mass recovered."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Crystallisation purifies a solid because:",
+        "options": [
+          "The impurity evaporates",
+          "The compound is much less soluble cold than hot, while the impurity stays dissolved",
+          "The impurity melts",
+          "The solvent reacts with the impurity"
+        ],
+        "answer": 1,
+        "feedback": "The impurity is too dilute to saturate the cold liquor, so it stays in solution."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The compound should be dissolved in:",
+        "options": [
+          "As much hot solvent as possible",
+          "The minimum volume of hot solvent",
+          "Cold solvent",
+          "No solvent at all"
+        ],
+        "answer": 1,
+        "feedback": "Excess solvent holds more product dissolved in the cold liquor, lowering the yield."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "Cooling the solution rapidly in ice gives:",
+        "options": [
+          "Large pure crystals",
+          "Fine crystals that trap impurity",
+          "No crystals",
+          "A higher melting point"
+        ],
+        "answer": 1,
+        "feedback": "Fast growth traps mother liquor, so the yield rises but the purity falls."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Carry out at least two crystallisations.",
+        "check": "rows>=2"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Filter the hot solution before letting it cool.",
+        "check": "hotFiltered"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the percentage recovery you obtained from the minimum volume of solvent.",
+        "answer": 60,
+        "tolerance": 20,
+        "feedback": "About 60 per cent; the rest stays dissolved in the cold mother liquor."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "You doubled the volume of solvent. The recovery:",
+        "options": [
+          "Rose",
+          "Fell",
+          "Stayed the same",
+          "Became 100%"
+        ],
+        "answer": 1,
+        "feedback": "The mass held in the cold liquor is proportional to its volume, so more solvent means more product lost."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Your product melted several degrees below the accepted value. This means:",
+        "options": [
+          "It is a different compound",
+          "Impurity remains in the crystals",
+          "It was cooled too slowly",
+          "The balance is wrong"
+        ],
+        "answer": 1,
+        "feedback": "A depressed melting point is the signature of residual impurity — usually from cooling too fast."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Mass left in the mother liquor = solubility at the cold temperature × volume of solvent",
+    "assumptions": [
+      "Mass left in the mother liquor = solubility at the cold temperature × volume of solvent",
+      "Yield = mass dissolved − mass left in the mother liquor",
+      "Percentage recovery = (mass of crystals ÷ mass of pure compound taken) × 100",
+      "Slow cooling gives large crystals of high purity; rapid cooling gives fine impure powder"
+    ],
+    "validRange": "Dissolving in the minimum volume of hot solvent and cooling slowly gives large, ",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Using more solvent than the minimum, so much of the product stays dissolved and is lost.",
+      "Cooling too quickly, giving fine crystals that trap mother liquor and remain impure.",
+      "Failing to filter the hot solution, so insoluble dirt is collected with the crystals.",
+      "Washing the crystals with warm rather than cold solvent, dissolving away part of the yield."
+    ],
+    "expectedBehaviour": [
+      "Dissolving in the minimum volume of hot solvent and cooling slowly gives large, well formed crystals with a recovery of about 60 per cent. The product melts close to the accepted value, showing the impurity has been left behind in the mother liquor. Using more solvent raises the loss; crash-cooling raises the yield but lowers the purity."
+    ],
+    "testFile": "tests/batch9.test.js"
+  }
+}

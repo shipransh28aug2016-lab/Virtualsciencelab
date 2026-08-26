@@ -1,0 +1,597 @@
+{
+  "id": "XI-CHE-C01",
+  "class": "XI",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "C",
+    "serial": 1,
+    "categoryTitle": "Experiments based on pH",
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 6: Equilibrium — Ionic Equilibrium",
+    "topic": "Ionic equilibrium: ionization of acids and bases, strong and weak electrolytes, degree of ionization, ionization constant, ionic product of water, pH scale",
+    "subtopic": "pH of solutions; hydrolysis of salts and pH of their solutions; common ion effect",
+    "practical": "Determination of pH of some solutions obtained from fruit juices, solution of known and varied concentrations of acids, bases and salts using pH paper or universal indicator.",
+    "assessmentComponent": "Content Based Experiment (06 marks)",
+    "learningObjectives": [
+      "Determine the pH of a range of solutions using pH paper and universal indicator",
+      "Relate the measured pH to the hydrogen ion concentration through pH = −log[H⁺]",
+      "Distinguish strong and weak acids of the same concentration by their pH",
+      "Predict and verify whether a salt solution is acidic, basic or neutral from the nature of its parent acid and base",
+      "Show that tenfold dilution of a strong acid raises the pH by one unit",
+      "Classify common fruit juices and household solutions on the pH scale"
+    ],
+    "competencies": [
+      "Careful matching of an indicator colour against a standard chart",
+      "Understanding the limits of resolution of a measuring method",
+      "Reasoning from equilibrium constants to an observable property",
+      "Systematic tabulation and comparison of a set of related measurements"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Classes XI-XII Curriculum 2026-27, PRACTICAL SYLLABUS, C. Experiments based on pH, item 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Determination of pH of acids, bases, salts and fruit juices",
+  "shortTitle": "pH of Solutions",
+  "objective": [
+    "To determine the pH of solutions of acids, bases and salts of known concentration using pH paper or universal indicator.",
+    "To determine the pH of some solutions obtained from fruit juices.",
+    "To study the effect of dilution on the pH of a strong acid."
+  ],
+  "theory": {
+    "statement": "Water ionises very slightly into H⁺ and OH⁻ ions. At 298 K the product of their concentrations, the ionic product of water, is constant at Kw = 1.0 × 10⁻¹⁴. The pH of a solution is defined as the negative logarithm to base ten of the hydrogen ion concentration.",
+    "derivationNote": "For a strong acid, ionisation is complete, so [H⁺] equals the concentration of the acid and pH = −log C directly. For a weak acid HA of concentration C and ionisation constant Ka, the equilibrium HA ⇌ H⁺ + A⁻ gives Ka = x²/(C − x), where x = [H⁺]. When ionisation is small this reduces to [H⁺] = √(Ka·C), so a weak acid always has a higher pH than a strong acid of the same concentration. Salts of a strong acid and strong base do not hydrolyse and are neutral. The anion of a weak acid hydrolyses with Kb = Kw/Ka, making the solution basic, while the cation of a weak base hydrolyses with Ka = Kw/Kb, making it acidic. Since pH + pOH = 14 at 298 K, either quantity determines the other.",
+    "keyEquations": [
+      "Kw = [H⁺][OH⁻] = 1.0 × 10⁻¹⁴ at 298 K",
+      "pH = −log₁₀[H⁺]",
+      "pH + pOH = 14",
+      "Strong acid: [H⁺] = C",
+      "Weak acid: [H⁺] = √(Ka·C)",
+      "Salt of weak acid and strong base: Kb(hydrolysis) = Kw/Ka"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Test tubes",
+      "spec": "borosilicate, 15 mL, in a stand",
+      "why": "Each solution is tested in its own clean tube to avoid cross-contamination"
+    },
+    {
+      "name": "pH paper",
+      "spec": "wide range, 1–14, with colour chart",
+      "why": "Quick determination to the nearest whole pH unit"
+    },
+    {
+      "name": "Universal indicator",
+      "spec": "solution with standard colour chart",
+      "why": "Gives a finer estimate, to about half a pH unit"
+    },
+    {
+      "name": "pH meter",
+      "spec": "digital, calibrated with buffers",
+      "why": "Gives pH to 0.01, used here to show the limits of the colour methods"
+    },
+    {
+      "name": "Dropper",
+      "spec": "glass, one per solution",
+      "why": "Adds a fixed small volume of indicator without contaminating the stock"
+    },
+    {
+      "name": "Glass rod",
+      "spec": "clean",
+      "why": "Transfers a drop of solution onto the pH paper"
+    },
+    {
+      "name": "Wash bottle",
+      "spec": "with distilled water",
+      "why": "Rinses the tubes and the rod between samples"
+    }
+  ],
+  "materials": [
+    {
+      "name": "Hydrochloric acid",
+      "spec": "0.1 M",
+      "why": "A typical strong monobasic acid"
+    },
+    {
+      "name": "Acetic acid",
+      "spec": "0.1 M, Ka = 1.8 × 10⁻⁵",
+      "why": "A weak acid at the same concentration, for direct comparison"
+    },
+    {
+      "name": "Sodium hydroxide",
+      "spec": "0.1 M",
+      "why": "A typical strong base"
+    },
+    {
+      "name": "Ammonium hydroxide",
+      "spec": "0.1 M, Kb = 1.8 × 10⁻⁵",
+      "why": "A weak base"
+    },
+    {
+      "name": "Sodium chloride",
+      "spec": "0.1 M",
+      "why": "Salt of a strong acid and a strong base: does not hydrolyse"
+    },
+    {
+      "name": "Sodium acetate",
+      "spec": "0.1 M",
+      "why": "Salt of a weak acid and a strong base: hydrolyses to give a basic solution"
+    },
+    {
+      "name": "Ammonium chloride",
+      "spec": "0.1 M",
+      "why": "Salt of a strong acid and a weak base: hydrolyses to give an acidic solution"
+    },
+    {
+      "name": "Fruit juices",
+      "spec": "lemon, orange, tomato, freshly filtered",
+      "why": "Everyday examples containing citric and other weak acids"
+    }
+  ],
+  "variables": [
+    {
+      "id": "sample",
+      "label": "Solution",
+      "symbol": "",
+      "unit": "",
+      "type": "independent",
+      "default": "hcl",
+      "options": [
+        "hcl",
+        "h2so4",
+        "acetic",
+        "citric",
+        "naoh",
+        "ammonia",
+        "nacl",
+        "ch3coona",
+        "nh4cl",
+        "na2co3",
+        "lemon",
+        "orange",
+        "tomato",
+        "soap",
+        "water"
+      ]
+    },
+    {
+      "id": "dilution",
+      "label": "Dilution factor",
+      "symbol": "",
+      "unit": "×",
+      "type": "independent",
+      "min": 1,
+      "max": 1000,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "id": "method",
+      "label": "Method",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "universal",
+      "options": [
+        "paper",
+        "universal",
+        "meter"
+      ]
+    },
+    {
+      "id": "tempC",
+      "label": "Temperature",
+      "symbol": "t",
+      "unit": "°C",
+      "type": "controlled",
+      "min": 15,
+      "max": 40,
+      "step": 1,
+      "default": 25
+    },
+    {
+      "id": "pH",
+      "label": "pH",
+      "symbol": "pH",
+      "unit": "",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Rinse a clean test tube with a little of the solution to be tested, then take about 5 mL of it in the tube.",
+      "checkpoint": false
+    },
+    {
+      "step": 2,
+      "text": "Choose the method: dip a strip of pH paper, or add two or three drops of universal indicator, or immerse the electrode of a calibrated pH meter.",
+      "checkpoint": true,
+      "expects": "method"
+    },
+    {
+      "step": 3,
+      "text": "Match the colour developed against the standard colour chart supplied with the indicator and read off the pH.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 4,
+      "text": "Record the pH, the nature of the solution and the calculated hydrogen ion concentration in the observation table.",
+      "checkpoint": false
+    },
+    {
+      "step": 5,
+      "text": "Repeat for hydrochloric acid and acetic acid of the same 0.1 M concentration and compare their pH values.",
+      "checkpoint": true,
+      "expects": "sample"
+    },
+    {
+      "step": 6,
+      "text": "Test the three salt solutions and account for each result in terms of the strength of the parent acid and base.",
+      "checkpoint": false
+    },
+    {
+      "step": 7,
+      "text": "Test the fruit juices and classify each as strongly or weakly acidic.",
+      "checkpoint": false
+    },
+    {
+      "step": 8,
+      "text": "Dilute the hydrochloric acid ten times and a hundred times and record the pH each time.",
+      "checkpoint": true,
+      "expects": "dilution"
+    },
+    {
+      "step": 9,
+      "text": "Test at least five different solutions in all, then arrange them in order of increasing pH and draw your conclusion.",
+      "checkpoint": true,
+      "expects": "rows>=5"
+    }
+  ],
+  "simulation": {
+    "model": "ph-determination",
+    "renderer": "ph-determination",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "sample",
+        "widget": "segmented",
+        "options": [
+          "hcl",
+          "acetic",
+          "naoh",
+          "ammonia",
+          "nacl",
+          "ch3coona",
+          "nh4cl",
+          "lemon",
+          "orange",
+          "tomato",
+          "soap",
+          "water"
+        ]
+      },
+      {
+        "var": "method",
+        "widget": "segmented",
+        "options": [
+          "paper",
+          "universal",
+          "meter"
+        ]
+      },
+      {
+        "var": "dilution",
+        "widget": "slider"
+      }
+    ],
+    "actions": [
+      {
+        "id": "test",
+        "label": "Record pH",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "sample",
+        "label": "Solution",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "concentration",
+        "label": "Conc.",
+        "unit": "mol/L",
+        "decimals": 4
+      },
+      {
+        "key": "method",
+        "label": "Method",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "pH",
+        "label": "pH",
+        "unit": "",
+        "decimals": 2
+      },
+      {
+        "key": "pOH",
+        "label": "pOH",
+        "unit": "",
+        "decimals": 2
+      },
+      {
+        "key": "nature",
+        "label": "Nature",
+        "unit": "",
+        "decimals": 0
+      }
+    ],
+    "graph": {
+      "x": "index",
+      "y": "pH",
+      "xLabel": "Solution tested",
+      "yLabel": "pH",
+      "throughOrigin": false
+    },
+    "minRows": 5
+  },
+  "calculations": {
+    "steps": [
+      "[H⁺] = 10^(−pH)",
+      "pOH = 14 − pH",
+      "For a strong acid, expected pH = −log C",
+      "For a weak acid, expected pH = −log √(Ka·C)",
+      "Change in pH per tenfold dilution of a strong acid should be exactly 1 unit"
+    ],
+    "resultKeys": [
+      "mostAcidic",
+      "mostBasic",
+      "dilutionCheck"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "pH of 0.1 M hydrochloric acid",
+    "symbol": "pH",
+    "value": 1.0,
+    "tolerance": 0.5,
+    "unit": "",
+    "secondary": {
+      "quantity": "pH of 0.1 M acetic acid",
+      "value": 2.87,
+      "tolerance": 0.6,
+      "unit": ""
+    },
+    "statement": "Solutions of strong acids have a low pH and strong bases a high pH. A weak acid of the same concentration as a strong acid shows a distinctly higher pH because it is only partly ionised. Salts of a weak acid with a strong base are basic, salts of a strong acid with a weak base are acidic, and salts of a strong acid with a strong base are neutral. All the fruit juices tested are acidic."
+  },
+  "safety": [
+    "Acids and alkalis of 0.1 M concentration still irritate the skin and eyes; wear eye protection and wash any splash immediately with plenty of water.",
+    "Never pipette any solution by mouth; use a pipette filler.",
+    "Do not taste any solution to judge whether it is acidic, however familiar the fruit juice may look.",
+    "Add indicator to the solution, never solution to the indicator bottle, so the stock is not contaminated.",
+    "Dispose of the tested solutions down the sink with plenty of running water."
+  ],
+  "sourcesOfError": [
+    "pH paper resolves only to the nearest whole unit, so small differences cannot be detected with it.",
+    "Judging a colour by eye is subjective, and difficult under coloured or dim lighting.",
+    "A fruit juice that is itself coloured masks the indicator colour; it must be filtered or diluted first.",
+    "A test tube not rinsed with the solution carries over traces of the previous sample.",
+    "The pH meter drifts if it has not been calibrated with standard buffers.",
+    "Temperature affects Kw, so the neutral point is exactly 7 only at 25 °C."
+  ],
+  "viva": [
+    {
+      "question": "Define pH.",
+      "expectedConcept": "pH is the negative logarithm to base ten of the hydrogen ion concentration in mol per litre: pH = −log₁₀[H⁺]. It is a dimensionless number.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "The logarithmic definition, with the negative sign.",
+      "commonMisconception": "Saying pH means 'power of hydrogen' without giving the mathematical definition."
+    },
+    {
+      "question": "Two solutions, one of hydrochloric acid and one of acetic acid, are both 0.1 M. Which has the lower pH and why?",
+      "expectedConcept": "Hydrochloric acid, with pH 1. It is a strong acid and ionises completely, so [H⁺] = 0.1 M. Acetic acid is weak and only slightly ionised, giving [H⁺] = √(Ka·C) ≈ 1.3 × 10⁻³ M and a pH of about 2.9.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Degree of ionisation, not concentration, distinguishes them.",
+      "commonMisconception": "Assuming equal concentrations must give equal pH."
+    },
+    {
+      "question": "What is the ionic product of water and what is its value at 298 K?",
+      "expectedConcept": "Kw = [H⁺][OH⁻], the product of the molar concentrations of hydrogen and hydroxide ions in water. At 298 K it is 1.0 × 10⁻¹⁴ mol²·L⁻².",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Definition plus numerical value.",
+      "commonMisconception": "Confusing Kw with the pH of water."
+    },
+    {
+      "question": "Why is an aqueous solution of sodium acetate basic?",
+      "expectedConcept": "Sodium acetate is the salt of a weak acid and a strong base. The acetate ion hydrolyses, CH₃COO⁻ + H₂O ⇌ CH₃COOH + OH⁻, releasing hydroxide ions. The sodium ion does not hydrolyse, so the solution is basic with a pH of about 8.9.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Anionic hydrolysis with Kb = Kw/Ka.",
+      "commonMisconception": "Thinking every salt solution must be neutral."
+    },
+    {
+      "question": "A 0.1 M solution of a strong acid is diluted ten times. By how much does its pH change?",
+      "expectedConcept": "It rises by exactly one unit, from 1 to 2, because [H⁺] falls by a factor of ten and the pH scale is logarithmic.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "log(C/10) = log C − 1.",
+      "commonMisconception": "Expecting the pH to fall, or to change by ten units."
+    },
+    {
+      "question": "Can the pH of a very dilute acid exceed 7?",
+      "expectedConcept": "No. Below about 10⁻⁶ M the hydrogen ions contributed by the ionisation of water itself become significant. The total [H⁺] can never fall below that of pure water, so the pH approaches 7 from below but never crosses it.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Water's autoionisation sets the limit.",
+      "commonMisconception": "Calculating pH = 8 for a 10⁻⁸ M acid and concluding that an acid can be basic."
+    },
+    {
+      "question": "Why is universal indicator preferred to litmus for this experiment?",
+      "expectedConcept": "Litmus only tells you whether the solution is acidic or basic. Universal indicator is a mixture of several indicators with different ranges, so it gives a continuous sequence of colours across the whole scale and therefore an actual pH value.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Range and resolution.",
+      "commonMisconception": "Believing litmus can give a numerical pH."
+    },
+    {
+      "question": "The pH of a solution is 4. What is its hydrogen ion concentration and its pOH?",
+      "expectedConcept": "[H⁺] = 10⁻⁴ mol·L⁻¹ and pOH = 14 − 4 = 10, so [OH⁻] = 10⁻¹⁰ mol·L⁻¹.",
+      "difficulty": "easy",
+      "bloom": "Apply",
+      "answerLogic": "Direct application of the two definitions.",
+      "commonMisconception": "Giving [H⁺] as 4 × 10⁻¹ or forgetting that pOH is the complement to 14."
+    },
+    {
+      "question": "Why must a coloured fruit juice be filtered or diluted before testing with universal indicator?",
+      "expectedConcept": "The natural pigment of the juice masks or distorts the colour produced by the indicator, making the match against the chart unreliable. Filtering removes suspended pulp and dilution lightens the colour, though dilution must then be allowed for in the interpretation.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "The method depends on judging one colour, so a background colour is interference.",
+      "commonMisconception": "Assuming the indicator overrides any colour already present."
+    },
+    {
+      "question": "Is water at 60 °C, with a pH of about 6.5, acidic?",
+      "expectedConcept": "No, it is still neutral. Kw increases with temperature, so water ionises more and both [H⁺] and [OH⁻] rise equally. The neutral point moves below 7. A solution is acidic only when [H⁺] exceeds [OH⁻], which is not the case here.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Neutrality means equal ion concentrations, not pH exactly 7.",
+      "commonMisconception": "Treating pH 7 as the definition of neutrality at every temperature."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The pH of a 0.001 M solution of a strong monobasic acid is:",
+        "options": [
+          "1",
+          "2",
+          "3",
+          "11"
+        ],
+        "answer": 2,
+        "feedback": "A strong acid ionises completely, so [H⁺] = 10⁻³ M and pH = 3."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "An aqueous solution of ammonium chloride is:",
+        "options": [
+          "Acidic",
+          "Basic",
+          "Neutral",
+          "Amphoteric"
+        ],
+        "answer": 0,
+        "feedback": "It is the salt of a strong acid and a weak base. The ammonium ion hydrolyses to give H₃O⁺, so the solution is acidic."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "At 298 K, if the pOH of a solution is 4, its pH is:",
+        "options": [
+          "4",
+          "7",
+          "10",
+          "14"
+        ],
+        "answer": 2,
+        "feedback": "pH + pOH = 14, so pH = 14 − 4 = 10. The solution is basic."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Test at least five different solutions.",
+        "check": "rows>=5"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Include both a strong acid and a weak acid at the same concentration.",
+        "check": "correctIndicator"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the pH of 0.1 M hydrochloric acid that you measured.",
+        "answer": 1.0,
+        "tolerance": 0.6,
+        "feedback": "0.1 M HCl ionises completely, giving [H⁺] = 0.1 M and pH = 1."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "State the pH of 0.1 M acetic acid that you measured.",
+        "answer": 2.87,
+        "tolerance": 0.7,
+        "feedback": "Acetic acid is weak: [H⁺] = √(Ka·C) = √(1.8 × 10⁻⁵ × 0.1) = 1.34 × 10⁻³ M, giving pH 2.87."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "You diluted 0.1 M HCl one hundred times. The pH should change from 1 to:",
+        "options": [
+          "0.01",
+          "2",
+          "3",
+          "100"
+        ],
+        "answer": 2,
+        "feedback": "A hundredfold dilution is two decades, so the pH rises by exactly 2 units, from 1 to 3."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "pH = −log[H⁺]; strong acid [H⁺] = C; weak acid Ka = x²/(C−x); Kw = 10⁻¹⁴",
+    "assumptions": [
+      "Temperature 298 K so Kw = 1.0 × 10⁻¹⁴",
+      "Activity coefficients taken as unity",
+      "Strong acids and bases completely ionised",
+      "Universal indicator resolves about ±0.5 pH unit, pH paper about ±1"
+    ],
+    "validRange": "Concentration 10⁻⁴ to 1 mol/L; pH 0 to 14",
+    "unitSystem": "Concentration in mol/L; pH dimensionless",
+    "edgeCases": [
+      "Strong acid below 10⁻⁶ M: pH approaches but never exceeds 7 — warned",
+      "NaCl gives exactly pH 7; sodium acetate is basic; ammonium chloride acidic",
+      "Weak acid solved exactly, not by the small-x approximation",
+      "Temperature other than 25 °C shifts the neutral point — warned"
+    ],
+    "expectedBehaviour": [
+      "Tenfold dilution of a strong acid raises pH by exactly 1",
+      "Weak acid pH is at least 1.5 units above a strong acid of the same concentration",
+      "pH + pOH = 14 for every reading",
+      "All fruit juices fall between pH 1.5 and 5"
+    ],
+    "testFile": "tests/batch2.test.js"
+  }
+}

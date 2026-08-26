@@ -1,0 +1,200 @@
+{
+  "id": "XI-PHY-A09",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 9,
+    "unit": "Unit III: Laws of Motion",
+    "chapter": "Chapter-4: Laws of Motion",
+    "topic": "Intuitive concept of force; Newton's laws of motion; equilibrium of concurrent forces; static and kinetic friction, laws of friction, rolling friction, lubrication",
+    "subtopic": "Limiting friction and normal reaction; coefficient of friction; angle of friction",
+    "practical": "To study the relationship between force of limiting friction and normal reaction and to find the co-efficient of friction between a block and a horizontal surface.",
+    "learningObjectives": [
+      "Determine the least force that just starts a block sliding on a horizontal surface",
+      "Vary the normal reaction by adding known loads on top of the block",
+      "Plot limiting friction against normal reaction and obtain a straight line through the origin",
+      "Find the coefficient of static friction from the slope of that line",
+      "Show experimentally that limiting friction does not depend on the apparent area of contact",
+      "Distinguish static, limiting and kinetic friction"
+    ],
+    "competencies": [
+      "Identifying a threshold experimentally rather than reading a continuous quantity",
+      "Controlling one variable, the normal reaction, while others are held fixed",
+      "Graphical determination of a constant of proportionality through the origin",
+      "Designing a control test to disprove a plausible but wrong hypothesis, that area matters"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Experiment 9 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Limiting friction and normal reaction: coefficient of friction",
+  "shortTitle": "Friction",
+  "objective": [
+    "To study the relationship between the force of limiting friction and the normal reaction.",
+    "To find the coefficient of friction between a block and a horizontal surface.",
+    "To show that limiting friction does not depend on the apparent area of contact."
+  ],
+  "theory": {
+    "statement": "When a body rests on a surface and a gradually increasing horizontal force is applied, friction adjusts itself to be exactly equal and opposite to the applied force, so the body stays at rest. There is a maximum value beyond which it cannot grow: this is limiting friction, and the body then begins to slide.",
+    "derivationNote": "The laws of friction state that limiting friction is directly proportional to the normal reaction and independent of the apparent area of contact. Writing F for the limiting friction and R for the normal reaction, F ∝ R, so F = μ_s R where μ_s is the coefficient of static friction. Here R is the total weight resting on the surface, (M + m)g, where M is the mass of the block and m the added load. Since the pull is applied by weights in a pan over a frictionless pulley, the applied force equals the weight in the pan. A graph of F against R is therefore a straight line through the origin whose slope is μ_s. The angle whose tangent is μ_s is called the angle of friction. Independence of area seems surprising, but the true area of contact at the microscopic high points is what matters, and that depends on the load, not on the apparent area.",
+    "keyEquations": [
+      "F_limiting = μ_s × R",
+      "R = (M + m)g",
+      "μ_s = slope of the F against R graph",
+      "Angle of friction λ = tan⁻¹(μ_s)",
+      "μ_kinetic < μ_static for the same pair of surfaces"
+    ]
+  },
+  "apparatus": [
+    { "name": "Wooden block", "spec": "with a hook, about 200 g, faces of different area", "why": "The body whose friction is studied; different faces test the area law" },
+    { "name": "Horizontal surface", "spec": "wooden plank or glass sheet, clean and dry", "why": "The second of the two surfaces in contact" },
+    { "name": "Frictionless pulley", "spec": "clamped at the edge of the table", "why": "Turns the vertical pull of the weights into a horizontal pull on the block" },
+    { "name": "Pan and weight box", "spec": "slotted weights from 0.5 g upwards", "why": "Applies a pull that can be increased in small steps to find the threshold" },
+    { "name": "Load slabs", "spec": "100 g each", "why": "Placed on the block to vary the normal reaction without changing the surfaces" },
+    { "name": "Thread", "spec": "fine, strong, inextensible", "why": "Transmits the pull horizontally without stretching" },
+    { "name": "Spirit level", "spec": "small", "why": "Confirms the surface is horizontal, so the normal reaction really is the weight" }
+  ],
+  "materials": [],
+  "variables": [
+    { "id": "loadG", "label": "Load on the block", "symbol": "m", "unit": "g", "type": "independent", "min": 0, "max": 500, "step": 50, "default": 0 },
+    { "id": "panG", "label": "Weight in the pan", "symbol": "W", "unit": "g", "type": "independent", "min": 0, "max": 400, "step": 0.5, "default": 0 },
+    { "id": "surface", "label": "Surfaces in contact", "symbol": "", "unit": "", "type": "control", "default": "woodWood", "options": ["woodWood", "woodGlass", "woodMetal", "lubricated"] },
+    { "id": "face", "label": "Face resting on the table", "symbol": "", "unit": "", "type": "control", "default": "broad", "options": ["broad", "narrow"] },
+    { "id": "blockMassG", "label": "Mass of block", "symbol": "M", "unit": "g", "type": "controlled", "min": 100, "max": 400, "step": 50, "default": 200 },
+    { "id": "limitingFriction", "label": "Limiting friction", "symbol": "F", "unit": "N", "type": "dependent" }
+  ],
+  "procedure": [
+    { "step": 1, "text": "Check with the spirit level that the surface is horizontal, and clamp the pulley firmly at the edge of the table.", "checkpoint": false },
+    { "step": 2, "text": "Weigh the block and the pan. Place the block on the surface with its broad face down and attach the thread over the pulley to the pan.", "checkpoint": true, "expects": "blockMassG" },
+    { "step": 3, "text": "Add weights to the pan in small steps. After each addition, tap the table gently and watch whether the block starts to move.", "checkpoint": true, "expects": "panG" },
+    { "step": 4, "text": "Note the least weight for which the block just begins to slide with a uniform velocity. This weight is the limiting friction.", "checkpoint": true, "expects": "record" },
+    { "step": 5, "text": "Place a 100 g load on the block and repeat, finding the new least weight that starts it moving.", "checkpoint": true, "expects": "loadG" },
+    { "step": 6, "text": "Repeat for at least five different loads, so the normal reaction is varied over a good range.", "checkpoint": true, "expects": "rows>=3" },
+    { "step": 7, "text": "Calculate the normal reaction R = (M + m)g and the limiting friction F for each reading.", "checkpoint": false },
+    { "step": 8, "text": "Now turn the block onto its narrow face and repeat two or three readings. Compare the friction with the earlier values at the same load.", "checkpoint": false },
+    { "step": 9, "text": "Plot F against R, draw the best straight line through the origin, and find its slope, which is the coefficient of friction.", "checkpoint": true, "expects": "result" }
+  ],
+  "simulation": {
+    "model": "friction",
+    "renderer": "friction",
+    "fps": 60,
+    "controls": [
+      { "var": "panG", "widget": "slider" },
+      { "var": "loadG", "widget": "slider" },
+      { "var": "surface", "widget": "segmented", "options": ["woodWood", "woodGlass", "woodMetal", "lubricated"] },
+      { "var": "face", "widget": "segmented", "options": ["broad", "narrow"] }
+    ],
+    "actions": [
+      { "id": "record", "label": "Record threshold", "primary": true },
+      { "id": "reset", "label": "Reset" }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      { "key": "trial", "label": "Trial", "unit": "", "decimals": 0 },
+      { "key": "loadG", "label": "Load m", "unit": "g", "decimals": 0 },
+      { "key": "totalMassG", "label": "M + m", "unit": "g", "decimals": 0 },
+      { "key": "normalReaction", "label": "R", "unit": "N", "decimals": 3 },
+      { "key": "panG", "label": "Pan weight", "unit": "g", "decimals": 1 },
+      { "key": "limitingFriction", "label": "F", "unit": "N", "decimals": 3 },
+      { "key": "ratio", "label": "F/R", "unit": "", "decimals": 3 },
+      { "key": "face", "label": "Face", "unit": "", "decimals": 0 }
+    ],
+    "graph": { "x": "normalReaction", "y": "limitingFriction", "xLabel": "Normal reaction R (N)", "yLabel": "Limiting friction F (N)", "throughOrigin": true },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "R = (M + m) × g / 1000, with masses in gram",
+      "F = weight in the pan × g / 1000",
+      "For each row, the ratio F/R should be constant",
+      "Slope of the F–R line through the origin gives μ",
+      "Angle of friction λ = tan⁻¹ μ"
+    ],
+    "resultKeys": ["mu", "angleOfFriction", "r2"]
+  },
+  "expectedResult": {
+    "quantity": "Coefficient of static friction",
+    "symbol": "μ",
+    "value": 0.42,
+    "tolerance": 0.05,
+    "unit": "",
+    "secondary": { "quantity": "Angle of friction", "value": 22.8, "tolerance": 3, "unit": "degree" },
+    "statement": "The graph of limiting friction against normal reaction is a straight line through the origin, showing that F is directly proportional to R. Its slope gives a coefficient of static friction of about 0.42 for wood on wood. The value is unchanged when the block rests on its narrow face, confirming that friction is independent of the apparent area of contact."
+  },
+  "safety": [
+    "Clamp the pulley securely; a pulley that slips off the table sends the weights onto someone's foot.",
+    "Keep feet clear of the area below the pan, and stop the block before it reaches the pulley.",
+    "Add weights gently. Dropping them onto the pan gives a jerk that starts the block prematurely and spoils the reading.",
+    "Wipe up any oil used in the lubricated trial; an oily floor is a genuine hazard.",
+    "Do not overload the thread beyond its breaking strength."
+  ],
+  "sourcesOfError": [
+    "The threshold is judged by eye, so there is a real uncertainty in deciding when motion just begins.",
+    "The pulley is not perfectly frictionless, so part of the applied weight is used in turning it.",
+    "The thread may not be exactly horizontal, so only its horizontal component pulls the block.",
+    "Dust, grease or moisture on the surfaces changes the coefficient between readings.",
+    "The surface may not be truly horizontal, so the normal reaction is not exactly the weight.",
+    "Jerks while adding weights start the block before the true limiting value is reached."
+  ],
+  "viva": [
+    { "question": "Define limiting friction.", "expectedConcept": "It is the maximum value that static friction can reach, that is the least force which just sets the body in motion. Below it the body remains at rest and friction equals the applied force.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Maximum of static friction, at the point of impending motion.", "commonMisconception": "Confusing it with kinetic friction, or thinking friction has a single fixed value." },
+    { "question": "State the laws of limiting friction.", "expectedConcept": "Limiting friction is directly proportional to the normal reaction; it is independent of the apparent area of contact so long as the normal reaction is unchanged; and it depends on the nature and roughness of the two surfaces in contact.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "The three classical laws.", "commonMisconception": "Including area as a factor." },
+    { "question": "Why does the graph of F against R pass through the origin?", "expectedConcept": "Because when the normal reaction is zero there is no force pressing the surfaces together, so there is no friction at all. The relation is one of direct proportionality, not merely a linear one.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Zero R must give zero F.", "commonMisconception": "Drawing a line with an intercept and still calling the slope μ." },
+    { "question": "Friction is said not to depend on the area of contact. This seems wrong — explain it.", "expectedConcept": "The apparent area is not the real area of contact. Surfaces touch only at microscopic high points, and the true contact area is set by how hard they are pressed together, that is by the normal reaction. Spreading the same load over a larger apparent area reduces the pressure but increases the number of contact points, and the two effects cancel.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Real versus apparent area of contact.", "commonMisconception": "Believing a larger block face must give more grip." },
+    { "question": "Is the coefficient of friction a dimensionless quantity? Justify.", "expectedConcept": "Yes. It is the ratio of two forces, limiting friction to normal reaction, so all dimensions cancel and it has no unit.", "difficulty": "easy", "bloom": "Understand", "answerLogic": "Ratio of like quantities.", "commonMisconception": "Assigning it the unit newton." },
+    { "question": "What is the angle of friction, and how is it related to μ?", "expectedConcept": "It is the angle that the resultant of the limiting friction and the normal reaction makes with the normal. Its tangent equals the coefficient of friction: μ = tan λ.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "μ = tan λ.", "commonMisconception": "Confusing it with the angle of repose without noticing they are numerically equal." },
+    { "question": "Why is kinetic friction less than limiting friction?", "expectedConcept": "Once sliding begins there is less time for the microscopic high points to weld together at each contact, so fewer and weaker junctions form. The force needed to keep the body moving is therefore smaller than that needed to start it.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Contact junctions have less time to form.", "commonMisconception": "Thinking the surfaces become smoother by rubbing." },
+    { "question": "Why should the block be given a gentle tap after adding each weight?", "expectedConcept": "A body at rest may be held by a slightly larger static friction than the true limiting value because the surfaces have settled. A gentle tap overcomes this and reveals whether the applied force has genuinely reached the limiting value.", "difficulty": "hard", "bloom": "Apply", "answerLogic": "Removes the effect of surfaces settling.", "commonMisconception": "Thinking the tap is what provides the extra force." },
+    { "question": "How does a lubricant reduce friction?", "expectedConcept": "The lubricant forms a thin film that keeps the microscopic high points of the two surfaces apart, so far fewer junctions form. Solid-to-solid contact is largely replaced by the much weaker internal friction of the fluid layer.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Separation of asperities by a fluid film.", "commonMisconception": "Saying the lubricant simply makes the surfaces smoother." },
+    { "question": "Rolling friction is much smaller than sliding friction. Why?", "expectedConcept": "In rolling, the surfaces in contact do not slide over one another, so the microscopic junctions are not sheared but peeled apart one by one. The area in contact at any instant is also very small. This is why wheels and ball bearings are used.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "No relative sliding at the contact point.", "commonMisconception": "Assuming a rolling body has no friction at all." }
+  ],
+  "assessment": {
+    "preLab": [
+      { "id": "pre1", "type": "mcq", "question": "The coefficient of friction is:", "options": ["Measured in newton", "Measured in newton per metre", "Dimensionless", "Measured in kilogram"], "answer": 2, "feedback": "It is the ratio of two forces, so it has no unit and no dimensions." },
+      { "id": "pre2", "type": "mcq", "question": "Limiting friction between a block and a table depends on:", "options": ["The apparent area of contact", "The normal reaction", "The volume of the block", "The colour of the surfaces"], "answer": 1, "feedback": "F = μR. Limiting friction is proportional to the normal reaction and independent of the apparent area of contact." },
+      { "id": "pre3", "type": "mcq", "question": "The purpose of the pulley in this experiment is to:", "options": ["Reduce the friction of the block", "Convert the vertical pull of the weights into a horizontal pull", "Measure the force directly", "Support the weight of the block"], "answer": 1, "feedback": "The weights hang vertically but the block must be pulled horizontally; the pulley changes the direction of the force." }
+    ],
+    "duringLab": [
+      { "id": "dur1", "type": "task", "question": "Record the threshold for at least three different loads.", "check": "rows>=3" },
+      { "id": "dur2", "type": "task", "question": "Vary the load on the block between readings.", "check": "massVaried" }
+    ],
+    "postLab": [
+      { "id": "post1", "type": "numeric", "question": "State the coefficient of friction you obtained from the slope.", "answer": 0.42, "tolerance": 0.07, "feedback": "For clean dry wood on wood the coefficient of static friction is about 0.42." },
+      { "id": "post2", "type": "numeric", "question": "Calculate the angle of friction in degrees.", "answer": 22.8, "tolerance": 4, "feedback": "λ = tan⁻¹(0.42) = 22.8°." },
+      { "id": "post3", "type": "mcq", "question": "You turned the block onto its narrow face. The limiting friction:", "options": ["Halved, because the area halved", "Doubled", "Stayed the same", "Became zero"], "answer": 2, "feedback": "Limiting friction depends on the normal reaction and the nature of the surfaces, not on the apparent area of contact. The weight did not change, so neither did the friction." }
+    ],
+    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+  },
+  "scientificValidation": {
+    "formula": "F = μR; R = (M+m)g; μ = slope through the origin; λ = tan⁻¹μ",
+    "assumptions": [
+      "Surfaces dry, clean and unlubricated",
+      "The pull is horizontal, through a frictionless pulley",
+      "Pan and string are light and the string inextensible",
+      "The block slides without toppling",
+      "Limiting friction is independent of apparent contact area"
+    ],
+    "validRange": "Block 200 g; load 0 to 500 g; normal reaction 2 to 7 N",
+    "unitSystem": "Masses in gram converted to kg; forces in newton",
+    "edgeCases": [
+      "Below the limiting value nothing moves: static friction self-adjusts",
+      "Once sliding, the resisting force drops to the kinetic value and the block accelerates",
+      "Lubrication drops μ to roughly a third of the dry value",
+      "Turning the block on its narrow face does not change F — warned as a deliberate check"
+    ],
+    "expectedBehaviour": [
+      "F against R is a straight line through the origin, r² above 0.99",
+      "The ratio F/R is the same for every load",
+      "μ is identical on the broad and narrow faces",
+      "μ kinetic is smaller than μ static for every surface pair"
+    ],
+    "testFile": "tests/batch3.test.js"
+  }
+}

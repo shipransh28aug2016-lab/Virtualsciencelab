@@ -1,0 +1,473 @@
+{
+  "id": "XII-CHE-A03",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "A",
+    "categoryTitle": "Surface Chemistry",
+    "assessmentComponent": "Content Based Experiment",
+    "serial": 3,
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Chapter-5: Surface Chemistry",
+    "topic": "Emulsions, types of emulsions, emulsifying agents",
+    "subtopic": "Oil-in-water and water-in-oil emulsions, the dilution test",
+    "practical": "Study of the role of emulsifying agents in stabilizing the emulsion of different oils.",
+    "learningObjectives": [
+      "Be able to prepare emulsions of different oils in water, with and without an emulsifying agent",
+      "Be able to measure how long each emulsion takes to separate",
+      "Be able to show that an emulsifying agent greatly increases the stability of an emulsion",
+      "Be able to identify the type of emulsion formed by the dilution test"
+    ],
+    "competencies": [
+      "Performing a standard laboratory operation and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, CATEGORY A, Experiment 3 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Role of emulsifying agents in stabilising an emulsion",
+  "shortTitle": "Emulsifying agents",
+  "objective": [
+    "To prepare emulsions of different oils in water, with and without an emulsifying agent.",
+    "To measure how long each emulsion takes to separate.",
+    "To show that an emulsifying agent greatly increases the stability of an emulsion.",
+    "To identify the type of emulsion formed by the dilution test."
+  ],
+  "theory": {
+    "statement": "An emulsion is a colloidal dispersion of one liquid in another with which it does not mix. Shaking oil and water gives an emulsion that separates again in a minute or two, because the droplets collide and coalesce. An EMULSIFYING AGENT is a molecule with a polar head and a non-polar tail, so it sits at the oil-water boundary with its tail in the oil and its head in the water. It lowers the interfacial tension, so the droplets formed are much smaller, and it surrounds each droplet with a charged or hydrated layer that stops them merging. Because the rate at which separated oil rises follows Stokes’ law, v = 2r²(Δρ)g/9η, and depends on the SQUARE of the droplet radius, halving the droplet size slows separation fourfold. That is why a small amount of soap has such a large effect. The agent also determines the TYPE of emulsion: a water-loving head gives oil-in-water, while a calcium soap, being oil-loving, gives water-in-oil.",
+    "keyEquations": [
+      "Stokes’ law: v = 2r²(Δρ)g / 9η",
+      "Separation time t = h / v, so t ∝ η / (r² Δρ)",
+      "Halving the droplet radius multiplies the separation time by four",
+      "Stabilisation ratio = separation time with agent / separation time without"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Test tubes with stoppers",
+      "why": "The mixture must be shaken vigorously and then left undisturbed to separate."
+    },
+    {
+      "name": "Measuring cylinder",
+      "why": "Oil and water must be used in the same fixed ratio every run, or the comparison is meaningless."
+    },
+    {
+      "name": "Stopwatch",
+      "why": "The measured quantity is the time until a clear oil layer reappears."
+    },
+    {
+      "name": "Soap solution, detergent, gum acacia, lime water",
+      "why": "The emulsifying agents to be compared, including one that gives the opposite type of emulsion."
+    },
+    {
+      "name": "Different oils",
+      "why": "To show that the effect of the agent is general, and that a viscous oil separates slowly anyway."
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "oil",
+      "label": "Oil",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "mustard",
+      "options": [
+        "mustard",
+        "coconut",
+        "olive",
+        "castor"
+      ]
+    },
+    {
+      "id": "agent",
+      "label": "Emulsifier",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "soap",
+      "options": [
+        "none",
+        "soap",
+        "detergent",
+        "gum",
+        "limewater"
+      ]
+    },
+    {
+      "id": "test",
+      "label": "Test",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "separation",
+      "options": [
+        "separation",
+        "dilution"
+      ]
+    },
+    {
+      "id": "agentPct",
+      "label": "Emulsifier added",
+      "symbol": "",
+      "unit": "%",
+      "type": "independent",
+      "min": 0,
+      "max": 5,
+      "step": 0.25,
+      "default": 1
+    },
+    {
+      "id": "scale",
+      "label": "Stopwatch",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "w1",
+      "options": [
+        "w1",
+        "w05",
+        "w01"
+      ]
+    },
+    {
+      "id": "separationTime",
+      "label": "Separation time",
+      "symbol": "",
+      "unit": "",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    "Take equal volumes of oil and water in a test tube with no emulsifier.",
+    "Stopper it and shake vigorously for a fixed time, then stand it in the rack and start the stopwatch.",
+    "Record the time at which a clear layer of oil first reappears at the top. This is the control.",
+    "Repeat with the same oil and the same shaking, but with about one per cent of soap solution added.",
+    "Repeat with the other emulsifying agents in turn.",
+    "For each stable emulsion, add a few drops to a test tube of water and to a test tube of oil, and see which it mixes with freely.",
+    "Compare the separation times and identify the type of each emulsion."
+  ],
+  "simulation": {
+    "model": "emulsion",
+    "renderer": "emulsion",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "oil",
+        "label": "Oil",
+        "widget": "segmented",
+        "options": [
+          "mustard",
+          "coconut",
+          "olive",
+          "castor"
+        ]
+      },
+      {
+        "var": "agent",
+        "label": "Emulsifier",
+        "widget": "segmented",
+        "options": [
+          "none",
+          "soap",
+          "detergent",
+          "gum",
+          "limewater"
+        ]
+      },
+      {
+        "var": "agentPct",
+        "label": "Emulsifier added",
+        "widget": "slider"
+      },
+      {
+        "var": "test",
+        "label": "Test",
+        "widget": "segmented",
+        "options": [
+          "separation",
+          "dilution"
+        ]
+      },
+      {
+        "var": "scale",
+        "label": "Stopwatch",
+        "widget": "segmented",
+        "options": [
+          "w1",
+          "w05",
+          "w01"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record this mixture",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Obs",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "oil",
+        "label": "Oil"
+      },
+      {
+        "key": "agent",
+        "label": "Emulsifier"
+      },
+      {
+        "key": "agentPct",
+        "label": "Amount",
+        "unit": "%",
+        "decimals": 2
+      },
+      {
+        "key": "separationS",
+        "label": "Separation time",
+        "unit": "s",
+        "decimals": 1
+      },
+      {
+        "key": "emulsionType",
+        "label": "Type"
+      }
+    ],
+    "graph": null,
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Note the separation time for the oil and water with NO emulsifier: this is the control.",
+      "Note the separation time with each emulsifying agent.",
+      "Divide each by the control time to get the stabilisation ratio.",
+      "Compare the agents by their stabilisation ratios.",
+      "Use the dilution test to state whether each emulsion is oil-in-water or water-in-oil."
+    ],
+    "resultKeys": [
+      "stabilisationRatio",
+      "bestAgent"
+    ]
+  },
+  "expectedResult": {
+    "statement": "Oil and water alone separate in a little over a minute. With about one per cent of soap the same mixture stays emulsified for half an hour or more, a stabilisation ratio of roughly twenty, and detergent is better still. Most of that gain is geometric: the agent makes the droplets several times smaller, and the separation time depends on the square of the radius. Beyond about two per cent the interface is fully covered and more agent achieves almost nothing. Soap, detergent and gum all give oil-in-water emulsions, while lime water gives water-in-oil, as the dilution test shows.",
+    "value": null,
+    "unit": null,
+    "tolerancePct": null
+  },
+  "safety": [
+    "Oils are flammable: keep them away from any naked flame.",
+    "Wipe up spilled oil at once, since a film of oil on the floor is dangerously slippery.",
+    "Stopper the tube firmly before shaking, and point it away from yourself and others.",
+    "Lime water is alkaline and irritates the eyes; wear eye protection."
+  ],
+  "sourcesOfError": [
+    "Shaking for different times or with different vigour between runs, which changes the initial droplet size and invalidates the comparison.",
+    "Omitting the control with no emulsifier, leaving nothing against which the stabilised emulsion can be judged.",
+    "Judging the endpoint inconsistently, sometimes at the first film of oil and sometimes at full separation.",
+    "Attributing a long separation time to the emulsifier when it is really due to the high viscosity of the oil.",
+    "Using different oil-to-water ratios between runs."
+  ],
+  "viva": [
+    {
+      "question": "What is an emulsion?",
+      "expectedConcept": "A colloidal dispersion of one liquid in another liquid with which it is immiscible.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Liquid dispersed in liquid.",
+      "commonMisconception": "That an emulsion is a true solution of oil in water."
+    },
+    {
+      "question": "How does an emulsifying agent work?",
+      "expectedConcept": "Its polar head sits in the water and its non-polar tail in the oil, lowering the interfacial tension and putting a protective layer around each droplet.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "A molecule with two ends of opposing affinity.",
+      "commonMisconception": "That it makes the two liquids chemically miscible."
+    },
+    {
+      "question": "Name the two types of emulsion.",
+      "expectedConcept": "Oil dispersed in water, and water dispersed in oil.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Named by which phase is dispersed.",
+      "commonMisconception": "That the type depends only on which liquid is present in excess."
+    },
+    {
+      "question": "How does the dilution test identify the type?",
+      "expectedConcept": "An emulsion mixes freely with whichever liquid is its continuous phase, so one that mixes with water is oil-in-water.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "It mixes with its own continuous phase.",
+      "commonMisconception": "That the denser liquid is always the continuous phase."
+    },
+    {
+      "question": "Why does a small amount of soap have such a large effect?",
+      "expectedConcept": "It makes the droplets several times smaller, and the separation time depends on the square of the droplet radius, so the effect is amplified.",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "Stokes’ law depends on r².",
+      "commonMisconception": "That the effect is purely electrostatic."
+    },
+    {
+      "question": "Why does adding more and more emulsifier stop helping?",
+      "expectedConcept": "Once the whole oil-water interface is covered there is nowhere for further agent to act, so the effect saturates.",
+      "difficulty": "medium",
+      "bloom": "Analyse",
+      "answerLogic": "The interface becomes saturated.",
+      "commonMisconception": "That stability rises indefinitely with concentration."
+    },
+    {
+      "question": "Why is a control with no emulsifier essential?",
+      "expectedConcept": "Without it there is no baseline, and a slow separation caused by a viscous oil could be mistaken for stabilisation.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "A comparison needs a baseline.",
+      "commonMisconception": "That the stabilised emulsion can be judged on its own."
+    },
+    {
+      "question": "Give an everyday example of an emulsion.",
+      "expectedConcept": "Milk is fat dispersed in water, stabilised by casein; butter is water dispersed in fat.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Milk and butter are opposite types.",
+      "commonMisconception": "That milk and butter are the same type of emulsion."
+    },
+    {
+      "question": "What is the cleansing action of soap?",
+      "expectedConcept": "Soap emulsifies the oily dirt, surrounding it in micelles that are carried away in the water.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Emulsification of grease.",
+      "commonMisconception": "That soap dissolves grease chemically."
+    },
+    {
+      "question": "Why does castor oil separate slowly even without an emulsifier?",
+      "expectedConcept": "Its viscosity is more than ten times that of mustard oil, and Stokes’ law makes the rise speed inversely proportional to viscosity.",
+      "difficulty": "hard",
+      "bloom": "Analyse",
+      "answerLogic": "Viscosity slows the rise independently of the agent.",
+      "commonMisconception": "That a long separation time always means a stable emulsion."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "An emulsifying agent works because its molecule has:",
+        "options": [
+          "Two polar ends",
+          "Two non-polar ends",
+          "A polar head and a non-polar tail",
+          "No structure"
+        ],
+        "answer": 2,
+        "feedback": "The two ends let it sit at the oil-water boundary, one end in each phase."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "Milk is an emulsion of:",
+        "options": [
+          "Water in fat",
+          "Fat in water",
+          "Fat in fat",
+          "Air in water"
+        ],
+        "answer": 1,
+        "feedback": "Milk is fat dispersed in water, stabilised by the protein casein."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Time the separation with NO emulsifier first: that is your control.",
+        "check": "rows>=1"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Time at least two mixtures so the effect of the agent can be compared.",
+        "check": "rows>=3"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "Halving the droplet radius changes the separation time by a factor of:",
+        "options": [
+          "2",
+          "4",
+          "1/2",
+          "1/4"
+        ],
+        "answer": 1,
+        "feedback": "Stokes’ law makes the rise speed proportional to r², so the time goes up fourfold."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "An emulsion that mixes freely with water is:",
+        "options": [
+          "Water in oil",
+          "Oil in water",
+          "Neither",
+          "Both"
+        ],
+        "answer": 1,
+        "feedback": "An emulsion mixes with its own continuous phase, so water must be the continuous phase."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Stokes’ law: v = 2r²(Δρ)g / 9η",
+    "assumptions": [
+      "Stokes’ law: v = 2r²(Δρ)g / 9η",
+      "Separation time t = h / v, so t ∝ η / (r² Δρ)",
+      "Halving the droplet radius multiplies the separation time by four",
+      "Stabilisation ratio = separation time with agent / separation time without"
+    ],
+    "validRange": "Oil and water alone separate in a little over a minute. With about one per cent ",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "Shaking for different times or with different vigour between runs, which changes the initial droplet size and invalidates the comparison.",
+      "Omitting the control with no emulsifier, leaving nothing against which the stabilised emulsion can be judged.",
+      "Judging the endpoint inconsistently, sometimes at the first film of oil and sometimes at full separation.",
+      "Attributing a long separation time to the emulsifier when it is really due to the high viscosity of the oil."
+    ],
+    "expectedBehaviour": [
+      "Oil and water alone separate in a little over a minute. With about one per cent of soap the same mixture stays emulsified for half an hour or more, a stabilisation ratio of roughly twenty, and detergent is better still. Most of that gain is geometric: the agent makes the droplets several times smaller, and the separation time depends on the square of the radius. Beyond about two per cent the interface is fully covered and more agent achieves almost nothing. Soap, detergent and gum all give oil-in-water emulsions, while lime water gives water-in-oil, as the dilution test shows."
+    ],
+    "testFile": "tests/batch15.test.js"
+  }
+}

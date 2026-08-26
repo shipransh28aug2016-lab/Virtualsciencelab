@@ -1,0 +1,572 @@
+{
+  "id": "XI-PHY-ACT-B6",
+  "class": "XI",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "B",
+    "serial": 6,
+    "kind": "activity",
+    "unit": "Unit VII: Properties of Bulk Matter",
+    "chapter": "Chapter-8: Mechanical Properties of Solids",
+    "topic": "Elastic behaviour, stress-strain relationship, Hooke’s law, Young’s modulus, bulk modulus, shear modulus of rigidity (qualitative idea only), Poisson’s ratio; elastic energy",
+    "subtopic": "Bending of beams; depression of a cantilever and of a beam supported at both ends",
+    "practical": "To study the effect of load on depression of a suitably clamped metre scale loaded at (i) its end (ii) in the middle.",
+    "learningObjectives": [
+      "Be able to study how the depression of a clamped metre scale depends on the load",
+      "Be able to compare the depression when the load is at the free end with that when it is at the middle of a supported beam",
+      "Be able to obtain Young’s modulus for the material of the scale from the slope"
+    ],
+    "competencies": [
+      "Performing a guided activity and recording what is observed rather than what is expected",
+      "Relating a measured quantity to the limits of the instrument used",
+      "Drawing a quantitative conclusion from a small set of readings",
+      "Explaining the physical reason behind each step of the procedure"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Activity 6 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Depression of a clamped metre scale loaded at the end and in the middle",
+  "shortTitle": "Depression of a beam",
+  "objective": [
+    "To study how the depression of a clamped metre scale depends on the load.",
+    "To compare the depression when the load is at the free end with that when it is at the middle of a supported beam.",
+    "To obtain Young’s modulus for the material of the scale from the slope."
+  ],
+  "theory": {
+    "statement": "A metre scale clamped at one end is a cantilever. Hang a load at the free end and it bends. Support the same scale at both ends instead, and load it at the centre, and it bends far less. Both depressions are proportional to the load, but the two arrangements differ by a remarkably large factor.",
+    "derivationNote": "For a cantilever of length L carrying a load W at the free end, the depression is the load times the cube of the length, divided by three times Young’s modulus times the second moment of area. For the same beam supported at both ends and loaded at the centre, the depression is the load times the cube of the span, divided by FORTY-EIGHT times the same product. Everything else being equal, the ratio of the two is forty-eight over three, which is sixteen. A beam supported at both ends and loaded in the middle is sixteen times stiffer than the same beam cantilevered from one end. That is a large and memorable number, and it is why shelves are supported at both ends and why a diving board is fixed at only one. Two other dependences are worth noticing. The depression goes as the CUBE of the length, so halving the span makes the beam eight times stiffer. And the second moment of area for a rectangular section is the breadth times the cube of the depth divided by twelve, so turning a scale on edge instead of laying it flat increases the stiffness enormously. Note that turning it swaps BOTH dimensions: the depth cubed gains a factor of the ratio cubed, but the breadth loses one factor of the ratio, so the stiffness rises by the SQUARE of the ratio, not the cube. For a scale 28 mm wide and 3.2 mm thick that is about seventy-seven times.",
+    "keyEquations": [
+      "Cantilever loaded at the end: depression = W L cubed divided by 3 Y I",
+      "Supported at both ends, loaded centrally: depression = W L cubed divided by 48 Y I",
+      "The ratio of the two depressions is 16",
+      "Second moment of area of a rectangle = breadth times depth cubed, divided by 12"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Metre scale of wood or steel",
+      "spec": "uniform in section",
+      "why": "The beam under test; its dimensions are needed for the second moment of area"
+    },
+    {
+      "name": "G-clamp and rigid bench",
+      "spec": "",
+      "why": "Provides a rigid fixing; a clamp that gives way adds to the apparent depression"
+    },
+    {
+      "name": "Two knife-edge supports",
+      "spec": "for the second arrangement",
+      "why": "Supports the beam at both ends so it can be loaded centrally"
+    },
+    {
+      "name": "Slotted weights and hanger",
+      "spec": "20 g to 500 g",
+      "why": "Applies a known load; the load is the independent variable"
+    },
+    {
+      "name": "Vernier or millimetre scale",
+      "spec": "least count 0.1 mm or 0.5 mm",
+      "why": "Measures the depression, which may be only a few millimetres"
+    },
+    {
+      "name": "Screw gauge and callipers",
+      "spec": "",
+      "why": "Measures the breadth and thickness of the scale, which enter as a cube"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "arrangement",
+      "label": "Arrangement",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "cantileverEnd",
+      "options": [
+        "cantileverEnd",
+        "supportedCentre"
+      ]
+    },
+    {
+      "id": "loadG",
+      "label": "Load",
+      "symbol": "W",
+      "unit": "g",
+      "type": "independent",
+      "min": 0,
+      "max": 500,
+      "step": 20,
+      "default": 50
+    },
+    {
+      "id": "spanCm",
+      "label": "Span",
+      "symbol": "L",
+      "unit": "cm",
+      "type": "independent",
+      "min": 30,
+      "max": 90,
+      "step": 10,
+      "default": 40
+    },
+    {
+      "id": "scale",
+      "label": "Scale",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "wood",
+      "options": [
+        "wood",
+        "steel",
+        "plastic"
+      ]
+    },
+    {
+      "id": "orientation",
+      "label": "Orientation",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "flat",
+      "options": [
+        "flat",
+        "edge"
+      ]
+    },
+    {
+      "id": "gauge",
+      "label": "Gauge",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "mm05",
+      "options": [
+        "mm1",
+        "mm05",
+        "vernier"
+      ]
+    },
+    {
+      "id": "depressionMm",
+      "label": "Depression",
+      "symbol": "δ",
+      "unit": "mm",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Clamp the metre scale firmly to the bench so that a measured length projects horizontally.",
+      "checkpoint": true,
+      "expects": "arrangement"
+    },
+    {
+      "step": 2,
+      "text": "Measure the breadth and thickness of the scale with callipers and a screw gauge.",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Note the position of the free end with no load, using the vernier or millimetre scale.",
+      "checkpoint": true,
+      "expects": "spanCm"
+    },
+    {
+      "step": 4,
+      "text": "Hang a load from the free end and read the new position when it has settled.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 5,
+      "text": "Repeat for at least three increasing loads, staying well within the elastic limit.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 6,
+      "text": "Remove the loads one by one and check that the scale returns to its original position.",
+      "checkpoint": false
+    },
+    {
+      "step": 7,
+      "text": "Now support the scale on two knife edges and load it at the centre of the same span.",
+      "checkpoint": false
+    },
+    {
+      "step": 8,
+      "text": "Plot depression against load for both arrangements and compare the two slopes.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "scale-depression",
+    "renderer": "scale-depression",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "loadG",
+        "widget": "slider"
+      },
+      {
+        "var": "spanCm",
+        "widget": "slider"
+      },
+      {
+        "var": "arrangement",
+        "widget": "segmented",
+        "options": [
+          "cantileverEnd",
+          "supportedCentre"
+        ]
+      },
+      {
+        "var": "scale",
+        "widget": "segmented",
+        "options": [
+          "wood",
+          "steel",
+          "plastic"
+        ]
+      },
+      {
+        "var": "orientation",
+        "widget": "segmented",
+        "options": [
+          "flat",
+          "edge"
+        ]
+      },
+      {
+        "var": "gauge",
+        "widget": "segmented",
+        "options": [
+          "mm1",
+          "mm05",
+          "vernier"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record depression",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "loadG",
+        "label": "Load",
+        "unit": "g",
+        "decimals": 0
+      },
+      {
+        "key": "loadN",
+        "label": "Load",
+        "unit": "N",
+        "decimals": 3
+      },
+      {
+        "key": "spanCm",
+        "label": "Span",
+        "unit": "cm",
+        "decimals": 0
+      },
+      {
+        "key": "depressionMm",
+        "label": "Depression",
+        "unit": "mm",
+        "decimals": 2
+      },
+      {
+        "key": "perNewton",
+        "label": "Per newton",
+        "unit": "mm/N",
+        "decimals": 3
+      },
+      {
+        "key": "arrangement",
+        "label": "Arrangement",
+        "unit": "",
+        "decimals": 0
+      }
+    ],
+    "graph": {
+      "x": "loadN",
+      "y": "depressionMm",
+      "xLabel": "Load (N)",
+      "yLabel": "Depression (mm)",
+      "throughOrigin": true
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Convert each load from grams to newtons",
+      "Plot the depression against the load: it is a straight line through the origin",
+      "Find the slope, in millimetres per newton",
+      "Second moment of area = breadth times thickness cubed, divided by 12",
+      "Young’s modulus follows from the slope, the span and the second moment of area",
+      "Compare the slopes for the two arrangements: the ratio should be about 16"
+    ],
+    "resultKeys": [
+      "youngsModulus",
+      "slope",
+      "ratio"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Young’s modulus for the wooden scale",
+    "symbol": "Y",
+    "value": 11000000000,
+    "tolerance": 2500000000,
+    "unit": "N/m²",
+    "secondary": {
+      "quantity": "Ratio of cantilever to central depression",
+      "value": 16,
+      "tolerance": 3,
+      "unit": ""
+    },
+    "statement": "The depression is directly proportional to the load in both arrangements, giving a straight line through the origin. Young’s modulus for the wooden scale comes out at about eleven gigapascal. The cantilever depresses about sixteen times as much as the same beam supported at both ends and loaded centrally, which is why shelves are supported at both ends."
+  },
+  "safety": [
+    "Keep feet clear of the area beneath the loads; a slotted weight dropped from the hanger is heavy.",
+    "Clamp the scale securely so the whole apparatus cannot tip off the bench.",
+    "Do not overload the scale: a plastic or wooden scale can snap suddenly and fly apart.",
+    "Add and remove weights gently rather than dropping them onto the hanger.",
+    "Wear eye protection if a brittle scale is loaded near its limit."
+  ],
+  "sourcesOfError": [
+    "A clamp that is not perfectly rigid lets the scale rotate, adding to the apparent depression.",
+    "The scale may already be slightly bent before any load is applied.",
+    "The weight of the scale itself contributes a depression that the simple formula ignores.",
+    "The thickness enters as a cube, so a small error in measuring it is magnified threefold.",
+    "Loading beyond the elastic limit means the scale does not return, and the readings are no longer reversible.",
+    "Reading the depression by eye against a scale introduces parallax."
+  ],
+  "viva": [
+    {
+      "question": "Why is the depression proportional to the load?",
+      "expectedConcept": "Because within the elastic limit the material obeys Hooke’s law: strain is proportional to stress. Doubling the load doubles the bending moment everywhere along the beam, and so doubles the curvature and the depression.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Hooke’s law within the elastic limit.",
+      "commonMisconception": "Thinking the relation must curve because bending looks non-linear."
+    },
+    {
+      "question": "Why is a beam supported at both ends sixteen times stiffer than a cantilever?",
+      "expectedConcept": "The formulae differ only in the numerical factor, three for the cantilever and forty-eight for the centrally loaded beam. The ratio is forty-eight over three, which is sixteen. Physically, supporting both ends halves the effective lever arm and shares the bending moment between two supports.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "The factors 3 and 48 give a ratio of 16.",
+      "commonMisconception": "Guessing the factor is two because there are two supports."
+    },
+    {
+      "question": "How does the depression depend on the length of the beam?",
+      "expectedConcept": "It is proportional to the cube of the length. Halving the span makes the beam eight times stiffer, which is why a long shelf sags so much more than a short one of the same board.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Depression varies as L cubed.",
+      "commonMisconception": "Expecting the depression simply to halve when the span is halved."
+    },
+    {
+      "question": "What is the second moment of area, and why does it matter?",
+      "expectedConcept": "It measures how the material of the cross-section is distributed about the neutral axis. For a rectangle it is the breadth times the cube of the depth divided by twelve. Because the depth enters as a cube, material placed far from the neutral axis contributes enormously to the stiffness.",
+      "difficulty": "hard",
+      "bloom": "Understand",
+      "answerLogic": "How the section resists bending; depth enters as a cube.",
+      "commonMisconception": "Thinking only the total area of cross-section matters."
+    },
+    {
+      "question": "Why is a metre scale much stiffer on edge than laid flat?",
+      "expectedConcept": "Because the second moment of area is the breadth times the cube of the depth. Turning the scale on edge swaps both dimensions: the depth cubed gains a factor of the ratio cubed, while the breadth loses one factor of it, so the stiffness rises by the SQUARE of the ratio. For a scale 28 mm wide and 3.2 mm thick that is about seventy-seven times.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Stiffness rises as the square of the width-to-thickness ratio.",
+      "commonMisconception": "Assuming the orientation makes no difference since it is the same piece of wood."
+    },
+    {
+      "question": "Why must the load be kept within the elastic limit?",
+      "expectedConcept": "Beyond it the material does not return to its original shape when unloaded, the depression is no longer proportional to the load, and the graph ceases to be a straight line. The whole analysis assumes elastic behaviour.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Only elastic deformation is reversible and linear.",
+      "commonMisconception": "Thinking a bigger load simply gives a better reading."
+    },
+    {
+      "question": "Which is bent more, a steel scale or a wooden one of the same size?",
+      "expectedConcept": "The wooden one, by a large margin. Young’s modulus for steel is around two hundred gigapascal against about eleven for wood, so for the same load and section the steel bends less than a twentieth as much.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "A larger Young’s modulus means less bending.",
+      "commonMisconception": "Judging by density or hardness rather than by Young’s modulus."
+    },
+    {
+      "question": "What does Young’s modulus measure?",
+      "expectedConcept": "The ratio of longitudinal stress to longitudinal strain within the elastic limit. It is a measure of how stiff the material is: a large value means a large stress is needed to produce a small strain.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Stress divided by strain.",
+      "commonMisconception": "Confusing stiffness with strength, which is the stress at which it breaks."
+    },
+    {
+      "question": "Why is the thickness of the scale measured with a screw gauge rather than a ruler?",
+      "expectedConcept": "Because it enters the calculation as a cube. A one per cent error in the thickness produces a three per cent error in the second moment of area and therefore in Young’s modulus, so it must be measured with the most precise instrument available.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "A cubed quantity magnifies its error threefold.",
+      "commonMisconception": "Treating all the measurements as equally important."
+    },
+    {
+      "question": "Why is a diving board fixed at one end but a shelf supported at both?",
+      "expectedConcept": "A diving board is deliberately made springy, and a cantilever gives the large deflection wanted. A shelf must not sag, so it is supported at both ends, which for the same board and span is about sixteen times stiffer.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Choose the arrangement for the stiffness you want.",
+      "commonMisconception": "Thinking the difference is only about strength or safety."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The depression of a loaded cantilever is proportional to:",
+        "options": [
+          "The load",
+          "The square of the load",
+          "The square root of the load",
+          "The reciprocal of the load"
+        ],
+        "answer": 0,
+        "feedback": "Within the elastic limit, depression is directly proportional to the load."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "Compared with a cantilever, a beam supported at both ends and loaded centrally depresses:",
+        "options": [
+          "16 times more",
+          "16 times less",
+          "The same",
+          "Twice as much"
+        ],
+        "answer": 1,
+        "feedback": "The factors 3 and 48 give a ratio of sixteen."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "The depression of a beam depends on its length as:",
+        "options": [
+          "L",
+          "L squared",
+          "L cubed",
+          "The square root of L"
+        ],
+        "answer": 2,
+        "feedback": "It varies as the cube of the length, so halving the span gives an eightfold reduction."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record the depression for three or more different loads.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Take readings in both arrangements to compare them.",
+        "check": "bothArrangements"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the ratio of the cantilever depression to the centrally loaded depression.",
+        "answer": 16,
+        "tolerance": 4,
+        "feedback": "About sixteen, from the factors 3 and 48 in the two formulae."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "You turned the scale on edge and it barely bent. This is because:",
+        "options": [
+          "It became heavier",
+          "The depth in the bending direction enters as a cube",
+          "The material changed",
+          "The load was smaller"
+        ],
+        "answer": 1,
+        "feedback": "The second moment of area goes as breadth times depth cubed; turning it on edge swaps both, so the stiffness rises as the square of the width-to-thickness ratio — about seventy-seven times here."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "The thickness is measured with a screw gauge because:",
+        "options": [
+          "It is quicker",
+          "It enters the result as a cube, so its error is magnified threefold",
+          "It is thinner than a millimetre",
+          "It is required by the syllabus"
+        ],
+        "answer": 1,
+        "feedback": "A cubed quantity triples the percentage error, so it needs the most precise instrument."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Cantilever loaded at the end: depression = W L cubed divided by 3 Y I",
+    "assumptions": [
+      "Cantilever loaded at the end: depression = W L cubed divided by 3 Y I",
+      "Supported at both ends, loaded centrally: depression = W L cubed divided by 48 Y I",
+      "The ratio of the two depressions is 16",
+      "Second moment of area of a rectangle = breadth times depth cubed, divided by 12"
+    ],
+    "validRange": "The depression is directly proportional to the load in both arrangements, giving",
+    "unitSystem": "SI units with practical laboratory units as noted",
+    "edgeCases": [
+      "A clamp that is not perfectly rigid lets the scale rotate, adding to the apparent depression.",
+      "The scale may already be slightly bent before any load is applied.",
+      "The weight of the scale itself contributes a depression that the simple formula ignores.",
+      "The thickness enters as a cube, so a small error in measuring it is magnified threefold."
+    ],
+    "expectedBehaviour": [
+      "The depression is directly proportional to the load in both arrangements, giving a straight line through the origin. Young’s modulus for the wooden scale comes out at about eleven gigapascal. The cantilever depresses about sixteen times as much as the same beam supported at both ends and loaded centrally, which is why shelves are supported at both ends."
+    ],
+    "testFile": "tests/batch9.test.js"
+  }
+}

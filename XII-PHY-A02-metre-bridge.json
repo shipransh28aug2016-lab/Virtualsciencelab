@@ -1,0 +1,555 @@
+{
+  "id": "XII-PHY-A02",
+  "class": "XII",
+  "subject": "Physics",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Physics",
+    "subjectCode": "042",
+    "section": "A",
+    "serial": 2,
+    "unit": "Unit II: Current Electricity",
+    "chapter": "Chapter-3: Current Electricity",
+    "topic": "Electric current; Ohm's law; resistance and resistivity; series and parallel combinations of resistors; Wheatstone bridge",
+    "subtopic": "Wheatstone bridge and its application in the metre bridge; balance condition; null method",
+    "practical": "To find resistance of a given wire / standard resistor using metre bridge.",
+    "learningObjectives": [
+      "State and apply the balance condition of a Wheatstone bridge",
+      "Locate the null point on a metre bridge using a galvanometer and jockey",
+      "Calculate an unknown resistance from S = R(100 − l)/l",
+      "Explain why the balance point should lie near the middle of the wire",
+      "Determine the resistivity of the material of the wire from its resistance and dimensions",
+      "Verify the laws of series and parallel combination of resistances"
+    ],
+    "competencies": [
+      "Setting up a circuit from a circuit diagram and tracing connections",
+      "Use of a null method, and appreciating why it is more accurate than a deflection method",
+      "Minimising percentage error by choosing the operating range of an instrument",
+      "Analysing the effect of end resistance and contact resistance on a measurement"
+    ],
+    "sourceReference": "CBSE Physics (042) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-A, Experiment 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Metre bridge: resistance of a wire and the Wheatstone balance",
+  "shortTitle": "Metre Bridge",
+  "objective": [
+    "To find the resistance of a given wire using a metre bridge.",
+    "To determine the resistivity of the material of the wire.",
+    "To verify the laws of combination of resistances in series and in parallel."
+  ],
+  "theory": {
+    "statement": "A metre bridge is a practical form of the Wheatstone bridge in which two of the four arms are the two parts of a uniform one-metre wire, divided by the position of the jockey.",
+    "derivationNote": "In a balanced Wheatstone bridge the galvanometer carries no current and P/Q = R/S. On a metre bridge the arms P and Q are the two lengths of the bridge wire, l and (100 − l). Because the wire is uniform, its resistance is proportional to length, so P/Q = l/(100 − l). Hence R/S = l/(100 − l), giving S = R(100 − l)/l. Since no current flows through the galvanometer at balance, the result does not depend on the galvanometer's resistance or on the cell's e.m.f. — this is why a null method is more reliable than a deflection method. The resistivity then follows from S = ρL/A with A = πD²/4.",
+    "keyEquations": [
+      "Balance condition: P/Q = R/S",
+      "P/Q = l/(100 − l) for a uniform wire",
+      "S = R(100 − l)/l",
+      "ρ = S·A/L = S·πD²/(4L)",
+      "Series: S = S₁ + S₂;  Parallel: 1/S = 1/S₁ + 1/S₂"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Metre bridge",
+      "spec": "one metre of uniform constantan wire on a wooden board with a metre scale",
+      "why": "Provides the two ratio arms as two lengths of one uniform wire"
+    },
+    {
+      "name": "Resistance box",
+      "spec": "0–100 Ω, plug type",
+      "why": "Supplies the known resistance R in the left gap"
+    },
+    {
+      "name": "Galvanometer",
+      "spec": "centre-zero, sensitive",
+      "why": "Detects the null point; must show deflection either side of zero"
+    },
+    {
+      "name": "Jockey",
+      "spec": "sharp knife edge",
+      "why": "Makes contact at one definite point on the bridge wire"
+    },
+    {
+      "name": "Leclanche cell or battery eliminator",
+      "spec": "2 V",
+      "why": "Drives the current through the bridge; a low voltage prevents heating"
+    },
+    {
+      "name": "One-way key",
+      "spec": "plug key",
+      "why": "Breaks the circuit when readings are not being taken, so the wire does not heat"
+    },
+    {
+      "name": "Unknown resistance coil",
+      "spec": "constantan or nichrome wire",
+      "why": "The resistance to be determined, placed in the right gap"
+    },
+    {
+      "name": "Screw gauge",
+      "spec": "least count 0.001 cm",
+      "why": "Measures the diameter of the wire, needed for resistivity"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "resistanceBox",
+      "label": "Resistance from box",
+      "symbol": "R",
+      "unit": "Ω",
+      "type": "independent",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "id": "jockeyCm",
+      "label": "Jockey position",
+      "symbol": "l",
+      "unit": "cm",
+      "type": "independent",
+      "min": 1,
+      "max": 99,
+      "step": 0.1,
+      "default": 50
+    },
+    {
+      "id": "unknown",
+      "label": "Unknown coil",
+      "symbol": "S",
+      "unit": "Ω",
+      "type": "control",
+      "default": "coilA",
+      "options": [
+        "coilA",
+        "coilB",
+        "coilC"
+      ]
+    },
+    {
+      "id": "combination",
+      "label": "Combination",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "single",
+      "options": [
+        "single",
+        "series",
+        "parallel"
+      ]
+    },
+    {
+      "id": "emf",
+      "label": "Cell e.m.f.",
+      "symbol": "E",
+      "unit": "V",
+      "type": "controlled",
+      "min": 1,
+      "max": 4,
+      "step": 0.5,
+      "default": 2
+    },
+    {
+      "id": "unknownS",
+      "label": "Unknown resistance",
+      "symbol": "S",
+      "unit": "Ω",
+      "type": "dependent"
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Connect the resistance box in the left gap and the unknown coil in the right gap of the metre bridge.",
+      "checkpoint": true,
+      "expects": "wiringCorrect"
+    },
+    {
+      "step": 2,
+      "text": "Connect the cell and key across the full length of the bridge wire, and the galvanometer between the central strip and the jockey.",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Take out a suitable plug from the resistance box, choosing R roughly equal to the expected unknown so the null point falls near the middle.",
+      "checkpoint": true,
+      "expects": "resistanceBox"
+    },
+    {
+      "step": 4,
+      "text": "Insert the key and press the jockey gently at the left end, then at the right end. Check that the galvanometer deflects in opposite directions.",
+      "checkpoint": false
+    },
+    {
+      "step": 5,
+      "text": "Slide the jockey along the wire until the galvanometer shows no deflection. Note the balancing length l.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 6,
+      "text": "Calculate S = R(100 − l)/l for this reading.",
+      "checkpoint": false
+    },
+    {
+      "step": 7,
+      "text": "Repeat with at least two more values of R so that the null point still lies between 40 and 60 cm.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 8,
+      "text": "Measure the diameter of the wire with a screw gauge at several places and take the mean.",
+      "checkpoint": false
+    },
+    {
+      "step": 9,
+      "text": "Calculate the mean resistance and the resistivity ρ = SπD²/4L. Repeat the whole procedure for the coils in series and in parallel.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "metre-bridge",
+    "renderer": "metre-bridge",
+    "fps": 60,
+    "controls": [
+      {
+        "var": "jockeyCm",
+        "widget": "slider"
+      },
+      {
+        "var": "resistanceBox",
+        "widget": "slider"
+      },
+      {
+        "var": "unknown",
+        "widget": "segmented",
+        "options": [
+          "coilA",
+          "coilB",
+          "coilC"
+        ]
+      },
+      {
+        "var": "combination",
+        "widget": "segmented",
+        "options": [
+          "single",
+          "series",
+          "parallel"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "findNull",
+        "label": "Record balance point",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "resistanceBox",
+        "label": "R",
+        "unit": "Ω",
+        "decimals": 0
+      },
+      {
+        "key": "balanceLength",
+        "label": "l",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "rightLength",
+        "label": "100 − l",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "unknownS",
+        "label": "S = R(100−l)/l",
+        "unit": "Ω",
+        "decimals": 3
+      }
+    ],
+    "graph": {
+      "x": "resistanceBox",
+      "y": "balanceLength",
+      "xLabel": "R (Ω)",
+      "yLabel": "Balance length l (cm)",
+      "throughOrigin": false
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "For each trial: S = R(100 − l)/l",
+      "Mean S = ΣS / n",
+      "Area of cross-section A = πD²/4",
+      "Resistivity ρ = S·A/L"
+    ],
+    "resultKeys": [
+      "resistance",
+      "rho",
+      "expected"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Resistance of the given coil",
+    "symbol": "S",
+    "value": 4.7,
+    "tolerance": 0.15,
+    "unit": "Ω",
+    "secondary": {
+      "quantity": "Resistivity of constantan",
+      "value": 4.52e-07,
+      "tolerance": 5e-08,
+      "unit": "Ω·m"
+    },
+    "statement": "The resistance of the given coil is about 4.7 Ω. The series combination gives the sum of the individual resistances and the parallel combination gives a value smaller than either, confirming the laws of combination."
+  },
+  "safety": [
+    "Press the jockey gently and only for an instant; dragging it along the wire scrapes the surface and destroys the uniformity on which the whole method depends.",
+    "Keep the key open except while actually taking a reading, so the wire does not heat.",
+    "Use a cell of about 2 V; a higher voltage passes a large current and changes the resistance of the wire by heating it.",
+    "Check that all connections are tight and the terminals clean before switching on."
+  ],
+  "sourcesOfError": [
+    "The bridge wire may not be perfectly uniform in cross-section along its length.",
+    "End resistances at the copper strips and contact resistance at the terminals are not accounted for.",
+    "Heating of the wire by the current changes its resistance during the experiment.",
+    "Error in reading the position of the jockey against the metre scale, made worse if the null point is near either end.",
+    "The resistance box plugs may be loose or dirty, adding an unknown extra resistance."
+  ],
+  "viva": [
+    {
+      "question": "State the balance condition of a Wheatstone bridge.",
+      "expectedConcept": "When no current flows through the galvanometer, the ratio of the resistances in the two arms on one side equals that on the other: P/Q = R/S.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "The four-arm ratio condition.",
+      "commonMisconception": "Saying the four resistances must be equal."
+    },
+    {
+      "question": "Why is the metre bridge called a null method, and why is that an advantage?",
+      "expectedConcept": "The reading is taken when the galvanometer shows zero deflection. At that instant no current passes through the galvanometer, so neither its resistance nor its calibration, nor the e.m.f. of the cell, affects the result.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Independence from instrument calibration is the key advantage.",
+      "commonMisconception": "Thinking a more sensitive galvanometer gives a different answer."
+    },
+    {
+      "question": "Why should the balance point lie near the middle of the wire?",
+      "expectedConcept": "The percentage error in S depends on the errors in both l and (100 − l). When the null point is near the centre these two lengths are comparable and large, so a fixed reading error of say 0.1 cm is a small fraction of each. Near either end one of them becomes small and the fractional error blows up.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Error propagation through S = R(100 − l)/l.",
+      "commonMisconception": "Saying only that it is 'easier to read' in the middle."
+    },
+    {
+      "question": "What is end error and how can it be eliminated?",
+      "expectedConcept": "End error arises from the resistance of the copper strips and the contacts at the ends of the bridge wire, which effectively add a small length to each side. It is eliminated by interchanging the positions of R and S and taking the mean of the two results.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Interchanging cancels the systematic offset.",
+      "commonMisconception": "Confusing it with zero error of the metre scale."
+    },
+    {
+      "question": "Why is a low voltage cell used?",
+      "expectedConcept": "A higher voltage drives a larger current through the bridge wire, heating it. Heating raises the resistance of the wire, so the resistance per unit length is no longer constant and the balance point drifts.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Joule heating changes the very property the method assumes constant.",
+      "commonMisconception": "Thinking a bigger cell simply gives a bigger deflection and is therefore better."
+    },
+    {
+      "question": "Why must the jockey be pressed and not dragged?",
+      "expectedConcept": "Dragging scrapes the wire, changing its cross-section locally. Since the method depends on the wire's resistance being exactly proportional to length, any non-uniformity introduces a permanent error into every later reading.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Preserving uniformity of the wire.",
+      "commonMisconception": "Thinking it is only about damaging the equipment."
+    },
+    {
+      "question": "The galvanometer shows deflection in the same direction at both ends of the wire. What is wrong?",
+      "expectedConcept": "There is a fault in the circuit — usually a broken connection, a loose plug in the resistance box, or the resistance box set to zero. A correctly connected bridge must deflect in opposite directions at the two ends, since the null point lies between them.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Opposite deflections bracket the null point.",
+      "commonMisconception": "Continuing to slide the jockey in search of a null that cannot exist."
+    },
+    {
+      "question": "Which material is used for the bridge wire and why?",
+      "expectedConcept": "Constantan or manganin, because they have a high resistivity and a very low temperature coefficient of resistance, so the resistance hardly changes as the wire warms.",
+      "difficulty": "medium",
+      "bloom": "Remember",
+      "answerLogic": "Low temperature coefficient is the deciding property.",
+      "commonMisconception": "Suggesting copper, which has too low a resistivity and too high a temperature coefficient."
+    },
+    {
+      "question": "How would you find the resistivity from your result?",
+      "expectedConcept": "Measure the length L of the wire and its diameter D with a screw gauge, compute the area A = πD²/4, then use ρ = S·A/L.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "ρ = RA/L with A from the diameter.",
+      "commonMisconception": "Using the radius where the diameter was measured, giving a result four times too small."
+    },
+    {
+      "question": "Can a metre bridge be used to measure a very high resistance, say 1 MΩ?",
+      "expectedConcept": "No. To balance such a resistance the ratio arms would need to be enormously unequal, so the null point would lie extremely close to one end where the percentage error is unacceptable. High resistances are measured instead by other methods such as a post office box used differently, or by a substitution method.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "The practical range follows from the balance point staying on the wire.",
+      "commonMisconception": "Assuming any resistance can be measured if a large enough R is available."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "At balance in a metre bridge, the current through the galvanometer is:",
+        "options": [
+          "Maximum",
+          "Zero",
+          "Equal to the cell current",
+          "Half the cell current"
+        ],
+        "answer": 1,
+        "feedback": "Balance is defined by zero galvanometer current, which is why the method is called a null method."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "If R = 5 Ω and the balance length is 50 cm, the unknown resistance is:",
+        "options": [
+          "2.5 Ω",
+          "5 Ω",
+          "10 Ω",
+          "Cannot be found"
+        ],
+        "answer": 1,
+        "feedback": "S = R(100 − l)/l = 5 × 50/50 = 5 Ω. A central null point means the two resistances are equal."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "The bridge wire is made of constantan mainly because it has:",
+        "options": [
+          "High conductivity",
+          "A low temperature coefficient of resistance",
+          "Low density",
+          "High melting point"
+        ],
+        "answer": 1,
+        "feedback": "A low temperature coefficient keeps the resistance per unit length constant even as the wire warms slightly."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Connect the resistance box and the unknown in the correct gaps.",
+        "check": "wiringCorrect"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Record at least three balance points with different values of R.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur3",
+        "type": "task",
+        "question": "Keep every balance point between 40 cm and 60 cm.",
+        "check": "concordant"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the mean resistance of the coil you obtained (Ω).",
+        "answer": 4.7,
+        "tolerance": 0.2,
+        "feedback": "The coil supplied has a resistance of about 4.7 Ω."
+      },
+      {
+        "id": "post2",
+        "type": "mcq",
+        "question": "The null point is found at 8 cm. What should you do?",
+        "options": [
+          "Record it and calculate S",
+          "Increase R so the null point moves towards the middle",
+          "Decrease R",
+          "Use a more sensitive galvanometer"
+        ],
+        "answer": 1,
+        "feedback": "A null point at 8 cm gives a very large percentage error. Since l = 100R/(R + S), increasing R moves the balance point to the right."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Two coils of 4.7 Ω and 8.2 Ω are connected in parallel. The metre bridge should give about:",
+        "options": [
+          "12.9 Ω",
+          "6.45 Ω",
+          "2.99 Ω",
+          "1.74 Ω"
+        ],
+        "answer": 2,
+        "feedback": "1/S = 1/4.7 + 1/8.2 gives S = 2.99 Ω, which is less than either resistance."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "R/S = l/(100 − l); S = R(100 − l)/l; ρ = SπD²/(4L)",
+    "assumptions": [
+      "Bridge wire uniform in cross-section and material",
+      "Resistance per unit length constant",
+      "End and contact resistances negligible",
+      "Galvanometer sensitive enough to detect the null",
+      "Negligible heating of the wire"
+    ],
+    "validRange": "Unknown 1 to 20 Ω; R 1 to 20 Ω; balance point kept between 30 and 70 cm",
+    "unitSystem": "Lengths in cm, resistance in Ω, resistivity in Ω·m",
+    "edgeCases": [
+      "R = 0: no balance possible — blocked as an error",
+      "Balance below 20 cm or above 80 cm: percentage error large — warned",
+      "Equal R and S balance exactly at 50.0 cm",
+      "Interchanging R and S moves the balance point to (100 − l)"
+    ],
+    "expectedBehaviour": [
+      "Null point shifts left as the unknown resistance increases",
+      "Galvanometer deflects in opposite senses on the two sides of the null",
+      "Series combination gives S₁ + S₂ to within 3%",
+      "Parallel combination gives S₁S₂/(S₁ + S₂)"
+    ],
+    "testFile": "tests/batch2.test.js"
+  }
+}
