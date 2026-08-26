@@ -6,6 +6,7 @@
 <title>CBSE V-LAB 2026–27 · Virtual Physics Laboratory</title>
 <meta name="description" content="Offline-first virtual laboratory for CBSE Class XI and XII Physics (042). Interactive experiments, observation notebook, viva and assessment. Works with no internet." />
 <meta name="theme-color" content="#eef2f8" />
+<meta name="author" content="Paras Pranav" />
 <link rel="manifest" href="manifest.webmanifest" />
 <link rel="stylesheet" href="assets/app.css" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f8cff'/%3E%3Cpath d='M12 6h8M13 6v8l-6 10a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-6-10V6' stroke='%23fff' stroke-width='2' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E" />
@@ -84,6 +85,7 @@
             <div class="canvas-wrap"><canvas id="cv" width="900" height="560" role="img" aria-label="Experiment apparatus"></canvas></div>
             <div class="toolbar" id="toolbar"></div>
             <div class="readouts" id="readouts"></div>
+            <div class="live-config" id="liveConfig" aria-live="polite"></div>
             <div class="feedback" id="feedback" role="alert" aria-live="polite"></div>
           </div>
 
@@ -94,25 +96,38 @@
         </div>
 
         <div>
-          <div class="panel glass">
-            <h4>Apparatus controls</h4>
-            <div id="controls"></div>
+          <div class="panel glass panel-collapsible" id="panelControls">
+            <button class="panel-head" type="button" aria-expanded="true" aria-controls="controlsBody">
+              <h4>Apparatus controls</h4><span class="rule"></span>
+              <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="panel-body" id="controlsBody"><div><div id="controls"></div></div></div>
           </div>
 
-          <div class="panel glass">
-            <h4>Observation table</h4>
-            <div class="tblwrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
-            <div class="toolbar" style="margin-top:9px">
-              <button class="btn sm" id="csvBtn">Export CSV</button>
-              <button class="btn sm ghost" id="clearBtn">Clear table</button>
-            </div>
-            <div class="result-box" id="resultBox">Take readings, then calculate the result.</div>
+          <div class="panel glass panel-collapsible" id="panelTable">
+            <button class="panel-head" type="button" aria-expanded="true" aria-controls="tableBody">
+              <h4>Observation table</h4><span class="rule"></span>
+              <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="panel-body" id="tableBody"><div>
+              <div class="tblwrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+              <div class="toolbar" style="margin-top:9px">
+                <button class="btn sm" id="csvBtn">Export CSV</button>
+                <button class="btn sm ghost" id="clearBtn">Clear table</button>
+              </div>
+              <div class="result-box" id="resultBox">Take readings, then calculate the result.</div>
+            </div></div>
           </div>
 
-          <div class="panel glass" id="graphPanel">
-            <h4>Graph</h4>
-            <div id="graph"></div>
-            <div class="hint" id="graphHint"></div>
+          <div class="panel glass panel-collapsible" id="graphPanel">
+            <button class="panel-head" type="button" aria-expanded="true" aria-controls="graphBody">
+              <h4>Graph</h4><span class="rule"></span>
+              <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="panel-body" id="graphBody"><div>
+              <div id="graph"></div>
+              <div class="hint" id="graphHint"></div>
+            </div></div>
           </div>
         </div>
       </div>
@@ -141,6 +156,7 @@
   <footer>
     <div>CBSE V-LAB 2026–27 · Curriculum traced to <span style="color:var(--muted)">cbseacademic.nic.in</span> Physics (042) 2026–27 · runs fully offline after first load.</div>
     <div style="margin-top:6px;font-size:11px">Simulations are pedagogical models. Always follow your school's safety rules in a physical laboratory.</div>
+    <div class="credit">Designed &amp; Developed by <strong>Paras Pranav</strong><span class="sep">·</span>© 2026 Paras Pranav. All Rights Reserved.</div>
   </footer>
 </div>
 
