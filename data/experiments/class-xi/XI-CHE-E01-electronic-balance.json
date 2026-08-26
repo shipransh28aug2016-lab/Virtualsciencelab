@@ -1,0 +1,340 @@
+{
+  "id": "XI-CHE-E01",
+  "class": "XI",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "E",
+    "serial": 1,
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 1: Some Basic Concepts of Chemistry",
+    "topic": "Mole concept; the balance as the starting instrument of quantitative chemistry",
+    "subtopic": "Correct use of an electronic (top-pan) balance: taring, readability, weighing by difference",
+    "practical": "Using a mechanical balance/electronic balance.",
+    "learningObjectives": [
+      "Zero (tare) a balance correctly before weighing",
+      "Read a digital balance to its stated readability",
+      "Weigh a sample by difference so any residue left behind is caught",
+      "Recognise an unstable/drifting reading and know its likely cause"
+    ],
+    "competencies": [
+      "Careful qualitative and quantitative observation",
+      "Relating an observation to the underlying chemical principle",
+      "Systematic, evidence-based reasoning"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-E, Experiment 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Weighing by an electronic balance",
+  "shortTitle": "Electronic Balance",
+  "objective": [
+    "Zero (tare) a balance correctly before weighing",
+    "Read a digital balance to its stated readability",
+    "Weigh a sample by difference so any residue left behind is caught",
+    "Recognise an unstable/drifting reading and know its likely cause"
+  ],
+  "theory": {
+    "statement": "Quantitative chemistry starts with an accurate mass. A modern electronic balance displays mass directly (unlike a null beam balance), but using it correctly still requires taring the container, waiting for the reading to settle, and reading no more digits than its stated readability justifies.",
+    "derivationNote": "Weighing 'by difference' — weighing the container plus solute, then weighing the container again after transferring the solute out — gives the mass actually transferred, and automatically detects any solid left clinging to the container. A single weighing of an empty container assumed to be exactly a round number can hide a real, uncorrected error.",
+    "keyEquations": [
+      "Net mass = gross reading − tare (container) mass",
+      "Mass transferred (by difference) = mass before transfer − mass after transfer"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Electronic balance",
+      "spec": "readability 0.01 g or 0.001 g",
+      "why": "The weighing instrument"
+    },
+    {
+      "name": "Weighing bottle / watch glass",
+      "spec": "clean, dry",
+      "why": "Container for the sample; never weigh a chemical directly on the pan"
+    },
+    {
+      "name": "Spatula",
+      "spec": "",
+      "why": "Transfers solid without touching it by hand"
+    },
+    {
+      "name": "Sample (salt, coin, or similar)",
+      "spec": "",
+      "why": "The object or substance to be weighed"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "object",
+      "label": "Object to weigh",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "salt5",
+      "options": [
+        "salt5",
+        "coin",
+        "watch",
+        "bottle"
+      ]
+    },
+    {
+      "id": "balance",
+      "label": "Balance",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "digital2",
+      "options": [
+        "digital2",
+        "digital3",
+        "mechanical"
+      ]
+    },
+    {
+      "id": "tared",
+      "label": "Tared with container first",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "containerMassG",
+      "label": "Container (tare) mass",
+      "symbol": "",
+      "unit": "g",
+      "type": "controlled",
+      "min": 0,
+      "max": 20,
+      "step": 0.01,
+      "default": 8.24
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Check the balance is level and switch it on; allow it to warm up if required.",
+      "checkpoint": false
+    },
+    {
+      "step": 2,
+      "text": "Place the empty container on the pan and press tare/zero.",
+      "checkpoint": true,
+      "expects": "tared"
+    },
+    {
+      "step": 3,
+      "text": "Add the sample with a spatula, close any draft shield, and wait for the reading to stop changing.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 4,
+      "text": "Record the stable reading to the balance's full readability.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 5,
+      "text": "Repeat the weighing to check repeatability.",
+      "checkpoint": true,
+      "expects": "rows>=2"
+    },
+    {
+      "step": 6,
+      "text": "Compare the two readings and comment on the balance's precision.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "electronic-balance",
+    "renderer": "electronic-balance",
+    "fps": 15,
+    "controls": [
+      {
+        "var": "object",
+        "widget": "segmented",
+        "options": [
+          "salt5",
+          "coin",
+          "watch",
+          "bottle"
+        ]
+      },
+      {
+        "var": "balance",
+        "widget": "segmented",
+        "options": [
+          "digital2",
+          "digital3",
+          "mechanical"
+        ]
+      },
+      {
+        "var": "tared",
+        "widget": "switch"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record reading",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "object",
+        "label": "Object",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "reading",
+        "label": "Net mass",
+        "unit": "g",
+        "decimals": 3
+      }
+    ],
+    "graph": {
+      "x": "trial",
+      "y": "reading",
+      "xLabel": "Trial number",
+      "yLabel": "Net mass (g)",
+      "throughOrigin": false
+    },
+    "minRows": 2
+  },
+  "calculations": {
+    "steps": [
+      "Tare the balance with the empty container",
+      "Add the sample and wait for a stable reading",
+      "Repeat and compare"
+    ],
+    "resultKeys": [
+      "meanMass",
+      "spread"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Net mass of the salt sample",
+    "symbol": "m",
+    "value": 5.126,
+    "tolerance": 0.05,
+    "unit": "g",
+    "statement": "Correctly tared and read, the electronic balance gives a net mass of about 5.126 g, repeatable to well within its stated readability."
+  },
+  "safety": [
+    "Never weigh a chemical directly on the pan — use a container.",
+    "Do not weigh hot objects; convection currents give an unstable, drifting reading.",
+    "Clean any spillage on the pan immediately."
+  ],
+  "sourcesOfError": [
+    "Forgetting to tare includes the container's mass in the result.",
+    "A draught or vibration prevents the reading from settling.",
+    "A hygroscopic solid gains mass steadily if left open to the air."
+  ],
+  "viva": [
+    {
+      "question": "Why must a chemical never be weighed directly on the pan?",
+      "expectedConcept": "It can corrode or contaminate the pan, and a corrosive or reactive chemical can damage the balance itself. A container also allows the mass to be tared away.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Protects both instrument and sample.",
+      "commonMisconception": "Thinking a quick wipe afterwards is sufficient protection."
+    },
+    {
+      "question": "What does 'weighing by difference' mean, and why is it more reliable?",
+      "expectedConcept": "Weighing the full container, transferring the sample out, then weighing the container again — the difference is the true mass transferred, automatically correcting for any solid left behind.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Catches incomplete transfer that a single weighing would miss.",
+      "commonMisconception": "Believing a single careful weighing is equivalent."
+    },
+    {
+      "question": "Two readings of the same sample differ by 0.02 g on a balance readable to 0.01 g. Is this balance faulty?",
+      "expectedConcept": "Not necessarily — some variation between 0.01 g readings is expected from air currents, static, or minor sample changes; 0.02 g is only two least counts. It becomes concerning only if it is persistent and much larger than the readability.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Small scatter near the least count is normal, not a fault.",
+      "commonMisconception": "Treating any disagreement as an instrument fault."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Taring a balance means:",
+        "options": [
+          "Cleaning the pan",
+          "Setting the display to zero with a container already on the pan",
+          "Calibrating against a standard mass",
+          "Switching it on"
+        ],
+        "answer": 1,
+        "feedback": "Taring zeroes the display so subsequent readings show only the net mass of what is added."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Weigh the sample at least twice to check repeatability.",
+        "check": "rows>=2"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the net mass of the salt sample (g).",
+        "answer": 5.126,
+        "tolerance": 0.06,
+        "feedback": "About 5.126 g when correctly tared."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 40,
+      "postLab": 20,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Net mass = gross − tare",
+    "assumptions": [
+      "Balance is level and zeroed",
+      "No draughts or vibration during weighing"
+    ],
+    "validRange": "0.1-200 g",
+    "unitSystem": "gram",
+    "edgeCases": [
+      "Weighing a hot or hygroscopic sample never truly settles"
+    ],
+    "expectedBehaviour": [
+      "Repeated weighings agree to within the balance's readability"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

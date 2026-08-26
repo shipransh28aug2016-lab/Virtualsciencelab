@@ -1,0 +1,334 @@
+{
+  "id": "XII-CHE-F01",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "F",
+    "serial": 1,
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Unit 1: The Solid State / Preparative Inorganic Chemistry",
+    "topic": "Preparation of a double salt by combining stoichiometric amounts of two simple salts",
+    "subtopic": "Preparation of ferrous ammonium sulphate (Mohr's salt) by crystallisation",
+    "practical": "Preparation of double salt of Ferrous Ammonium Sulphate or Potash Alum.",
+    "learningObjectives": [
+      "Calculate the stoichiometric masses of FeSO4·7H2O and (NH4)2SO4 needed",
+      "Dissolve the two salts together in acidified water and evaporate to crystallisation",
+      "Explain why the solution is acidified with dilute H2SO4 before evaporation",
+      "Calculate the percentage yield against the theoretical mass"
+    ],
+    "competencies": [
+      "Careful qualitative and quantitative observation",
+      "Relating an observation to the underlying chemical principle",
+      "Systematic, evidence-based reasoning"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-F, Experiment 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Preparation of Ferrous Ammonium Sulphate",
+  "shortTitle": "Mohr's Salt Preparation",
+  "objective": [
+    "Calculate the stoichiometric masses of FeSO4·7H2O and (NH4)2SO4 needed",
+    "Dissolve the two salts together in acidified water and evaporate to crystallisation",
+    "Explain why the solution is acidified with dilute H2SO4 before evaporation",
+    "Calculate the percentage yield against the theoretical mass"
+  ],
+  "theory": {
+    "statement": "A double salt is a crystalline compound of two simple salts that exist together in a fixed, stoichiometric ratio in the solid but dissociate completely into their separate simple ions in solution (unlike a complex salt, whose complex ion survives dissolution). Ferrous ammonium sulphate, FeSO4·(NH4)2SO4·6H2O (Mohr's salt), is prepared by crystallising a stoichiometric (1:1 mole) mixture of ferrous sulphate and ammonium sulphate from acidified aqueous solution.",
+    "derivationNote": "Fe2+ is readily oxidised to Fe3+ by air, especially in neutral or alkaline solution; a little dilute sulphuric acid keeps the solution acidic, which slows this oxidation and prevents the iron precipitating as a basic ferric salt before crystallisation. The mixture is evaporated only to the point where a crystallising film just appears on the surface — evaporating to dryness fuses the crystals into an impure mass.",
+    "keyEquations": [
+      "FeSO4·7H2O + (NH4)2SO4 + H2O → FeSO4·(NH4)2SO4·6H2O (crystallises together)",
+      "% yield = (mass of crystals obtained / theoretical mass) × 100"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Ferrous sulphate crystals",
+      "spec": "FeSO4·7H2O",
+      "why": "One component of the double salt"
+    },
+    {
+      "name": "Ammonium sulphate",
+      "spec": "(NH4)2SO4",
+      "why": "The other component, combined in equimolar ratio"
+    },
+    {
+      "name": "Dilute sulphuric acid",
+      "spec": "a few drops",
+      "why": "Prevents oxidation/hydrolysis of Fe2+ during evaporation"
+    },
+    {
+      "name": "China dish and burner",
+      "spec": "",
+      "why": "Evaporates the solution to the point of crystallisation"
+    },
+    {
+      "name": "Ice bath",
+      "spec": "",
+      "why": "Cools the concentrated solution to encourage crystallisation"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "product",
+      "label": "Product",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "mohr",
+      "options": [
+        "mohr",
+        "alum"
+      ]
+    },
+    {
+      "id": "limitingReagentG",
+      "label": "FeSO4·7H2O taken",
+      "symbol": "",
+      "unit": "g",
+      "type": "independent",
+      "min": 3,
+      "max": 12,
+      "step": 0.5,
+      "default": 7
+    },
+    {
+      "id": "acidified",
+      "label": "Acidified with dil. H2SO4",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "cooling",
+      "label": "Cooling",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "slow",
+      "options": [
+        "slow",
+        "fast"
+      ]
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Calculate the equimolar masses of FeSO4·7H2O and (NH4)2SO4 required.",
+      "checkpoint": true,
+      "expects": "limitingReagentG"
+    },
+    {
+      "step": 2,
+      "text": "Dissolve both salts together in the minimum volume of warm water acidified with a few drops of dilute H2SO4.",
+      "checkpoint": true,
+      "expects": "acidified"
+    },
+    {
+      "step": 3,
+      "text": "Filter if necessary, then evaporate over a water bath until a crystallising film just appears.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 4,
+      "text": "Cool slowly and undisturbed to allow large, well-formed pale green crystals to form.",
+      "checkpoint": true,
+      "expects": "cooling"
+    },
+    {
+      "step": 5,
+      "text": "Filter the crystals, dry between filter paper, weigh, and calculate the percentage yield.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "salt-preparation",
+    "renderer": "salt-preparation",
+    "fps": 10,
+    "controls": [
+      {
+        "var": "limitingReagentG",
+        "widget": "slider"
+      },
+      {
+        "var": "acidified",
+        "widget": "switch"
+      },
+      {
+        "var": "cooling",
+        "widget": "segmented",
+        "options": [
+          "slow",
+          "fast"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record yield",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "limitingReagentG",
+        "label": "FeSO4·7H2O",
+        "unit": "g",
+        "decimals": 1
+      },
+      {
+        "key": "crystalMassG",
+        "label": "Crystals obtained",
+        "unit": "g",
+        "decimals": 2
+      },
+      {
+        "key": "percentYield",
+        "label": "% yield",
+        "unit": "%",
+        "decimals": 1
+      }
+    ],
+    "graph": null,
+    "minRows": 1
+  },
+  "calculations": {
+    "steps": [
+      "Combine equimolar FeSO4·7H2O and (NH4)2SO4",
+      "Evaporate to a crystallising film, then cool slowly",
+      "% yield = (mass obtained / theoretical mass) × 100"
+    ],
+    "resultKeys": [
+      "percentYield",
+      "crystalMass"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Percentage yield of Mohr's salt",
+    "symbol": "",
+    "value": 62,
+    "tolerance": 15,
+    "unit": "%",
+    "statement": "Combining stoichiometric FeSO4·7H2O and (NH4)2SO4 in acidified solution, evaporating to a crystallising film and cooling slowly gives pale green Mohr's-salt crystals in about 55-70% yield, with the acid preventing the iron from oxidising and precipitating before it can crystallise."
+  },
+  "safety": [
+    "Dilute sulphuric acid is corrosive — avoid skin/eye contact.",
+    "Handle the hot china dish with tongs, not bare hands."
+  ],
+  "sourcesOfError": [
+    "Insufficient acidification lets Fe2+ oxidise to Fe3+, which precipitates as basic iron(III) sulphate and is lost from the product.",
+    "Evaporating to dryness fuses the crystals into an impure cake.",
+    "Rapid cooling gives small crystals that trap mother liquor and impurity between them."
+  ],
+  "viva": [
+    {
+      "question": "Why must the solution be acidified with dilute sulphuric acid before evaporation?",
+      "expectedConcept": "Fe2+ is readily oxidised by dissolved air, especially as the solution becomes neutral or alkaline on concentration; the acid keeps [H+] high enough to suppress this oxidation and the accompanying hydrolysis/precipitation of basic iron salts.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Acid suppresses Fe2+ oxidation and hydrolysis.",
+      "commonMisconception": "Thinking the acid is needed simply to 'help it dissolve'."
+    },
+    {
+      "question": "What distinguishes a double salt like Mohr's salt from a complex salt?",
+      "expectedConcept": "A double salt exists as a fixed-ratio compound only in the solid state; on dissolving, it dissociates completely into its simple constituent ions (Fe2+, NH4+, SO4^2-). A complex salt's complex ion (e.g. [Fe(CN)6]4-) survives intact in solution.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Behaviour on dissolution is the defining test.",
+      "commonMisconception": "Treating 'double salt' and 'complex salt' as synonyms."
+    },
+    {
+      "question": "Why is the solution evaporated only to a crystallising film, not to dryness?",
+      "expectedConcept": "Evaporating to dryness fuses the crystals together into an impure solid mass that traps mother liquor and its dissolved impurities; stopping at the first sign of crystallisation and then cooling slowly gives separate, well-formed, purer crystals.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Controlled, slow crystallisation gives purer product.",
+      "commonMisconception": "Assuming more evaporation always means more product recovered, ignoring purity."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Mohr's salt is prepared by combining FeSO4·7H2O with:",
+        "options": [
+          "K2SO4",
+          "(NH4)2SO4",
+          "Al2(SO4)3",
+          "CuSO4"
+        ],
+        "answer": 1,
+        "feedback": "Ferrous ammonium sulphate is FeSO4·(NH4)2SO4·6H2O."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Complete at least one preparation and weigh the product.",
+        "check": "rows>=1"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "Acidifying the solution before evaporation mainly prevents:",
+        "options": [
+          "The crystals dissolving again",
+          "Oxidation and hydrolysis of Fe2+",
+          "The solution boiling too fast",
+          "Loss of ammonia"
+        ],
+        "answer": 1,
+        "feedback": "The acid keeps Fe2+ from being oxidised to Fe3+ and hydrolysing."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 40,
+      "postLab": 20,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "% yield = (obtained/theoretical) × 100",
+    "assumptions": [
+      "Equimolar mixing of the two component salts",
+      "Slow, undisturbed cooling for large crystals"
+    ],
+    "validRange": "3-12 g of FeSO4·7H2O",
+    "unitSystem": "gram, %",
+    "edgeCases": [
+      "Unacidified solution loses significant yield to oxidation"
+    ],
+    "expectedBehaviour": [
+      "Pale green, well-formed crystals; yield falls if not acidified"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

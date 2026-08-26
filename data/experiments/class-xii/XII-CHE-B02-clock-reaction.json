@@ -1,0 +1,356 @@
+{
+  "id": "XII-CHE-B02",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "B",
+    "serial": 2,
+    "unit": "Unit 3: Chemical Kinetics",
+    "chapter": "Unit 3: Chemical Kinetics",
+    "topic": "Rate law, order of reaction, effect of concentration and temperature on rate",
+    "subtopic": "The iodine clock reaction: a fixed thiosulphate 'clock' reveals the initial rate",
+    "practical": "Study of reaction rates of Reaction of Iodide ion with Hydrogen Peroxide at room temperature using different concentration of Iodide ions.",
+    "learningObjectives": [
+      "Set up the iodine-clock reaction between iodide and hydrogen peroxide",
+      "Measure the clock time for several different iodide concentrations",
+      "Determine the order of reaction with respect to iodide from a 1/t vs concentration plot",
+      "Determine the activation energy from clock times at different temperatures"
+    ],
+    "competencies": [
+      "Careful qualitative and quantitative observation",
+      "Relating an observation to the underlying chemical principle",
+      "Systematic, evidence-based reasoning"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-B, Experiment 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Rate of reaction: I⁻ + H2O2 (iodine clock)",
+  "shortTitle": "Iodine Clock Reaction",
+  "objective": [
+    "Set up the iodine-clock reaction between iodide and hydrogen peroxide",
+    "Measure the clock time for several different iodide concentrations",
+    "Determine the order of reaction with respect to iodide from a 1/t vs concentration plot",
+    "Determine the activation energy from clock times at different temperatures"
+  ],
+  "theory": {
+    "statement": "H2O2 oxidises I- to I2 slowly: H2O2 + 2I- + 2H+ → I2 + 2H2O. A small, fixed amount of thiosulphate and starch is included with the iodide; thiosulphate reduces the I2 back to I- as fast as it forms (I2 + 2S2O3^2- → 2I- + S4O6^2-), so no colour appears — until the thiosulphate is used up, at which point free iodine appears all at once and the starch turns blue-black. The time to that sudden colour change ('clock time') is inversely proportional to the initial rate of the slow reaction.",
+    "derivationNote": "Since a fixed amount of thiosulphate is consumed at each run, the clock time t is inversely proportional to the rate of I2 production: rate ∝ 1/t. Plotting 1/t against [I-] at constant [H2O2] and temperature gives a straight line through the origin if the reaction is first order in iodide. Repeating at several temperatures and plotting ln(rate) against 1/T gives the activation energy via the Arrhenius equation.",
+    "keyEquations": [
+      "H2O2 + 2I- + 2H+ → I2 + 2H2O (slow)",
+      "I2 + 2S2O3^2- → 2I- + S4O6^2- (fast, 'clock')",
+      "Rate ∝ 1/t; Rate = k[I-]^m[H2O2]^n",
+      "ln k = ln A − Ea/RT"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Potassium iodide solution",
+      "spec": "0.1 M",
+      "why": "Source of iodide ions, the species whose order is being found"
+    },
+    {
+      "name": "Hydrogen peroxide solution",
+      "spec": "1.0 M (dilute)",
+      "why": "The oxidising agent"
+    },
+    {
+      "name": "Sodium thiosulphate solution",
+      "spec": "dilute, fixed small volume each run",
+      "why": "Provides the 'clock': it is consumed at a fixed rate, so the time to its exhaustion measures the reaction rate"
+    },
+    {
+      "name": "Starch solution",
+      "spec": "freshly prepared indicator",
+      "why": "Gives a sharp blue-black colour with free iodine, marking the clock's end point clearly"
+    },
+    {
+      "name": "Stopwatch and thermometer",
+      "spec": "",
+      "why": "Times the clock reaction and monitors temperature"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "kiVolume",
+      "label": "KI solution",
+      "symbol": "",
+      "unit": "mL",
+      "type": "independent",
+      "min": 2,
+      "max": 20,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "id": "waterVolume",
+      "label": "Water (to keep total constant)",
+      "symbol": "",
+      "unit": "mL",
+      "type": "controlled",
+      "min": 0,
+      "max": 18,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "id": "h2o2Volume",
+      "label": "H2O2 solution",
+      "symbol": "",
+      "unit": "mL",
+      "type": "controlled",
+      "min": 5,
+      "max": 15,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "id": "tempC",
+      "label": "Temperature",
+      "symbol": "T",
+      "unit": "°C",
+      "type": "controlled",
+      "min": 15,
+      "max": 45,
+      "step": 1,
+      "default": 25
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Mix the KI, water and starch/thiosulphate mixture in a flask, keeping the total volume constant.",
+      "checkpoint": true,
+      "expects": "kiVolume"
+    },
+    {
+      "step": 2,
+      "text": "Add the H2O2 solution and start the stopwatch immediately.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 3,
+      "text": "Stop the watch the instant the solution turns blue-black; record the time.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 4,
+      "text": "Repeat with a different volume of KI (compensating with water so the total stays fixed).",
+      "checkpoint": true,
+      "expects": "rows>=4"
+    },
+    {
+      "step": 5,
+      "text": "Plot 1/t against [I-] and determine the order of reaction from the shape.",
+      "checkpoint": true,
+      "expects": "result"
+    },
+    {
+      "step": 6,
+      "text": "Repeat the whole run at two or three different temperatures to obtain the activation energy.",
+      "checkpoint": false
+    }
+  ],
+  "simulation": {
+    "model": "clock-reaction",
+    "renderer": "clock-reaction",
+    "fps": 10,
+    "controls": [
+      {
+        "var": "kiVolume",
+        "widget": "slider"
+      },
+      {
+        "var": "waterVolume",
+        "widget": "slider"
+      },
+      {
+        "var": "h2o2Volume",
+        "widget": "slider"
+      },
+      {
+        "var": "tempC",
+        "widget": "slider"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Start / record clock time",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "iodideConc",
+        "label": "[I⁻]",
+        "unit": "mol/L",
+        "decimals": 4
+      },
+      {
+        "key": "tempC",
+        "label": "Temp.",
+        "unit": "°C",
+        "decimals": 0
+      },
+      {
+        "key": "time",
+        "label": "Clock time",
+        "unit": "s",
+        "decimals": 1
+      },
+      {
+        "key": "rate",
+        "label": "Rate = 1/t",
+        "unit": "s⁻¹",
+        "decimals": 5
+      }
+    ],
+    "graph": {
+      "x": "iodideConc",
+      "y": "rate",
+      "xLabel": "[I⁻] (mol/L)",
+      "yLabel": "Rate = 1/t (s⁻¹)",
+      "throughOrigin": true
+    },
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "Rate = 1/(clock time)",
+      "Plot rate against [I-] at fixed [H2O2] and temperature",
+      "Order = 1 if the plot is a straight line through the origin"
+    ],
+    "resultKeys": [
+      "order",
+      "activationEnergy",
+      "slope"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Order of reaction with respect to iodide",
+    "symbol": "order",
+    "value": 1,
+    "tolerance": 0.25,
+    "unit": "",
+    "secondary": {
+      "quantity": "Activation energy",
+      "value": 42,
+      "tolerance": 8,
+      "unit": "kJ/mol"
+    },
+    "statement": "The graph of 1/t against [I-] is a straight line through the origin, showing the reaction is first order in iodide. The Arrhenius plot from clock times at different temperatures gives an activation energy of about 42 kJ/mol."
+  },
+  "safety": [
+    "Hydrogen peroxide can bleach skin and clothing; handle with care.",
+    "Dispose of iodine-containing waste as directed."
+  ],
+  "sourcesOfError": [
+    "Timing reaction (reaction time in starting/stopping the watch) is a larger fraction of error for very fast (short-time) runs.",
+    "Not keeping the total volume constant changes more than one concentration at once.",
+    "A stale starch indicator gives a weak or delayed colour change."
+  ],
+  "viva": [
+    {
+      "question": "Why is a fixed, small amount of thiosulphate included in every run?",
+      "expectedConcept": "It acts as a 'clock': it reacts with the I2 produced as fast as it forms, so no colour appears until it is used up. Because the SAME amount is used up each time, the time taken is inversely proportional to how fast I2 was being produced — the reaction rate.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "A fixed consumable converts a rate into a measurable time.",
+      "commonMisconception": "Thinking the thiosulphate is simply an indicator like starch."
+    },
+    {
+      "question": "Why does starch turn blue-black only after the thiosulphate is exhausted, not throughout the reaction?",
+      "expectedConcept": "As long as thiosulphate remains, it destroys iodine as fast as it is made, so free I2 (and therefore the starch-iodine colour) cannot accumulate. Only once thiosulphate runs out does I2 build up and the colour appear.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Two competing reactions; colour signals which one has 'won'.",
+      "commonMisconception": "Expecting the colour to develop gradually from the start."
+    },
+    {
+      "question": "How would doubling the iodide concentration affect the clock time, for a first-order reaction?",
+      "expectedConcept": "The rate would double, so the clock time (inversely proportional to rate) would HALVE.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Rate ∝ [I-]; time ∝ 1/rate.",
+      "commonMisconception": "Expecting the time to double along with the concentration."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "In this experiment, the reaction rate is taken as:",
+        "options": [
+          "The clock time itself",
+          "The reciprocal of the clock time",
+          "The square of the clock time",
+          "The temperature rise"
+        ],
+        "answer": 1,
+        "feedback": "Since a fixed amount of thiosulphate is used up each run, rate ∝ 1/t."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record the clock time for at least four different iodide concentrations.",
+        "check": "rows>=4"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the order of reaction with respect to iodide ion.",
+        "answer": 1,
+        "tolerance": 0.3,
+        "feedback": "The reaction is first order in iodide, as shown by the linear, origin-passing rate-vs-concentration plot."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 35,
+      "postLab": 25,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Rate = k[I-]^m[H2O2]^n; rate ∝ 1/t",
+    "assumptions": [
+      "Thiosulphate is the limiting 'clock' reagent, consumed well before H2O2 or I- are significantly depleted",
+      "Temperature constant during a concentration series"
+    ],
+    "validRange": "[I-] 0.01-0.05 M as mixed; 15-45 °C",
+    "unitSystem": "mol/L, s, kJ/mol",
+    "edgeCases": [
+      "Too little thiosulphate gives an uncomfortably short, hard-to-time clock"
+    ],
+    "expectedBehaviour": [
+      "1/t proportional to [I-]; roughly doubles per 10 °C rise"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

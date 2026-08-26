@@ -1,0 +1,337 @@
+{
+  "id": "XI-CHE-D01",
+  "class": "XI",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "D",
+    "serial": 1,
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 6: Equilibrium — Chemical Equilibrium (Le Chatelier's Principle)",
+    "topic": "Factors affecting chemical equilibrium; Le Chatelier's principle",
+    "subtopic": "Shift in the Fe3+/SCN- complex-formation equilibrium on changing a concentration",
+    "practical": "Study the shift in equilibrium between ferric ions and thiocyanate ions by increasing/decreasing the concentration of either of the ions.",
+    "learningObjectives": [
+      "Observe the intense red colour of the [FeSCN]2+ complex ion",
+      "Predict and observe the effect of adding more Fe3+ or SCN- on the colour intensity",
+      "Predict and observe the effect of removing Fe3+ (by adding a complexing agent) on the colour",
+      "Explain each observation using Le Chatelier's principle and the reaction quotient Q"
+    ],
+    "competencies": [
+      "Careful qualitative and quantitative observation",
+      "Relating an observation to the underlying chemical principle",
+      "Systematic, evidence-based reasoning"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-D, Experiment 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Shift in equilibrium: Fe3+ and SCN-",
+  "shortTitle": "Fe³⁺ / SCN⁻ Equilibrium",
+  "objective": [
+    "Observe the intense red colour of the [FeSCN]2+ complex ion",
+    "Predict and observe the effect of adding more Fe3+ or SCN- on the colour intensity",
+    "Predict and observe the effect of removing Fe3+ (by adding a complexing agent) on the colour",
+    "Explain each observation using Le Chatelier's principle and the reaction quotient Q"
+  ],
+  "theory": {
+    "statement": "Fe3+(aq, pale yellow) and SCN-(aq, colourless) exist in equilibrium with the intensely blood-red complex ion [FeSCN]2+(aq): Fe3+ + SCN- ⇌ [FeSCN]2+. Because the product is so strongly coloured while the reactants are almost colourless, the depth of colour is a direct, visual proxy for how far the equilibrium lies to the right.",
+    "derivationNote": "By Le Chatelier's principle, increasing the concentration of either reactant (Fe3+ or SCN-) shifts the equilibrium to the right, deepening the red colour. Adding a reagent that removes Fe3+ from solution — such as sodium oxalate, which forms the stable, colourless [Fe(C2O4)3]3- complex — lowers the free Fe3+ concentration and shifts the equilibrium to the LEFT, fading the colour, even though nothing was added or removed from the SCN- side directly.",
+    "keyEquations": [
+      "Fe3+(aq) + SCN-(aq) ⇌ [FeSCN]2+(aq)",
+      "Kc = [FeSCN2+]/([Fe3+][SCN-])",
+      "Le Chatelier: a stress that increases a reactant shifts equilibrium towards products, and vice versa"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Ferric chloride solution",
+      "spec": "0.1 M FeCl3",
+      "why": "Source of Fe3+ ions"
+    },
+    {
+      "name": "Potassium thiocyanate solution",
+      "spec": "0.1 M KSCN",
+      "why": "Source of SCN- ions"
+    },
+    {
+      "name": "Sodium oxalate solution",
+      "spec": "saturated",
+      "why": "Removes free Fe3+ by forming a stable, colourless oxalato complex"
+    },
+    {
+      "name": "Test tubes and test tube stand",
+      "spec": "6 tubes",
+      "why": "Holds separate portions of the equilibrium mixture for comparison"
+    },
+    {
+      "name": "White tile or white background",
+      "spec": "",
+      "why": "Makes small differences in colour intensity easier to judge"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "system",
+      "label": "Equilibrium system",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "fescn",
+      "options": [
+        "fescn"
+      ]
+    },
+    {
+      "id": "reagent",
+      "label": "Reagent added",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "fecl3",
+      "options": [
+        "fecl3",
+        "kscn",
+        "oxalate",
+        "water"
+      ]
+    },
+    {
+      "id": "concentrationMm",
+      "label": "Amount added",
+      "symbol": "C",
+      "unit": "mM",
+      "type": "independent",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 0
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Mix dilute FeCl3 and KSCN solutions to give a pale red-orange reference mixture; divide it into four test tubes.",
+      "checkpoint": false
+    },
+    {
+      "step": 2,
+      "text": "To the first tube add a little more FeCl3 solution and compare the colour with the reference.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 3,
+      "text": "To the second tube add a little more KSCN solution and compare.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 4,
+      "text": "To the third tube add sodium oxalate solution drop by drop and watch the colour fade.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 5,
+      "text": "To the fourth tube add water and compare (dilution alone).",
+      "checkpoint": true,
+      "expects": "rows>=4"
+    },
+    {
+      "step": 6,
+      "text": "Explain each colour change in terms of the equilibrium shifting left or right.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "equilibrium-shift",
+    "renderer": "equilibrium-shift",
+    "fps": 20,
+    "controls": [
+      {
+        "var": "reagent",
+        "widget": "segmented",
+        "options": [
+          "fecl3",
+          "kscn",
+          "oxalate",
+          "water"
+        ]
+      },
+      {
+        "var": "concentrationMm",
+        "widget": "slider"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record observation",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "reagent",
+        "label": "Reagent",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "concentrationMm",
+        "label": "Amount",
+        "unit": "mM",
+        "decimals": 0
+      },
+      {
+        "key": "colourObserved",
+        "label": "Colour",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "direction",
+        "label": "Shift",
+        "unit": "",
+        "decimals": 0
+      }
+    ],
+    "graph": {
+      "x": "concentrationMm",
+      "y": "shiftIndex",
+      "xLabel": "Reagent added (mM)",
+      "yLabel": "Colour-shift index",
+      "throughOrigin": false
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Add each reagent to a separate portion of the equilibrium mixture",
+      "Observe and record the colour change",
+      "State whether the equilibrium shifted towards products or reactants"
+    ],
+    "resultKeys": [
+      "bothDirectionsShown",
+      "maxShift"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Direction of the equilibrium shift on adding excess Fe3+ or SCN-",
+    "symbol": "",
+    "value": null,
+    "unit": "",
+    "statement": "Adding extra FeCl3 or KSCN deepens the red colour (equilibrium shifts right, towards [FeSCN]2+). Adding sodium oxalate removes free Fe3+ and fades the colour (equilibrium shifts left) — demonstrating that a stress need not add or remove a species written explicitly in the equilibrium to shift it; removing Fe3+ indirectly has the same effect as removing it directly."
+  },
+  "safety": [
+    "FeCl3 solution can stain skin and clothing; handle over a tray.",
+    "KSCN is toxic if ingested — do not pipette by mouth.",
+    "Dispose of thiocyanate-containing waste as directed, not down the sink in quantity."
+  ],
+  "sourcesOfError": [
+    "Judging colour intensity by eye is subjective; use a consistent white background and viewing angle.",
+    "Using too concentrated a reagent makes the colour so dark that further shifts are hard to see.",
+    "Old or diluted stock solutions give weaker colours unrelated to the equilibrium itself."
+  ],
+  "viva": [
+    {
+      "question": "Why does adding sodium oxalate fade the red colour, even though oxalate does not appear in the Fe3+/SCN- equilibrium?",
+      "expectedConcept": "Oxalate ions form a stable, colourless complex with free Fe3+, lowering its concentration in solution. By Le Chatelier's principle, removing a reactant (Fe3+) shifts the equilibrium Fe3+ + SCN- ⇌ [FeSCN]2+ to the LEFT, so some of the red complex dissociates and the colour fades.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "An indirect removal of a reactant via a side equilibrium.",
+      "commonMisconception": "Thinking oxalate must react directly with SCN- or with the complex itself."
+    },
+    {
+      "question": "What would you expect if you added a large excess of both FeCl3 and KSCN together?",
+      "expectedConcept": "The colour would deepen even further than adding either alone, since both reactant concentrations rise together, pushing the equilibrium further to the right.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Combined effect of two reactant increases.",
+      "commonMisconception": "Assuming the effects would cancel."
+    },
+    {
+      "question": "Why is this particular equilibrium ([FeSCN]2+) so well suited to demonstrating Le Chatelier's principle visually?",
+      "expectedConcept": "Because the product is intensely coloured while both reactants are nearly colourless, so the position of equilibrium can be read directly from colour intensity without any instrument.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "A strong, exclusive colour signal from one species.",
+      "commonMisconception": "Thinking any equilibrium could be observed this easily."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Adding more KSCN to the Fe3+/SCN- equilibrium mixture will:",
+        "options": [
+          "Fade the red colour",
+          "Deepen the red colour",
+          "Turn the solution blue",
+          "Have no visible effect"
+        ],
+        "answer": 1,
+        "feedback": "Adding a reactant shifts the equilibrium towards the product, deepening the red [FeSCN]2+ colour."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Test at least four different reagents/conditions.",
+        "check": "rows>=4"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "Sodium oxalate fades the red colour because it:",
+        "options": [
+          "Reacts directly with SCN-",
+          "Removes free Fe3+ as a stable complex",
+          "Is itself red and masks the colour",
+          "Increases the temperature"
+        ],
+        "answer": 1,
+        "feedback": "Oxalate complexes Fe3+, lowering its free concentration and shifting the equilibrium left."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 40,
+      "postLab": 20,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Fe3+ + SCN- ⇌ [FeSCN]2+; Le Chatelier's principle",
+    "assumptions": [
+      "Reaction reaches equilibrium quickly enough to observe as a steady colour",
+      "The complexing side-reaction (oxalate) goes essentially to completion"
+    ],
+    "validRange": "0-100 mM added reagent",
+    "unitSystem": "Millimolar; colour-shift index 0-1",
+    "edgeCases": [
+      "High reagent concentration saturates the colour change"
+    ],
+    "expectedBehaviour": [
+      "Colour deepens on adding a reactant, fades on removing one"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

@@ -1,0 +1,314 @@
+{
+  "id": "XII-CHE-G04",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "G",
+    "serial": 4,
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Unit 12: Aldehydes, Ketones and Carboxylic Acids / Amines (preparative organic chemistry)",
+    "topic": "Preparative organic chemistry: synthesis, isolation, purification and characterisation of an organic solid",
+    "subtopic": "Aniline is diazotised with sodium nitrite and dilute HCl at ice-cold temperature to give a diazonium salt, which is then coupled with N,N-dimethylaniline (or 2-naphthol) under mildly alkaline conditions to give the azo dye aniline yellow, coloured by its extended, conjugated -N=N- azo chromophore",
+    "practical": "Preparation of Aniline yellow or 2-Naphthol Aniline dye",
+    "learningObjectives": [
+      "Carry out the reaction under the specified conditions",
+      "Isolate the crude solid product by filtration/precipitation",
+      "Purify the product by recrystallisation",
+      "Determine the melting point of the purified product as a purity check, and calculate the percentage yield"
+    ],
+    "competencies": [
+      "Careful qualitative and quantitative observation",
+      "Relating an observation to the underlying chemical principle",
+      "Systematic, evidence-based reasoning"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-G, Experiment 4 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Preparation of Aniline Yellow",
+  "shortTitle": "Aniline Yellow Dye Preparation",
+  "objective": [
+    "Carry out the reaction under the specified conditions",
+    "Isolate the crude solid product by filtration/precipitation",
+    "Purify the product by recrystallisation",
+    "Determine the melting point of the purified product as a purity check, and calculate the percentage yield"
+  ],
+  "theory": {
+    "statement": "Aniline is diazotised with sodium nitrite and dilute HCl at ice-cold temperature to give a diazonium salt, which is then coupled with N,N-dimethylaniline (or 2-naphthol) under mildly alkaline conditions to give the azo dye aniline yellow, coloured by its extended, conjugated -N=N- azo chromophore.",
+    "derivationNote": "Crude yield is always higher than the yield after recrystallisation — the gap between the two is a direct, quantitative measure of the impurity removed in one recrystallisation. The melting point of the purified solid, sharp and close to the literature value, is the check that the removed material really was impurity and not product.",
+    "keyEquations": [
+      "C6H5NH2 + NaNO2 + 2HCl --0-5°C--> C6H5N2+Cl- + NaCl + 2H2O (diazotisation)",
+      "C6H5N2+ + C6H5N(CH3)2 --coupling--> C6H5-N=N-C6H4-N(CH3)2 (azo dye)"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Aniline, sodium nitrite, dilute HCl",
+      "spec": "",
+      "why": "Generate the diazonium salt at low temperature"
+    },
+    {
+      "name": "N,N-dimethylaniline (coupling component)",
+      "spec": "",
+      "why": "Couples with the diazonium salt to form the azo linkage"
+    },
+    {
+      "name": "Ice-salt freezing mixture",
+      "spec": "",
+      "why": "Diazonium salts decompose above about 5 °C and must be kept ice-cold throughout"
+    },
+    {
+      "name": "Sodium acetate",
+      "spec": "",
+      "why": "Buffers the coupling step to the mildly acidic/neutral pH at which coupling is efficient"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "preparation",
+      "label": "Preparation",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "anilineYellow",
+      "options": [
+        "anilineYellow"
+      ]
+    },
+    {
+      "id": "startingMassG",
+      "label": "Aniline taken",
+      "symbol": "",
+      "unit": "g",
+      "type": "independent",
+      "min": 1.5,
+      "max": 6,
+      "step": 0.1,
+      "default": 3.0
+    },
+    {
+      "id": "coolingAdequate",
+      "label": "Adequately cooled during reaction",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "secondRecrystallisation",
+      "label": "Second recrystallisation performed",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": false
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Set up the reaction with the specified reagents, cooling as required for this exothermic step.",
+      "checkpoint": true,
+      "expects": "coolingAdequate"
+    },
+    {
+      "step": 2,
+      "text": "Once the reaction is complete, isolate the crude solid by filtration (or by pouring onto crushed ice, as appropriate).",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 3,
+      "text": "Weigh the crude product and calculate the crude percentage yield.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 4,
+      "text": "Recrystallise from a suitable solvent, filter, and dry the purified crystals.",
+      "checkpoint": true,
+      "expects": "rows>=1"
+    },
+    {
+      "step": 5,
+      "text": "Determine the melting point of the purified product and compare with the literature value.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "organic-preparation",
+    "renderer": "organic-preparation",
+    "fps": 10,
+    "controls": [
+      {
+        "var": "startingMassG",
+        "widget": "slider"
+      },
+      {
+        "var": "coolingAdequate",
+        "widget": "switch"
+      },
+      {
+        "var": "secondRecrystallisation",
+        "widget": "switch"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record yield & m.p.",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "startingMassG",
+        "label": "Starting mass",
+        "unit": "g",
+        "decimals": 1
+      },
+      {
+        "key": "crudeYieldPct",
+        "label": "Crude yield",
+        "unit": "%",
+        "decimals": 1
+      },
+      {
+        "key": "purifiedYieldPct",
+        "label": "Purified yield",
+        "unit": "%",
+        "decimals": 1
+      },
+      {
+        "key": "meltingPointC",
+        "label": "M.p.",
+        "unit": "°C",
+        "decimals": 1
+      }
+    ],
+    "graph": null,
+    "minRows": 1
+  },
+  "calculations": {
+    "steps": [
+      "Isolate and weigh the crude product; crude % yield",
+      "Recrystallise, weigh again; purified % yield",
+      "Determine the melting point as a purity check"
+    ],
+    "resultKeys": [
+      "purifiedYield",
+      "meltingPoint"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Melting point of the purified product",
+    "symbol": "",
+    "value": 128.0,
+    "tolerance": 2,
+    "unit": "°C",
+    "statement": "The crude product is obtained in good yield; recrystallisation lowers the yield but sharpens the melting point towards the literature value of about 128.0 °C, confirming the gain in purity."
+  },
+  "safety": [
+    "Aniline and N,N-dimethylaniline are toxic, absorbed through skin — wear gloves.",
+    "Sodium nitrite plus acid can release toxic nitrogen oxide fumes — work in a ventilated area.",
+    "Keep the diazonium intermediate cold and never let it dry out uncontrolled — it can be shock-sensitive when dry."
+  ],
+  "sourcesOfError": [
+    "Letting the temperature rise during diazotisation decomposes the diazonium salt before it can couple, lowering yield.",
+    "Coupling at the wrong pH (too acidic or too alkaline) reduces the rate and yield of azo bond formation.",
+    "A discoloured (brown, not yellow) product usually indicates decomposition from inadequate cooling."
+  ],
+  "viva": [
+    {
+      "question": "Why must the diazonium salt be kept below about 5 °C at every stage?",
+      "expectedConcept": "Diazonium salts are thermally unstable and decompose rapidly above about 5 °C, losing nitrogen gas and forming phenols or other side products instead of coupling to give the dye — so the cold chain must not be broken from diazotisation right through to coupling.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Diazonium instability above ~5 °C.",
+      "commonMisconception": "Thinking only the diazotisation step, not the subsequent coupling, needs to be kept cold."
+    },
+    {
+      "question": "What gives an azo dye like aniline yellow its colour?",
+      "expectedConcept": "The -N=N- azo linkage extends conjugation between the two aromatic rings, creating a chromophore whose HOMO-LUMO gap falls in the visible region, so the compound absorbs visible light and appears coloured.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Conjugated azo chromophore absorbs in the visible range.",
+      "commonMisconception": "Attributing the colour simply to 'nitrogen' being present rather than to the conjugated system."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Recrystallisation is expected to:",
+        "options": [
+          "Increase both yield and purity",
+          "Lower the yield but increase the purity",
+          "Increase the yield but lower the purity",
+          "Change the product into a different compound"
+        ],
+        "answer": 1,
+        "feedback": "Some product is always lost in the mother liquor during recrystallisation, but what remains is purer, shown by a sharper, higher melting point."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Complete the preparation and record both crude and purified yield.",
+        "check": "rows>=1"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the melting point of the purified product (°C).",
+        "answer": 128.0,
+        "tolerance": 3,
+        "feedback": "About 128.0 °C for the pure compound."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 35,
+      "postLab": 25,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "% yield = (obtained/theoretical) × 100; melting point as purity check",
+    "assumptions": [
+      "Reaction goes to a realistic, not complete, conversion",
+      "One recrystallisation removes most but not all impurity"
+    ],
+    "validRange": "1.5-6 g starting material",
+    "unitSystem": "gram, %, °C",
+    "edgeCases": [
+      "Poor cooling during an exothermic step lowers both yield and purity"
+    ],
+    "expectedBehaviour": [
+      "Purified yield < crude yield; purified m.p. closer to literature value"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

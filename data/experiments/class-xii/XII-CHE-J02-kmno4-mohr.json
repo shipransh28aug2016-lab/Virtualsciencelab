@@ -1,0 +1,337 @@
+{
+  "id": "XII-CHE-J02",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "J",
+    "serial": 2,
+    "unit": "Unit 2: Electrochemistry",
+    "chapter": "Unit 2: Electrochemistry / Redox Reactions",
+    "topic": "Redox titration: permanganometry, self-indicating end point",
+    "subtopic": "Standardising KMnO4 against standard Mohr's salt (Fe²⁺)",
+    "practical": "Determination of concentration/molarity of KMnO4 solution by titrating it against a standard solution of Ferrous Ammonium Sulphate.",
+    "learningObjectives": [
+      "Titrate KMnO4 against standard standard Mohr's salt (Fe²⁺) in acidic medium",
+      "Recognise the self-indicating end point (permanent pale pink)",
+      "Apply N1V1=N2V2 using the correct n-factor for the redox change",
+      "Calculate the molarity/normality of the KMnO4 solution"
+    ],
+    "competencies": [
+      "Careful qualitative and quantitative observation",
+      "Relating an observation to the underlying chemical principle",
+      "Systematic, evidence-based reasoning"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-J, Experiment 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Molarity of KMnO4 vs Standard Mohr's Salt",
+  "shortTitle": "KMnO₄ vs Mohr's Salt",
+  "objective": [
+    "Titrate KMnO4 against standard standard Mohr's salt (Fe²⁺) in acidic medium",
+    "Recognise the self-indicating end point (permanent pale pink)",
+    "Apply N1V1=N2V2 using the correct n-factor for the redox change",
+    "Calculate the molarity/normality of the KMnO4 solution"
+  ],
+  "theory": {
+    "statement": "Potassium permanganate is a strong oxidising agent that is its OWN indicator: as long as any reducing agent remains, the intense purple MnO4- is reduced to nearly colourless Mn2+ as fast as it is added, so the solution stays colourless/pale. The instant the reducing agent is exhausted, the next drop of MnO4- persists, turning the solution a permanent pale pink — a uniquely sharp, reagent-free end point.",
+    "derivationNote": "n-factor: MnO4- (5, Mn7+→Mn2+); Fe2+ (1, Fe2+→Fe3+)",
+    "keyEquations": [
+      "MnO4- + 5Fe2+ + 8H+ → Mn2+ + 5Fe3+ + 4H2O",
+      "n-factor: MnO4- (5, Mn7+→Mn2+); Fe2+ (1, Fe2+→Fe3+)"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "KMnO4 solution",
+      "spec": "in the burette, to be standardised",
+      "why": "The titrant of unknown exact concentration"
+    },
+    {
+      "name": "Standard standard Mohr's salt (Fe²⁺)",
+      "spec": "known concentration",
+      "why": "The primary standard against which KMnO4 is titrated"
+    },
+    {
+      "name": "Dilute sulphuric acid",
+      "spec": "",
+      "why": "Provides the acidic medium MnO4- needs to be reduced cleanly to Mn2+ (n-factor 5)"
+    },
+    {
+      "name": "Burette, pipette, conical flask",
+      "spec": "",
+      "why": "Standard volumetric glassware"
+    },
+    {
+      "name": "Water bath",
+      "spec": "for the oxalic acid titration only",
+      "why": "The MnO4-/oxalate reaction is slow at room temperature and is titrated warm (about 60 °C)"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "system",
+      "label": "System",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "kmno4_mohr",
+      "options": [
+        "kmno4_mohr"
+      ]
+    },
+    {
+      "id": "titrantConc",
+      "label": "Standard standard Mohr's salt (Fe²⁺)",
+      "symbol": "N",
+      "unit": "N",
+      "type": "control",
+      "min": 0.02,
+      "max": 0.2,
+      "step": 0.01,
+      "default": 0.1
+    },
+    {
+      "id": "analyteVolume",
+      "label": "standard Mohr's salt (Fe²⁺) taken",
+      "symbol": "V",
+      "unit": "mL",
+      "type": "control",
+      "min": 10,
+      "max": 25,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "id": "indicator",
+      "label": "Indicator",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "self",
+      "options": [
+        "self"
+      ]
+    },
+    {
+      "id": "buretteVolume",
+      "label": "Burette reading (KMnO4)",
+      "symbol": "V",
+      "unit": "mL",
+      "type": "independent",
+      "min": 0,
+      "max": 50,
+      "step": 0.1,
+      "default": 0
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Pipette standard Mohr's salt (Fe²⁺) into a conical flask and acidify with dilute H2SO4.",
+      "checkpoint": true,
+      "expects": "analyteVolume"
+    },
+    {
+      "step": 2,
+      "text": "Warm the flask if titrating oxalic acid (the reaction is slow when cold).",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Fill the burette with the KMnO4 solution and note the initial reading.",
+      "checkpoint": false
+    },
+    {
+      "step": 4,
+      "text": "Run in KMnO4 slowly, swirling constantly, until a permanent pale pink colour persists for about 30 seconds.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 5,
+      "text": "Repeat until concordant titres (within 0.1-0.2 mL) are obtained.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 6,
+      "text": "Calculate the normality and molarity of the KMnO4 solution.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "titration",
+    "renderer": "titration",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "buretteVolume",
+        "widget": "slider"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record end point",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "initialReading",
+        "label": "Initial",
+        "unit": "mL",
+        "decimals": 1
+      },
+      {
+        "key": "finalReading",
+        "label": "Final",
+        "unit": "mL",
+        "decimals": 1
+      },
+      {
+        "key": "volumeUsed",
+        "label": "KMnO₄ used",
+        "unit": "mL",
+        "decimals": 1
+      }
+    ],
+    "graph": {
+      "x": "trial",
+      "y": "volumeUsed",
+      "xLabel": "Trial number",
+      "yLabel": "Volume of KMnO₄ used (mL)",
+      "throughOrigin": false
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "N1V1 = N2V2 at the equivalence point",
+      "Normality of KMnO4 = (N(standard) × V(standard)) / V(KMnO4)",
+      "Molarity of KMnO4 = Normality / 5 (n-factor 5 in acidic medium)"
+    ],
+    "resultKeys": [
+      "normality",
+      "strength",
+      "meanTitre"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Normality of the KMnO4 solution",
+    "symbol": "N",
+    "value": 0.02,
+    "tolerance": 0.0024,
+    "unit": "N",
+    "statement": "Three concordant titrations against standard standard Mohr's salt (Fe²⁺) give the normality of the KMnO4 solution to within a few per cent, using the self-indicating permanent-pink end point — no external indicator is needed."
+  },
+  "safety": [
+    "Concentrated/dilute sulphuric acid is corrosive — handle carefully.",
+    "KMnO4 stains skin and clothing purple-brown — work over a tray."
+  ],
+  "sourcesOfError": [
+    "Using HCl instead of H2SO4 to acidify introduces an error, since MnO4- can oxidise Cl- as a side reaction, using up extra titrant.",
+    "Titrating oxalic acid cold gives a slow, indistinct end point; the solution should be warmed to about 60 °C.",
+    "Overshooting the faint pink end point (it should persist about 30 seconds, not be a deep permanent purple) gives a titre that is too large."
+  ],
+  "viva": [
+    {
+      "question": "Why does this Fe2+/MnO4- titration not need warming, unlike the oxalic-acid titration?",
+      "expectedConcept": "The Fe2+/MnO4- reaction is a fast, simple one-electron-transfer redox reaction at room temperature, unlike the oxalate reaction, which is slow and needs autocatalysis to proceed at a useful rate — so no warming is required here.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Reaction rate differs fundamentally between the two reducing agents.",
+      "commonMisconception": "Assuming all KMnO4 titrations require the same warming step."
+    },
+    {
+      "question": "Why must the ferrous ammonium sulphate solution be freshly prepared or kept acidified?",
+      "expectedConcept": "Fe2+ is readily air-oxidised to Fe3+, especially in neutral solution; if some of the standard has already oxidised before titration, its known Fe2+ concentration is no longer accurate, and the KMnO4 normality calculated from it would be too high.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Air oxidation of the standard degrades its known concentration.",
+      "commonMisconception": "Assuming Mohr's salt solution stores indefinitely without change."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Why is dilute HCl NOT used to acidify a KMnO4 titration?",
+        "options": [
+          "It is too weak an acid",
+          "MnO4- oxidises Cl- as a side reaction, wasting titrant",
+          "HCl reacts with the standard solution",
+          "It has no effect either way"
+        ],
+        "answer": 1,
+        "feedback": "Chloride can be oxidised by permanganate, consuming extra KMnO4 and giving a titre that is too high; dilute H2SO4 is used instead since sulphate is not oxidised."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Obtain at least three concordant titres.",
+        "check": "rows>=3"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "The end point of this titration is recognised by:",
+        "options": [
+          "A colour change from one indicator colour to another",
+          "A permanent pale pink colour from the KMnO4 itself",
+          "Effervescence",
+          "A precipitate forming"
+        ],
+        "answer": 1,
+        "feedback": "KMnO4 is self-indicating: excess unreacted MnO4- gives the solution a permanent pale pink colour."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 35,
+      "postLab": 25,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "N1V1 = N2V2; n-factor of MnO4- (acidic) = 5",
+    "assumptions": [
+      "Acidic medium throughout (H2SO4, not HCl)",
+      "MnO4- is reduced cleanly to Mn2+"
+    ],
+    "validRange": "0.02-0.2 N",
+    "unitSystem": "N, mL",
+    "edgeCases": [
+      "Using HCl as the acid introduces a competing oxidation of Cl-"
+    ],
+    "expectedBehaviour": [
+      "Self-indicating pink end point; concordant titres within 0.2 mL"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

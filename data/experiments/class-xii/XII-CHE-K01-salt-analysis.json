@@ -1,0 +1,404 @@
+{
+  "id": "XII-CHE-K01",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "K",
+    "serial": 1,
+    "unit": "Unit 2: Electrochemistry",
+    "chapter": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques",
+    "topic": "Qualitative inorganic analysis: systematic detection of a cation and an anion (Class XII list, includes oxalate)",
+    "subtopic": "Systematic salt analysis using preliminary and confirmatory wet tests, extended anion list",
+    "practical": "Determination of one anion and one cation in a given salt. Cations: Pb2+, Cu2+, Al3+, Fe3+, Mn2+, Ni2+, Zn2+, Co2+, Ca2+, Sr2+, Ba2+, Mg2+, NH4+. Anions: CO3 2-, S2-, SO3 2-, NO3-, NO2-, Cl-, Br-, I-, SO4 2-, PO4 3-, CH3COO-, C2O4 2-. (Insoluble salts excluded)",
+    "learningObjectives": [
+      "Apply the same systematic scheme as XI-CHE-F01, with the anion list extended to include oxalate",
+      "Distinguish oxalate from carbonate, since both are salts of a weak acid that can effervesce or react with acid depending on conditions",
+      "Confirm oxalate specifically by its decolourisation of warm, acidified KMnO4",
+      "Combine cation and anion evidence to state the identity of the given salt"
+    ],
+    "competencies": [
+      "Careful qualitative and quantitative observation",
+      "Relating an observation to the underlying chemical principle",
+      "Systematic, evidence-based reasoning"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-K, Experiment 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Salt Analysis (Class XII): One Cation, One Anion",
+  "shortTitle": "Qualitative Salt Analysis (XII)",
+  "objective": [
+    "Apply the same systematic scheme as XI-CHE-F01, with the anion list extended to include oxalate",
+    "Distinguish oxalate from carbonate, since both are salts of a weak acid that can effervesce or react with acid depending on conditions",
+    "Confirm oxalate specifically by its decolourisation of warm, acidified KMnO4",
+    "Combine cation and anion evidence to state the identity of the given salt"
+  ],
+  "theory": {
+    "statement": "The Class XII salt-analysis scheme repeats the systematic approach of Class XI (preliminary tests narrowing the field, confirmatory tests settling it) but with oxalate, C2O4^2-, added to the anions that must be considered — a salt of a weak diprotic acid that, unlike carbonate, does NOT effervesce with dilute acid at room temperature but does reduce warm acidified permanganate.",
+    "derivationNote": "Because oxalate does not effervesce with dilute acid, it can initially be mistaken for one of the 'unreactive' anions (sulphate, chloride, nitrate) at the preliminary stage. Its confirmatory test — decolourising a few drops of dilute, acidified KMnO4 on warming — is unambiguous and ties this experiment back to the redox titrations of Section J.",
+    "keyEquations": [
+      "2MnO4- + 5C2O4^2- + 16H+ → 2Mn2+ + 10CO2 + 8H2O (confirms oxalate)",
+      "CO3^2- + 2H+ → H2O + CO2 (carbonate effervesces; oxalate does not, at room temperature)"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Given salt",
+      "spec": "solid, unknown",
+      "why": "The sample whose cation and anion are to be identified"
+    },
+    {
+      "name": "Dilute hydrochloric/sulphuric acid",
+      "spec": "",
+      "why": "Preliminary test for a volatile anion (carbonate); oxalate gives no effervescence here"
+    },
+    {
+      "name": "Dilute, acidified KMnO4",
+      "spec": "warm",
+      "why": "Confirmatory test for oxalate, which decolourises it on warming"
+    },
+    {
+      "name": "Sodium hydroxide, ammonium hydroxide solutions",
+      "spec": "",
+      "why": "Precipitation tests narrowing the cation"
+    },
+    {
+      "name": "Silver nitrate, barium chloride solutions",
+      "spec": "",
+      "why": "Confirmatory reagents for halide and sulphate respectively"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "salt",
+      "label": "Given salt",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "s1",
+      "options": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8"
+      ]
+    },
+    {
+      "id": "test",
+      "label": "Test performed",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "appearance",
+      "options": [
+        "appearance",
+        "dilAcid",
+        "flame",
+        "naoh",
+        "nh4oh",
+        "confirmAnion"
+      ]
+    },
+    {
+      "id": "cationGuess",
+      "label": "Cation identified as",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "cu2",
+      "options": [
+        "cu2",
+        "fe3",
+        "zn2",
+        "ca2",
+        "pb2",
+        "nh4",
+        "ba2",
+        "al3"
+      ]
+    },
+    {
+      "id": "anionGuess",
+      "label": "Anion identified as",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "so4",
+      "options": [
+        "so4",
+        "cl",
+        "co3",
+        "no3",
+        "ox"
+      ]
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Note the colour and physical form of the salt.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 2,
+      "text": "Add dilute acid; note whether effervescence occurs (carbonate) or not (oxalate/sulphate/chloride/nitrate all possible if no gas).",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 3,
+      "text": "If no effervescence, test a fresh portion by warming with a few drops of dilute, acidified KMnO4 to check for oxalate.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 4,
+      "text": "Perform the flame test and the NaOH/NH4OH precipitation tests to narrow the cation.",
+      "checkpoint": true,
+      "expects": "rows>=4"
+    },
+    {
+      "step": 5,
+      "text": "Perform the specific confirmatory test(s) for both the cation and the anion.",
+      "checkpoint": true,
+      "expects": "result"
+    },
+    {
+      "step": 6,
+      "text": "State the identity of the salt, with evidence for both ions.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "salt-analysis",
+    "renderer": "salt-analysis",
+    "fps": 10,
+    "controls": [
+      {
+        "var": "salt",
+        "widget": "segmented",
+        "options": [
+          "s1",
+          "s2",
+          "s3",
+          "s4",
+          "s5",
+          "s6",
+          "s7",
+          "s8"
+        ]
+      },
+      {
+        "var": "test",
+        "widget": "segmented",
+        "options": [
+          "appearance",
+          "dilAcid",
+          "flame",
+          "naoh",
+          "nh4oh",
+          "confirmAnion"
+        ]
+      },
+      {
+        "var": "cationGuess",
+        "widget": "segmented",
+        "options": [
+          "cu2",
+          "fe3",
+          "zn2",
+          "ca2",
+          "pb2",
+          "nh4",
+          "ba2",
+          "al3"
+        ]
+      },
+      {
+        "var": "anionGuess",
+        "widget": "segmented",
+        "options": [
+          "so4",
+          "cl",
+          "co3",
+          "no3",
+          "ox"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Run test",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "salt",
+        "label": "Salt",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "test",
+        "label": "Test",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "observation",
+        "label": "Observation",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "correct",
+        "label": "Correct?",
+        "unit": "",
+        "decimals": 0
+      }
+    ],
+    "graph": null,
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "Run preliminary tests, checking specifically for oxalate's non-effervescence",
+      "Confirm oxalate (if suspected) with warm acidified KMnO4",
+      "State the cation and anion with supporting evidence"
+    ],
+    "resultKeys": [
+      "correctlyIdentified",
+      "accuracyPct"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Number of salts correctly identified (cation + anion), Class XII extended list",
+    "symbol": "",
+    "value": null,
+    "unit": "",
+    "statement": "The extended Class XII scheme correctly distinguishes oxalate from the other 'non-effervescing' anions by its specific reaction with warm, acidified permanganate — the same redox chemistry standardised quantitatively in Section J."
+  },
+  "safety": [
+    "Some reagents (concentrated acids, ammonia, KMnO4) are corrosive/irritating — work in a ventilated space.",
+    "Barium and lead salts are toxic — wash hands after handling."
+  ],
+  "sourcesOfError": [
+    "Assuming any anion that doesn't effervesce with acid must be sulphate or chloride, without testing for oxalate specifically.",
+    "Using cold rather than warm KMnO4 for the oxalate test, which reacts too slowly cold to give a clear result.",
+    "Concluding from a single test rather than combining several lines of evidence."
+  ],
+  "viva": [
+    {
+      "question": "How would you distinguish a carbonate from an oxalate salt, given that both are salts of weak acids?",
+      "expectedConcept": "Carbonate effervesces readily with dilute acid at room temperature, releasing CO2 that turns lime water milky. Oxalate does NOT effervesce with dilute acid under these conditions; it is instead confirmed by its ability to decolourise warm, acidified potassium permanganate — a redox reaction, not an acid-base one.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Different confirmatory chemistry: acid-base gas test vs. redox decolourisation.",
+      "commonMisconception": "Expecting oxalate to effervesce with dilute acid the way carbonate does."
+    },
+    {
+      "question": "Why must the KMnO4 used to test for oxalate be both acidified AND warmed?",
+      "expectedConcept": "Acidification ensures MnO4- is reduced cleanly to Mn2+ (n-factor 5) rather than to MnO2, and warming speeds up the otherwise slow, autocatalysed oxalate/permanganate reaction so the decolourisation is clear within a reasonable time.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Both conditions matter for a clean, timely confirmatory result.",
+      "commonMisconception": "Testing with neutral or cold KMnO4 and getting an ambiguous, slow result."
+    },
+    {
+      "question": "This confirmatory oxalate test uses the same reaction as which quantitative experiment in the syllabus?",
+      "expectedConcept": "The same MnO4-/oxalate redox reaction used here qualitatively is titrated quantitatively in XII-CHE-J01, to standardise a KMnO4 solution against standard oxalic acid.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Connects qualitative confirmatory chemistry to the quantitative titration.",
+      "commonMisconception": "Treating the two experiments as chemically unrelated."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Which anion does NOT effervesce with dilute acid but IS confirmed by decolourising warm acidified KMnO4?",
+        "options": [
+          "Carbonate",
+          "Sulphite",
+          "Oxalate",
+          "Chloride"
+        ],
+        "answer": 2,
+        "feedback": "Oxalate is unreactive with dilute acid at room temperature but reduces warm acidified permanganate, decolourising it."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Run at least four different tests before concluding.",
+        "check": "rows>=4"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "The oxalate confirmatory test relies on:",
+        "options": [
+          "An acid-base reaction with effervescence",
+          "A precipitation reaction",
+          "A redox reaction with permanganate",
+          "A flame colour"
+        ],
+        "answer": 2,
+        "feedback": "Oxalate reduces warm, acidified MnO4- to Mn2+, decolourising the purple permanganate — a redox, not acid-base, confirmatory test."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 40,
+      "postLab": 20,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Systematic analysis; oxalate confirmed by MnO4- redox decolourisation",
+    "assumptions": [
+      "One cation and one anion present, from the extended syllabus list",
+      "Salt is soluble"
+    ],
+    "validRange": "Eight representative salts",
+    "unitSystem": "Descriptive",
+    "edgeCases": [
+      "Oxalate does not effervesce with dilute acid, unlike carbonate"
+    ],
+    "expectedBehaviour": [
+      "Correct systematic testing identifies both ions, including oxalate via its redox behaviour"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

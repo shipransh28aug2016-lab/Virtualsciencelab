@@ -10,6 +10,7 @@ import { RENDERERS as thermalFluids } from './thermal-fluids.js';
 import { RENDERERS as electricity } from './electricity.js';
 import { RENDERERS as optics } from './optics.js';
 import { RENDERERS as chemistry } from './chemistry.js';
+import { RENDERERS as chemistryNew } from './chemistry-new.js';
 
 export const RENDERERS = {
   ...mechanics,
@@ -17,6 +18,7 @@ export const RENDERERS = {
   ...electricity,
   ...optics,
   ...chemistry,
+  ...chemistryNew,
 };
 
 export default RENDERERS;

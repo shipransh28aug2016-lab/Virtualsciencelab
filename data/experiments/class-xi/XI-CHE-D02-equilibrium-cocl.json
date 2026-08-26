@@ -1,0 +1,330 @@
+{
+  "id": "XI-CHE-D02",
+  "class": "XI",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "D",
+    "serial": 2,
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 6: Equilibrium — Chemical Equilibrium (Le Chatelier's Principle)",
+    "topic": "Factors affecting chemical equilibrium; Le Chatelier's principle",
+    "subtopic": "Shift in the cobalt(II) aqua/chloro complex equilibrium on changing the chloride concentration",
+    "practical": "Study the shift in equilibrium between [Co(H2O)6]2+ and chloride ions by changing the concentration of either of the ions.",
+    "learningObjectives": [
+      "Observe the pink colour of the hexaaquacobalt(II) ion and the blue colour of the tetrachlorocobaltate(II) ion",
+      "Predict and observe the effect of adding concentrated HCl (a source of Cl-) on the colour",
+      "Predict and observe the effect of adding water on the colour",
+      "Explain both observations using Le Chatelier's principle, including the role of water as a reactant in the reverse direction"
+    ],
+    "competencies": [
+      "Careful qualitative and quantitative observation",
+      "Relating an observation to the underlying chemical principle",
+      "Systematic, evidence-based reasoning"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-D, Experiment 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Shift in equilibrium: [Co(H₂O)₆]²⁺ and Cl⁻",
+  "shortTitle": "Cobalt Chloride Equilibrium",
+  "objective": [
+    "Observe the pink colour of the hexaaquacobalt(II) ion and the blue colour of the tetrachlorocobaltate(II) ion",
+    "Predict and observe the effect of adding concentrated HCl (a source of Cl-) on the colour",
+    "Predict and observe the effect of adding water on the colour",
+    "Explain both observations using Le Chatelier's principle, including the role of water as a reactant in the reverse direction"
+  ],
+  "theory": {
+    "statement": "In aqueous solution, cobalt(II) exists in equilibrium between the pink, octahedral hexaaqua ion and the blue, tetrahedral tetrachloro ion: [Co(H2O)6]2+(pink) + 4Cl-(aq) ⇌ [CoCl4]2-(blue) + 6H2O(l). Because the two forms are such visually distinct colours, this is one of the clearest classroom demonstrations of Le Chatelier's principle.",
+    "derivationNote": "Adding concentrated HCl raises [Cl-] sharply, shifting the equilibrium to the right (towards blue), by Le Chatelier's principle. Adding water has TWO reinforcing effects: it dilutes [Cl-] (shifting left) AND it is itself a product of the reverse reaction being effectively added in large excess (also favouring the reactant side, since water is the solvent and its 'concentration' effectively can't be driven down) — so dilution with water always drives the equilibrium back towards pink, unlike a simple dilution of a solute-only equilibrium.",
+    "keyEquations": [
+      "[Co(H2O)6]2+(aq) + 4Cl-(aq) ⇌ [CoCl4]2-(aq) + 6H2O(l)",
+      "Kc = [CoCl4^2-]/([Co(H2O)6^2+][Cl-]^4)",
+      "Adding Cl- (via HCl or NaCl) shifts right (blue); adding water shifts left (pink)"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Cobalt(II) chloride solution",
+      "spec": "in a little water, pink",
+      "why": "The equilibrium mixture under study"
+    },
+    {
+      "name": "Concentrated hydrochloric acid",
+      "spec": "conc. HCl",
+      "why": "Provides a large, controllable increase in chloride ion concentration"
+    },
+    {
+      "name": "Distilled water",
+      "spec": "",
+      "why": "Dilutes the mixture and shifts the equilibrium back"
+    },
+    {
+      "name": "Test tubes",
+      "spec": "",
+      "why": "Holds separate portions for comparison"
+    },
+    {
+      "name": "Water bath (optional)",
+      "spec": "",
+      "why": "Warming also favours the blue form, since the forward reaction is endothermic — useful for cross-checking"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "system",
+      "label": "Equilibrium system",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "cocl",
+      "options": [
+        "cocl"
+      ]
+    },
+    {
+      "id": "reagent",
+      "label": "Reagent added",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "hcl",
+      "options": [
+        "hcl",
+        "nacl",
+        "water",
+        "agno3"
+      ]
+    },
+    {
+      "id": "concentrationMm",
+      "label": "Amount added",
+      "symbol": "C",
+      "unit": "mM",
+      "type": "independent",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 0
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Dissolve a little cobalt(II) chloride in the minimum of water to give a pink solution.",
+      "checkpoint": false
+    },
+    {
+      "step": 2,
+      "text": "Add concentrated HCl drop by drop, noting the colour after each addition.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 3,
+      "text": "Once the solution is distinctly blue, add water drop by drop and watch it return towards pink.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 4,
+      "text": "Repeat the chloride addition using solid NaCl instead of HCl, for comparison.",
+      "checkpoint": true,
+      "expects": "rows>=4"
+    },
+    {
+      "step": 5,
+      "text": "Explain both directions of the colour change in terms of Le Chatelier's principle.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "equilibrium-shift",
+    "renderer": "equilibrium-shift",
+    "fps": 20,
+    "controls": [
+      {
+        "var": "reagent",
+        "widget": "segmented",
+        "options": [
+          "hcl",
+          "nacl",
+          "water",
+          "agno3"
+        ]
+      },
+      {
+        "var": "concentrationMm",
+        "widget": "slider"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record observation",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "reagent",
+        "label": "Reagent",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "concentrationMm",
+        "label": "Amount",
+        "unit": "mM",
+        "decimals": 0
+      },
+      {
+        "key": "colourObserved",
+        "label": "Colour",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "direction",
+        "label": "Shift",
+        "unit": "",
+        "decimals": 0
+      }
+    ],
+    "graph": {
+      "x": "concentrationMm",
+      "y": "shiftIndex",
+      "xLabel": "Reagent added (mM)",
+      "yLabel": "Colour-shift index",
+      "throughOrigin": false
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Add each reagent to a portion of the cobalt solution",
+      "Observe and record the colour (pink / blue / intermediate)",
+      "State whether the equilibrium shifted towards products or reactants"
+    ],
+    "resultKeys": [
+      "bothDirectionsShown",
+      "maxShift"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Direction of the equilibrium shift on adding concentrated HCl vs. water",
+    "symbol": "",
+    "value": null,
+    "unit": "",
+    "statement": "Adding concentrated HCl turns the pink cobalt(II) solution blue (equilibrium shifts towards [CoCl4]2-). Adding water reverses this, turning it pink again (equilibrium shifts back towards [Co(H2O)6]2+) — a clean, reversible demonstration of Le Chatelier's principle running in both directions."
+  },
+  "safety": [
+    "Concentrated HCl is corrosive — use in a fume cupboard or well-ventilated area, wear eye protection.",
+    "Cobalt salts are toxic and a suspected carcinogen with prolonged exposure — avoid skin contact and wash hands after."
+  ],
+  "sourcesOfError": [
+    "Too little HCl gives only a faint colour change that is hard to judge",
+    "The colour change is gradual (not instantaneous), so waiting after each addition matters",
+    "Ambient lighting affects how the pink/blue/violet intermediate shades are judged"
+  ],
+  "viva": [
+    {
+      "question": "Write the equilibrium and identify which species is pink and which is blue.",
+      "expectedConcept": "[Co(H2O)6]2+ (pink) + 4Cl- ⇌ [CoCl4]2- (blue) + 6H2O. The hexaaqua ion is pink; the tetrachloro ion is blue.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Correct equation with colours assigned to the correct species.",
+      "commonMisconception": "Reversing which complex is which colour."
+    },
+    {
+      "question": "Why does adding water shift the equilibrium back to pink, rather than just diluting both colours equally?",
+      "expectedConcept": "Water is not a spectator here — it is a product of the forward reaction (as written) and its effective concentration cannot be depleted, so adding a large excess of it drives the equilibrium towards the side that consumes it, i.e. back towards [Co(H2O)6]2+.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Water is a reactant in the reverse direction, not merely a diluent.",
+      "commonMisconception": "Treating water addition as simple dilution with no chemical role."
+    },
+    {
+      "question": "How would raising the temperature affect this equilibrium, and why?",
+      "expectedConcept": "The forward (pink to blue) reaction is endothermic, so raising the temperature shifts the equilibrium further towards the blue [CoCl4]2- form, by Le Chatelier's principle applied to a temperature stress.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Le Chatelier applied to heat as a 'reagent'.",
+      "commonMisconception": "Assuming temperature has no effect on an ionic equilibrium."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The blue form of the cobalt(II) equilibrium is:",
+        "options": [
+          "[Co(H2O)6]2+",
+          "[CoCl4]2-",
+          "CoCl2 solid",
+          "Co metal"
+        ],
+        "answer": 1,
+        "feedback": "The tetrahedral tetrachlorocobaltate(II) ion, [CoCl4]2-, is blue; the hexaaqua ion is pink."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Observe the colour with at least four different reagents/amounts.",
+        "check": "rows>=4"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "Adding water to the blue solution will:",
+        "options": [
+          "Keep it blue",
+          "Turn it pink again",
+          "Turn it colourless",
+          "Precipitate cobalt hydroxide"
+        ],
+        "answer": 1,
+        "feedback": "Diluting with water shifts the equilibrium back towards the pink hexaaqua form."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 40,
+      "postLab": 20,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "[Co(H2O)6]2+ + 4Cl- ⇌ [CoCl4]2- + 6H2O; Le Chatelier's principle",
+    "assumptions": [
+      "Equilibrium is reached quickly relative to observation",
+      "HCl and NaCl both act simply as sources of Cl-"
+    ],
+    "validRange": "0-100 mM added Cl-",
+    "unitSystem": "Millimolar; colour-shift index 0-1",
+    "edgeCases": [
+      "Very dilute Cl- keeps the solution pink regardless of small further additions"
+    ],
+    "expectedBehaviour": [
+      "Pink to blue on adding Cl-; blue to pink on adding water"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}
