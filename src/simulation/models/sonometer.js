@@ -53,8 +53,29 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, phase: 0, amplitude: 0, resonant: false, beat: 0 }; }
+/**
+ * The wire under the fork. Resonance is sharp: the paper rider is only
+ * thrown off when the bridge separation puts the wire's natural frequency
+ * on the fork's, so the amplitude here is a resonance curve in the
+ * mistuning, and the beat frequency is the difference the ear hears.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const fWire = frequencyHz(inputs);
+  const fFork = inputs.forkHz ?? (typeof inputs.fork === 'string' ? Number((inputs.fork.match(/\d+/) || [256])[0]) : 256);
+  const detune = Math.abs(fWire - fFork);
+  // A lightly damped resonance: amplitude falls off with mistuning.
+  const Q = 42;
+  const target = 1 / Math.sqrt(1 + (2 * Q * detune / Math.max(1, fFork)) ** 2);
+  s.amplitude += (target - s.amplitude) * Math.min(1, dt * 4);
+  s.resonant = target > 0.7;
+  s.beat = detune;
+  // Phase of the standing wave, slowed so the shape is visible on screen.
+  s.phase = (s.phase + dt * Math.min(14, fWire * 0.05)) % (Math.PI * 2);
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 101);

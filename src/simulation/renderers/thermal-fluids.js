@@ -38,14 +38,60 @@ export function surfaceTension(ctx, w, h, state, inputs) {
 
 export function viscosity(ctx, w, h, state, inputs) {
   const th = theme();
-  const cx = w / 2;
-  drawBeaker(ctx, cx, 20, 140, h - 60, 0.9, th.liquidAlt, { label: 'Viscous liquid (measuring jar)' });
-  ctx.save(); ctx.fillStyle = '#8b93a3'; ctx.beginPath();
-  const y = 30 + ((state?.t ?? 0) * 40) % (h - 80);
-  ctx.arc(cx, y, 6, 0, Math.PI * 2); ctx.fill(); ctx.restore();
-  label(ctx, cx + 90, h / 2, 'Falling sphere', { anchor: 'right', bg: false });
-  label(ctx, cx - 90, 40, 'Upper mark', { anchor: 'left', bg: false });
-  label(ctx, cx - 90, h - 60, 'Lower mark', { anchor: 'left', bg: false });
+  const cx = 400;
+  const jarTop = 40, jarH = 400, jarW = 150;
+  const jarBot = jarTop + jarH;
+  drawBeaker(ctx, cx, jarTop, jarW, jarH, 0.94, th.liquidAlt,
+    { label: 'Viscous liquid (tall measuring jar)', graduations: false });
+
+  /* The marks are a fixed distance apart, and the ball's position between
+     them is the model's own integrated fall — not a decorative loop. The
+     ball must reach terminal velocity BEFORE the upper mark, which is why
+     the upper mark sits well below the surface. */
+  const upperY = jarTop + jarH * 0.24;
+  const fallPx = jarH * 0.62;
+  const lowerY = upperY + fallPx;
+  for (const [y, name] of [[upperY, 'Upper mark'], [lowerY, 'Lower mark']]) {
+    ctx.save();
+    ctx.strokeStyle = 'rgba(190,40,40,0.85)';
+    ctx.lineWidth = 1.6;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath(); ctx.moveTo(cx - jarW / 2 - 8, y); ctx.lineTo(cx + jarW / 2 + 8, y); ctx.stroke();
+    ctx.restore();
+    label(ctx, cx - jarW / 2 - 10, y, name, { anchor: 'left' });
+  }
+
+  const dFall = (inputs?.fallDistanceCm ?? 30) / 100;      // metres between marks
+  const yFrac = Math.min(1, (state?.y ?? 0) / Math.max(1e-6, dFall));
+  const ballY = state?.released ? upperY + yFrac * fallPx : jarTop + 18;
+  const r = Math.max(4, (inputs?.ballDiameterMm ?? 4) * 1.5);
+
+  ctx.save();
+  // Steel ball, lit like everything else on this bench.
+  const g = ctx.createRadialGradient(cx - r * 0.4, ballY - r * 0.45, r * 0.1, cx, ballY, r);
+  g.addColorStop(0, '#f2f5fa'); g.addColorStop(0.45, '#9aa5b6');
+  g.addColorStop(1, '#3f4757');
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(cx, ballY, r, 0, Math.PI * 2); ctx.fill();
+  // Wake behind a ball that is actually moving.
+  if (state?.released && (state?.v ?? 0) > 0.001) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.32)';
+    ctx.lineWidth = 1;
+    for (let i = 1; i <= 3; i++) {
+      ctx.beginPath();
+      ctx.arc(cx, ballY - r - i * 7, r * (1 - i * 0.18), Math.PI * 1.15, Math.PI * 1.85);
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
+  label(ctx, cx + r + 6, ballY, 'Falling sphere', { anchor: 'right' });
+
+  const vT = (state?.v ?? 0);
+  label(ctx, cx + jarW / 2 + 90, jarTop + 60,
+    !state?.released ? 'Release the ball at the surface'
+      : state?.landed ? `Reached lower mark in ${(state.elapsed ?? 0).toFixed(2)} s`
+        : `v = ${(vT * 100).toFixed(2)} cm/s${state?.atTerminal ? ' — terminal' : ' — still accelerating'}`,
+    { anchor: 'right', bold: true, color: state?.atTerminal ? '#0d7a52' : undefined });
 }
 
 export function coolingCurve(ctx, w, h, state, inputs) {

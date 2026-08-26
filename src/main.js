@@ -3,7 +3,7 @@
  * Wires curriculum data → simulation engine → components. No framework.
  */
 import { ExperimentMachine, STATES, STATE_LABELS } from './core/state-machine.js';
-import { fitCanvas, finishFrame, setCanvasTheme } from './simulation/renderers/apparatus.js';
+import { renderScene, finishFrame, setCanvasTheme, resetScene } from './simulation/renderers/apparatus.js';
 import * as Interact from './simulation/renderers/interact.js';
 import { resetFluids } from './simulation/fluids.js';
 import { renderGraph } from './components/graph.js';
@@ -591,6 +591,7 @@ async function openLab(exp) {
   updateBrand(exp);
 
   resetFluids();                 // a new bench starts with a still surface
+  resetScene();                  // and is re-framed for its own apparatus
   Interact.attach($('#cv'), onCanvasDrag);
   buildToolbar();
   buildControls();
@@ -1398,9 +1399,10 @@ function stopLoop() { app.running = false; if (app.raf) cancelAnimationFrame(app
 function draw() {
   const canvas = $('#cv');
   if (!canvas || !app.exp) return;
-  const { w, h, ctx } = fitCanvas(canvas, 16 / 10);
-  const fn = app.renderers ? app.renderers[app.exp.simulation.renderer] : null;
-  if (fn) fn(ctx, w, h, app.state, app.inputs);
+  const name = app.exp.simulation.renderer;
+  const fn = app.renderers ? app.renderers[name] : null;
+  if (!fn) return;
+  const { w, h, ctx } = renderScene(canvas, 16 / 10, name, fn, app.state, app.inputs);
   finishFrame(ctx, w, h);
 }
 
@@ -1477,7 +1479,9 @@ function updateReadouts() {
     ];
   } else if (m === 'reaction-kinetics') {
     items = [
-      ['[S₂O₃²⁻]', app.model.effectiveConc(app.inputs).toFixed(4), 'M'],
+      /* The model names this `thioConc`; calling a function it does not
+         export threw on every frame and killed the readouts for this lab. */
+      ['[S₂O₃²⁻]', app.model.thioConc(app.inputs).toFixed(4), 'M'],
       ['Temperature', String(app.inputs.tempC), '°C'],
       ['Stop clock', (app.state.elapsed || 0).toFixed(1), 's'],
       ['Cross hidden', `${Math.round(Math.min(1, app.state.turbidity || 0) * 100)}`, '%'],

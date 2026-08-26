@@ -34,8 +34,14 @@ export function validate(inputs) {
   if (inputs.slopeMethod === 'twoPoints') warnings.push({ field: 'slopeMethod', code: 'TWO_POINT_SLOPE', message: 'Taking the slope from two points uses only a third of the data.', why: 'The best-fit line uses every point and averages out random error; two points carry only their own two errors, magnified by the calculation.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, drawn: 0 }; }
+/** The line is drawn in, so the fit appears as it is plotted. */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  s.drawn = Math.min(1, s.drawn + dt * 0.6);
+  return s;
+}
 
 export function measure(state, inputs, seed, trial) {
   const d = datasetOf(inputs);

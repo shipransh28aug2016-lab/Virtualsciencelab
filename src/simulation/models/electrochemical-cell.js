@@ -39,8 +39,29 @@ export function validate(inputs) {
   if (inputs.anode === inputs.cathode) errors.push({ field: 'cathode', code: 'SAME_METAL', message: 'Both electrodes are the same metal.', why: 'A cell needs two different half-reactions to produce a net potential; identical electrodes give E° = 0.' });
   return { ok: errors.length === 0, errors, warnings: [] };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, emf: 0, charge: 0, migration: 0 }; }
+
+/**
+ * The cell on load. The voltmeter does not snap to the Nernst value: the
+ * electrode reaches its equilibrium potential over a second or two, and
+ * without the salt bridge charge separation builds up and the reading
+ * collapses to nothing — which is the point of including the bridge.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const target = emfV(inputs);
+  if (target === null) {
+    // No salt bridge: the circuit polarises and the reading dies away.
+    s.emf = s.emf * Math.max(0, 1 - dt * 2.2);
+    s.migration = 0;
+    return s;
+  }
+  s.emf += (target - s.emf) * Math.min(1, dt * 2.4);
+  s.charge += Math.abs(s.emf) * dt;                    // ions moved so far
+  s.migration = (s.migration + dt * (0.25 + Math.abs(s.emf) * 0.5)) % 1;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const e = emfV(inputs);

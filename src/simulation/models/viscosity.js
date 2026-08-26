@@ -58,8 +58,30 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, released: false, y: 0, v: 0, elapsed: 0, atTerminal: false, landed: false }; }
+/**
+ * The ball falls through the liquid.
+ *
+ * It does not start at its terminal speed: it accelerates until viscous
+ * drag balances the net weight, which is why the upper mark must be far
+ * enough below the surface for Stokes' law to apply by the time timing
+ * starts. Integrating it — rather than jumping straight to v_t — is what
+ * lets a student see that.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  if (!s.released || s.landed) return s;
+  const vT = terminalVelocity(inputs);
+  // First-order approach to terminal velocity; the time constant is short
+  // for a small sphere in a viscous liquid.
+  s.v += (vT - s.v) * Math.min(1, dt * 9);
+  s.y += s.v * dt;
+  s.elapsed += dt;
+  s.atTerminal = Math.abs(s.v - vT) < vT * 0.02;
+  if (s.y >= inputs.fallDistanceCm / 100) { s.y = inputs.fallDistanceCm / 100; s.landed = true; }
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   if (floats(inputs)) return null;

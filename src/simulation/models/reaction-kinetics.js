@@ -40,8 +40,32 @@ export function validate(inputs) {
   }
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() {
+  return { t: 0, running: false, elapsed: 0, turbidity: 0, crossVisible: true, finishedAt: null };
+}
+
+/**
+ * The reaction runs on the clock.
+ *
+ * Na2S2O3 + 2HCl -> 2NaCl + SO2 + S + H2O: the sulphur comes out as a
+ * colloid, and the flask clouds until the ink cross beneath it disappears.
+ * Turbidity therefore grows with the sulphur produced, which for this
+ * pseudo-first-order rate is 1 - exp(-t/tau); the cross is called gone
+ * when it crosses the opacity a person stops being able to see through,
+ * and that instant IS the measurement, so it must be the same instant the
+ * model reports.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  if (!s.running || s.finishedAt) return s;
+  s.elapsed += dt;
+  const tEnd = reactionTimeS(inputs);
+  s.turbidity = 1 - Math.exp(-2.4 * (s.elapsed / tEnd));
+  s.crossVisible = s.turbidity < 0.78;
+  if (!s.crossVisible) s.finishedAt = s.elapsed;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 281);

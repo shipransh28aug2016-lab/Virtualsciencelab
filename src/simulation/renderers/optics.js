@@ -4,52 +4,104 @@
 import {
   label, drawOpticalBench, drawUpright, drawConvexLens, drawConcaveLens, drawConcaveMirror,
   drawConvexMirror, drawScreen, drawCandle, drawPrism, drawSlab, drawDial, theme,
+  drawRayDiagram, drawImageOnScreen,
 } from './apparatus.js';
 
 /* Pixels per centimetre along the optical bench. One constant, so the
    object, the image and the printed scale can never drift apart. */
-const SCALE = 2.2;
+const SCALE = 5.2;
 
-function benchScene(ctx, w, h) {
-  const y = h - 60;
-  drawOpticalBench(ctx, 30, w - 30, y);
-  return y;
+/* The bench is laid out in scene space; the frame is fitted to it
+   afterwards. The axis sits well above the bench so there is room for the
+   rays, which are the actual subject of every one of these experiments. */
+const BENCH_Y = 470;
+const AXIS_Y = 230;
+
+/**
+ * The bench is cut to the experiment, not the other way round. A metre
+ * rule drawn far wider than the apparatus standing on it forces the whole
+ * scene to be scaled down to fit the rule — which is what left the rays
+ * too small to read.
+ */
+function benchScene(ctx, w, h, x0 = 40, x1 = 640) {
+  drawOpticalBench(ctx, x0 - 40, x1 + 40, BENCH_Y, { scaleMax: Math.round((x1 - x0 + 80) / SCALE) });
+  return BENCH_Y;
+}
+
+/** Focal length declared by whichever element the student has mounted. */
+function focalOf(inputs, fallback) {
+  const id = inputs?.lens || inputs?.mirror || inputs?.element;
+  const m = typeof id === 'string' && id.match(/(\d+)/);
+  return m ? Number(m[1]) : (inputs?.focalLengthCm ?? fallback);
 }
 
 export function convexLens(ctx, w, h, state, inputs) {
-  const y = benchScene(ctx, w, h);
-  const cx = w / 2;
-  /* The object must stand where the model says it stands. Drawing it at a
-     fixed spot while u changed made the bench disagree with the arithmetic
-     the student was doing: a lens formula worked out for u = 40 cm was
-     illustrated by a candle sitting at u = 60 cm. */
-  const u = inputs?.objectDistanceCm ?? 30;
-  const objX = Math.max(45, cx - u * SCALE);
-  drawCandle(ctx, objX, y, 40, {
-    label: `Illuminated object (u = ${u.toFixed(1)} cm)`,
-    drag: { varId: 'objectDistanceCm', axis: 'x', unit: 'object distance u', p0: cx, p1: cx - 110 * SCALE, v0: 0, v1: 110 },
+  const lensX = 380;
+  const u = inputs?.objectDistanceCm ?? 40;
+  const f = focalOf(inputs, 15);
+  const screenU0 = inputs?.screenPosCm ?? state?.screen ?? (Number.isFinite(state?.v) ? state.v : 24);
+  benchScene(ctx, w, h, lensX - u * SCALE, lensX + Math.max(screenU0, 20) * SCALE);
+
+  // The light path, computed from 1/v − 1/u = 1/f. Drawn first so the
+  // apparatus sits on top of its own rays.
+  const geom = drawRayDiagram(ctx, lensX, AXIS_Y, {
+    f, u, hObj: inputs?.objectHeightCm ?? 2, scale: SCALE, aperture: 110,
   });
-  drawConvexLens(ctx, cx, y - 40, 55, { axis: true, axisLen: w / 2 - 40 });
-  const v = state?.v;
-  const screenX = Number.isFinite(v) ? Math.min(w - 60, cx + v * SCALE) : w - 90;
-  drawScreen(ctx, screenX, y, 80, {
-    label: Number.isFinite(v) ? `Screen (sharp image, v = ${v.toFixed(1)} cm)` : 'Screen (no real image)',
-    drag: { varId: 'screenPosCm', axis: 'x', unit: 'screen position', p0: cx, p1: cx + 120 * SCALE, v0: 0, v1: 120 },
+
+  // Object: a candle on an upright, at the distance the model is using.
+  drawUpright(ctx, geom.objX, BENCH_Y, BENCH_Y - AXIS_Y);
+  drawCandle(ctx, geom.objX, AXIS_Y, geom.hPx, {
+    label: `Illuminated object · u = ${u.toFixed(1)} cm`,
+    drag: { varId: 'objectDistanceCm', axis: 'x', unit: 'object distance u',
+      p0: lensX, p1: lensX - 110 * SCALE, v0: 0, v1: 110 },
   });
+
+  drawUpright(ctx, lensX, BENCH_Y, BENCH_Y - AXIS_Y);
+  drawConvexLens(ctx, lensX, AXIS_Y, 72, { label: `Convex lens · f = ${f} cm`, bulge: 13 });
+
+  // Screen where the student has actually put it.
+  const screenU = screenU0;
+  const screenX = lensX + screenU * SCALE;
+  drawUpright(ctx, screenX, BENCH_Y, BENCH_Y - AXIS_Y - 60);
+  const sharp = drawImageOnScreen(ctx, screenX, AXIS_Y, 120, geom, { scale: SCALE });
+  drawScreen(ctx, screenX, AXIS_Y + 60, 120, {
+    label: `Screen · ${screenU.toFixed(1)} cm`,
+    drag: { varId: 'screenPosCm', axis: 'x', unit: 'screen position',
+      p0: lensX, p1: lensX + 120 * SCALE, v0: 0, v1: 120 },
+  });
+  if (sharp > 0.9) label(ctx, (lensX + screenX) / 2, AXIS_Y - 150,
+    `1/v − 1/u = 1/f   →   f = ${(1 / (1 / geom.v + 1 / u)).toFixed(1)} cm`,
+    { anchor: 'above', bold: true, size: 13 });
 }
 export function concaveMirror(ctx, w, h, state, inputs) {
-  const y = benchScene(ctx, w, h);
-  const mirrorX = w - 90;
+  const mirrorX = 700;
   const u = inputs?.objectDistanceCm ?? 30;
-  // As above: the object stands at the distance the mirror formula is using.
-  const objX = Math.max(50, mirrorX - u * SCALE);
-  drawCandle(ctx, objX, y, 40, {
-    label: `Illuminated object (u = ${u.toFixed(1)} cm)`,
-    drag: { varId: 'objectDistanceCm', axis: 'x', unit: 'object distance u', p0: mirrorX, p1: mirrorX - 80 * SCALE, v0: 0, v1: 80 },
+  const f = focalOf(inputs, 15);
+  benchScene(ctx, w, h, mirrorX - u * SCALE, mirrorX);
+
+  // A concave mirror forms its image back on the SAME side as the object,
+  // so the construction is reflected about the mirror.
+  const geom = drawRayDiagram(ctx, mirrorX, AXIS_Y, {
+    f, u, hObj: inputs?.objectHeightCm ?? 2, scale: SCALE, mirror: true, aperture: 120,
   });
-  drawConcaveMirror(ctx, mirrorX, y - 40, 60);
+
+  drawUpright(ctx, geom.objX, BENCH_Y, BENCH_Y - AXIS_Y);
+  drawCandle(ctx, geom.objX, AXIS_Y, geom.hPx, {
+    label: `Illuminated object · u = ${u.toFixed(1)} cm`,
+    drag: { varId: 'objectDistanceCm', axis: 'x', unit: 'object distance u',
+      p0: mirrorX, p1: mirrorX - 80 * SCALE, v0: 0, v1: 80 },
+  });
+
+  drawUpright(ctx, mirrorX, BENCH_Y, BENCH_Y - AXIS_Y);
+  drawConcaveMirror(ctx, mirrorX, AXIS_Y, 72, { label: `Concave mirror · f = ${f} cm` });
+
   const v = state?.v;
-  if (Number.isFinite(v)) drawScreen(ctx, Math.max(70, mirrorX - v * SCALE), y, 80, { label: `Screen (v = ${v.toFixed(1)} cm)` });
+  if (Number.isFinite(v)) {
+    const sx = mirrorX - v * SCALE;
+    drawUpright(ctx, sx, BENCH_Y, BENCH_Y - AXIS_Y - 60);
+    drawScreen(ctx, sx, AXIS_Y + 60, 120, { label: `Screen · v = ${v.toFixed(1)} cm` });
+    drawImageOnScreen(ctx, sx, AXIS_Y, 120, geom, { scale: SCALE });
+  }
 }
 export function auxiliaryLens(ctx, w, h, state, inputs) {
   const y = benchScene(ctx, w, h);

@@ -43,8 +43,28 @@ export function validate(inputs) {
   if (inputs.func !== 'diode') warnings.push({ field: 'func', code: 'WRONG_FUNCTION', message: 'The diode-test function is needed, not the ohms range.', why: 'The diode-test range supplies enough voltage to show the forward drop directly; the ordinary ohms range on many meters cannot forward-bias a junction at all.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, current: 0, conducting: false, reading: 0 }; }
+/**
+ * Testing a diode. Forward biased it conducts once past its knee (about
+ * 0.7 V for silicon, 0.3 V for germanium) and the current then climbs
+ * steeply; reverse biased essentially nothing flows. The meter is eased
+ * towards the value so the student sees it swing, as a real one does.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const V = inputs.appliedV ?? 0;
+  const forward = (inputs.bias ?? 'forward') === 'forward';
+  const knee = (inputs.diode === 'Ge' || inputs.material === 'germanium') ? 0.3 : 0.7;
+  // Shockley-like: exponential above the knee, leakage below.
+  const target = forward
+    ? (V > knee ? 0.001 * (Math.exp((V - knee) / 0.05) - 1) : 1e-6 * V)
+    : -2e-6;
+  s.current += (Math.max(-0.01, Math.min(0.08, target)) - s.current) * Math.min(1, dt * 8);
+  s.conducting = forward && V > knee;
+  s.reading = s.current;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const fwd = reading({ ...inputs, polarity: 'forward' });

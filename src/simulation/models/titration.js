@@ -116,11 +116,28 @@ export function init() { return { t: 0, delivered: 0, pH: 7, colour: 'colourless
 
 export function step(state, inputs, dt) {
   const s = { ...state };
-  const target = Math.max(0, Math.min(50, inputs.buretteVolume));
   const vEq = equivalenceVolume(inputs);
-  const before = s.delivered;
-  s.delivered += (target - s.delivered) * Math.min(1, dt * 6);
-  s.flowing = Math.abs(target - s.delivered) > 0.03;
+
+  /*
+   * An open stopcock delivers titrant at a rate, and the volume delivered
+   * is the time integral of that rate. This is the whole experiment, and
+   * it was missing: `flowRate` was set by the stopcock buttons but never
+   * read here, and `flowing` was then overwritten from the slider — so
+   * opening the tap did nothing at all and the burette never emptied.
+   *
+   * Two ways to reach a volume, both ending in the same state: run the
+   * tap (integrated below), or set the level directly on the slider.
+   */
+  if (s.flowing && s.flowRate > 0) {
+    s.delivered = Math.min(50, s.delivered + s.flowRate * dt);
+    // Overshooting past the end point is the student's mistake to make,
+    // but the tap shuts once the burette is empty.
+    if (s.delivered >= 50) { s.delivered = 50; s.flowing = false; s.flowRate = 0; }
+  } else {
+    const target = Math.max(0, Math.min(50, inputs.buretteVolume));
+    s.delivered += (target - s.delivered) * Math.min(1, dt * 6);
+    s.flowing = false;
+  }
   s.pH = pHAt(inputs, s.delivered);
   s.colour = colourAt(inputs, s.delivered);
   s.atEndPoint = Math.abs(s.delivered - vEq) <= 0.15;

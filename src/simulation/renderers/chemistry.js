@@ -3,36 +3,155 @@
  */
 import {
   label, drawBeaker, drawConicalFlask, drawBurette, drawTestTube, drawThermometer,
-  drawRetortStand, drawBurner, drawSwatch, theme,
+  drawRetortStand, drawBurner, drawSwatch, theme, heatingAssembly, drawClamp,
+  drawTripod, drawGauze, heatAt, noteBounds,
 } from './apparatus.js';
+import { clock, rgba, shade, mixColor, clamp, noise1 } from './realism.js';
+
+/* The bench top every chemistry scene stands on. Fixed in scene space —
+   the frame is fitted to the apparatus afterwards, so a scene never has to
+   guess how tall the canvas will be. */
+const BENCH_Y = 430;
 
 export function meltingPoint(ctx, w, h, state, inputs) {
-  const th = theme();
-  const cx = w / 2;
-  drawRetortStand(ctx, cx, h - 30, h - 100);
-  drawBeaker(ctx, cx, 50, 100, 100, 0.7, '#e8c877', { label: 'Melting-point bath' });
-  drawThermometer(ctx, cx, 20, 120, 0.6);
-  ctx.save(); ctx.fillStyle = '#d8d0c0'; ctx.fillRect(cx + 10, 60, 4, 60); ctx.restore();
-  label(ctx, cx + 12, 120, 'Capillary + sample', { anchor: 'below' });
-  drawBurner(ctx, cx, h - 20, true);
+  const cx = 380;
+  const T0 = state?.bathTemp ?? state?.temperature ?? 30;
+  const mp = state?.meltingPoint ?? inputs?.meltingPoint ?? 122;
+  // The bath is a liquid paraffin / sulphuric acid bath: it is heated, and
+  // how far it has climbed is what the whole experiment is watching.
+  const frac = clamp((T0 - 20) / 200, 0, 1);
+  const A = heatingAssembly(ctx, cx, BENCH_Y, {
+    vesselWidth: 150, vesselHeight: 128, fill: 0.66,
+    liquid: '#e8c877', lit: state?.heating !== false, air: 1,
+    vesselLabel: 'Melting-point bath (liquid paraffin)',
+    flameHeight: 30 + 26 * (inputs?.heatingRate ?? 0.5),
+  });
+
+  // Thermometer clamped so its bulb sits beside the sample, not on the base.
+  const rodX = cx - 129;
+  drawClamp(ctx, rodX, A.topY + 26, cx - 34, { label: 'Clamp holding thermometer' });
+  drawThermometer(ctx, cx - 16, A.topY - 96, 210, frac);
+
+  // The capillary, rubber-banded to the thermometer stem.
+  const capTop = A.topY - 10;
+  const capBot = A.bot - 26;
+  ctx.save();
+  ctx.strokeStyle = 'rgba(200,215,235,0.95)';
+  ctx.lineWidth = 4.5;
+  ctx.beginPath(); ctx.moveTo(cx + 6, capTop); ctx.lineTo(cx + 6, capBot); ctx.stroke();
+  // The packed solid in the sealed end — and its melting, which is the
+  // observation the student is actually making.
+  const melted = clamp((T0 - (mp - 1.5)) / 3, 0, 1);
+  ctx.strokeStyle = melted > 0.5 ? '#eef3fb' : '#f4f0e2';
+  ctx.lineWidth = 2.6;
+  ctx.beginPath();
+  ctx.moveTo(cx + 6, capBot - 16 * (1 - melted * 0.45));
+  ctx.lineTo(cx + 6, capBot - 1);
+  ctx.stroke();
+  if (melted > 0.05 && melted < 1) {
+    // Meniscus collapsing as the last of the solid goes.
+    ctx.fillStyle = rgba('#ffffff', 0.6 * melted);
+    ctx.beginPath(); ctx.arc(cx + 6, capBot - 16 * (1 - melted * 0.45), 2.4, 0, Math.PI * 2); ctx.fill();
+  }
+  // Rubber band.
+  ctx.strokeStyle = '#c9744e';
+  ctx.lineWidth = 2.4;
+  ctx.beginPath(); ctx.moveTo(cx - 22, A.topY + 6); ctx.lineTo(cx + 12, A.topY + 6); ctx.stroke();
+  ctx.restore();
+  label(ctx, cx + 8, capBot + 4, 'Capillary + sample', { anchor: 'below', leader: true });
+
+  label(ctx, cx + 120, A.topY + 44,
+    melted >= 1 ? `Melted — ${T0.toFixed(1)} °C` : melted > 0 ? `Melting… ${T0.toFixed(1)} °C` : `Bath ${T0.toFixed(1)} °C`,
+    { anchor: 'right', bold: true, color: melted > 0 ? '#c02626' : undefined });
 }
 export function boilingPoint(ctx, w, h, state, inputs) {
   const th = theme();
-  const cx = w / 2;
-  drawRetortStand(ctx, cx, h - 30, h - 100);
-  const { topY } = drawBeaker(ctx, cx, 60, 100, 100, 0.7, '#e8c877', { label: 'Heating bath' });
-  drawTestTube(ctx, cx, 30, 100, 24, 0.3, th.liquid, { label: 'Siwoloboff tube' });
-  drawThermometer(ctx, cx + 30, 20, 120, 0.6);
+  const cx = 380;
+  const T0 = state?.temperature ?? state?.bathTemp ?? 30;
+  const bp = state?.boilingPoint ?? inputs?.boilingPoint ?? 78;
+  const A = heatingAssembly(ctx, cx, BENCH_Y, {
+    vesselWidth: 152, vesselHeight: 130, fill: 0.68,
+    liquid: '#e8c877', lit: state?.heating !== false,
+    vesselLabel: 'Heating bath', flameHeight: 44,
+  });
+  const rodX = cx - 130;
+  drawClamp(ctx, rodX, A.topY + 20, cx - 40, { label: 'Clamp' });
+
+  // Siwoloboff tube, standing in the bath with its inverted capillary.
+  const tubeTop = A.topY - 54;
+  drawTestTube(ctx, cx + 14, tubeTop, 150, 30, 0.42, th.liquid,
+    { label: 'Siwoloboff tube (liquid under test)', inRack: true });
+  const tubeBot = tubeTop + 150;
+
+  /* The observation: a rapid, continuous stream of bubbles from the
+     inverted capillary means the vapour pressure has reached atmospheric —
+     the boiling point is read as the stream just stops on cooling. */
+  const near = clamp((T0 - (bp - 12)) / 12, 0, 1);
+  ctx.save();
+  ctx.strokeStyle = 'rgba(205,220,240,0.95)';
+  ctx.lineWidth = 3.4;
+  ctx.beginPath(); ctx.moveTo(cx + 14, tubeBot - 54); ctx.lineTo(cx + 14, tubeBot - 12); ctx.stroke();
+  if (near > 0.02) {
+    const t = clock();
+    const n = Math.round(3 + near * 9);
+    for (let i = 0; i < n; i++) {
+      const ph = ((t * (0.5 + near * 2.4) + i / n) % 1);
+      const by = tubeBot - 12 - ph * (tubeBot - 12 - (tubeTop + 88));
+      const r = 1.4 + near * 2.2;
+      ctx.strokeStyle = 'rgba(255,255,255,0.75)';
+      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+      ctx.lineWidth = 0.9;
+      ctx.beginPath(); ctx.arc(cx + 14 + Math.sin(ph * 7 + i) * 2.5, by, r, 0, Math.PI * 2);
+      ctx.fill(); ctx.stroke();
+    }
+  }
+  ctx.restore();
+  label(ctx, cx + 14, tubeBot - 4, 'Inverted capillary', { anchor: 'below', leader: true });
+
+  drawThermometer(ctx, cx - 24, A.topY - 100, 214, clamp((T0 - 20) / 140, 0, 1));
+  label(ctx, cx + 128, A.topY + 40,
+    near >= 0.98 ? `Rapid stream — ${T0.toFixed(1)} °C` : `${T0.toFixed(1)} °C`,
+    { anchor: 'right', bold: true, color: near >= 0.98 ? '#c02626' : undefined });
 }
 export function crystallisation(ctx, w, h, state, inputs) {
-  const th = theme();
-  const cx = w / 2;
-  const { topY, bot } = drawBeaker(ctx, cx, 40, 140, 110, 0.6, th.liquid, { label: 'Hot saturated solution' });
-  drawBurner(ctx, cx, h - 20, true);
-  ctx.save(); ctx.fillStyle = '#dfe8f5'; ctx.globalAlpha = 0.8;
-  for (let i = 0; i < 6; i++) { ctx.beginPath(); ctx.arc(cx - 40 + i * 16, bot - 10, 3, 0, Math.PI * 2); ctx.fill(); }
-  ctx.globalAlpha = 1; ctx.restore();
-  label(ctx, cx, bot + 4, 'Crystals forming on cooling', { anchor: 'below' });
+  const cx = 380;
+  const heating = state?.heating ?? true;
+  const T0 = state?.temperature ?? 80;
+  // Crystals appear on COOLING, as solubility falls below what is dissolved.
+  const yieldFrac = clamp(state?.yieldFraction ?? (heating ? 0 : clamp((70 - T0) / 50, 0, 1)), 0, 1);
+  const A = heatingAssembly(ctx, cx, BENCH_Y, {
+    vesselWidth: 168, vesselHeight: 128, fill: 0.6,
+    liquid: '#cfe2f2', lit: heating,
+    vesselLabel: heating ? 'Hot saturated solution' : 'Solution cooling',
+    flameHeight: 42,
+  });
+
+  // Crystals growing on the base as the liquor cools.
+  ctx.save();
+  const t = clock();
+  const n = Math.round(yieldFrac * 26);
+  for (let i = 0; i < n; i++) {
+    const rx = cx - 66 + ((i * 37) % 132);
+    const size = 3 + ((i * 13) % 5) + yieldFrac * 3;
+    const ry = A.bot - 8 - ((i * 7) % 9);
+    const grow = clamp((yieldFrac * 26 - i) / 3, 0, 1);
+    ctx.save();
+    ctx.translate(rx, ry);
+    ctx.rotate(((i * 41) % 90) * Math.PI / 180 + Math.sin(t * 0.2 + i) * 0.02);
+    ctx.fillStyle = rgba('#eef4fd', 0.92);
+    ctx.strokeStyle = rgba('#8fb0d8', 0.9);
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.moveTo(0, -size * grow); ctx.lineTo(size * 0.62 * grow, 0);
+    ctx.lineTo(0, size * grow); ctx.lineTo(-size * 0.62 * grow, 0);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.restore();
+  }
+  ctx.restore();
+  label(ctx, cx, A.bot + 26,
+    heating ? 'Evaporating to saturation' : `Crystals forming on cooling — ${(yieldFrac * 100).toFixed(0)}% deposited`,
+    { anchor: 'below' });
+  label(ctx, cx + 130, A.topY + 42, `${T0.toFixed(0)} °C`, { anchor: 'right', bold: true });
 }
 export function phDetermination(ctx, w, h, state, inputs) {
   const th = theme();
@@ -45,14 +164,70 @@ export function phDetermination(ctx, w, h, state, inputs) {
 }
 export function titration(ctx, w, h, state, inputs) {
   const th = theme();
-  const cx = w / 2;
-  const { topY } = drawBurette(ctx, cx, 15, 150, 1 - (state?.delivered ?? 0) / 50, { liquidColor: th.liquid, dropping: state?.flowing, label: 'Burette (titrant)' });
-  const colourMap = { colourless: 'rgba(255,255,255,0.15)', pink: '#f2a6c8', yellow: '#f3e26b', orange: '#f0a23d', red: '#e5433d', green: '#3fae5a', blue: '#3d7ae5', violet: '#7a3fc4' };
-  let key = (state?.colour || 'colourless').split(' ')[0].split('(')[0].trim();
+  const cx = 400;
+  const delivered = state?.delivered ?? 0;
+  const flowing = !!state?.flowing;
+
+  const colourMap = {
+    colourless: 'rgba(214,230,246,0.34)', pink: '#f2a6c8', yellow: '#f3e26b',
+    orange: '#f0a23d', red: '#e5433d', green: '#3fae5a', blue: '#3d7ae5',
+    violet: '#7a3fc4', purple: '#8b4fd0', brown: '#8a5a2b', colourles: 'rgba(214,230,246,0.34)',
+  };
+  const key = (state?.colour || 'colourless').split(' ')[0].split('(')[0].trim().toLowerCase();
   const fill = colourMap[key] || th.liquid;
-  drawConicalFlask(ctx, cx, 190, 40, 110, 110, 0.35, fill, { label: 'Conical flask (analyte)' });
-  label(ctx, cx, 40, `Delivered: ${(state?.delivered ?? 0).toFixed(1)} mL`, { anchor: 'above', bg: false });
-  label(ctx, cx + 90, 190, state?.colour || 'colourless', { anchor: 'right' });
+  const titrantCol = inputs?.titrant === 'KMnO4' ? '#8b2fa8' : th.liquid;
+
+  // ── the stand that actually holds the burette ──
+  const rodX = cx - 132;
+  drawRetortStand(ctx, rodX, BENCH_Y, 470, { label: 'Retort stand' });
+
+  const buretteTop = BENCH_Y - 452;
+  const buretteLen = 258;
+  drawClamp(ctx, rodX, buretteTop + 62, cx - 12, { label: 'Burette clamp' });
+
+  // ── the flask, standing on a glazed white tile so the end point shows ──
+  const flaskH = 132, flaskTop = BENCH_Y - flaskH;
+  ctx.save();
+  ctx.fillStyle = th.isDark ? '#e8edf5' : '#fbfcfe';
+  ctx.strokeStyle = 'rgba(40,60,95,0.25)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  if (ctx.roundRect) ctx.roundRect(cx - 90, BENCH_Y - 5, 180, 9, 2); else ctx.rect(cx - 90, BENCH_Y - 5, 180, 9);
+  ctx.fill(); ctx.stroke();
+  ctx.restore();
+  label(ctx, cx + 92, BENCH_Y, 'White glazed tile', { anchor: 'right' });
+
+  // The burette delivers real drops onto the liquid surface in the flask.
+  const F = { topY: flaskTop, bodyTop: flaskTop + flaskH * 0.28, bot: BENCH_Y - 5 };
+  const surfaceY = F.bot - (F.bot - F.bodyTop) * 0.42;
+
+  drawBurette(ctx, cx, buretteTop, buretteLen, 1 - delivered / 50, {
+    liquidColor: titrantCol,
+    flowRate: flowing ? (state?.flowRate ?? 0.5) : 0,
+    targetY: surfaceY,
+    label: `Burette (${inputs?.titrant || 'titrant'})`,
+  });
+
+  drawConicalFlask(ctx, cx, flaskTop, 46, 150, flaskH, 0.42, fill, {
+    label: `Conical flask (${inputs?.analyte || 'analyte'})`,
+    stirring: flowing ? 0.35 : 0,
+  });
+
+  // ── the reading, where a student's eye actually goes ──
+  const vEq = state?.equivalenceVolume;
+  const near = Number.isFinite(vEq) ? Math.max(0, 1 - Math.abs(vEq - delivered) / 2) : 0;
+  label(ctx, cx + 118, buretteTop + 120, `Delivered  ${delivered.toFixed(1)} mL`,
+    { anchor: 'right', bold: true, size: 14 });
+  label(ctx, cx + 118, buretteTop + 148, `Indicator: ${state?.colour || 'colourless'}`,
+    { anchor: 'right', color: fill.startsWith('rgba') ? undefined : fill });
+  if (state?.atEndPoint) {
+    label(ctx, cx, flaskTop - 26, 'END POINT — permanent colour change', { anchor: 'above', bold: true, color: '#c02626' });
+  } else if (near > 0.4) {
+    label(ctx, cx, flaskTop - 26, 'Near end point — add drop-wise, swirl', { anchor: 'above', color: '#8a5a00' });
+  }
+  if (state?.overshot) {
+    label(ctx, cx, flaskTop - 26, 'OVERSHOT — refill and repeat', { anchor: 'above', bold: true, color: '#c02626' });
+  }
 }
 export function solPreparation(ctx, w, h, state, inputs) {
   const th = theme();

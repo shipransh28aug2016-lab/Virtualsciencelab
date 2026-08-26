@@ -25,8 +25,15 @@ export function scaleOf(inputs) { return SCALES[inputs.scale] || SCALES.lc02; }
 export function objectOf(inputs) { return OBJECTS[inputs.object] || OBJECTS.pencil; }
 
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, aligned: 0 }; }
+/** Nothing runs on its own; the scale simply follows what is measured. */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const target = inputs.lengthCm ?? inputs.reading ?? 0;
+  s.aligned += (target - s.aligned) * Math.min(1, dt * 8);
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 107);

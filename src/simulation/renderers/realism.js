@@ -277,9 +277,9 @@ export function caustic(ctx, cx, groundY, width, color, opts = {}) {
   const rx = width * 0.44;
   const ox = -LIGHT.x * width * 0.5;
   ctx.save();
-  ctx.globalCompositeOperation = 'lighter';
+  if (THEME.isDark) ctx.globalCompositeOperation = 'lighter';
   const g = ctx.createRadialGradient(cx + ox, groundY, 1, cx + ox, groundY, rx);
-  g.addColorStop(0, rgba(color, 0.4 * strength));
+  g.addColorStop(0, rgba(color, (THEME.isDark ? 0.4 : 0.26) * strength));
   g.addColorStop(0.5, rgba(color, 0.14 * strength));
   g.addColorStop(1, rgba(color, 0));
   ctx.fillStyle = g;
@@ -289,14 +289,25 @@ export function caustic(ctx, cx, groundY, width, color, opts = {}) {
   ctx.restore();
 }
 
-/** Additive glow — flames, lamp filaments, glowing wire, indicator LEDs. */
+/**
+ * Glow around a hot or luminous body.
+ *
+ * Additive light only works where there is darkness to add it to. On the
+ * bright classroom theme `lighter` drives an already near-white bench
+ * straight to pure white, which is precisely how a lit Bunsen burner came
+ * to be invisible on a white wall. So on a light background the glow is
+ * composited normally, keeping its own colour, and only the dim-room
+ * theme gets true additive bloom.
+ */
 export function bloom(ctx, x, y, r, color, intensity = 1) {
   if (r <= 0 || intensity <= 0.01) return;
   ctx.save();
-  ctx.globalCompositeOperation = 'lighter';
+  const additive = THEME.isDark;
+  if (additive) ctx.globalCompositeOperation = 'lighter';
+  const k = additive ? 1 : 0.62;
   const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-  g.addColorStop(0, rgba(color, 0.62 * intensity));
-  g.addColorStop(0.35, rgba(color, 0.24 * intensity));
+  g.addColorStop(0, rgba(color, 0.62 * intensity * k));
+  g.addColorStop(0.35, rgba(color, 0.24 * intensity * k));
   g.addColorStop(1, rgba(color, 0));
   ctx.fillStyle = g;
   ctx.beginPath();
@@ -630,13 +641,19 @@ export function flame(ctx, cx, baseY, height, opts = {}) {
   };
 
   ctx.save();
-  ctx.globalCompositeOperation = 'lighter';
+  /* A flame on a bright bench must be painted, not added: additive
+     blending against a white wall yields white, and the burner disappears.
+     In the dim-room theme the flame really is the brightest thing in the
+     frame, so there it is composited additively as light. */
+  const dark = THEME.isDark;
+  if (dark) ctx.globalCompositeOperation = 'lighter';
+  const A = dark ? 1 : 1.34;      // opaque enough to hold against the wall
 
   // Outer envelope — blue when premixed, orange when starved of air.
-  const outerCol = mixColor('#ff9c3a', '#7fb6ff', hot);
+  const outerCol = mixColor('#ff8a1f', '#5aa2ff', hot);
   const og = ctx.createLinearGradient(0, baseY, 0, baseY - H);
-  og.addColorStop(0, rgba(outerCol, 0.7 * intensity));
-  og.addColorStop(0.55, rgba(outerCol, 0.42 * intensity));
+  og.addColorStop(0, rgba(outerCol, Math.min(1, 0.72 * A) * intensity));
+  og.addColorStop(0.55, rgba(outerCol, Math.min(1, 0.5 * A) * intensity));
   og.addColorStop(1, rgba(outerCol, 0));
   ctx.fillStyle = og;
   envelope(1, 0); ctx.fill();
@@ -644,9 +661,9 @@ export function flame(ctx, cx, baseY, height, opts = {}) {
   // Luminous sooting body — only when the air hole is closed.
   if (hot < 0.95) {
     const lum = ctx.createLinearGradient(0, baseY, 0, baseY - H * 0.92);
-    lum.addColorStop(0, rgba('#ffcf5a', 0.72 * (1 - hot) * intensity));
-    lum.addColorStop(0.5, rgba('#ff9b2e', 0.5 * (1 - hot) * intensity));
-    lum.addColorStop(1, rgba('#ff7a1a', 0));
+    lum.addColorStop(0, rgba('#ffd45a', Math.min(1, 0.85 * A) * (1 - hot) * intensity));
+    lum.addColorStop(0.5, rgba('#ff8f18', Math.min(1, 0.62 * A) * (1 - hot) * intensity));
+    lum.addColorStop(1, rgba('#ff6a08', 0));
     ctx.fillStyle = lum;
     envelope(0.86, sway * 0.4); ctx.fill();
   }
@@ -654,14 +671,15 @@ export function flame(ctx, cx, baseY, height, opts = {}) {
   // Inner cone of unburnt gas — sharp, and only with air.
   if (hot > 0.15) {
     const ic = ctx.createLinearGradient(0, baseY, 0, baseY - H * 0.42);
-    ic.addColorStop(0, rgba('#39e6ff', 0.55 * hot * intensity));
-    ic.addColorStop(1, rgba('#1f7fff', 0));
+    ic.addColorStop(0, rgba('#25d6ff', Math.min(1, 0.7 * A) * hot * intensity));
+    ic.addColorStop(0.7, rgba('#1268e8', Math.min(1, 0.5 * A) * hot * intensity));
+    ic.addColorStop(1, rgba('#1268e8', 0));
     ctx.fillStyle = ic;
     envelope(0.42, 0); ctx.fill();
   }
 
   // Base collar where the gas leaves the barrel.
-  ctx.fillStyle = rgba(hot > 0.5 ? '#5fa8ff' : '#ffb14d', 0.5 * intensity);
+  ctx.fillStyle = rgba(hot > 0.5 ? '#4a94ff' : '#ffa733', 0.6 * intensity);
   ctx.beginPath();
   ctx.ellipse(cx, baseY, wBase * 0.5, wBase * 0.16, 0, 0, Math.PI * 2);
   ctx.fill();

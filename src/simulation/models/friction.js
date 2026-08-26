@@ -37,8 +37,34 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, x: 0, v: 0, slipping: false, applied: 0 }; }
+/**
+ * The block on the bench as load is added to the pan.
+ *
+ * Below the limiting value static friction simply matches the pull and
+ * nothing moves — the observation students most often miss. Once the pull
+ * exceeds it the block accelerates under the net force, so the moment of
+ * slipping is visible, not merely reported.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const pull = panForceN(inputs);
+  const limit = limitingFrictionN(inputs);
+  s.applied = pull;
+  if (pull <= limit) {
+    // Static friction rises to meet the pull; the block stays put.
+    s.slipping = false;
+    s.v = 0;
+    return s;
+  }
+  s.slipping = true;
+  const mass = Math.max(0.02, normalReactionN(inputs) / 9.792);
+  const a = (pull - limit * 0.85) / mass;      // kinetic friction is the lower one
+  s.v += a * dt;
+  s.x += s.v * dt;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   if (!slipping(inputs)) return null;

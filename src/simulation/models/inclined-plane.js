@@ -45,8 +45,28 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, s: 0, v: 0, moving: false, balanced: false }; }
+/**
+ * The body on the incline. When the pan load balances the component of
+ * weight down the slope nothing moves; otherwise the body accelerates
+ * along the plane under the net force, which is what makes the balance
+ * point findable by watching rather than by arithmetic alone.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const need = requiredForceGwt(inputs);
+  const have = inputs.panGwt ?? 0;
+  s.balanced = Math.abs(have - need) <= 0.5;
+  if (s.balanced) { s.moving = false; s.v = 0; return s; }
+  s.moving = true;
+  // Net force in gram-weight -> acceleration along the plane.
+  const net = (have - need) * 9.792e-3;
+  const mass = Math.max(0.02, (bodyOf(inputs).massG ?? 100) / 1000);
+  s.v += (net / mass) * dt;
+  s.s += s.v * dt;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   if (!balanced(inputs)) return null;

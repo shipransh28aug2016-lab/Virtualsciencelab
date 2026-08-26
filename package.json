@@ -7,12 +7,17 @@
   "scripts": {
     "start": "node tools/serve.mjs",
     "dev": "node tools/serve.mjs",
-    "build:index": "node tools/build-index.mjs"
+    "build:index": "node tools/build-index.mjs",
+    "audit:liveness": "node tools/audit-liveness.mjs",
+    "audit:models": "node tools/audit-models.mjs",
+    "audit:renderers": "node tools/audit-renderers.mjs",
+    "shot": "node tools/screenshot.mjs"
   },
-  "dependencies": {},
   "engines": {
     "node": ">=18"
   },
-  "//": "The APP has zero runtime dependencies. See README.md 'Verify it' for the current state of the test suite.",
-  "devDependencies": {}
+  "//": "The APP has zero runtime dependencies. Playwright is a dev-only dependency used by tools/audit-liveness.mjs, which opens every one of the 100 labs in a real browser and checks that the canvas actually changes over time -- the check that caught 73 labs rendering a dead screen.",
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  }
 }

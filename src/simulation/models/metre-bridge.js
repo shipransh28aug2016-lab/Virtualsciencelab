@@ -44,8 +44,27 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, deflection: 0, balanced: false, jockey: 50 }; }
+/**
+ * The bridge as the jockey is slid along the wire. The galvanometer
+ * deflection is proportional to the bridge's off-balance ratio, so it
+ * swings through zero AT the balance point — the null the student is
+ * hunting for — rather than being a lamp that switches on when a number
+ * matches.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const lBal = balanceLengthCm(inputs);
+  const l = inputs.jockeyCm ?? state.jockey ?? lBal;
+  s.jockey = l;
+  // Off-balance current, normalised; sign tells the student which way to move.
+  const off = (l - lBal) / 50;
+  const target = Math.max(-1, Math.min(1, off * 3.2));
+  s.deflection += (target - s.deflection) * Math.min(1, dt * 7);
+  s.balanced = Math.abs(l - lBal) < 0.3;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   if (!atBalance(inputs)) return null;

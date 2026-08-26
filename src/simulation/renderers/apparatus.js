@@ -31,12 +31,78 @@ import {
   brushedMetal, chrome, plastic, cork, dialFace, lcdPanel,
 } from './realism.js';
 import { vessel, levelChanged, prune } from '../fluids.js';
-import * as I from './interact.js';
+import * as Iraw from './interact.js';
+
+/* Registering a piece of apparatus also declares where the scene extends
+   to, so framing and pointer-picking can never fall out of step. */
+const I = {
+  ...Iraw,
+  apparatus(name, x, y, w, h, opts) { noteBounds(x, y, w, h); return Iraw.apparatus(name, x, y, w, h, opts); },
+  handle(name, box, bind) { noteBounds(box.x, box.y, box.w, box.h); return Iraw.handle(name, box, bind); },
+};
 
 export { setCanvasTheme, theme } from './realism.js';
 export { flame, bloom, incandescence, brushedMetal, chrome, plastic, contactShadow, caustic } from './realism.js';
 
 const T = () => theme();
+
+/* ------------------------------------------------------------------ *
+ *  Scene framing
+ * ------------------------------------------------------------------ *
+ * Every renderer was written against a nominal bench a few hundred
+ * pixels across. On a real screen that left the apparatus stranded in a
+ * sea of empty grey — the single thing that made these scenes look dead.
+ * So the frame is measured, not assumed: each primitive reports the box
+ * it actually occupies, and the whole scene is then scaled and centred
+ * to fill the canvas. A renderer never has to know the canvas size.
+ */
+
+let bounds = null;
+let heatSources = [];
+let placedLabels = [];
+
+/** A primitive reports the box it drew into. */
+export function noteBounds(x, y, w, h) {
+  if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+  const x1 = x + (w || 0), y1 = y + (h || 0);
+  if (!bounds) bounds = { x0: x, y0: y, x1, y1 };
+  else {
+    if (x < bounds.x0) bounds.x0 = x;
+    if (y < bounds.y0) bounds.y0 = y;
+    if (x1 > bounds.x1) bounds.x1 = x1;
+    if (y1 > bounds.y1) bounds.y1 = y1;
+  }
+}
+
+export function sceneBounds() { return bounds; }
+
+/**
+ * A lit burner announces where its flame is and how hot it is running, so
+ * anything standing over it can respond — a vessel base that glows, the
+ * convection that starts in the liquid, the bubbles that follow. Without
+ * this the flame was just a decal painted near a beaker that never
+ * noticed it.
+ */
+export function addHeatSource(x, y, power, radius) {
+  heatSources.push({ x, y, power, radius });
+}
+
+/**
+ * How strongly a vessel spanning x0..x1 with its base at `baseY` is being
+ * heated, 0..1. Falls off with horizontal offset and with the gap between
+ * flame tip and vessel base, the way real radiant and convective heating
+ * from a burner does.
+ */
+export function heatAt(x0, x1, baseY) {
+  let total = 0;
+  const cx = (x0 + x1) / 2;
+  for (const s of heatSources) {
+    const dx = Math.abs(s.x - cx) / Math.max(1, (x1 - x0) * 0.5 + s.radius);
+    const dy = Math.max(0, baseY - s.y) / Math.max(1, s.radius * 2.2);
+    total += s.power * Math.max(0, 1 - dx * dx) * Math.max(0, 1 - dy);
+  }
+  return clamp(total, 0, 1);
+}
 
 /** Stable identity for a piece of apparatus, from where it stands. */
 const keyOf = (kind, a, b) => `${kind}@${Math.round(a)},${Math.round(b)}`;
@@ -68,9 +134,58 @@ export function fitCanvas(canvas, aspect = 16 / 10) {
   tickClock();
   I.beginFrame();
   prune();
+  bounds = null;
+  heatSources = [];
+  placedLabels = [];
   backdrop(ctx, w, h, Math.round(h * 0.84));
   return { w, h, ctx };
 }
+
+/**
+ * Render one frame of a scene, scaled to fill the canvas.
+ *
+ * The first frame for a given scene and canvas size is drawn twice: once
+ * to find out how big the apparatus actually is, then for real with the
+ * transform that centres it. The transform is cached, so steady state is
+ * a single pass; it is recomputed only when the canvas is resized or a
+ * different experiment is opened.
+ */
+const fitCache = new Map();
+
+export function renderScene(canvas, aspect, key, fn, state, inputs) {
+  let g = fitCanvas(canvas, aspect);
+  const { w, h } = g;
+  const cacheKey = `${key}:${w}x${h}`;
+  let fit = fitCache.get(cacheKey);
+
+  if (!fit) {
+    // Measuring pass — draw it once to learn the extent of the bench.
+    try { fn(g.ctx, w, h, state, inputs); } catch { /* reported by the real pass */ }
+    const b = bounds;
+    fit = { k: 1, dx: 0, dy: 0 };
+    if (b && b.x1 > b.x0 && b.y1 > b.y0) {
+      const pad = 16;
+      const bw = b.x1 - b.x0, bh = b.y1 - b.y0;
+      // Never blow a scene up past legibility, never crop one that overflows.
+      const k = clamp(Math.min((w - pad * 2) / bw, (h - pad * 2) / bh), 0.45, 2.6);
+      fit = { k, dx: (w - bw * k) / 2 - b.x0 * k, dy: (h - bh * k) / 2 - b.y0 * k };
+    }
+    fitCache.set(cacheKey, fit);
+    g = fitCanvas(canvas, aspect);          // clear the measuring pass away
+  }
+
+  I.setTransform(fit);
+  const { ctx } = g;
+  ctx.save();
+  ctx.translate(fit.dx, fit.dy);
+  ctx.scale(fit.k, fit.k);
+  fn(ctx, w, h, state, inputs);
+  ctx.restore();
+  return g;
+}
+
+/** Forget cached framing — call when the experiment changes. */
+export function resetScene() { fitCache.clear(); }
 
 /** Finish the frame: edge falloff, then the pointer overlay on top. */
 export function finishFrame(ctx, w, h) {
@@ -100,28 +215,46 @@ export function label(ctx, x, y, text, opts = {}) {
   else if (anchor === 'left') tx = x - 8;
   else if (anchor === 'right') tx = x + 8;
 
-  if (leader) {
-    ctx.strokeStyle = rgba(th.accent, 0.5);
+  /* Labels are placed, not just printed. A scene with a dozen named parts
+     will otherwise stack captions on top of each other — which is exactly
+     what made these benches unreadable. Each new plate is pushed along the
+     anchor's own direction until it clears the ones already down, and a
+     leader is drawn if it had to travel. */
+  const tw = ctx.measureText(text).width;
+  const pad = 4.5;
+  const bw = tw + pad * 2;
+  const bh = size + pad * 2 - 2;
+  const bx0 = tx - (ctx.textAlign === 'center' ? tw / 2 : ctx.textAlign === 'right' ? tw : 0) - pad;
+  let by0 = (anchor === 'above' ? ty - size : anchor === 'below' ? ty - 1.5 : ty - size / 2 - 1.5) - pad + 1;
+
+  const overlaps = (y) => placedLabels.some((r) =>
+    bx0 < r.x + r.w + 2 && bx0 + bw + 2 > r.x && y < r.y + r.h + 2 && y + bh + 2 > r.y);
+
+  const dir = anchor === 'above' ? -1 : 1;
+  const startY = by0;
+  for (let n = 0; n < 14 && overlaps(by0); n++) by0 = startY + dir * (n + 1) * (bh + 3);
+  const moved = Math.abs(by0 - startY) > 1;
+  placedLabels.push({ x: bx0, y: by0, w: bw, h: bh });
+  const dy = by0 - startY;
+
+  if (leader || moved) {
+    ctx.strokeStyle = rgba(th.accent, moved ? 0.42 : 0.5);
     ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(tx, ty); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(tx, ty + dy - (anchor === 'above' ? 0 : 1)); ctx.stroke();
   }
   if (bg) {
-    const tw = ctx.measureText(text).width;
-    const pad = 4.5;
-    const bx = tx - (ctx.textAlign === 'center' ? tw / 2 : ctx.textAlign === 'right' ? tw : 0);
-    const by = anchor === 'above' ? ty - size : anchor === 'below' ? ty - 1.5 : ty - size / 2 - 1.5;
-    ctx.fillStyle = th.isDark ? 'rgba(9,16,29,0.8)' : 'rgba(255,255,255,0.86)';
+    ctx.fillStyle = th.isDark ? 'rgba(9,16,29,0.86)' : 'rgba(255,255,255,0.9)';
     ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(bx - pad, by - pad + 1, tw + pad * 2, size + pad * 2 - 2, 5);
-    else ctx.rect(bx - pad, by - pad + 1, tw + pad * 2, size + pad * 2 - 2);
+    if (ctx.roundRect) ctx.roundRect(bx0, by0, bw, bh, 5); else ctx.rect(bx0, by0, bw, bh);
     ctx.fill();
-    ctx.strokeStyle = th.isDark ? 'rgba(150,180,230,0.16)' : 'rgba(24,42,74,0.1)';
+    ctx.strokeStyle = th.isDark ? 'rgba(150,180,230,0.18)' : 'rgba(24,42,74,0.12)';
     ctx.lineWidth = 1;
     ctx.stroke();
   }
   ctx.fillStyle = color || th.ink;
-  ctx.fillText(text, tx, ty);
+  ctx.fillText(text, tx, ty + dy);
   ctx.restore();
+  noteBounds(bx0 - 2, by0 - 2, bw + 4, bh + 4);
 }
 
 /** A small marker pinpointing exactly what a label refers to. */
@@ -208,9 +341,16 @@ function contents(ctx, box, fillFrac, liquidColor, opts, key) {
 
   if (frac <= 0.001) { v.wave.step(); return { level, v, ry: 0 }; }
 
+  /* Heat arriving from a burner underneath. The renderer does not have to
+     pass anything: the burner registered its flame, and this vessel simply
+     asks how much of it is reaching its base. Everything that follows —
+     convection, the first bubbles, a rolling boil, steam — is that one
+     number. */
+  const heat = opts.heat ?? heatAt(x0, x1, bot);
+
   // Agitation from whatever is happening chemically or mechanically.
   const stir = opts.stirring || 0;
-  const boil = opts.boiling || 0;
+  const boil = clamp((opts.boiling || 0) + Math.max(0, (heat - 0.45) / 0.55), 0, 1);
   if (stir > 0) v.wave.agitate(stir * 0.5);
   if (boil > 0) v.wave.agitate(boil * 0.7);
   levelChanged(v, level);
@@ -222,8 +362,39 @@ function contents(ctx, box, fillFrac, liquidColor, opts, key) {
     radiusBottom: opts.radiusBottom ?? 5,
   });
 
+  /* Convection. Liquid heated at the base becomes less dense and rises up
+     the middle, spilling outward and sinking at the cooler walls — the
+     cell every student is asked to draw. Shown as warm rising filaments
+     whose speed follows the heating. */
+  if (heat > 0.06) {
+    ctx.save();
+    const t = clock();
+    const cw = x1 - x0;
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.lineWidth = 1.6;
+    for (let i = 0; i < 5; i++) {
+      const phase = (t * (0.24 + heat * 0.5) + i * 0.2) % 1;
+      const yy = bot - 4 - phase * (bot - level - 6);
+      if (yy < level) continue;
+      const spread = (1 - phase) * 0.16 + phase * 0.46;
+      const xx = (x0 + x1) / 2 + Math.sin(i * 2.1 + t * 0.9) * cw * spread * 0.5;
+      ctx.strokeStyle = rgba('#ffd9a0', 0.16 * heat * Math.sin(phase * Math.PI));
+      ctx.beginPath();
+      ctx.moveTo(xx, yy + 8);
+      ctx.quadraticCurveTo(xx + Math.sin(t * 2 + i) * 4, yy + 3, xx, yy);
+      ctx.stroke();
+    }
+    // The base of the liquid, hottest and least dense, reads brighter.
+    const g = ctx.createLinearGradient(0, bot, 0, bot - (bot - level) * 0.55);
+    g.addColorStop(0, rgba('#ffb765', 0.3 * heat));
+    g.addColorStop(1, rgba('#ffb765', 0));
+    ctx.fillStyle = g;
+    ctx.fillRect(x0, bot - (bot - level) * 0.55, x1 - x0, (bot - level) * 0.55);
+    ctx.restore();
+  }
+
   // Bubbles from boiling or from gas evolved by a reaction.
-  const bubbleRate = (opts.bubbling || 0) + boil * 26;
+  const bubbleRate = (opts.bubbling || 0) + boil * 26 + (heat > 0.25 ? (heat - 0.25) * 14 : 0);
   if (bubbleRate > 0 || v.bubbles.bubbles.length) {
     v.bubbles.update(bubbleRate, x0 + 2, x1 - 2, bot - 2, level, (f, r) => v.wave.disturb(f, -r * 0.22, 2));
     ctx.save();
@@ -260,12 +431,13 @@ function contents(ctx, box, fillFrac, liquidColor, opts, key) {
     sheen: 1 - clamp(boil * 0.6 + stir * 0.4, 0, 0.8),
   });
 
-  // Steam off a hot liquid.
-  if (opts.steam > 0) {
-    v.plume.update(opts.steam * 16, cx, level - 2, { spread: rx * 0.6, fade: 0.7 });
+  // Steam off a hot liquid — automatic once it is near boiling.
+  const steam = Math.max(opts.steam || 0, Math.max(0, (heat - 0.5) / 0.5));
+  if (steam > 0.02) {
+    v.plume.update(steam * 16, cx, level - 2, { spread: rx * 0.6, fade: 0.7 });
     ctx.save();
     for (const p of v.plume.puffs) {
-      ctx.fillStyle = rgba('#ffffff', 0.16 * p.life);
+      ctx.fillStyle = rgba('#ffffff', 0.16 * p.life * steam);
       ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
     }
     ctx.restore();
@@ -625,28 +797,34 @@ export function drawBurner(ctx, cx, baseY, lit = true, opts = {}) {
   g.addColorStop(1, shade(th.metal, -0.5));
   ctx.fillStyle = g;
   ctx.beginPath();
-  ctx.moveTo(cx - 17, baseY);
-  ctx.lineTo(cx + 17, baseY);
-  ctx.lineTo(cx + 9, baseY - 21);
-  ctx.lineTo(cx - 9, baseY - 21);
+  ctx.moveTo(cx - 24, baseY);
+  ctx.lineTo(cx + 24, baseY);
+  ctx.lineTo(cx + 12, baseY - 26);
+  ctx.lineTo(cx - 12, baseY - 26);
   ctx.closePath();
   ctx.fill();
   ctx.restore();
   // Barrel + collar.
-  brushedMetal(ctx, cx - 4.5, baseY - 34, 9, 14, { axis: 'v' });
-  chrome(ctx, cx - 6, baseY - 24, 12, 5, 1.5);
+  brushedMetal(ctx, cx - 6, baseY - 44, 12, 20, { axis: 'v' });
+  chrome(ctx, cx - 8, baseY - 30, 16, 6, 1.5);
   // Air hole, open by the amount set.
   const air = clamp(opts.air ?? 1, 0, 1);
   ctx.save();
   ctx.fillStyle = rgba('#0a1220', 0.6 + 0.3 * air);
-  ctx.fillRect(cx - 4, baseY - 22.5, 3 * air + 0.6, 3);
+  ctx.fillRect(cx - 5, baseY - 28, 4 * air + 0.8, 4);
   ctx.restore();
 
   if (lit) {
-    drawFlame(ctx, cx, baseY - 34, opts.flameHeight ?? 46, { air, intensity: opts.intensity ?? 1 });
+    const fh = opts.flameHeight ?? 46;
+    drawFlame(ctx, cx, baseY - 44, fh, { air, intensity: opts.intensity ?? 1 });
+    /* Announce the flame so whatever stands over it is actually heated.
+       A premixed (air-hole open) flame is much hotter than a luminous one,
+       which is the whole reason students are told to open the air hole
+       before heating anything. */
+    addHeatSource(cx, baseY - 44 - fh, (0.55 + 0.45 * air) * (opts.intensity ?? 1), fh);
   }
   const name = opts.label || 'Bunsen burner';
-  I.apparatus(name, cx - 18, baseY - 36, 36, 38, { note: air > 0.5 ? 'Air hole open — hot blue flame' : 'Air hole closed — luminous flame' });
+  I.apparatus(name, cx - 24, baseY - 46, 48, 48, { note: air > 0.5 ? 'Air hole open — hot blue flame' : 'Air hole closed — luminous flame' });
   label(ctx, cx, baseY + 6, name, { anchor: 'below' });
 }
 
@@ -1259,4 +1437,284 @@ export function title(ctx, w, text) {
   ctx.textBaseline = 'top';
   ctx.fillText(text, 12, 10);
   ctx.restore();
+}
+
+/* ------------------------------------------------------------------ *
+ *  Assemblies — apparatus set up the way it is actually set up
+ * ------------------------------------------------------------------ *
+ * A burner at the bottom of the frame and a beaker at the top, joined by
+ * nothing, is not a laboratory: it is two drawings sharing a canvas. The
+ * helpers below build the standard assemblies as a bench technician would
+ * lay them out, so the flame is under the gauze, the gauze is on the
+ * tripod, the vessel is on the gauze, and the heat therefore reaches it.
+ */
+
+/** Iron tripod — three legs, the back one seen between the front two. */
+export function drawTripod(ctx, cx, baseY, hgt, wid) {
+  const th = T();
+  const topR = wid / 2;
+  ctx.save();
+  contactShadow(ctx, cx, baseY + 1, wid * 1.25, { strength: 0.7 });
+  ctx.strokeStyle = shade(th.metal, -0.3);
+  ctx.lineWidth = 3.4;
+  ctx.lineCap = 'round';
+  // Back leg first, so the front pair overlaps it.
+  ctx.strokeStyle = shade(th.metal, -0.5);
+  ctx.beginPath(); ctx.moveTo(cx, baseY - hgt); ctx.lineTo(cx + topR * 0.15, baseY - hgt * 0.12); ctx.stroke();
+  ctx.strokeStyle = shade(th.metal, -0.18);
+  for (const s of [-1, 1]) {
+    ctx.beginPath();
+    ctx.moveTo(cx + s * topR * 0.86, baseY - hgt);
+    ctx.lineTo(cx + s * topR * 1.14, baseY);
+    ctx.stroke();
+  }
+  // Top ring.
+  ctx.strokeStyle = shade(th.metal, 0.1);
+  ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.ellipse(cx, baseY - hgt, topR, topR * 0.2, 0, 0, Math.PI * 2); ctx.stroke();
+  ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.ellipse(cx, baseY - hgt - 1, topR, topR * 0.2, 0, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke();
+  ctx.restore();
+  I.apparatus('Tripod stand', cx - topR * 1.2, baseY - hgt - 4, topR * 2.4, hgt + 6,
+    { note: 'Supports the vessel over the flame' });
+  return { topY: baseY - hgt, r: topR };
+}
+
+/**
+ * Wire gauze. The ceramic centre spreads the flame so the vessel is not
+ * heated at a point — the reason a beaker cracks if it is heated without
+ * one. It glows when the flame under it is hot enough.
+ */
+export function drawGauze(ctx, cx, y, wid, opts = {}) {
+  const th = T();
+  const heat = opts.heat ?? heatAt(cx - wid / 2, cx + wid / 2, y);
+  ctx.save();
+  const g = ctx.createLinearGradient(cx - wid / 2, 0, cx + wid / 2, 0);
+  g.addColorStop(0, shade(th.metal, -0.45));
+  g.addColorStop(0.4, shade(th.metal, 0.2));
+  g.addColorStop(1, shade(th.metal, -0.5));
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  if (ctx.roundRect) ctx.roundRect(cx - wid / 2, y - 2.5, wid, 5, 2); else ctx.rect(cx - wid / 2, y - 2.5, wid, 5);
+  ctx.fill();
+  // Ceramic centre disc.
+  ctx.fillStyle = heat > 0.35 ? mixColor('#d8d2c4', '#ff7a2a', clamp((heat - 0.35) / 0.65, 0, 1)) : '#d8d2c4';
+  ctx.beginPath(); ctx.ellipse(cx, y, wid * 0.26, 2.6, 0, 0, Math.PI * 2); ctx.fill();
+  // Mesh.
+  ctx.strokeStyle = rgba('#2a3346', 0.35);
+  ctx.lineWidth = 0.6;
+  for (let i = 1; i < 9; i++) {
+    const x = cx - wid / 2 + (wid * i) / 9;
+    ctx.beginPath(); ctx.moveTo(x, y - 2.2); ctx.lineTo(x, y + 2.2); ctx.stroke();
+  }
+  ctx.restore();
+  if (heat > 0.3) incandescence(ctx, cx, y, wid * 0.3, clamp((heat - 0.3) / 0.7, 0, 1), { intensity: 0.7 });
+  I.apparatus('Wire gauze', cx - wid / 2, y - 4, wid, 8,
+    { note: 'Spreads the flame so the vessel is not heated at a point' });
+  return y;
+}
+
+/** A boss-head and clamp gripping something on a retort-stand rod. */
+export function drawClamp(ctx, rodX, y, reachX, opts = {}) {
+  const th = T();
+  const dir = Math.sign(reachX - rodX) || 1;
+  ctx.save();
+  chrome(ctx, rodX - 5.5, y - 6, 11, 12, 2);                 // boss head
+  brushedMetal(ctx, Math.min(rodX, reachX), y - 2, Math.abs(reachX - rodX), 4, { axis: 'h' });
+  // Jaws.
+  ctx.fillStyle = shade(th.metal, -0.15);
+  ctx.beginPath();
+  ctx.ellipse(reachX, y, 5, 7, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#2c3446';
+  ctx.beginPath(); ctx.ellipse(reachX + dir * 1.5, y, 2.4, 5.4, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+  I.apparatus(opts.label || 'Clamp and boss head', Math.min(rodX, reachX) - 6, y - 9,
+    Math.abs(reachX - rodX) + 14, 18, { note: opts.note });
+}
+
+/**
+ * The standard heating assembly: retort stand, burner, tripod, gauze, and
+ * the vessel sitting on top of it — laid out so the flame really is under
+ * the vessel and `heatAt` therefore reports heat reaching it.
+ *
+ * Returns the geometry so a renderer can place a thermometer, a capillary
+ * or a stirrer into the vessel it just stood up.
+ */
+export function heatingAssembly(ctx, cx, benchY, opts = {}) {
+  const {
+    vesselWidth = 132, vesselHeight = 116, fill = 0.62,
+    liquid = '#cfe0f5', lit = true, air = 1, vessel: kind = 'beaker',
+    vesselLabel, standSide = -1, flameHeight = 44, stand = true,
+  } = opts;
+
+  const burnerBaseY = benchY;
+  // Tripod tall enough to clear the flame, vessel sitting on the gauze.
+  const tripodH = flameHeight + 42;   // clears the barrel plus the flame
+  const gaugeY = burnerBaseY - tripodH;
+
+  if (stand) {
+    const rodX = cx + standSide * (vesselWidth * 0.5 + 54);
+    drawRetortStand(ctx, rodX, benchY, tripodH + vesselHeight + 76, { label: 'Retort stand' });
+  }
+  drawBurner(ctx, cx, burnerBaseY, lit, { air, flameHeight });
+  drawTripod(ctx, cx, burnerBaseY, tripodH, vesselWidth * 0.92);
+  drawGauze(ctx, cx, gaugeY, vesselWidth * 0.96);
+
+  const topY = gaugeY - 3 - vesselHeight;
+  let geom;
+  if (kind === 'flask') {
+    geom = drawConicalFlask(ctx, cx, topY, vesselWidth * 0.34, vesselWidth, vesselHeight, fill, liquid,
+      { label: vesselLabel || 'Round-bottom flask' });
+  } else {
+    geom = drawBeaker(ctx, cx, topY, vesselWidth, vesselHeight, fill, liquid,
+      { label: vesselLabel || 'Beaker' });
+  }
+  return { ...geom, cx, topY, gaugeY, burnerBaseY, bot: gaugeY - 3, heat: heatAt(cx - vesselWidth / 2, cx + vesselWidth / 2, gaugeY - 3) };
+}
+
+/* ------------------------------------------------------------------ *
+ *  Ray optics — drawing the light, not just the glass
+ * ------------------------------------------------------------------ *
+ * An optics experiment with no rays on the bench is a photograph of some
+ * apparatus. What the student is actually asked to understand is where
+ * the light goes, so the light is what gets drawn: the standard
+ * construction rays, refracted at the element, converging to the image,
+ * and the image itself landing on the screen — sharp only where the
+ * lens equation says it is.
+ */
+
+/**
+ * Trace and draw a thin-lens (or spherical-mirror) construction.
+ *
+ * Distances are in centimetres and converted with `scale`; the geometry
+ * comes from 1/v − 1/u = 1/f, so the picture is the equation.
+ *
+ * @param opts.f          focal length, cm (positive converging)
+ * @param opts.u          object distance, cm (positive, measured from the element)
+ * @param opts.hObj       object height, cm
+ * @param opts.screenU    where the screen stands, cm from the element
+ */
+export function drawRayDiagram(ctx, elemX, axisY, opts = {}) {
+  const {
+    f = 15, u = 40, hObj = 2, scale = 2.2, screenU = null,
+    mirror = false, aperture = 56, showConstruction = true,
+  } = opts;
+  const th = T();
+
+  const uPx = u * scale;
+  const hPx = Math.max(34, hObj * scale * 5.0);       // object drawn to a legible height
+  const objX = elemX - uPx;
+  const objTop = axisY - hPx;
+
+  // Thin-lens equation. v > 0 means a real image on the far side.
+  const v = (u === f) ? Infinity : (u * f) / (u - f);
+  const m = Number.isFinite(v) ? -v / u : NaN;         // linear magnification
+  const vPx = Number.isFinite(v) ? v * scale : Infinity;
+  const imgX = mirror ? elemX - vPx : elemX + vPx;
+  const imgTop = axisY + hPx * (Number.isFinite(m) ? m : 0);
+
+  const fPx = f * scale;
+  ctx.save();
+
+  // Principal axis and the focal points, which the construction needs.
+  dashedLine(ctx, elemX - uPx - 60, axisY, elemX + Math.min(400, Math.abs(vPx) + 80), axisY, rgba(th.dim, 0.8));
+  for (const sgn of [-1, 1]) {
+    const fx = elemX + sgn * fPx;
+    ctx.fillStyle = th.accent2;
+    ctx.beginPath(); ctx.arc(fx, axisY, 3, 0, Math.PI * 2); ctx.fill();
+    label(ctx, fx, axisY + 4, sgn < 0 ? 'F' : "F'", { anchor: 'below', size: 11 });
+  }
+
+  // The object, as an upright arrow on the axis.
+  arrow(ctx, objX, axisY, objX, objTop, th.accent, 2.2);
+
+  if (showConstruction && Number.isFinite(v)) {
+    const rayCol = rgba('#f0a23d', 0.95);
+    const half = aperture / 2;
+    ctx.lineWidth = 1.5;
+
+    // 1. Parallel to the axis, then through the far focus.
+    ctx.strokeStyle = rayCol;
+    ctx.beginPath();
+    ctx.moveTo(objX, objTop);
+    ctx.lineTo(elemX, objTop);
+    ctx.lineTo(imgX, imgTop);
+    ctx.stroke();
+
+    // 2. Straight through the optical centre, undeviated.
+    ctx.strokeStyle = rgba('#e5433d', 0.9);
+    ctx.beginPath();
+    ctx.moveTo(objX, objTop);
+    ctx.lineTo(imgX, imgTop);
+    ctx.stroke();
+
+    // 3. Through the near focus, emerging parallel to the axis.
+    const nearF = elemX - fPx;
+    if (objX < nearF) {
+      const tAtLens = (elemX - objX) / (nearF - objX);
+      const yAtLens = objTop + (axisY - objTop) * tAtLens;
+      if (Math.abs(yAtLens - axisY) < half) {
+        ctx.strokeStyle = rgba('#3fae5a', 0.9);
+        ctx.beginPath();
+        ctx.moveTo(objX, objTop);
+        ctx.lineTo(elemX, yAtLens);
+        ctx.lineTo(imgX + (imgX > elemX ? 60 : -60), yAtLens);
+        ctx.stroke();
+      }
+    }
+
+    // The image itself, inverted when m is negative — the whole point.
+    arrow(ctx, imgX, axisY, imgX, imgTop, '#c02626', 2.6);
+    label(ctx, imgX, imgTop + (imgTop > axisY ? 8 : -8),
+      `${v > 0 ? 'Real' : 'Virtual'}, ${m < 0 ? 'inverted' : 'erect'} · v = ${v.toFixed(1)} cm`,
+      { anchor: imgTop > axisY ? 'below' : 'above', size: 11, bold: true });
+  } else if (!Number.isFinite(v)) {
+    label(ctx, elemX + 40, axisY - 40, 'Object at F — emergent rays parallel, no image', { anchor: 'right', color: '#8a5a00' });
+  }
+  ctx.restore();
+
+  return { objX, objTop, hPx, v, m, imgX, imgTop, vPx };
+}
+
+/**
+ * The patch of light actually falling on the screen. Only at the image
+ * distance is it a sharp inverted image; move the screen off and it
+ * spreads into the circle of confusion, which is exactly how a student
+ * finds the focus — by looking for the sharpest patch, not by reading a
+ * number off a slider.
+ */
+export function drawImageOnScreen(ctx, screenX, axisY, hgt, geom, opts = {}) {
+  const { scale = 2.2 } = opts;
+  if (!geom || !Number.isFinite(geom.v)) return 0;
+  const missPx = Math.abs(screenX - geom.imgX);
+  const sharp = clamp(1 - missPx / (26 * scale), 0, 1);
+  const imgH = Math.abs(geom.hPx * (geom.m || 0));
+  const blur = 2 + (1 - sharp) * 26;
+
+  ctx.save();
+  // The cone of light landing on the screen.
+  const g = ctx.createRadialGradient(screenX, axisY - imgH / 2 * Math.sign(geom.m || -1), 0,
+    screenX, axisY - imgH / 2 * Math.sign(geom.m || -1), imgH / 2 + blur);
+  g.addColorStop(0, rgba('#ffe9b0', 0.85 * (0.35 + 0.65 * sharp)));
+  g.addColorStop(0.6, rgba('#ffcf70', 0.4 * (0.3 + 0.7 * sharp)));
+  g.addColorStop(1, rgba('#ffbb50', 0));
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.ellipse(screenX, axisY - (imgH / 2) * Math.sign(geom.m || -1) * -1,
+    4 + blur * 0.5, imgH / 2 + blur, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // The inverted image, resolved only when the screen is at v.
+  if (sharp > 0.12) {
+    ctx.globalAlpha = sharp;
+    arrow(ctx, screenX, axisY, screenX, axisY + imgH * Math.sign(geom.m < 0 ? 1 : -1), '#b03018', 2.4);
+    ctx.globalAlpha = 1;
+  }
+  ctx.restore();
+  label(ctx, screenX, axisY + hgt * 0.5,
+    sharp > 0.9 ? 'Sharp image' : sharp > 0.3 ? 'Nearly focused' : 'Blurred — move the screen',
+    { anchor: 'below', size: 11, color: sharp > 0.9 ? '#0d7a52' : undefined });
+  return sharp;
 }

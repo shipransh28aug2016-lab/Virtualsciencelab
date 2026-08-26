@@ -50,8 +50,27 @@ export function validate(inputs) {
   if (inputs.water === 'standing') warnings.push({ field: 'water', code: 'STANDING_WATER', message: 'The outer water is never changed.', why: 'As the outer water becomes more concentrated, the concentration difference driving diffusion shrinks, and removal stalls at a plateau well above zero, however long dialysis continues.', fix: 'Use running water, or change it periodically.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, running: true, elapsed: 0, inside: C0, outside: 0, fraction: 1 }; }
+
+/**
+ * Dialysis in progress. Crystalloid inside the bag leaves through the
+ * membrane exponentially towards the plateau the water regime allows —
+ * standing water saturates and the transfer stalls, changed water keeps
+ * the gradient up and it goes to completion. What appears outside is what
+ * has left inside, so the two curves are one conservation statement.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  if (!s.running) return s;
+  // Minutes are the natural unit here; a lab period is compressed so the
+  // student can watch the curve rather than wait an hour for it.
+  s.elapsed += dt * (inputs.timeScale ?? 4);
+  s.inside = concentrationAt(inputs, s.elapsed);
+  s.outside = C0 - s.inside;
+  s.fraction = s.inside / C0;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 271);

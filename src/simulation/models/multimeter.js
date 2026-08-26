@@ -57,8 +57,23 @@ export function validate(inputs) {
   if (correctFunc(inputs) && !correctConnection(inputs)) warnings.push({ field: 'connection', code: 'WRONG_CONNECTION', message: 'An ammeter must be in series; a voltmeter in parallel.', why: 'Connecting an ammeter in parallel effectively short-circuits the source through the meter\'s low resistance.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, reading: 0, settling: 0, correct: false }; }
+/**
+ * A digital multimeter. It does not answer instantly: the display settles
+ * over a moment, and if the function switch or the leads are wrong it
+ * settles on the wrong thing rather than refusing — which is exactly the
+ * mistake this exercise is meant to teach a student to catch.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const ok = correctFunc(inputs) && correctConnection(inputs);
+  s.correct = ok;
+  const target = ok ? (targetOf(inputs)?.value ?? 0) : 0;
+  s.reading += (target - s.reading) * Math.min(1, dt * 5);
+  s.settling = Math.abs(target - s.reading) > Math.max(1e-6, Math.abs(target) * 0.002) ? 1 : 0;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const t = targetOf(inputs);

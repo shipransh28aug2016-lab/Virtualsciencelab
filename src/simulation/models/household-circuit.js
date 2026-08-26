@@ -44,8 +44,26 @@ export function validate(inputs) {
   if (!safeFuse(inputs)) warnings.push({ field: 'fuseRatingA', code: 'BAD_FUSE_RATING', message: 'This fuse rating does not suit the working current.', why: `The circuit draws about ${totalCurrentA(inputs).toFixed(2)} A normally. A fuse must be rated just above that, so it does not blow in normal use but still protects the wiring on a fault.` });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, current: 0, lamps: 0, fuseBlown: false, switchPhase: 0 }; }
+/**
+ * The lighting circuit. Lamps in parallel each draw their own current from
+ * the same supply, so the total rises with every one switched on — and
+ * past the fuse rating the fuse goes, which is the safety lesson the
+ * experiment carries.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const V = inputs.supplyV ?? 220;
+  const n = inputs.lampsOn ?? inputs.lamps ?? 1;
+  const perLampW = inputs.lampWatt ?? 60;
+  const target = s.fuseBlown ? 0 : (n * perLampW) / V;
+  s.current += (target - s.current) * Math.min(1, dt * 6);
+  s.lamps = s.fuseBlown ? 0 : n;
+  if (!s.fuseBlown && s.current > (inputs.fuseA ?? 5)) { s.fuseBlown = true; }
+  s.switchPhase = (s.switchPhase + dt) % 1;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 223);

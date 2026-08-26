@@ -48,8 +48,21 @@ export function apparentRadiusCm(inputs) {
 }
 
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, focus: 0, apparent: 0 }; }
+/**
+ * Focusing the travelling microscope. The apparent position of the mark
+ * rises by t(1 - 1/n) when the slab is placed over it; the focus setting
+ * eases towards it so the student sees the shift happen rather than being
+ * told about it.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const target = apparentThicknessCm(inputs);
+  s.apparent += (target - s.apparent) * Math.min(1, dt * 3);
+  s.focus = Math.abs(target - s.apparent) < 0.002 ? 1 : 0;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 239);

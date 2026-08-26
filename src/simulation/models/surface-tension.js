@@ -45,8 +45,19 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, rise: 0, settled: false }; }
+/**
+ * The liquid climbing the capillary. It overshoots slightly and settles,
+ * the way a real meniscus does, towards h = 2T cos(theta) / (r rho g).
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const target = riseCm(inputs);
+  s.rise += (target - s.rise) * Math.min(1, dt * 3.2);
+  s.settled = Math.abs(target - s.rise) < Math.max(0.005, Math.abs(target) * 0.004);
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   if (liquidOf(inputs).nonWetting) return null;

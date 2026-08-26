@@ -34,8 +34,23 @@ export function validate(inputs) {
   if (!rolling(inputs)) warnings.push({ field: 'panG', code: 'NOT_ROLLING', message: 'The pan load is not close to the rolling-friction value.', why: 'Rolling friction is tiny; add fine weights slowly until the roller just begins to move steadily.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, s: 0, v: 0, rolling: false }; }
+/**
+ * A roller decelerating under rolling friction. Rolling resistance is far
+ * smaller than sliding friction, which is the comparison the experiment
+ * exists to make, so the roller coasts a long way before stopping.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  if (!s.rolling) return s;
+  const mu = (typeof rollingCoefficient === 'function' ? rollingCoefficient(inputs) : (inputs.mu ?? 0.02));
+  const a = -mu * 9.792;
+  s.v = Math.max(0, s.v + a * dt);
+  s.s += s.v * dt;
+  if (s.v <= 0.0001) s.rolling = false;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   if (!rolling(inputs)) return null;

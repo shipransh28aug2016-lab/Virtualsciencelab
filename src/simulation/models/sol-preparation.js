@@ -60,8 +60,32 @@ export function validate(inputs) {
   if (coagulationValueMm(inputs) === null && s.type === 'lyophobic') warnings.push({ field: 'electrolyte', code: 'WRONG_SIGN_ION', message: 'This electrolyte\'s active ion carries the same sign as the sol.', why: 'By the Hardy-Schulze rule only the ion of charge OPPOSITE to the sol\'s own does the coagulating; the same-signed ion is a spectator.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, elapsed: 0, coagulation: 0, tyndall: 1, settled: 0 }; }
+
+/**
+ * A sol under an electrolyte. Above the coagulation value the double
+ * layer is compressed, particles collide and stick, and the sol
+ * flocculates — the Tyndall beam dims as the colloid is consumed and the
+ * floc settles out. Below it, nothing happens however long you wait,
+ * which is exactly the observation the experiment is for.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  s.elapsed += dt;
+  if (!coagulates(inputs)) {
+    s.coagulation = 0; s.tyndall = 1; s.settled = 0;
+    return s;
+  }
+  // How far past the coagulation value sets how fast it goes.
+  const cv = coagulationValueMm(inputs) || 1;
+  const excess = Math.max(0, inputs.concentrationMm / cv - 1);
+  const rate = 0.16 + excess * 0.5;
+  s.coagulation = Math.min(1, 1 - Math.exp(-rate * s.elapsed));
+  s.tyndall = 1 - s.coagulation * 0.92;          // beam fades as the sol goes
+  s.settled = Math.max(0, s.coagulation - 0.35) / 0.65;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 269);

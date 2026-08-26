@@ -30,6 +30,23 @@ let active = null;      // region being dragged
 let pointer = { x: -1, y: -1, inside: false };
 let onChange = null;    // (varId, value) => void, supplied by the app
 let enabled = true;
+let xform = { k: 1, dx: 0, dy: 0 };
+
+/**
+ * The scene is drawn through a fit transform, so regions are registered in
+ * scene coordinates while the pointer arrives in canvas coordinates. One
+ * place converts between them; if this were done at each call site a
+ * resize would silently leave the highlight ring off the apparatus.
+ */
+export function setTransform(t) { xform = t || { k: 1, dx: 0, dy: 0 }; }
+
+const toScreen = (r) => ({
+  ...r,
+  x: r.x * xform.k + xform.dx, y: r.y * xform.k + xform.dy,
+  w: r.w * xform.k, h: r.h * xform.k,
+  p0: r.p0 === undefined ? undefined : (r.axis === 'x' ? r.p0 * xform.k + xform.dx : r.p0 * xform.k + xform.dy),
+  p1: r.p1 === undefined ? undefined : (r.axis === 'x' ? r.p1 * xform.k + xform.dx : r.p1 * xform.k + xform.dy),
+});
 
 /** Called once per frame before anything is drawn. */
 export function beginFrame() {
@@ -79,7 +96,7 @@ function valueAt(r, px, py) {
 function hitTest(px, py) {
   // Later registrations sit on top, so search backwards.
   for (let i = regions.length - 1; i >= 0; i--) {
-    const r = regions[i];
+    const r = toScreen(regions[i]);
     const pad = r.kind === 'handle' ? 6 : 0;   // handles are easier to grab
     if (px >= r.x - pad && px <= r.x + r.w + pad && py >= r.y - pad && py <= r.y + r.h + pad) return r;
   }

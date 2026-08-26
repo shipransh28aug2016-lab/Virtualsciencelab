@@ -52,8 +52,20 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, screw: 0, contact: false }; }
+/**
+ * A spherometer is read, not run: nothing evolves on its own. What must
+ * respond is the screw — turning it moves the central leg until it just
+ * touches, and the contact is what the reading is taken at.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const target = inputs.screwTurns ?? state.screw ?? 0;
+  s.screw += (target - s.screw) * Math.min(1, dt * 8);
+  s.contact = Math.abs(target - s.screw) < 0.002;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   if (!atContact(inputs)) return null;

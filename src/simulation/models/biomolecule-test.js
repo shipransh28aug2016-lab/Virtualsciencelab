@@ -61,8 +61,24 @@ export function observation(inputs) {
 }
 
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, elapsed: 0, development: 0, complete: false }; }
+
+/**
+ * A wet test is not instantaneous. Warm the tube and the colour or the
+ * precipitate appears over some seconds and then stops changing; a
+ * negative test stays stubbornly as it was, however long it is watched.
+ * `development` is how far the observation has come, so the tube on screen
+ * and the observation recorded are the same event.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt; s.elapsed += dt;
+  const positive = isPositive(inputs);
+  const target = positive ? 1 : 0;
+  s.development += (target - s.development) * Math.min(1, dt * 0.55);
+  s.complete = positive ? s.development > 0.96 : s.elapsed > 6;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   return { trial, sample: sampleOf(inputs).label, test: testOf(inputs).label, observation: observation(inputs), positive: isPositive(inputs), _kind: sampleOf(inputs).kind };

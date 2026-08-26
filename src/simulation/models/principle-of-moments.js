@@ -38,8 +38,25 @@ export function validate(inputs) {
   if (!balanced(inputs)) warnings.push({ field: 'knownPosCm', code: 'NOT_BALANCED', message: 'The scale is not yet balanced.', why: 'Slide the known mass until the metre scale is horizontal on the knife edge.', fix: 'Adjust the known mass position.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, tilt: 0, balanced: false, net: 0 }; }
+/**
+ * The metre rule on its knife edge. The net moment about the pivot tilts
+ * the rule until the moments balance; a rule that simply sits level
+ * whatever is hung on it teaches nothing, so the imbalance is shown as
+ * the tilt it actually produces.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const L = (inputs.leftMassG ?? 50) * (inputs.leftArmCm ?? 20);
+  const R = (inputs.rightMassG ?? 50) * (inputs.rightArmCm ?? 20);
+  s.net = R - L;
+  s.balanced = Math.abs(s.net) < Math.max(1, (L + R) * 0.004);
+  // Tilt saturates: a real rule comes to rest against the bench.
+  const target = Math.max(-0.32, Math.min(0.32, s.net / Math.max(1, (L + R) * 0.6)));
+  s.tilt += (target - s.tilt) * Math.min(1, dt * 3.4);
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   if (!balanced(inputs)) return null;

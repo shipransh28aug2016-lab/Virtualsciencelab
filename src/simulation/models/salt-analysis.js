@@ -79,8 +79,22 @@ export function validate(inputs) {
   }
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, elapsed: 0, development: 0, testRun: false }; }
+/**
+ * A wet test on the salt. Once the reagent is added the characteristic
+ * precipitate or colour builds over a few seconds and then stops; a test
+ * that gives nothing stays clear no matter how long it is watched.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt; s.elapsed += dt;
+  const obs = typeof observation === 'function' ? observation(inputs) : '';
+  const positive = !!obs && !/^no\b|nothing|negative|no characteristic/i.test(obs);
+  const target = positive ? 1 : 0;
+  s.development += (target - s.development) * Math.min(1, dt * 0.6);
+  s.testRun = s.elapsed > 0.2;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const salt = saltOf(inputs);
