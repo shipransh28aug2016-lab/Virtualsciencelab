@@ -39,8 +39,26 @@ export function depressionMm(inputs) {
 }
 
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, depression: 0, v: 0, settled: false }; }
+/**
+ * A loaded beam sags -- and it does not sag smoothly. A metre scale
+ * supported at its ends and loaded at the centre oscillates about its new
+ * position and is damped to rest, which is why a reading is taken only
+ * after the pointer has stopped swinging.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const target = depressionMm(inputs);
+  // Damped spring approach: stiffness and damping give a couple of visible
+  // swings before it settles.
+  const k = 46, c = 7.5;
+  const a = k * (target - s.depression) - c * s.v;
+  s.v += a * dt;
+  s.depression += s.v * dt;
+  s.settled = Math.abs(target - s.depression) < 0.01 && Math.abs(s.v) < 0.05;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 163);

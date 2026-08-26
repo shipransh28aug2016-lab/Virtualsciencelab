@@ -45,8 +45,27 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, levelCm: 5, phase: 0, loudness: 0, resonant: false }; }
+/**
+ * The resonance tube. The air column is tuned by raising the water level;
+ * loudness peaks sharply when the column length matches an odd quarter
+ * wavelength, and the standing wave in the tube runs at the fork's
+ * frequency. Both are computed, so the loud point on screen is the loud
+ * point in the arithmetic.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const target = inputs.waterLevelCm ?? state.levelCm ?? 5;
+  s.levelCm += (target - s.levelCm) * Math.min(1, dt * 2.2);
+  const near = nearestResonance(inputs, s.levelCm);
+  const miss = Math.abs(near?.missCm ?? 99);
+  // A sharp resonance: a centimetre off and it is markedly quieter.
+  s.loudness = 1 / (1 + (miss / 1.1) ** 2);
+  s.resonant = s.loudness > 0.72;
+  s.phase = (s.phase + dt * 9) % (Math.PI * 2);
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   if (!atResonance(inputs)) return null;

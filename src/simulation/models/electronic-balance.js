@@ -35,8 +35,21 @@ export function validate(inputs) {
   if (!inputs.tared && inputs.object !== 'bottle') warnings.push({ field: 'tared', code: 'NOT_TARED', message: 'The balance has not been tared (zeroed) with the empty container on the pan.', why: 'Without taring, the displayed mass includes the container, not just the sample.', fix: 'Place the empty container, press tare/zero, then add the sample.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0, settled: false }; }
-export function step(state, inputs, dt) { const s = { ...state }; s.t += dt; s.settled = s.t > 0.6; return s; }
+export function init() { return { t: 0, displayG: 0, settled: false }; }
+/**
+ * A top-pan balance settling. The display hunts in its last digit while
+ * the pan is still moving and only then stabilises -- which is why a mass
+ * is read after the stability indicator appears, not before.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const target = grossMassG(inputs);
+  s.displayG = (s.displayG ?? 0) + (target - (s.displayG ?? 0)) * Math.min(1, dt * 3.4);
+  // Residual hunting in the last digit until the pan comes to rest.
+  s.settled = Math.abs(target - s.displayG) < (inputs.balance === 'digital3' ? 5e-4 : 5e-3);
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   if (!state || !state.settled) return null;

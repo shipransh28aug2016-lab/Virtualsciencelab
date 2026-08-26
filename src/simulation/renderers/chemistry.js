@@ -4,7 +4,7 @@
 import {
   label, drawBeaker, drawConicalFlask, drawBurette, drawTestTube, drawThermometer,
   drawRetortStand, drawBurner, drawSwatch, theme, heatingAssembly, drawClamp,
-  drawTripod, drawGauze, heatAt, noteBounds,
+  drawTripod, drawGauze, heatAt, noteBounds, drawDigitalReadout,
 } from './apparatus.js';
 import { clock, rgba, shade, mixColor, clamp, noise1 } from './realism.js';
 
@@ -155,12 +155,58 @@ export function crystallisation(ctx, w, h, state, inputs) {
 }
 export function phDetermination(ctx, w, h, state, inputs) {
   const th = theme();
-  const cx = w / 2;
-  drawTestTube(ctx, cx, 30, 120, 28, 0.6, th.liquid, { label: inputs?.sample || 'Sample solution' });
-  const ph = state?.pH ?? 7;
-  const colour = ph < 3 ? '#e5433d' : ph < 6 ? '#f0a23d' : ph < 8 ? '#3fae5a' : ph < 11 ? '#3d7ae5' : '#7a3fc4';
-  drawSwatch(ctx, cx + 60, 60, 40, colour, `pH ≈ ${ph.toFixed ? ph.toFixed(1) : ph}`);
-  label(ctx, cx, 160, `Method: ${inputs?.method || 'universal indicator'}`, { anchor: 'below' });
+  const cx = 340;
+  /* The meter reads towards the true pH rather than snapping to it: a
+     glass electrode takes seconds to equilibrate, and a reading taken
+     before it settles is the commonest error in this experiment. */
+  const shown = state?.reading ?? state?.pH ?? 7;
+  const settled = !!state?.settled;
+  const colourFor = (p) => p < 3 ? '#e5433d' : p < 6 ? '#f0a23d' : p < 8 ? '#3fae5a' : p < 11 ? '#3d7ae5' : '#7a3fc4';
+  const colour = colourFor(shown);
+
+  drawBeaker(ctx, cx, BENCH_Y - 150, 160, 150, 0.62, colour, {
+    label: inputs?.sample || 'Sample solution', graduations: false,
+  });
+
+  // Electrode (or the paper strip) dipping into it.
+  const meter = /meter/i.test(String(inputs?.method));
+  if (meter) {
+    drawRetortStand(ctx, cx - 140, BENCH_Y, 330, { label: 'Stand' });
+    drawClamp(ctx, cx - 140, BENCH_Y - 230, cx - 22, { label: 'Electrode clamp' });
+    ctx.save();
+    ctx.fillStyle = '#dfe6f0';
+    ctx.strokeStyle = 'rgba(40,60,95,0.4)'; ctx.lineWidth = 1.1;
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(cx - 9, BENCH_Y - 258, 18, 190, 5); else ctx.rect(cx - 9, BENCH_Y - 258, 18, 190);
+    ctx.fill(); ctx.stroke();
+    // The glass bulb at the tip, which is what actually senses.
+    ctx.fillStyle = rgba('#cfe3f5', 0.85);
+    ctx.beginPath(); ctx.arc(cx, BENCH_Y - 64, 9, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.restore();
+    label(ctx, cx + 12, BENCH_Y - 230, 'Combined glass electrode', { anchor: 'right', size: 11 });
+    drawDigitalReadout(ctx, cx + 190, BENCH_Y - 210, 150, 56,
+      settled ? shown.toFixed(2) : shown.toFixed(2) + '…',
+      { label: 'pH meter', size: 22, color: settled ? '#7CFC9A' : '#5f8f6f' });
+  } else {
+    // Universal indicator paper, against the printed colour chart.
+    ctx.save();
+    ctx.fillStyle = colour;
+    ctx.fillRect(cx + 120, BENCH_Y - 250, 26, 90);
+    ctx.strokeStyle = rgba(th.stroke, 0.5); ctx.lineWidth = 1;
+    ctx.strokeRect(cx + 120, BENCH_Y - 250, 26, 90);
+    ctx.restore();
+    label(ctx, cx + 133, BENCH_Y - 252, 'Indicator paper', { anchor: 'above', size: 11 });
+    for (let p = 1; p <= 13; p += 2) {
+      drawSwatch(ctx, cx + 170 + ((p - 1) / 2) * 34, BENCH_Y - 250, 30, colourFor(p), String(p));
+    }
+    label(ctx, cx + 270, BENCH_Y - 190, 'Colour chart', { anchor: 'below', size: 11 });
+  }
+
+  label(ctx, cx, BENCH_Y - 320,
+    settled ? `pH = ${shown.toFixed(2)} — reading stable`
+      : `Equilibrating… ${shown.toFixed(2)}`,
+    { anchor: 'above', bold: true, color: settled ? '#0d7a52' : '#8a5a00' });
+  label(ctx, cx, BENCH_Y + 28, `Method: ${inputs?.method || 'universal indicator'}`, { anchor: 'below' });
 }
 export function titration(ctx, w, h, state, inputs) {
   const th = theme();

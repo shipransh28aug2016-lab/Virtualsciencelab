@@ -49,8 +49,24 @@ export function stateAt(inputs, t) {
 }
 
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init(inputs = defaults) { return { t: 0, running: true, elapsed: 0, tempC: (inputs.startTempC ?? 90), phase: 'liquid', frozen: 0 }; }
+/**
+ * Wax cooling through its freezing point. The temperature falls, then
+ * HOLDS at the freezing point while latent heat of fusion is given out,
+ * and only falls again once the wax has all solidified. That plateau is
+ * the whole observation, and it comes from the model's own temperature
+ * curve rather than being drawn in.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  if (!s.running) return s;
+  s.elapsed += dt * (inputs.timeScale ?? 6);   // a lab period, compressed
+  s.tempC = temperatureAt(inputs, s.elapsed);
+  s.phase = stateAt(inputs, s.elapsed);
+  s.frozen = s.phase === 'solid' ? 1 : s.phase === 'freezing' ? 0.5 : 0;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 139);

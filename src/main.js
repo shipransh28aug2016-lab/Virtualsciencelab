@@ -625,8 +625,21 @@ function buildToolbar() {
             <button class="btn" id="aRecord" disabled>Record time</button>
             <button class="btn" id="aReset">Fresh flask</button>`;
   } else {
-    html = `<button class="btn primary" id="aRecord">${esc(primary?.label || 'Take reading')}</button>
-            <button class="btn" id="aReset">Reset</button>`;
+    /*
+     * Many experiments are a PROCESS, not a reading: a projectile has to be
+     * launched, a ball released, a roller started, a bath heated. Their
+     * models expose a run flag for exactly that, but nothing in the toolbar
+     * ever set it, so the apparatus sat there and the screen looked dead.
+     * Any model whose state carries such a flag now gets the action that
+     * starts it, named for what it actually does.
+     */
+    const runFlag = processFlag();
+    html = runFlag
+      ? `<button class="btn primary" id="aRun">${esc(RUN_LABELS[runFlag] || 'Start')}</button>
+         <button class="btn" id="aRecord">${esc(primary?.label || 'Take reading')}</button>
+         <button class="btn" id="aReset">Reset</button>`
+      : `<button class="btn primary" id="aRecord">${esc(primary?.label || 'Take reading')}</button>
+         <button class="btn" id="aReset">Reset</button>`;
   }
   html += `<div class="grow" style="flex:1"></div>
            <button class="btn good" id="aCalc">Calculate result</button>`;
@@ -644,6 +657,8 @@ function buildToolbar() {
   if (stop) stop.onclick = () => setFlow(0);
   const start = $('#aStart');
   if (start) start.onclick = startKinetics;
+  const runBtn = $('#aRun');
+  if (runBtn) runBtn.onclick = startProcess;
   $('#aReset').onclick = resetSim;
   $('#aCalc').onclick = calculate;
   syncToolbar();
@@ -694,6 +709,54 @@ function setFlow(rate) {
   app.state = { ...app.state, flowing: rate > 0, flowRate: rate };
   if (rate > 0) app.machine.to(STATES.RUNNING);
   syncToolbar();
+}
+
+/**
+ * Run flags a model may expose, in the order we prefer to drive them, and
+ * what the button should be called for each. The label matters: "Start" on
+ * a projectile launcher tells a student nothing about what is about to
+ * happen.
+ */
+const RUN_LABELS = {
+  flying: 'Launch',
+  released: 'Release',
+  rolling: 'Start rolling',
+  heating: 'Light the burner',
+  running: 'Start',
+};
+
+/** Which run flag, if any, this experiment's model understands. */
+function processFlag() {
+  if (!app.state) return null;
+  for (const k of ['flying', 'released', 'rolling', 'heating', 'running']) {
+    if (k in app.state) return k;
+  }
+  return null;
+}
+
+/**
+ * Start (or restart) the process this experiment is. Re-initialising first
+ * means pressing it twice re-runs the experiment cleanly rather than
+ * resuming a finished one half-way.
+ */
+function startProcess() {
+  const v = app.model.validate(app.inputs);
+  showFeedback(v);
+  if (!v.ok) { toast(v.errors[0].message, 'bad'); return; }
+  const flag = processFlag();
+  if (!flag) return;
+  app.state = app.model.init(app.inputs);
+  app.state[flag] = true;
+  // A launcher needs its initial velocity components as well as the flag.
+  if (flag === 'flying') {
+    const u = app.inputs.speedMs ?? 6;
+    const a = ((app.inputs.angleDeg ?? 45) * Math.PI) / 180;
+    app.state.vx = u * Math.cos(a);
+    app.state.vy = u * Math.sin(a);
+  }
+  app.machine.to(STATES.RUNNING);
+  syncToolbar();
+  renderLiveConfig();
 }
 
 function startKinetics() {

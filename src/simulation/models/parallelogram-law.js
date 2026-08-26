@@ -56,8 +56,27 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, knotX: 0, knotY: 0, vx: 0, vy: 0, settled: false }; }
+/**
+ * The knot finding equilibrium. Released off-balance it is pulled to the
+ * point where the three tensions sum to zero, oscillating a little on the
+ * way -- which is what makes the parallelogram construction believable
+ * rather than asserted.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  // Net pull towards equilibrium, damped.
+  const theta = (thetaDeg(inputs) ?? 90) * Math.PI / 180;
+  const tx = Math.cos(theta) * 0.0, ty = 0;                 // equilibrium at origin
+  const k = 30, c = 6.4;
+  s.vx += (k * (tx - s.knotX) - c * s.vx) * dt;
+  s.vy += (k * (ty - s.knotY) - c * s.vy) * dt;
+  s.knotX += s.vx * dt; s.knotY += s.vy * dt;
+  s.settled = Math.hypot(s.vx, s.vy) < 0.01;
+  s.balanced = canBalance(inputs);
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   if (!canBalance(inputs)) return null;

@@ -43,8 +43,22 @@ export function validate(inputs) {
   if (!inputs.madeUpToMark) warnings.push({ field: 'madeUpToMark', code: 'OVERFILLED', message: 'The flask was not made up exactly to the graduation mark.', why: 'A volumetric flask is calibrated to hold its stated volume only up to the etched mark; overshooting it dilutes the solution below its intended concentration.', fix: 'Add water dropwise near the mark and read the meniscus at eye level.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0, settled: true }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, dissolved: 0, level: 0, settled: false, swirl: 0 }; }
+/**
+ * Making up a standard solution. The solid dissolves as it is swirled,
+ * then the flask is made up to the graduation mark -- both take time, and
+ * the solution is not standard until the first has finished.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  s.dissolved = Math.min(1, s.dissolved + dt * 0.34);
+  // Only make up to the mark once the solute is fully in solution.
+  if (s.dissolved > 0.92) s.level = Math.min(1, s.level + dt * 0.5);
+  s.swirl = (s.swirl + dt * (s.dissolved < 1 ? 2.2 : 0.4)) % (Math.PI * 2);
+  s.settled = s.level >= 1;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 311);

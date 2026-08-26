@@ -43,8 +43,22 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, swing: 0.35, settled: false, hole: 0 }; }
+/**
+ * The lamina hung from a pin, with a plumb line beside it. Both swing and
+ * are damped to rest, and the vertical they settle to is the line that
+ * must be ruled -- so the student has to wait for stillness before
+ * marking, exactly as at the bench.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  // Damped pendular swing of the suspended lamina.
+  s.swing = 0.35 * Math.exp(-s.t * 0.75) * Math.cos(s.t * 4.6);
+  s.settled = Math.abs(s.swing) < 0.004;
+  s.hole = inputs.holeIndex ?? 0;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   if (!gripped(inputs)) return null;

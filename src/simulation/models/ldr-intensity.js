@@ -32,8 +32,24 @@ export function illuminance(inputs) {
 export function resistanceOhm(inputs) { const c = cellOf(inputs); return c.A * illuminance(inputs) ** -c.gamma; }
 
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, resistance: 0, lux: 0, settled: false }; }
+/**
+ * An LDR is slow. Its resistance falls as carriers are photo-generated and
+ * recovers much more slowly in the dark -- so it lags behind a change in
+ * illumination, and a reading taken too soon is wrong.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const targetLux = illuminance(inputs);
+  const targetR = resistanceOhm(inputs);
+  s.lux += (targetLux - s.lux) * Math.min(1, dt * 5);
+  // Rise (getting darker) is slower than fall, as in a real cell.
+  const tau = targetR > s.resistance ? 1.4 : 0.5;
+  s.resistance += (targetR - s.resistance) * Math.min(1, dt / tau);
+  s.settled = Math.abs(targetR - s.resistance) < Math.max(1, targetR * 0.005);
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 229);

@@ -31,8 +31,21 @@ export function centralWidthMm(inputs) {
 }
 
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, width: 0, intensity: 1, settled: false }; }
+/**
+ * Single-slit diffraction. The central maximum widens as the slit is
+ * narrowed -- the inverse relation the experiment demonstrates -- and the
+ * pattern is eased to its new width so the change is watched rather than
+ * jumped to.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const target = centralWidthMm(inputs);
+  s.width += (target - s.width) * Math.min(1, dt * 2.8);
+  s.settled = Math.abs(target - s.width) < 0.05;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 257);

@@ -32,8 +32,29 @@ export function validate(inputs) {
   if (inputs.releaseHeightCm < 5) warnings.push({ field: 'releaseHeightCm', code: 'TOO_LOW', message: 'A very small release height gives a small, hard-to-read regained height.', why: 'Reading errors become a large fraction of a small height.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, running: false, s: 0, v: 0, height: 0, direction: 1, pass: 0 }; }
+/**
+ * A ball released on a curved track. Potential energy converts to kinetic
+ * on the way down and back again on the way up, and friction is why it
+ * never quite regains its starting height -- which is exactly what
+ * `regainedHeightCm` measures.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  if (!s.running) return s;
+  const h0 = (inputs.releaseHeightCm ?? 20) / 100;
+  const hEnd = (regainedHeightCm(inputs) ?? h0 * 80) / 100;
+  // Energy-consistent swing between the two heights, damped to hEnd.
+  const period = 1.6;
+  const decay = Math.exp(-s.t / 9);
+  const amp = hEnd + (h0 - hEnd) * decay;
+  s.height = amp * (0.5 + 0.5 * Math.cos((2 * Math.PI * s.t) / period));
+  s.v = Math.sqrt(Math.max(0, 2 * 9.792 * Math.max(0, amp - s.height)));
+  s.direction = Math.sin((2 * Math.PI * s.t) / period) > 0 ? -1 : 1;
+  s.pass = Math.floor(s.t / (period / 2));
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 131);

@@ -48,8 +48,19 @@ export function validate(inputs) {
   if (inputs.concentrationGPerL > CMC * 1.5) warnings.push({ field: 'concentrationGPerL', code: 'PAST_CMC', message: 'This concentration is well past the point where T stops falling.', why: 'Once micelles form at the critical micelle concentration, extra detergent no longer lowers the surface tension.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, rise: 0, settled: false }; }
+/**
+ * The capillary column climbing. Detergent lowers the surface tension, so
+ * the column stands lower -- the comparison the experiment is built on.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const target = riseMm(inputs);
+  s.rise += (target - s.rise) * Math.min(1, dt * 2.6);
+  s.settled = Math.abs(target - s.rise) < 0.02;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 151);

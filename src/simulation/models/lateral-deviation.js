@@ -36,8 +36,21 @@ export function validate(inputs) {
   if (inputs.incidenceDeg === 0) warnings.push({ field: 'incidenceDeg', code: 'NORMAL_INCIDENCE', message: 'At normal incidence there is no lateral shift to measure.', why: 'sin(i−r) = 0 when i = r = 0, so the emergent ray lies exactly on the incident ray.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, shift: 0, sweep: 0, settled: false }; }
+/**
+ * A ray through a parallel-sided slab emerges parallel to itself but
+ * laterally displaced. Sweeping the angle of incidence shows the shift
+ * growing with it, which is the relationship being investigated.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const target = shiftMm(inputs);
+  s.shift += (target - s.shift) * Math.min(1, dt * 3.4);
+  s.sweep = (s.sweep + dt * 0.55) % 1;     // the ray being traced along
+  s.settled = Math.abs(target - s.shift) < 0.02;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 251);

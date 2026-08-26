@@ -48,8 +48,26 @@ export function validate(inputs) {
   if (inputs.product === 'ferricOxalate' && !inputs.litProtected) warnings.push({ field: 'litProtected', code: 'LIGHT_EXPOSURE', message: 'Potassium ferric oxalate is light-sensitive.', why: 'Light photoreduces Fe³⁺ to Fe²⁺ in this complex, decomposing the product and lowering the yield of the pure emerald-green salt.', fix: 'Keep the solution and crystals away from bright light, e.g. wrapped in dark paper.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0, settled: true }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, elapsed: 0, evaporated: 0, crystals: 0, phase: 'heating' }; }
+/**
+ * Preparing a double or complex salt. The solution is evaporated to the
+ * crystallisation point, then set aside: crystals grow only on cooling,
+ * and slow cooling grows the large well-formed ones the exercise asks for.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt; s.elapsed += dt;
+  if (s.evaporated < 1) {
+    s.evaporated = Math.min(1, s.evaporated + dt * 0.14);
+    s.phase = 'evaporating';
+    return s;
+  }
+  s.phase = 'crystallising';
+  const rate = inputs.cooling === 'slow' ? 0.09 : 0.3;   // fast cooling -> small crystals
+  s.crystals = Math.min(1, s.crystals + dt * rate);
+  if (s.crystals >= 1) s.phase = 'complete';
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 317);

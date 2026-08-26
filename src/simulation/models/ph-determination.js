@@ -83,8 +83,24 @@ export function degreeOfDissociation(inputs) {
 }
 
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, pH: 7, reading: 7, settled: false, dipped: false }; }
+/**
+ * A glass electrode does not answer instantly. It drifts towards the true
+ * pH over a few seconds as the gel layer equilibrates with the solution --
+ * which is why a reading is taken only once the display stops moving, and
+ * why the meter must be left in the buffer before it is trusted.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const target = pHTrue(inputs);
+  s.pH = target;
+  s.dipped = true;
+  const tau = (inputs.method === 'pHMeter' || inputs.method === 'meter') ? 1.6 : 0.7;
+  s.reading += (target - s.reading) * Math.min(1, dt / tau);
+  s.settled = Math.abs(target - s.reading) < 0.01;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 179);

@@ -74,8 +74,26 @@ export function validate(inputs) {
   if (inputs.concentrationMm === 0) warnings.push({ field: 'concentrationMm', code: 'NO_REAGENT_YET', message: 'No reagent has been added yet.', why: 'Add the chosen reagent to see which way the equilibrium colour shifts.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, position: 0.5, shifting: false, settled: true }; }
+/**
+ * Le Chatelier in progress.
+ *
+ * Adding a reagent does not move the equilibrium instantly: the system
+ * relaxes towards its new position over a few seconds, and the colour of
+ * the mixture follows it there. Watching that relaxation IS the
+ * experiment -- a tube that simply switches colour teaches nothing about
+ * why it moved.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  // shiftIndex: negative to the reactant side, positive to the product side.
+  const target = 0.5 + Math.max(-0.5, Math.min(0.5, shiftIndex(inputs) * 0.5));
+  s.position += (target - s.position) * Math.min(1, dt * 0.7);
+  s.shifting = Math.abs(target - s.position) > 0.004;
+  s.settled = !s.shifting;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 293);

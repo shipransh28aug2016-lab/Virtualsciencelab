@@ -54,8 +54,26 @@ export function validate(inputs) {
   }
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, running: false, elapsed: 0, progress: 0, blue: 0, finishedAt: null }; }
+/**
+ * The iodine clock. Thiosulphate holds the iodine as fast as it is made,
+ * so nothing at all appears -- and then, the instant the thiosulphate is
+ * exhausted, free iodine hits the starch and the whole flask goes blue-black
+ * at once. That sudden switch after a quiet induction period is the point
+ * of the experiment, so the colour must stay flat and then jump.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  if (!s.running || s.finishedAt) return s;
+  s.elapsed += dt;
+  const tClock = Math.max(0.2, clockTimeS(inputs));
+  s.progress = Math.min(1, s.elapsed / tClock);
+  // Flat, then a sharp rise over the last few per cent.
+  s.blue = s.progress < 0.94 ? 0 : Math.min(1, (s.progress - 0.94) / 0.06);
+  if (s.progress >= 1) { s.blue = 1; s.finishedAt = s.elapsed; }
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 313);

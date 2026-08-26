@@ -30,8 +30,24 @@ export function amplitudeAt(inputs, t) { return inputs.initialAmplitudeCm * Math
 export function periodOf(inputs) { return 2 * Math.PI * Math.sqrt(inputs.lengthCm / 100 / G_TRUE); }
 
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, running: true, angle: 0, amplitude: 0, envelope: 1 }; }
+/**
+ * A damped pendulum. The envelope decays exponentially with the decay
+ * constant of the bob-and-medium combination, and the swing inside it runs
+ * at the pendulum's own period -- so the graph of amplitude against time
+ * on screen is the graph the student is asked to plot.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  if (!s.running) return s;
+  const T = periodOf(inputs);
+  const a0 = inputs.startAmplitudeDeg ?? 15;
+  s.envelope = amplitudeAt(inputs, s.t) / Math.max(1e-6, a0);
+  s.amplitude = a0 * s.envelope;
+  s.angle = s.amplitude * Math.cos((2 * Math.PI * s.t) / Math.max(0.2, T));
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 137);

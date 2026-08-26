@@ -71,8 +71,21 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, thimble: 0, spindle: 0, gripped: false }; }
+/**
+ * The thimble turning the spindle down onto the wire. The ratchet slips
+ * once contact is made -- which is why a screw gauge is turned by the
+ * ratchet and not the thimble, and why the reading is reproducible.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const target = (typeof objectOf === 'function' ? (objectOf(inputs)?.trueMm ?? 0) : (inputs.trueMm ?? 0));
+  s.spindle += (target - s.spindle) * Math.min(1, dt * 5);
+  s.thimble = (s.spindle % 0.5) / 0.5;
+  s.gripped = Math.abs(target - s.spindle) < 1e-4;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   if (!gripped(inputs)) return null;

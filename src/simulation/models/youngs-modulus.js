@@ -55,8 +55,24 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init() { return { t: 0, settled: true }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, extension: 0, v: 0, settled: false, yielded: false }; }
+/**
+ * The wire under load. It does not jump to its new length: the load is
+ * hung on, the wire stretches and the vernier settles over a moment. Past
+ * the elastic limit it keeps extending and does not come back, which is
+ * the failure the experiment warns against.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const target = extensionM(inputs);
+  s.yielded = beyondElasticLimit(inputs);
+  const k = s.yielded ? 2.0 : 5.5;
+  s.extension += (target - s.extension) * Math.min(1, dt * k);
+  if (s.yielded) s.extension += target * dt * 0.05;   // creeping, not recovering
+  s.settled = !s.yielded && Math.abs(target - s.extension) < Math.max(1e-9, target * 0.003);
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 73);

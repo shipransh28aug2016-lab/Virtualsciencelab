@@ -43,8 +43,24 @@ export function validate(inputs) {
   if (!trace(inputs)) errors.push({ field: 'incidenceDeg', code: 'TOTAL_INTERNAL_REFLECTION', message: 'No ray emerges at this angle of incidence.', why: 'The refracted ray inside the prism strikes the second face beyond the critical angle and undergoes total internal reflection instead of emerging.', fix: 'Increase the angle of incidence.' });
   return { ok: errors.length === 0, errors, warnings: [] };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, incidence: 30, deviation: 0, atMinimum: false }; }
+/**
+ * The prism being rotated to find minimum deviation. As the angle of
+ * incidence is changed the deviation falls to a minimum and rises again --
+ * the turning point the student watches the image reverse at.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const target = inputs.incidenceDeg ?? state.incidence ?? 30;
+  s.incidence += (target - s.incidence) * Math.min(1, dt * 3);
+  const tr = trace(inputs, s.incidence);
+  s.deviation = tr?.deviationDeg ?? s.deviation;
+  s.tir = !!tr?.totalInternalReflection;
+  // At minimum deviation the ray passes symmetrically through the prism.
+  s.atMinimum = !!tr && Math.abs((tr.r1 ?? 0) - (tr.r2 ?? 0)) < 0.4;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const tr = trace(inputs);

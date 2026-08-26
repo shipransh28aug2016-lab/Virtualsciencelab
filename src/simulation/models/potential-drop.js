@@ -31,8 +31,22 @@ export function gradientVPerM(inputs) { return (circuitCurrent(inputs) * wireOf(
 export function voltageAt(inputs, lengthCm) { return gradientVPerM(inputs) * (lengthCm / 100); }
 
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, jockeyM: 0.5, voltage: 0, settled: false }; }
+/**
+ * The potential divider. Voltage tapped off the wire is proportional to
+ * the length from the end, so sliding the jockey sweeps it linearly --
+ * and the voltmeter, like a real one, takes a moment to follow.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const at = inputs.tapPositionM ?? state.jockeyM ?? 0.5;
+  s.jockeyM += (at - s.jockeyM) * Math.min(1, dt * 4);
+  const target = voltageAt(inputs, s.jockeyM);
+  s.voltage += (target - s.voltage) * Math.min(1, dt * 6);
+  s.settled = Math.abs(target - s.voltage) < 1e-4;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 227);

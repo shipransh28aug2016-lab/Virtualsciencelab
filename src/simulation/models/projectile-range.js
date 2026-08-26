@@ -39,8 +39,25 @@ export function maxHeightM(inputs) {
 }
 
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, flying: false, x: 0, y: 0, vx: 0, vy: 0, landed: false, range: 0 }; }
+/**
+ * The projectile actually flies.
+ *
+ * Horizontal and vertical motion are integrated independently -- constant
+ * velocity across, uniform acceleration down -- which is the whole content
+ * of the experiment, and it is far better seen as a trajectory than read
+ * off a formula.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  if (!s.flying || s.landed) return s;
+  s.vy -= 9.792 * dt;
+  s.x += s.vx * dt;
+  s.y += s.vy * dt;
+  if (s.y <= 0) { s.y = 0; s.landed = true; s.flying = false; s.range = s.x; }
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 127);

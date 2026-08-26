@@ -80,8 +80,20 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, jaw: 0, gripped: false }; }
+/**
+ * The jaws closing onto the object. Nothing here runs on its own -- a
+ * calliper is read, not watched -- but the jaws must actually travel to
+ * the object's size when it is changed, or the instrument is a picture.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const target = (typeof objectOf === 'function' ? (objectOf(inputs)?.trueMm ?? 0) : (inputs.trueMm ?? 0)) / 1000;
+  s.jaw += (target - s.jaw) * Math.min(1, dt * 6);
+  s.gripped = Math.abs(target - s.jaw) < 1e-5;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   if (!gripped(inputs)) return null;

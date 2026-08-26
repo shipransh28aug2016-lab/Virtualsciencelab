@@ -71,8 +71,24 @@ export function validate(inputs) {
   }
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0, fused: false }; }
-export function step(state, inputs) { const s = { ...state }; if (inputs.test === 'fusion') s.fused = true; return s; }
+export function init() { return { t: 0, elapsed: 0, glow: 0, fused: false, extract: 0 }; }
+/**
+ * Lassaigne's sodium fusion. The tube must actually be heated to red heat
+ * with the sodium before any of N, S or halogen has been converted to its
+ * ionic sodium salt -- testing the extract before the fusion is complete is
+ * the classic way to get a false negative, so the glow is tracked and the
+ * extract only becomes available once it is reached.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt; s.elapsed += dt;
+  if (inputs.test === 'fusion' || inputs.fused) {
+    s.glow = Math.min(1, s.glow + dt * 0.22);
+    s.fused = s.glow > 0.92;
+    if (s.fused) s.extract = Math.min(1, s.extract + dt * 0.25);
+  }
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   return { trial, compound: compoundOf(inputs).label, test: (TESTS[inputs.test] || {}).label, observation: observation(inputs), _compound: inputs.compound, _fusedOk: inputs.fused || inputs.test === 'fusion' };

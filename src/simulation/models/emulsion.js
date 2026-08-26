@@ -36,8 +36,21 @@ export function separationTimeS(inputs) {
 export function emulsionType(inputs) { const a = agentOf(inputs); return a.type || 'unstable (no true emulsion)'; }
 
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, elapsed: 0, separation: 0, shaking: 0, stable: false }; }
+/**
+ * An emulsion separating. Without an emulsifying agent the two layers
+ * re-form quickly; with one they do not, and how long the mixture stays
+ * milky is precisely the measurement.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt; s.elapsed += dt;
+  const tSep = Math.max(0.5, separationTimeS(inputs));
+  s.separation = 1 - Math.exp(-s.elapsed / tSep);
+  s.stable = tSep > 120;
+  s.shaking = 0;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 277);

@@ -54,8 +54,24 @@ export function validate(inputs) {
   if (inputs.preparation === 'anilineYellow' && !inputs.iceCold) warnings.push({ field: 'iceCold', code: 'DIAZONIUM_WARM', message: 'The diazonium salt was not kept ice-cold.', why: 'A diazonium salt decomposes rapidly above about 5 °C, releasing nitrogen gas and destroying the intermediate needed for the coupling step.', fix: 'Keep the diazotisation and coupling steps in an ice bath throughout.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0, settled: true }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, elapsed: 0, reflux: 0, bubbles: 0, product: 0, phase: 'heating' }; }
+/**
+ * An organic preparation under reflux. The mixture is brought to the boil,
+ * held there while the reaction proceeds, and the product then separates
+ * on pouring into ice-cold water.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt; s.elapsed += dt;
+  s.reflux = Math.min(1, s.reflux + dt * 0.3);
+  s.bubbles = s.reflux > 0.75 ? (s.reflux - 0.75) / 0.25 : 0;
+  if (s.reflux >= 1) {
+    s.phase = 'reacting';
+    s.product = Math.min(1, s.product + dt * 0.12);
+    if (s.product >= 1) s.phase = 'complete';
+  }
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 331);
