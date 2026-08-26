@@ -3,7 +3,7 @@
  * Strategy: precache the whole shell on install; cache-first at runtime so the
  * lab NEVER waits on a network. Navigation falls back to the cached index.
  */
-const VERSION = 'vlab-2026-27-v35';
+const VERSION = 'vlab-2026-27-v36';
 const SHELL = [
   "./",
   "index.html",
@@ -17,6 +17,9 @@ const SHELL = [
   "src/assessment/engine.js",
   "src/offline/db.js",
   "src/simulation/renderers/apparatus.js",
+  "src/simulation/renderers/realism.js",
+  "src/simulation/renderers/interact.js",
+  "src/simulation/fluids.js",
   "src/simulation/renderers/index.js",
   "data/curriculum/cbse-2026-27.json",
   "data/experiments/index.json",
@@ -238,7 +241,10 @@ const isCore = (u) => !u.startsWith('data/experiments/')
     && !u.startsWith('src/simulation/models/')
     && !u.startsWith('src/simulation/renderers/')
   || u === 'data/experiments/index.json'
-  || u === 'src/simulation/renderers/apparatus.js';
+  || u === 'src/simulation/renderers/apparatus.js'
+  || u === 'src/simulation/renderers/realism.js'
+  || u === 'src/simulation/renderers/interact.js'
+  || u === 'src/simulation/fluids.js';
 
 const CORE = SHELL.filter(isCore);
 const CONTENT = SHELL.filter((u) => !isCore(u));

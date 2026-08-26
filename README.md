@@ -7,7 +7,8 @@ plot the graph, calculate a result, make mistakes, and face a viva — with the 
 
 > **Not** a video library. **Not** an animation gallery. The physics and chemistry are computed
 > live from the actual equations; every reading is quantised to a real least count; every
-> piece of apparatus on screen is drawn and labelled with its correct scientific name.
+> piece of apparatus on screen is drawn and labelled with its correct scientific name — and
+> can be picked up and moved.
 
 ---
 
@@ -67,6 +68,43 @@ bank, and a weighted pre-lab/during-lab/post-lab/viva assessment.
 
 ---
 
+## The bench is rendered, not diagrammed
+
+Three engines sit under every one of the 100 experiments, so improving them improves
+all 100 at once rather than one renderer at a time.
+
+**`src/simulation/renderers/realism.js` — materials and light.** One key light, fixed
+upper-left, so every specular highlight, contact shadow and caustic in the app agrees
+about where the lab window is. Glass is painted the way borosilicate actually reads:
+a Fresnel-bright edge where you look along the wall, a dark internal band from total
+internal reflection, the window reflected in the front surface, and a rim ellipse at
+the mouth — a beaker seen slightly from above shows its opening, which is what stops
+it looking like a rectangle. Liquid darkens with depth by **Beer–Lambert** (`I = I₀e^(-εcl)`),
+so a tall column of one solution really is deeper in colour at the bottom, and it
+carries the concave meniscus water pulls against clean glass. A Bunsen flame has two
+cones: open the air hole and you get the premixed blue flame with its sharp inner cone,
+close it and the luminous yellow sooting flame appears — continuously, through `air ∈ [0,1]`.
+
+**`src/simulation/fluids.js` — motion, integrated rather than animated.**
+
+| What you see | What is actually solved |
+|---|---|
+| ripples spreading, reflecting off the walls and dying away | 1-D wave equation `∂²η/∂t² = c²∂²η/∂x² − γ∂η/∂t`, explicit, sub-cycled to hold the Courant condition, with the free surface **volume-conserving** so a disturbance cannot leave the liquid permanently off-level |
+| drops leaving a burette one at a time | `ÿ = g` from a tip that gathers ~0.05 mL until surface tension lets go; each impact hands its momentum to the wave field |
+| fine bubbles drifting up, coarse ones racing | buoyancy against Stokes drag, `v_t ∝ r²` |
+| a precipitate taking seconds or minutes to settle | the same balance, density difference reversed |
+| indicator colour spreading from where the drop landed, and fading on swirling | advection–diffusion `∂c/∂t = D∂²c/∂x² − u∂c/∂x`, with swirling raising the effective `D` |
+| steam and fumes meandering upward | buoyant plume with turbulent entrainment |
+
+**`src/simulation/renderers/interact.js` — apparatus you can take hold of.** Every item
+registers its correct scientific name for the pointer, so hovering anything on the bench
+names it. Where moving a thing means something physically, it registers a drag handle —
+and the handle is bound to a **model variable in its own units**, never to a pixel
+position. Dragging the pendulum bob down does not stretch the drawing; it sets *L* in
+centimetres, through the same clamp-and-snap-to-least-count gate the slider uses, and
+the model recomputes `T = 2π√(L/g)`. Manipulating the bench and moving the slider are
+one operation arriving by two routes, so the drawing and the arithmetic cannot disagree.
+
 ## Architecture in one picture
 
 ```
@@ -74,7 +112,9 @@ data/curriculum/       the authoritative CBSE syllabus text, zero logic
 data/experiments/      one JSON per practical: theory, apparatus, procedure,
                         viva, assessment — content only, no code
    └─ src/simulation/models    PURE physics/chemistry: validate/init/step/measure/derive
+   └─ src/simulation/fluids.js wave equation, ballistics, Stokes drag, mixing — no drawing
    └─ src/simulation/renderers labelled canvas apparatus drawing — no physics
+        realism.js   materials + lighting        interact.js  pointer + drag handles
    └─ src/assessment    scoring, viva
                               ↓
       src/core         state machine, routing
@@ -116,6 +156,22 @@ node -e "…"   # every model: init → step → validate → measure → derive
 ALL 100 EXPERIMENTS PASS FULL PIPELINE WITH THEIR OWN JSON-DECLARED DEFAULT INPUTS
 ALL 100 EXPERIMENTS RESOLVE TO A REAL RENDERER FUNCTION
 ALL 76 RENDERERS EXECUTE CLEANLY AGAINST A MOCK CANVAS
+```
+
+The rendering and fluid engines are checked the same way — mechanically, against the
+property that is supposed to hold, not by looking at a screenshot:
+
+```
+published experiments : 100
+rendered cleanly      : 100      (both themes, 12 animated frames each)
+render failures       : 0
+
+volume conserved after impact : yes (0.0e+0)
+ripple decay 1-5s             : 0.741 → 0.131 → 0.019 → 0.003 → 0.001   (damps to rest)
+bubble v ∝ r² (r=1,2,3.5)     : 52px/s, 209px/s, 641px/s
+stirring homogenises          : 0.265 → 0.086   (mass conserved: 0.1250)
+
+drag the bob 60 cm → 120 cm    : theoretical T 1.5553 s → 2.1996 s   (√2 × 1.5553 = 2.1995)
 ```
 
 And a real boot, of the real `index.html` running the real `src/main.js` (jsdom +

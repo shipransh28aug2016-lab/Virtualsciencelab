@@ -3,7 +3,9 @@
  * Wires curriculum data → simulation engine → components. No framework.
  */
 import { ExperimentMachine, STATES, STATE_LABELS } from './core/state-machine.js';
-import { fitCanvas, setCanvasTheme } from './simulation/renderers/apparatus.js';
+import { fitCanvas, finishFrame, setCanvasTheme } from './simulation/renderers/apparatus.js';
+import * as Interact from './simulation/renderers/interact.js';
+import { resetFluids } from './simulation/fluids.js';
 import { renderGraph } from './components/graph.js';
 import * as DB from './offline/db.js';
 import {
@@ -588,6 +590,8 @@ async function openLab(exp) {
   document.documentElement.style.setProperty('--accent', root.getPropertyValue(token).trim());
   updateBrand(exp);
 
+  resetFluids();                 // a new bench starts with a still surface
+  Interact.attach($('#cv'), onCanvasDrag);
   buildToolbar();
   buildControls();
   renderLiveConfig();
@@ -1397,6 +1401,42 @@ function draw() {
   const { w, h, ctx } = fitCanvas(canvas, 16 / 10);
   const fn = app.renderers ? app.renderers[app.exp.simulation.renderer] : null;
   if (fn) fn(ctx, w, h, app.state, app.inputs);
+  finishFrame(ctx, w, h);
+}
+
+/**
+ * A piece of apparatus was dragged on the canvas.
+ *
+ * The handle hands back a value in the variable's OWN units, which is then
+ * put through exactly the same gate a slider goes through — clamped to the
+ * declared range and snapped to the declared step, which for an instrument
+ * is its least count. Manipulating the bench and moving the slider are
+ * therefore the same operation reaching the model by two routes, and the
+ * theory, the readouts, the graph and the drawing cannot disagree.
+ */
+function onCanvasDrag(varId, rawValue) {
+  if (!app.exp || !app.model) return;
+  const v = (app.exp.variables || []).find((x) => x.id === varId);
+  if (!v) return;                      // this experiment does not expose it
+  const min = Number.isFinite(v.min) ? v.min : -Infinity;
+  const max = Number.isFinite(v.max) ? v.max : Infinity;
+  const step = Number(v.step) > 0 ? Number(v.step) : 0;
+  let val = Math.min(max, Math.max(min, rawValue));
+  if (step) val = Math.round((val - min) / step) * step + min;
+  val = Number(val.toFixed(6));
+  if (app.inputs[varId] === val) return;
+  app.inputs[varId] = val;
+  // Keep the panel slider in step with the bench.
+  const sl = document.getElementById(`c_${varId}`);
+  if (sl) {
+    sl.value = String(val);
+    const out = document.getElementById(`c_${varId}_v`);
+    if (out) out.textContent = step && !Number.isInteger(step) ? val.toFixed(String(step).split('.')[1].length) : String(val);
+    if (Number.isFinite(v.min) && Number.isFinite(v.max) && v.max > v.min) {
+      sl.style.setProperty('--p', `${((val - v.min) / (v.max - v.min)) * 100}%`);
+    }
+  }
+  onInputChange();
 }
 
 function updateReadouts() {

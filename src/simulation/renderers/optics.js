@@ -6,6 +6,10 @@ import {
   drawConvexMirror, drawScreen, drawCandle, drawPrism, drawSlab, drawDial, theme,
 } from './apparatus.js';
 
+/* Pixels per centimetre along the optical bench. One constant, so the
+   object, the image and the printed scale can never drift apart. */
+const SCALE = 2.2;
+
 function benchScene(ctx, w, h) {
   const y = h - 60;
   drawOpticalBench(ctx, 30, w - 30, y);
@@ -15,19 +19,37 @@ function benchScene(ctx, w, h) {
 export function convexLens(ctx, w, h, state, inputs) {
   const y = benchScene(ctx, w, h);
   const cx = w / 2;
-  drawCandle(ctx, 60, y, 40);
+  /* The object must stand where the model says it stands. Drawing it at a
+     fixed spot while u changed made the bench disagree with the arithmetic
+     the student was doing: a lens formula worked out for u = 40 cm was
+     illustrated by a candle sitting at u = 60 cm. */
+  const u = inputs?.objectDistanceCm ?? 30;
+  const objX = Math.max(45, cx - u * SCALE);
+  drawCandle(ctx, objX, y, 40, {
+    label: `Illuminated object (u = ${u.toFixed(1)} cm)`,
+    drag: { varId: 'objectDistanceCm', axis: 'x', unit: 'object distance u', p0: cx, p1: cx - 110 * SCALE, v0: 0, v1: 110 },
+  });
   drawConvexLens(ctx, cx, y - 40, 55, { axis: true, axisLen: w / 2 - 40 });
   const v = state?.v;
-  const screenX = Number.isFinite(v) ? Math.min(w - 60, cx + v * 2.2) : w - 90;
-  drawScreen(ctx, screenX, y, 80, { label: Number.isFinite(v) ? 'Screen (sharp image)' : 'Screen (no real image)' });
+  const screenX = Number.isFinite(v) ? Math.min(w - 60, cx + v * SCALE) : w - 90;
+  drawScreen(ctx, screenX, y, 80, {
+    label: Number.isFinite(v) ? `Screen (sharp image, v = ${v.toFixed(1)} cm)` : 'Screen (no real image)',
+    drag: { varId: 'screenPosCm', axis: 'x', unit: 'screen position', p0: cx, p1: cx + 120 * SCALE, v0: 0, v1: 120 },
+  });
 }
 export function concaveMirror(ctx, w, h, state, inputs) {
   const y = benchScene(ctx, w, h);
   const mirrorX = w - 90;
-  drawCandle(ctx, 60, y, 40);
+  const u = inputs?.objectDistanceCm ?? 30;
+  // As above: the object stands at the distance the mirror formula is using.
+  const objX = Math.max(50, mirrorX - u * SCALE);
+  drawCandle(ctx, objX, y, 40, {
+    label: `Illuminated object (u = ${u.toFixed(1)} cm)`,
+    drag: { varId: 'objectDistanceCm', axis: 'x', unit: 'object distance u', p0: mirrorX, p1: mirrorX - 80 * SCALE, v0: 0, v1: 80 },
+  });
   drawConcaveMirror(ctx, mirrorX, y - 40, 60);
   const v = state?.v;
-  if (Number.isFinite(v)) drawScreen(ctx, Math.max(70, mirrorX - v * 2.2), y, 80, { label: 'Screen' });
+  if (Number.isFinite(v)) drawScreen(ctx, Math.max(70, mirrorX - v * SCALE), y, 80, { label: `Screen (v = ${v.toFixed(1)} cm)` });
 }
 export function auxiliaryLens(ctx, w, h, state, inputs) {
   const y = benchScene(ctx, w, h);

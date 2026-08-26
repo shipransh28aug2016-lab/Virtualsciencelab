@@ -119,7 +119,16 @@ export function simplePendulum(ctx, w, h, state, inputs) {
   const pivotX = w / 2, pivotY = 30;
   const lenPx = 20 + ((inputs.lengthCm ?? 60) / 150) * (h - 90);
   const angle = ((state?.angleDeg ?? inputs.amplitudeDeg ?? 8) * Math.PI) / 180;
-  drawPendulumBob(ctx, pivotX, pivotY, lenPx, angle, { label: 'Bob' });
+  /* The bob is draggable along the thread and bound to L in centimetres,
+     not to its pixel position: releasing it re-enters the model, which
+     recomputes T = 2π√(L/g) exactly as it would from the slider. */
+  drawPendulumBob(ctx, pivotX, pivotY, lenPx, angle, {
+    label: 'Bob',
+    drag: {
+      varId: 'lengthCm', axis: 'y', unit: 'length L in cm',
+      p0: pivotY + 20, p1: pivotY + 20 + (h - 90), v0: 0, v1: 150,
+    },
+  });
   label(ctx, pivotX, pivotY, 'Support / clamp', { anchor: 'above' });
   label(ctx, pivotX + 60, pivotY + lenPx / 2, `L = ${(inputs.lengthCm ?? 60).toFixed(0)} cm`, { anchor: 'right', bg: false });
   ctx.save(); ctx.fillStyle = th.muted; ctx.font = '600 12px sans-serif'; ctx.textAlign = 'center';
@@ -176,7 +185,16 @@ export function helicalSpring(ctx, w, h, state, inputs) {
   const len = restLen + Math.min(160, ext * 4);
   ctx.save(); ctx.fillStyle = th.metal; ctx.fillRect(w / 2 - 40, topY - 12, 80, 12); ctx.restore();
   drawSpring(ctx, w / 2, topY, len, 12, 22, { label: 'Helical spring' });
-  drawWeight(ctx, w / 2 - 12, topY + len, { label: `${inputs.loadG ?? 0} g` });
+  /* Pull the load hanger down to add slotted weights: the drag sets the
+     load in grams, so the extension that follows is Hooke's law acting on
+     the new force, not the drawing being stretched. */
+  drawWeight(ctx, w / 2 - 12, topY + len, {
+    label: `${inputs.loadG ?? 0} g`,
+    drag: {
+      varId: 'loadG', axis: 'y', unit: 'load in g',
+      p0: topY + restLen, p1: topY + restLen + 160, v0: 0, v1: 600,
+    },
+  });
   label(ctx, w / 2 + 70, topY + len / 2, 'Pointer & scale', { anchor: 'right' });
 }
 export function paperScale(ctx, w, h, state, inputs) {
