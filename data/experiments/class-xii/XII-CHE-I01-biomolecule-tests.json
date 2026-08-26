@@ -1,0 +1,348 @@
+{
+  "id": "XII-CHE-I01",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "I",
+    "serial": 1,
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Unit 14: Biomolecules",
+    "topic": "Characteristic tests for carbohydrates, fats and proteins",
+    "subtopic": "Qualitative tests on pure biomolecule samples and their detection in foodstuffs",
+    "practical": "Characteristic tests of carbohydrates, fats and proteins in pure samples and their detection in given foodstuffs.",
+    "learningObjectives": [
+      "Apply Molisch's test as a general test for all carbohydrates",
+      "Distinguish a reducing sugar (Fehling's-positive) from a non-reducing one such as sucrose",
+      "Apply the grease-spot and acrolein tests to detect fats",
+      "Apply the biuret and xanthoproteic tests to detect proteins, and apply all of these to identify components in real foodstuffs"
+    ],
+    "competencies": [
+      "Careful qualitative and quantitative observation",
+      "Relating an observation to the underlying chemical principle",
+      "Systematic, evidence-based reasoning"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-I, Experiment 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Tests for carbohydrates, fats and proteins",
+  "shortTitle": "Biomolecule Tests",
+  "objective": [
+    "Apply Molisch's test as a general test for all carbohydrates",
+    "Distinguish a reducing sugar (Fehling's-positive) from a non-reducing one such as sucrose",
+    "Apply the grease-spot and acrolein tests to detect fats",
+    "Apply the biuret and xanthoproteic tests to detect proteins, and apply all of these to identify components in real foodstuffs"
+  ],
+  "theory": {
+    "statement": "Carbohydrates, fats and proteins each give characteristic reactions with specific reagents. Testing pure, known samples first calibrates what a positive result looks like, before the same reagents are applied to unknown foodstuff extracts.",
+    "derivationNote": "Molisch's test (concentrated H2SO4 dehydrates any carbohydrate to a furfural derivative, which condenses with alpha-naphthol to a violet ring) is positive for ALL carbohydrates, including non-reducing ones like sucrose — a common point of confusion, since sucrose is Fehling's-NEGATIVE (its anomeric carbons are both tied up in the glycosidic bond, so it has no free reducing aldehyde/ketone) but still Molisch-POSITIVE.",
+    "keyEquations": [
+      "Carbohydrate --conc. H2SO4--> furfural derivative --alpha-naphthol--> violet ring (Molisch's test)",
+      "RCHO(reducing sugar) + 2Cu2+ + 5OH- → RCOO- + Cu2O↓ + 3H2O (Fehling's)",
+      "Peptide bonds + Cu2+ (alkaline) → violet complex (Biuret test)"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Molisch's reagent (alpha-naphthol in alcohol)",
+      "spec": "",
+      "why": "General test for any carbohydrate"
+    },
+    {
+      "name": "Fehling's solution A and B",
+      "spec": "mixed fresh",
+      "why": "Detects reducing sugars specifically"
+    },
+    {
+      "name": "Iodine solution",
+      "spec": "dilute",
+      "why": "Specific test for starch"
+    },
+    {
+      "name": "Biuret reagent (dilute CuSO4 + NaOH)",
+      "spec": "",
+      "why": "Detects the peptide bond, characteristic of proteins"
+    },
+    {
+      "name": "Concentrated nitric acid (xanthoproteic test)",
+      "spec": "",
+      "why": "Detects aromatic amino acid residues in a protein"
+    },
+    {
+      "name": "Filter paper (grease-spot test)",
+      "spec": "",
+      "why": "A simple physical test for the presence of fat"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "sample",
+      "label": "Sample",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "glucose",
+      "options": [
+        "glucose",
+        "sucrose",
+        "starch",
+        "oil",
+        "eggAlbumin",
+        "gelatin",
+        "milk",
+        "potatoExtract"
+      ]
+    },
+    {
+      "id": "test",
+      "label": "Reagent",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "molisch",
+      "options": [
+        "molisch",
+        "fehling",
+        "iodine",
+        "grease",
+        "acrolein",
+        "biuret",
+        "xanthoproteic"
+      ]
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Test pure known samples (glucose, sucrose, starch, oil, egg albumin) with the appropriate reagents first.",
+      "checkpoint": true,
+      "expects": "sample"
+    },
+    {
+      "step": 2,
+      "text": "Add the chosen reagent and note the observation.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 3,
+      "text": "Note which pure samples give a positive result with each reagent, calibrating expectations.",
+      "checkpoint": true,
+      "expects": "rows>=4"
+    },
+    {
+      "step": 4,
+      "text": "Apply the same battery of tests to the given foodstuff extracts (milk, potato extract).",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 5,
+      "text": "State which biomolecules are present in each foodstuff, with supporting evidence.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "biomolecule-test",
+    "renderer": "biomolecule-test",
+    "fps": 10,
+    "controls": [
+      {
+        "var": "sample",
+        "widget": "segmented",
+        "options": [
+          "glucose",
+          "sucrose",
+          "starch",
+          "oil",
+          "eggAlbumin",
+          "gelatin",
+          "milk",
+          "potatoExtract"
+        ]
+      },
+      {
+        "var": "test",
+        "widget": "segmented",
+        "options": [
+          "molisch",
+          "fehling",
+          "iodine",
+          "grease",
+          "acrolein",
+          "biuret",
+          "xanthoproteic"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Run test",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "sample",
+        "label": "Sample",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "test",
+        "label": "Reagent",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "observation",
+        "label": "Observation",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "positive",
+        "label": "Positive?",
+        "unit": "",
+        "decimals": 0
+      }
+    ],
+    "graph": null,
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "Calibrate each reagent on pure, known samples",
+      "Apply the same reagents to the foodstuff extracts",
+      "State which biomolecules each foodstuff contains, with evidence"
+    ],
+    "resultKeys": [
+      "foodstuffsCovered",
+      "positiveCount"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Biomolecules identified in the foodstuff extracts tested",
+    "symbol": "",
+    "value": null,
+    "unit": "",
+    "statement": "Sucrose is Molisch-positive but Fehling's-negative (a non-reducing sugar); starch is Molisch- and iodine-positive; oil gives a persistent grease spot; egg albumin and milk are biuret-positive (protein present). Applying the calibrated reagents to milk and potato extract correctly reveals their protein/carbohydrate/fat content."
+  },
+  "safety": [
+    "Concentrated sulphuric and nitric acids used in these tests are corrosive — handle with care, add acid to the tube down the side, not the reverse.",
+    "Discard Fehling's/Tollens'-type residues promptly as directed."
+  ],
+  "sourcesOfError": [
+    "Using stale Fehling's solution (which can give a false precipitate on its own) leads to a false positive.",
+    "Mistaking sucrose's Molisch-positive, Fehling's-negative result for 'no carbohydrate present'.",
+    "Insufficient heating in the acrolein test misses the characteristic pungent smell."
+  ],
+  "viva": [
+    {
+      "question": "Sucrose gives a positive Molisch's test but a negative Fehling's test. Explain both results.",
+      "expectedConcept": "Molisch's test is positive for ANY carbohydrate, including sucrose, since it depends only on acid dehydration of the sugar skeleton. Fehling's test needs a free reducing group (a free aldehyde or an -OH adjacent to it that can tautomerise to one); in sucrose, both anomeric carbons are tied up in the glycosidic bond linking glucose and fructose, leaving no free reducing group.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "General vs. reducing-sugar-specific tests give different information.",
+      "commonMisconception": "Concluding sucrose is 'not a carbohydrate' from the Fehling's-negative result alone."
+    },
+    {
+      "question": "What is the chemical basis of the biuret test for proteins?",
+      "expectedConcept": "In alkaline solution, Cu2+ ions form a coloured coordination complex with the nitrogen atoms of peptide bonds (the repeating -CO-NH- linkage), giving a violet/pink colour whose intensity roughly reflects the number of peptide bonds present.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Cu2+ complexation with peptide-bond nitrogens.",
+      "commonMisconception": "Thinking the biuret test detects amino acids in general rather than the peptide linkage specifically."
+    },
+    {
+      "question": "Why might a protein give only a weak xanthoproteic test despite clearly being a protein (positive biuret test)?",
+      "expectedConcept": "The xanthoproteic test depends on aromatic amino acid residues (tyrosine, tryptophan, phenylalanine) undergoing nitration. A protein low in these particular residues (e.g. gelatin) gives only a faint result even though the biuret test — which depends on the peptide backbone common to all proteins — is strongly positive.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Xanthoproteic test depends on specific residues, not the general peptide backbone.",
+      "commonMisconception": "Expecting all protein-specific tests to give equally strong results on any protein."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Molisch's test is positive for:",
+        "options": [
+          "Only reducing sugars",
+          "All carbohydrates, reducing or not",
+          "Only starch",
+          "Only proteins"
+        ],
+        "answer": 1,
+        "feedback": "Molisch's test depends on acid dehydration of the sugar skeleton and is positive for any carbohydrate, including non-reducing sugars like sucrose."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Test at least four sample/reagent combinations.",
+        "check": "rows>=4"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "The biuret test detects proteins by reacting with:",
+        "options": [
+          "Aromatic side chains",
+          "The peptide bond",
+          "Disulphide bridges",
+          "The carboxylic acid group of amino acids"
+        ],
+        "answer": 1,
+        "feedback": "Cu2+ complexes with the nitrogen atoms of the repeating peptide (-CO-NH-) linkage."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 40,
+      "postLab": 20,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Selective reagent tests for carbohydrates, fats and proteins",
+    "assumptions": [
+      "Reagents freshly prepared where required",
+      "Foodstuff extracts are reasonably clear/filtered"
+    ],
+    "validRange": "Six pure samples, two foodstuffs",
+    "unitSystem": "Descriptive",
+    "edgeCases": [
+      "Sucrose: Molisch-positive but Fehling's-negative"
+    ],
+    "expectedBehaviour": [
+      "Each reagent positive only for its target biomolecule class"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

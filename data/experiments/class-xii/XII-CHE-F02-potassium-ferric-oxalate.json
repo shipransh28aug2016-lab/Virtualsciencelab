@@ -1,0 +1,334 @@
+{
+  "id": "XII-CHE-F02",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "F",
+    "serial": 2,
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Unit 9: Coordination Compounds / Preparative Inorganic Chemistry",
+    "topic": "Preparation of a light-sensitive complex salt",
+    "subtopic": "Preparation of potassium ferric (trioxalato ferrate(III)) complex",
+    "practical": "Preparation of Potassium Ferric Oxalate.",
+    "learningObjectives": [
+      "Prepare ferrous oxalate as an intermediate, then oxidise it to the ferric complex",
+      "Combine with potassium oxalate to form K3[Fe(C2O4)3]·3H2O",
+      "Explain why the product must be protected from light during preparation and storage",
+      "Calculate the percentage yield of the emerald-green crystalline product"
+    ],
+    "competencies": [
+      "Careful qualitative and quantitative observation",
+      "Relating an observation to the underlying chemical principle",
+      "Systematic, evidence-based reasoning"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-F, Experiment 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Preparation of Potassium Ferric Oxalate",
+  "shortTitle": "Potassium Ferric Oxalate",
+  "objective": [
+    "Prepare ferrous oxalate as an intermediate, then oxidise it to the ferric complex",
+    "Combine with potassium oxalate to form K3[Fe(C2O4)3]·3H2O",
+    "Explain why the product must be protected from light during preparation and storage",
+    "Calculate the percentage yield of the emerald-green crystalline product"
+  ],
+  "theory": {
+    "statement": "Potassium trioxalatoferrate(III), K3[Fe(C2O4)3]·3H2O, is a complex salt — its complex ion [Fe(C2O4)3]3- survives intact in solution, unlike a double salt. It is prepared by first forming ferrous oxalate, oxidising it with hydrogen peroxide in the presence of excess potassium oxalate, and crystallising the emerald-green product.",
+    "derivationNote": "Fe2+ + C2O4^2- → FeC2O4 (yellow precipitate); this is then oxidised: 2FeC2O4 + H2O2 + 4K2C2O4 (excess) → 2K3[Fe(C2O4)3] + 2KOH, with excess oxalate present throughout to complex the Fe3+ as it forms, rather than letting it hydrolyse to Fe(OH)3. The finished complex is PHOTOSENSITIVE: light reduces Fe3+ to Fe2+ within the complex, releasing CO2 and slowly decomposing the emerald-green product — the same photochemistry once used in blueprint (cyanotype-related) processes.",
+    "keyEquations": [
+      "Fe2+ + C2O4^2- → FeC2O4↓ (yellow)",
+      "2FeC2O4 + H2O2 + 4K2C2O4 → 2K3[Fe(C2O4)3] + 2KOH",
+      "K3[Fe(C2O4)3] --light--> photoreduction (Fe3+ → Fe2+, loss of CO2)"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Ferrous ammonium sulphate",
+      "spec": "Mohr's salt, as the iron source",
+      "why": "Provides Fe2+ to form the initial ferrous oxalate"
+    },
+    {
+      "name": "Oxalic acid / potassium oxalate",
+      "spec": "",
+      "why": "Precipitates ferrous oxalate, and (in excess) complexes the Fe3+ formed"
+    },
+    {
+      "name": "Hydrogen peroxide",
+      "spec": "dilute",
+      "why": "Oxidises Fe2+ to Fe3+ within the oxalate system"
+    },
+    {
+      "name": "Dark/amber bottle or paper wrapping",
+      "spec": "",
+      "why": "Protects the finished, light-sensitive product from photodecomposition"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "product",
+      "label": "Product",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "ferricOxalate",
+      "options": [
+        "ferricOxalate"
+      ]
+    },
+    {
+      "id": "limitingReagentG",
+      "label": "Ferrous ammonium sulphate taken",
+      "symbol": "",
+      "unit": "g",
+      "type": "independent",
+      "min": 3,
+      "max": 10,
+      "step": 0.5,
+      "default": 7
+    },
+    {
+      "id": "litProtected",
+      "label": "Protected from light throughout",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "cooling",
+      "label": "Cooling",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "slow",
+      "options": [
+        "slow",
+        "fast"
+      ]
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Dissolve ferrous ammonium sulphate and precipitate ferrous oxalate by adding oxalic acid solution.",
+      "checkpoint": true,
+      "expects": "limitingReagentG"
+    },
+    {
+      "step": 2,
+      "text": "Filter and wash the yellow ferrous oxalate precipitate.",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Add potassium oxalate solution to the moist precipitate, then add hydrogen peroxide slowly with stirring, keeping the mixture warm.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 4,
+      "text": "Add a further small amount of oxalic acid to dissolve any remaining ferric hydroxide, then filter hot.",
+      "checkpoint": false
+    },
+    {
+      "step": 5,
+      "text": "Evaporate in subdued light or wrapped from light, then cool to crystallise.",
+      "checkpoint": true,
+      "expects": "litProtected"
+    },
+    {
+      "step": 6,
+      "text": "Filter, dry in the dark, weigh, and calculate the percentage yield.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "salt-preparation",
+    "renderer": "salt-preparation",
+    "fps": 10,
+    "controls": [
+      {
+        "var": "limitingReagentG",
+        "widget": "slider"
+      },
+      {
+        "var": "litProtected",
+        "widget": "switch"
+      },
+      {
+        "var": "cooling",
+        "widget": "segmented",
+        "options": [
+          "slow",
+          "fast"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record yield",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "limitingReagentG",
+        "label": "Fe source taken",
+        "unit": "g",
+        "decimals": 1
+      },
+      {
+        "key": "crystalMassG",
+        "label": "Crystals obtained",
+        "unit": "g",
+        "decimals": 2
+      },
+      {
+        "key": "percentYield",
+        "label": "% yield",
+        "unit": "%",
+        "decimals": 1
+      }
+    ],
+    "graph": null,
+    "minRows": 1
+  },
+  "calculations": {
+    "steps": [
+      "Precipitate ferrous oxalate, then oxidise with H2O2 in excess oxalate",
+      "Crystallise in the dark",
+      "% yield = (mass obtained / theoretical mass) × 100"
+    ],
+    "resultKeys": [
+      "percentYield",
+      "crystalMass"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Percentage yield of potassium ferric oxalate",
+    "symbol": "",
+    "value": 55,
+    "tolerance": 18,
+    "unit": "%",
+    "statement": "Oxidising ferrous oxalate with hydrogen peroxide in the presence of excess potassium oxalate, then crystallising in subdued light, gives emerald-green K3[Fe(C2O4)3]·3H2O crystals; exposure to bright light during preparation measurably lowers the yield of pure product through photoreduction."
+  },
+  "safety": [
+    "Hydrogen peroxide can bleach skin — avoid contact.",
+    "Oxalates are toxic if ingested — wash hands after handling.",
+    "Handle hot solutions with care."
+  ],
+  "sourcesOfError": [
+    "Working in bright light photoreduces the product as it forms, lowering yield and purity.",
+    "Insufficient excess oxalate lets some Fe3+ hydrolyse to Fe(OH)3 instead of complexing.",
+    "Evaporating too far concentrates and darkens the solution, making the crystallising point hard to judge."
+  ],
+  "viva": [
+    {
+      "question": "Why must potassium ferric oxalate be protected from light?",
+      "expectedConcept": "Light photochemically reduces the Fe3+ in the complex to Fe2+, with loss of CO2, slowly decomposing the emerald-green complex. This is why the preparation and storage are done in subdued light or a dark container.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Photoreduction of the coordinated Fe3+.",
+      "commonMisconception": "Thinking light simply fades the colour without any chemical change occurring."
+    },
+    {
+      "question": "Why is excess potassium oxalate present during the oxidation step?",
+      "expectedConcept": "As Fe2+ is oxidised to Fe3+, the excess oxalate immediately complexes it as [Fe(C2O4)3]3-. Without enough oxalate present, the Fe3+ would instead hydrolyse to insoluble, gelatinous Fe(OH)3, which is lost from the desired product.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Complexation competes with, and must outrun, hydrolysis.",
+      "commonMisconception": "Adding the oxidiser before ensuring enough oxalate is present."
+    },
+    {
+      "question": "Is potassium ferric oxalate a double salt or a complex salt? How would you tell experimentally?",
+      "expectedConcept": "It is a complex salt: in solution, its complex ion [Fe(C2O4)3]3- does not show the free, simple Fe3+ test reactions (e.g. no red colour with KSCN), because the iron is bound within the complex rather than existing as a simple aquo ion.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Absence of simple-ion reactions distinguishes a complex from a double salt.",
+      "commonMisconception": "Assuming any coloured crystalline salt combining two components must be a double salt."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Potassium ferric oxalate is best described as a:",
+        "options": [
+          "Double salt",
+          "Complex salt",
+          "Simple binary salt",
+          "Alloy"
+        ],
+        "answer": 1,
+        "feedback": "Its complex ion [Fe(C2O4)3]3- survives dissolution intact, the defining feature of a complex salt."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Complete at least one preparation and weigh the product.",
+        "check": "rows>=1"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "Working in bright light during this preparation will:",
+        "options": [
+          "Increase the yield",
+          "Have no effect",
+          "Lower the yield through photoreduction",
+          "Change the product's formula only, not its yield"
+        ],
+        "answer": 2,
+        "feedback": "Light reduces Fe3+ within the complex, decomposing product as it forms and lowering the yield of pure crystals."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 40,
+      "postLab": 20,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "% yield = (obtained/theoretical) × 100",
+    "assumptions": [
+      "Excess oxalate present throughout oxidation",
+      "Light exposure minimised"
+    ],
+    "validRange": "3-10 g of ferrous ammonium sulphate",
+    "unitSystem": "gram, %",
+    "edgeCases": [
+      "Bright-light exposure measurably lowers yield/purity"
+    ],
+    "expectedBehaviour": [
+      "Emerald-green crystals; yield falls if not protected from light"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

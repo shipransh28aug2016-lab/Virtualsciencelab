@@ -1,0 +1,344 @@
+{
+  "id": "XI-CHE-F02",
+  "class": "XI",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "F",
+    "serial": 2,
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques",
+    "topic": "Detection of nitrogen, sulphur and halogens in organic compounds by Lassaigne's test",
+    "subtopic": "Sodium fusion and confirmatory tests for N, S and Cl",
+    "practical": "Detection of Nitrogen, Sulphur, Chlorine in organic compounds.",
+    "learningObjectives": [
+      "Prepare a sodium fusion extract from an organic compound",
+      "Test the extract for nitrogen using the Prussian-blue test",
+      "Test the extract for sulphur using sodium nitroprusside or lead acetate",
+      "Test the extract for chlorine using silver nitrate, and recognise the interference between N, S and halogen tests"
+    ],
+    "competencies": [
+      "Careful qualitative and quantitative observation",
+      "Relating an observation to the underlying chemical principle",
+      "Systematic, evidence-based reasoning"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-F, Experiment 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Detection of N, S, Cl (Lassaigne's Test)",
+  "shortTitle": "Lassaigne's Test",
+  "objective": [
+    "Prepare a sodium fusion extract from an organic compound",
+    "Test the extract for nitrogen using the Prussian-blue test",
+    "Test the extract for sulphur using sodium nitroprusside or lead acetate",
+    "Test the extract for chlorine using silver nitrate, and recognise the interference between N, S and halogen tests"
+  ],
+  "theory": {
+    "statement": "Nitrogen, sulphur and halogens are covalently bound in organic compounds and give no ionic tests directly. Fusing the compound with sodium metal converts them to ionic sodium cyanide, sodium sulphide and sodium halide, all soluble in water — the 'Lassaigne's extract' — which can then be tested by ordinary inorganic qualitative methods.",
+    "derivationNote": "For nitrogen: the extract's CN- reacts with Fe2+ (from FeSO4) to give sodium hexacyanoferrate(II); on acidifying and adding FeCl3, this forms Prussian blue, Fe4[Fe(CN)6]3. If sulphur is ALSO present, CN- and S2- combine during fusion to give SCN- instead, and FeCl3 then gives blood-red FeSCN2+ rather than Prussian blue — so a red colour here is not a failed nitrogen test but positive evidence for BOTH elements together. For halogens, the extract is first boiled with dilute HNO3 (to destroy any interfering CN-/S2-) before AgNO3 is added; the colour and solubility of the silver halide precipitate then identifies which halogen is present.",
+    "keyEquations": [
+      "Na + C, N, S, X (in the compound) → NaCN, Na2S, NaX (fusion)",
+      "6CN- + Fe2+ → [Fe(CN)6]4-; then 3[Fe(CN)6]4- + 4Fe3+ → Fe4[Fe(CN)6]3 (Prussian blue)",
+      "CN- + S2- → SCN- (when N and S are both present); Fe3+ + SCN- → [FeSCN]2+ (blood red)"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Sodium metal",
+      "spec": "small, freshly cut piece",
+      "why": "Reduces the organic compound's N, S, halogen to ionic sodium salts"
+    },
+    {
+      "name": "Fusion (ignition) tube",
+      "spec": "hard glass, small",
+      "why": "Contains the compound and sodium during fusion"
+    },
+    {
+      "name": "Ferrous sulphate, ferric chloride solutions",
+      "spec": "freshly prepared",
+      "why": "Confirmatory reagents for nitrogen (Prussian blue test)"
+    },
+    {
+      "name": "Sodium nitroprusside solution",
+      "spec": "freshly prepared",
+      "why": "Sensitive confirmatory reagent for sulphide"
+    },
+    {
+      "name": "Dilute nitric acid, silver nitrate solution",
+      "spec": "",
+      "why": "Confirmatory reagents for halogens, after destroying interfering CN-/S2-"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "compound",
+      "label": "Compound",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "thiourea",
+      "options": [
+        "urea",
+        "thiourea",
+        "chlorobenzene",
+        "benzenesulphonic",
+        "glucose",
+        "chloroaniline"
+      ]
+    },
+    {
+      "id": "test",
+      "label": "Step / test",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "fusion",
+      "options": [
+        "fusion",
+        "nitrogen",
+        "sulphur",
+        "sulphur2",
+        "halogen"
+      ]
+    },
+    {
+      "id": "fused",
+      "label": "Fusion extract prepared",
+      "symbol": "",
+      "unit": "",
+      "type": "controlled",
+      "default": false
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Heat a small piece of sodium in a dry fusion tube until it melts, then add a little of the compound.",
+      "checkpoint": true,
+      "expects": "test"
+    },
+    {
+      "step": 2,
+      "text": "Heat strongly until the tube is red hot, then plunge it into distilled water and crush; filter to obtain the clear extract.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 3,
+      "text": "Test a portion of the extract for nitrogen: boil with FeSO4, acidify, and add FeCl3.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 4,
+      "text": "Test a fresh portion for sulphur with sodium nitroprusside solution.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 5,
+      "text": "Boil another portion with dilute HNO3, cool, and test for halogen with AgNO3.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 6,
+      "text": "State which elements are present, with the evidence for each.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "lassaigne-test",
+    "renderer": "lassaigne-test",
+    "fps": 10,
+    "controls": [
+      {
+        "var": "compound",
+        "widget": "segmented",
+        "options": [
+          "urea",
+          "thiourea",
+          "chlorobenzene",
+          "benzenesulphonic",
+          "glucose",
+          "chloroaniline"
+        ]
+      },
+      {
+        "var": "test",
+        "widget": "segmented",
+        "options": [
+          "fusion",
+          "nitrogen",
+          "sulphur",
+          "sulphur2",
+          "halogen"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Run test",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "compound",
+        "label": "Compound",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "test",
+        "label": "Test",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "observation",
+        "label": "Observation",
+        "unit": "",
+        "decimals": 0
+      }
+    ],
+    "graph": null,
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Fuse the compound with sodium to obtain the extract",
+      "Run the confirmatory test for each element in turn",
+      "Interpret a blood-red (rather than blue) nitrogen test as evidence for both N and S together"
+    ],
+    "resultKeys": [
+      "testsRun",
+      "validReadings"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Elements confirmed present in the compound tested",
+    "symbol": "",
+    "value": null,
+    "unit": "",
+    "statement": "The sodium fusion extract, tested systematically, correctly reveals which of nitrogen, sulphur and chlorine are present — including the special case where nitrogen and sulphur together give a blood-red rather than a Prussian-blue result."
+  },
+  "safety": [
+    "Sodium metal reacts violently with water — never add water to the hot fusion tube directly; plunge the whole tube into a beaker of water instead, behind a safety screen.",
+    "Wear eye protection throughout; the fusion tube can crack from thermal shock.",
+    "Silver nitrate stains skin — handle with care."
+  ],
+  "sourcesOfError": [
+    "An incompletely fused sample gives a false negative even when the element is present.",
+    "Testing a cold, unfused compound directly gives no reaction and could be misread as a true negative.",
+    "Confusing the blood-red N+S result with a failed nitrogen test."
+  ],
+  "viva": [
+    {
+      "question": "Why does the compound need to be fused with sodium before it can be tested for nitrogen?",
+      "expectedConcept": "Nitrogen in the compound is covalently bound and gives no ionic reactions. Fusion with sodium converts it into ionic sodium cyanide, which dissolves in water and CAN be tested by ordinary inorganic methods.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Conversion from covalent to ionic form enables the test.",
+      "commonMisconception": "Trying to test the organic compound directly with FeSO4/FeCl3."
+    },
+    {
+      "question": "A compound gives a blood-red colour, not Prussian blue, in the nitrogen test. What does this mean?",
+      "expectedConcept": "Both nitrogen AND sulphur are present. During fusion, CN- and S2- combine to form SCN-, which gives blood-red [FeSCN]2+ with FeCl3 instead of Prussian blue.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "SCN- forms only when both N and S are present together.",
+      "commonMisconception": "Concluding the nitrogen test simply failed."
+    },
+    {
+      "question": "Why is the extract boiled with dilute nitric acid before testing for halogens with silver nitrate?",
+      "expectedConcept": "To destroy any CN- or S2- present, which would themselves form precipitates with AgNO3 (AgCN, Ag2S) and give a false-positive or confusing result for halogen.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Removing interfering ions before the halogen-specific test.",
+      "commonMisconception": "Adding AgNO3 directly to the raw extract without this step."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Sodium fusion of an organic compound converts its nitrogen into:",
+        "options": [
+          "N2 gas",
+          "NaCN",
+          "NaNO3",
+          "NH3"
+        ],
+        "answer": 1,
+        "feedback": "The nitrogen is converted into ionic sodium cyanide, soluble in the aqueous extract."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Run at least three confirmatory tests.",
+        "check": "rows>=3"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "A blood-red (not blue) result in the nitrogen test indicates the compound contains:",
+        "options": [
+          "Nitrogen only",
+          "Sulphur only",
+          "Both nitrogen and sulphur",
+          "Neither"
+        ],
+        "answer": 2,
+        "feedback": "SCN- forms only when both CN- and S2- are present in the fusion extract."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 40,
+      "postLab": 20,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Na + compound → NaCN, Na2S, NaX; each tested by its own confirmatory reaction",
+    "assumptions": [
+      "Fusion is complete",
+      "Extract is filtered clear before testing"
+    ],
+    "validRange": "Six representative compounds",
+    "unitSystem": "Descriptive",
+    "edgeCases": [
+      "N+S together gives SCN-, a different (blood-red) result from N alone"
+    ],
+    "expectedBehaviour": [
+      "Each element present gives its characteristic confirmatory result"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

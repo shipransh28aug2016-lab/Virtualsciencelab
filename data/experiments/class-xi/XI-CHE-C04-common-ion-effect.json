@@ -1,0 +1,354 @@
+{
+  "id": "XI-CHE-C04",
+  "class": "XI",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "C",
+    "serial": 4,
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 6: Equilibrium — Ionic Equilibrium",
+    "topic": "Common-ion effect on the ionisation of weak acids and weak bases",
+    "subtopic": "Suppression of a weak electrolyte's own ionisation by a common ion",
+    "practical": "Study the pH change by common-ion effect in case of weak acids and weak bases.",
+    "learningObjectives": [
+      "Measure the pH of a weak acid (or base) alone",
+      "Add increasing amounts of its own salt (a common ion) and follow the pH",
+      "Explain the shift using Le Chatelier's principle applied to the ionisation equilibrium",
+      "Contrast the SIZE of the effect for a weak acid/base against a strong one"
+    ],
+    "competencies": [
+      "Careful qualitative and quantitative observation",
+      "Relating an observation to the underlying chemical principle",
+      "Systematic, evidence-based reasoning"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-C, Experiment 4 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Common-ion effect on weak acids and weak bases",
+  "shortTitle": "Common-ion Effect",
+  "objective": [
+    "Measure the pH of a weak acid (or base) alone",
+    "Add increasing amounts of its own salt (a common ion) and follow the pH",
+    "Explain the shift using Le Chatelier's principle applied to the ionisation equilibrium",
+    "Contrast the SIZE of the effect for a weak acid/base against a strong one"
+  ],
+  "theory": {
+    "statement": "A weak acid HA ionises only partially: HA ⇌ H+ + A-. Adding a soluble salt of A- (a source of the SAME, or 'common', ion) shifts this equilibrium to the left by Le Chatelier's principle, suppressing the acid's own ionisation and RAISING its pH (making it less acidic) compared with the pure acid at the same concentration.",
+    "derivationNote": "For acetic acid with added sodium acetate, [H+] is no longer sqrt(Ka*C) but must be found from Ka = [H+][A-]/[HA] with [A-] now dominated by the added salt: [H+] ~ Ka*C(acid)/C(salt). Since the added common ion concentration appears in the denominator, more salt gives a smaller [H+], i.e. a higher pH. A strong acid shows no such effect because it is already fully ionised — there is no equilibrium left to shift.",
+    "keyEquations": [
+      "HA ⇌ H+ + A-, Ka = [H+][A-]/[HA]",
+      "With a common ion present, [H+] is a quadratic root of the mass-action expression, not simply sqrt(Ka·C)",
+      "pH rises as the common-ion concentration rises, for a weak acid"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "pH meter (or universal indicator)",
+      "spec": "least count 0.01 (meter) or 0.5 (indicator)",
+      "why": "Measures the pH of each solution"
+    },
+    {
+      "name": "Acetic acid solution",
+      "spec": "0.1 M",
+      "why": "The weak acid whose ionisation is being suppressed"
+    },
+    {
+      "name": "Sodium acetate",
+      "spec": "solid, added in increasing amounts",
+      "why": "Provides the common (acetate) ion"
+    },
+    {
+      "name": "Beakers and measuring cylinders",
+      "spec": "",
+      "why": "Prepare and mix the solutions"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "sample",
+      "label": "Weak electrolyte",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "acetic",
+      "options": [
+        "acetic",
+        "ammonia"
+      ]
+    },
+    {
+      "id": "dilution",
+      "label": "Dilution factor",
+      "symbol": "",
+      "unit": "×",
+      "type": "control",
+      "min": 1,
+      "max": 1,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "id": "method",
+      "label": "Method",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "meter",
+      "options": [
+        "meter",
+        "universal"
+      ]
+    },
+    {
+      "id": "commonIonConc",
+      "label": "Common-ion salt added",
+      "symbol": "C",
+      "unit": "M",
+      "type": "independent",
+      "min": 0,
+      "max": 0.3,
+      "step": 0.02,
+      "default": 0
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Measure the pH of 0.1 M acetic acid alone (no salt added).",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 2,
+      "text": "Dissolve a small, known amount of sodium acetate in a fresh portion of the same acetic acid solution.",
+      "checkpoint": true,
+      "expects": "commonIonConc"
+    },
+    {
+      "step": 3,
+      "text": "Measure the pH again and note the change.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 4,
+      "text": "Repeat with larger amounts of sodium acetate, keeping the acetic acid concentration fixed.",
+      "checkpoint": true,
+      "expects": "rows>=4"
+    },
+    {
+      "step": 5,
+      "text": "Repeat the whole procedure for ammonium hydroxide with added ammonium chloride, for comparison.",
+      "checkpoint": false
+    },
+    {
+      "step": 6,
+      "text": "Plot pH against the common-ion concentration and note the direction of the shift.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "ph-determination",
+    "renderer": "ph-determination",
+    "fps": 20,
+    "controls": [
+      {
+        "var": "sample",
+        "widget": "segmented",
+        "options": [
+          "acetic",
+          "ammonia"
+        ]
+      },
+      {
+        "var": "commonIonConc",
+        "widget": "slider"
+      },
+      {
+        "var": "method",
+        "widget": "segmented",
+        "options": [
+          "meter",
+          "universal"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Measure pH",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "sample",
+        "label": "Sample",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "concentration",
+        "label": "Conc.",
+        "unit": "M",
+        "decimals": 2
+      },
+      {
+        "key": "pH",
+        "label": "pH",
+        "unit": "",
+        "decimals": 2
+      },
+      {
+        "key": "nature",
+        "label": "Nature",
+        "unit": "",
+        "decimals": 0
+      }
+    ],
+    "graph": {
+      "x": "index",
+      "y": "pH",
+      "xLabel": "Reading number",
+      "yLabel": "pH",
+      "throughOrigin": false
+    },
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "Measure pH of the weak acid alone",
+      "Add increasing common-ion salt and remeasure",
+      "Note the direction and size of the pH shift"
+    ],
+    "resultKeys": [
+      "mostAcidicPH",
+      "dilutionCheck"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "pH of 0.1 M acetic acid with no added acetate",
+    "symbol": "pH",
+    "value": 2.87,
+    "tolerance": 0.5,
+    "unit": "",
+    "secondary": {
+      "quantity": "pH of the same acid with 0.1 M sodium acetate added",
+      "value": 4.74,
+      "tolerance": 0.5,
+      "unit": ""
+    },
+    "statement": "Adding sodium acetate to acetic acid raises the pH sharply — from about 2.9 to about 4.7 with 0.1 M added acetate — because the common acetate ion suppresses the acid's own ionisation, exactly as Le Chatelier's principle predicts."
+  },
+  "safety": [
+    "Dilute acetic acid and ammonia solutions are of low hazard; ammonia vapour is irritating — work in a ventilated space.",
+    "Rinse the pH meter electrode between different solutions."
+  ],
+  "sourcesOfError": [
+    "Contamination of the electrode between readings can bias later results.",
+    "Temperature affects both Ka and Kw, so all readings should be at a similar room temperature.",
+    "A pH meter needs to be calibrated with buffer solutions before use."
+  ],
+  "viva": [
+    {
+      "question": "Why does adding sodium acetate raise the pH of acetic acid?",
+      "expectedConcept": "The acetate ion from the salt is the same species produced by the acid's own ionisation. By Le Chatelier's principle, adding a product shifts HA ⇌ H+ + A- to the left, lowering [H+] and so raising pH.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Le Chatelier applied to a common product ion.",
+      "commonMisconception": "Thinking sodium acetate is itself basic enough to explain the whole shift by simple hydrolysis alone."
+    },
+    {
+      "question": "Would you expect the same effect with hydrochloric acid and added sodium chloride?",
+      "expectedConcept": "No — HCl is a strong acid and is already fully ionised, so there is no equilibrium left to shift. The pH of a strong acid solution is essentially unaffected by adding its own salt.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Common-ion effect requires a partially-ionised (weak) electrolyte.",
+      "commonMisconception": "Applying the common-ion effect to strong electrolytes."
+    },
+    {
+      "question": "How is the common-ion effect used in a buffer solution?",
+      "expectedConcept": "A buffer is precisely a weak acid (or base) together with a salt of its conjugate — the common-ion effect is what keeps the ratio of HA to A-, and hence the pH, resistant to small additions of strong acid or base.",
+      "difficulty": "hard",
+      "bloom": "Apply",
+      "answerLogic": "Buffers exploit the common-ion effect deliberately.",
+      "commonMisconception": "Thinking buffers work by neutralising added acid/base completely rather than resisting the pH change."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Adding sodium acetate to acetic acid will:",
+        "options": [
+          "Lower the pH",
+          "Raise the pH",
+          "Have no effect",
+          "Turn the solution basic (pH > 7)"
+        ],
+        "answer": 1,
+        "feedback": "The common acetate ion suppresses the acid's ionisation, raising the pH — though the solution stays acidic overall."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Measure the pH at four or more different common-ion concentrations.",
+        "check": "rows>=4"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "The common-ion effect works because:",
+        "options": [
+          "The salt reacts with the acid",
+          "Adding a product ion shifts the equilibrium back towards reactants",
+          "The salt is itself a strong base",
+          "The water autoionises less"
+        ],
+        "answer": 1,
+        "feedback": "It is a direct application of Le Chatelier's principle to the acid's own ionisation equilibrium."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 35,
+      "postLab": 25,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Ka = [H+][A-]/[HA]; common ion added on the product side suppresses ionisation",
+    "assumptions": [
+      "Ideal solution behaviour",
+      "The salt is fully soluble and fully dissociated"
+    ],
+    "validRange": "0-0.3 M added salt",
+    "unitSystem": "Molarity, pH",
+    "edgeCases": [
+      "A strong acid/base shows no common-ion effect"
+    ],
+    "expectedBehaviour": [
+      "pH rises with added common ion for a weak acid; falls for a weak base"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

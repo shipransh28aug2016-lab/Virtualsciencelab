@@ -1,0 +1,417 @@
+{
+  "id": "XI-CHE-F01",
+  "class": "XI",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "F",
+    "serial": 1,
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques",
+    "topic": "Qualitative inorganic analysis: systematic detection of a cation and an anion",
+    "subtopic": "Systematic salt analysis using preliminary and confirmatory wet tests",
+    "practical": "Determination of one anion and one cation in a given salt. Cations: Pb2+, Cu2+, Al3+, Fe3+, Mn2+, Ni2+, Zn2+, Co2+, Ca2+, Sr2+, Ba2+, Mg2+, NH4+. Anions: CO3 2-, S2-, SO3 2-, NO3-, NO2-, Cl-, Br-, I-, SO4 2-, PO4 3-, CH3COO-. (Insoluble salts excluded)",
+    "learningObjectives": [
+      "Note the physical appearance (colour, form) of the salt as a preliminary clue",
+      "Perform the dilute-acid test to screen for a volatile anion (carbonate, sulphite, etc.)",
+      "Perform the flame test and precipitation tests to narrow down the cation",
+      "Confirm both the cation and the anion with a specific confirmatory test"
+    ],
+    "competencies": [
+      "Careful qualitative and quantitative observation",
+      "Relating an observation to the underlying chemical principle",
+      "Systematic, evidence-based reasoning"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-F, Experiment 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Salt Analysis: One Cation, One Anion",
+  "shortTitle": "Qualitative Salt Analysis",
+  "objective": [
+    "Note the physical appearance (colour, form) of the salt as a preliminary clue",
+    "Perform the dilute-acid test to screen for a volatile anion (carbonate, sulphite, etc.)",
+    "Perform the flame test and precipitation tests to narrow down the cation",
+    "Confirm both the cation and the anion with a specific confirmatory test"
+  ],
+  "theory": {
+    "statement": "Systematic qualitative analysis proceeds from broad, cheap preliminary tests (appearance, action of dilute acid, flame colour, action of NaOH/NH4OH) to narrow, specific confirmatory tests, so that expensive or ambiguous reagents are used only once the field of candidates has already been narrowed.",
+    "derivationNote": "A coloured salt already rules out many colourless-ion cations. Effervescence with dilute acid signals a volatile anion (carbonate gives a gas that turns lime water milky; sulphite gives a gas smelling of burning sulphur). The action of excess NaOH distinguishes an amphoteric cation (redissolves, e.g. Zn2+, Al3+, Pb2+) from one that does not (stays as a precipitate, e.g. Fe3+, Cu2+). Only once these narrow the candidates is a specific confirmatory reagent applied.",
+    "keyEquations": [
+      "CO3^2- + 2H+ → H2O + CO2 (gas turns lime water milky)",
+      "M^2+ + 2OH- → M(OH)2 (colour and solubility in excess identify M)",
+      "Ag+ + X- → AgX (colour of the silver halide identifies the halide)"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Given salt",
+      "spec": "solid, unknown",
+      "why": "The sample whose cation and anion are to be identified"
+    },
+    {
+      "name": "Dilute hydrochloric acid",
+      "spec": "",
+      "why": "Preliminary test for a volatile anion"
+    },
+    {
+      "name": "Sodium hydroxide solution",
+      "spec": "dilute and concentrated",
+      "why": "Precipitates and, for amphoteric cations, redissolves the metal hydroxide"
+    },
+    {
+      "name": "Ammonium hydroxide solution",
+      "spec": "dilute",
+      "why": "A second precipitating reagent that distinguishes some cations from the NaOH test"
+    },
+    {
+      "name": "Barium chloride, silver nitrate solutions",
+      "spec": "",
+      "why": "Confirmatory reagents for sulphate and halide anions respectively"
+    },
+    {
+      "name": "Platinum/nichrome wire and burner",
+      "spec": "",
+      "why": "Flame test for characteristic cation colours"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "salt",
+      "label": "Given salt",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "s1",
+      "options": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8"
+      ]
+    },
+    {
+      "id": "test",
+      "label": "Test performed",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "appearance",
+      "options": [
+        "appearance",
+        "dilAcid",
+        "flame",
+        "naoh",
+        "nh4oh",
+        "confirmAnion"
+      ]
+    },
+    {
+      "id": "cationGuess",
+      "label": "Cation identified as",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "cu2",
+      "options": [
+        "cu2",
+        "fe3",
+        "zn2",
+        "ca2",
+        "pb2",
+        "nh4",
+        "ba2",
+        "al3"
+      ]
+    },
+    {
+      "id": "anionGuess",
+      "label": "Anion identified as",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "so4",
+      "options": [
+        "so4",
+        "cl",
+        "co3",
+        "no3",
+        "ox"
+      ]
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Note the colour and physical form of the salt.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 2,
+      "text": "Add dilute HCl to a small portion; note any effervescence and its character.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 3,
+      "text": "Perform a flame test on a fresh sample with a clean wire.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 4,
+      "text": "Add NaOH solution dropwise, then in excess, and note the colour and solubility of any precipitate.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 5,
+      "text": "Repeat with NH4OH solution for comparison.",
+      "checkpoint": true,
+      "expects": "rows>=4"
+    },
+    {
+      "step": 6,
+      "text": "Based on the preliminary evidence, perform the specific confirmatory test(s) for both the cation and the anion.",
+      "checkpoint": true,
+      "expects": "result"
+    },
+    {
+      "step": 7,
+      "text": "State the identity of the salt, giving the evidence for both ions.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "salt-analysis",
+    "renderer": "salt-analysis",
+    "fps": 10,
+    "controls": [
+      {
+        "var": "salt",
+        "widget": "segmented",
+        "options": [
+          "s1",
+          "s2",
+          "s3",
+          "s4",
+          "s5",
+          "s6",
+          "s7",
+          "s8"
+        ]
+      },
+      {
+        "var": "test",
+        "widget": "segmented",
+        "options": [
+          "appearance",
+          "dilAcid",
+          "flame",
+          "naoh",
+          "nh4oh",
+          "confirmAnion"
+        ]
+      },
+      {
+        "var": "cationGuess",
+        "widget": "segmented",
+        "options": [
+          "cu2",
+          "fe3",
+          "zn2",
+          "ca2",
+          "pb2",
+          "nh4",
+          "ba2",
+          "al3"
+        ]
+      },
+      {
+        "var": "anionGuess",
+        "widget": "segmented",
+        "options": [
+          "so4",
+          "cl",
+          "co3",
+          "no3",
+          "ox"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Run test",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "salt",
+        "label": "Salt",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "test",
+        "label": "Test",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "observation",
+        "label": "Observation",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "correct",
+        "label": "Correct?",
+        "unit": "",
+        "decimals": 0
+      }
+    ],
+    "graph": null,
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "Run preliminary tests to narrow the candidates",
+      "Run confirmatory tests on the narrowed candidates",
+      "State the cation and anion with supporting evidence"
+    ],
+    "resultKeys": [
+      "correctlyIdentified",
+      "accuracyPct"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Number of salts correctly identified (cation + anion)",
+    "symbol": "",
+    "value": null,
+    "unit": "",
+    "statement": "Working systematically from preliminary to confirmatory tests, both the cation and the anion of each given salt can be identified with confidence, each conclusion supported by more than one line of evidence."
+  },
+  "safety": [
+    "Some reagents (concentrated acids, ammonia) are corrosive/irritating — work in a ventilated space and avoid skin/eye contact.",
+    "Barium and lead salts are toxic — wash hands after handling.",
+    "Never taste or smell a reagent to identify it."
+  ],
+  "sourcesOfError": [
+    "Using a dirty flame-test wire contaminates the result with a previous sample's colour.",
+    "Concluding from a single test rather than combining several lines of evidence.",
+    "Confusing carbonate and sulphite, which both effervesce with acid — the lime-water behaviour on prolonged passage of gas distinguishes them."
+  ],
+  "viva": [
+    {
+      "question": "Why is the salt's physical appearance noted before any reagent is added?",
+      "expectedConcept": "Many transition-metal cations give characteristically coloured salts (e.g. blue for Cu2+, green for Ni2+/Fe2+), so colour alone can rule out several candidates before any test is run, saving reagents and time.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Colour narrows the cation candidates immediately.",
+      "commonMisconception": "Treating colour as a confirmatory rather than a preliminary clue."
+    },
+    {
+      "question": "A salt effervesces with dilute HCl and the gas turns lime water milky. Is this conclusive for carbonate?",
+      "expectedConcept": "Almost, but sulphite also effervesces with acid; the distinguishing check is that carbonate's CO2 keeps the lime water milky (or re-clears it with excess gas as insoluble bicarbonate forms), while sulphite's SO2 also turns lime water milky but has a characteristic pungent, choking smell that CO2 lacks.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Effervescence with lime-water turbidity is suggestive but not by itself unique to carbonate.",
+      "commonMisconception": "Concluding carbonate from lime-water turbidity alone without checking for the smell of SO2."
+    },
+    {
+      "question": "Why is a confirmatory test only trusted after a preliminary test has pointed to it?",
+      "expectedConcept": "Running every confirmatory reagent on every candidate blindly wastes material and risks false positives from interference; the systematic order narrows the field first so the confirmatory test is checking a specific, already-likely hypothesis.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Efficient, evidence-based narrowing rather than exhaustive testing.",
+      "commonMisconception": "Believing any single confirmatory test alone is sufficient without preliminary support."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "A blue crystalline salt most likely contains which cation?",
+        "options": [
+          "Zn2+",
+          "Cu2+",
+          "Ca2+",
+          "NH4+"
+        ],
+        "answer": 1,
+        "feedback": "Cu2+ salts are characteristically blue; the other ions listed give colourless salts."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Run at least four different tests before concluding.",
+        "check": "rows>=4"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "Effervescence with dilute acid whose gas turns lime water milky AND has no smell indicates:",
+        "options": [
+          "Sulphate",
+          "Chloride",
+          "Carbonate",
+          "Nitrate"
+        ],
+        "answer": 2,
+        "feedback": "Carbonate releases odourless CO2 that turns lime water milky; sulphite would smell strongly of burning sulphur."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 40,
+      "postLab": 20,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Systematic analysis: preliminary tests narrow candidates, confirmatory tests settle identity",
+    "assumptions": [
+      "One cation and one anion present, from the syllabus list",
+      "Salt is soluble (insoluble salts are excluded from this scheme)"
+    ],
+    "validRange": "Eight representative salts",
+    "unitSystem": "Descriptive",
+    "edgeCases": [
+      "Carbonate/sulphite both effervesce; smell and lime-water behaviour distinguish them"
+    ],
+    "expectedBehaviour": [
+      "Correct systematic testing identifies both ions with supporting evidence"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

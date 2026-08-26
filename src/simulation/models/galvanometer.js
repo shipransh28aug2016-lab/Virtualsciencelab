@@ -1,0 +1,99 @@
+/**
+ * MODEL: Galvanometer — XII-PHY-A04 (resistance by half-deflection, and
+ * figure of merit) and XII-PHY-A05 (conversion to ammeter/voltmeter).
+ * Half-deflection: S = GR/(R−S), exact; G≈S only when R≫G.
+ * Ammeter shunt (parallel): S = IgG/(I−Ig). Voltmeter series: R = V/Ig − G.
+ */
+import { makeRng, jitter } from '../../utils/rng.js';
+import { sigFig } from '../../utils/measure.js';
+
+export const meta = {
+  id: 'XII-PHY-A04',
+  formula: 'G = SR/(R−S); k = E/((R+G)·θ); shunt S = IgG/(I−Ig); series R = V/Ig − G',
+  unitSystem: 'Ohm; current in microampere for the figure of merit',
+  assumptions: ['The galvanometer scale is linear', 'The cell\'s internal resistance is small compared with R', 'Deflection is proportional to current over the range used'],
+  validRange: 'Series resistance 500-10000 Ω',
+  edgeCases: ['A small R relative to G makes the crude approximation G≈S noticeably wrong'],
+  expectedBehaviour: ['Halving the deflection with a shunt in parallel gives S = GR/(R−S)', 'A converted ammeter has very low resistance; a converted voltmeter very high'],
+};
+
+export const GALVANOMETERS = { g1: { label: 'Galvanometer 1', G: 60, kMicro: 26 }, g2: { label: 'Galvanometer 2', G: 100, kMicro: 15 }, g3: { label: 'Galvanometer 3', G: 40, kMicro: 40 } };
+export const CELLS = { c2: { label: '2 V cell', emf: 2 }, c3: { label: '3 V cell', emf: 3 }, c4: { label: '4 V cell', emf: 4 } };
+
+export const defaults = { resistanceR: 3000, shuntS: 0, shuntConnected: false, galvanometer: 'g1', cell: 'c2', conversion: 'ammeter', targetRange: 1, testValue: 0.5 };
+
+export function galvOf(inputs) { return GALVANOMETERS[inputs.galvanometer] || GALVANOMETERS.g1; }
+export function cellOf(inputs) { return CELLS[inputs.cell] || CELLS.c2; }
+export function fullScaleDiv() { return 30; }
+
+/** Deflection in divisions for the half-deflection circuit (A04). */
+export function deflectionDiv(inputs) {
+  const g = galvOf(inputs);
+  const k = g.kMicro * 1e-6;
+  const I = inputs.shuntConnected
+    ? cellOf(inputs).emf / (inputs.resistanceR + (g.G * inputs.shuntS) / (g.G + inputs.shuntS))
+    : cellOf(inputs).emf / (inputs.resistanceR + g.G);
+  const currentThroughG = inputs.shuntConnected ? I * (inputs.shuntS / (g.G + inputs.shuntS)) : I;
+  return Math.min(fullScaleDiv(), currentThroughG / k);
+}
+
+/** The shunt that would give exactly half the no-shunt deflection. */
+export function halfDeflectionShunt(inputs) {
+  const g = galvOf(inputs);
+  return (g.G * inputs.resistanceR) / (inputs.resistanceR + g.G);
+}
+
+/** Required conversion resistance for A05. */
+export function requiredResistance(inputs) {
+  const g = galvOf(inputs);
+  const ig = g.kMicro * 1e-6 * fullScaleDiv();
+  if (inputs.conversion === 'ammeter') return (ig * g.G) / (inputs.targetRange - ig);
+  return inputs.targetRange / ig - g.G;
+}
+export function meterResistance(inputs) {
+  const g = galvOf(inputs);
+  const req = requiredResistance(inputs);
+  return inputs.conversion === 'ammeter' ? (g.G * req) / (g.G + req) : g.G + req;
+}
+
+export function validate(inputs) {
+  const warnings = [];
+  if (!inputs.shuntConnected && inputs.conversion !== 'voltmeter' && inputs.resistanceR < galvOf(inputs).G * 5) {
+    warnings.push({ field: 'resistanceR', code: 'R_TOO_SMALL', message: 'R is not much larger than G.', why: 'The half-deflection method\'s simple check G≈S is only a fair approximation when R≫G; for a small R the exact formula G=SR/(R−S) must be used and differs noticeably.' });
+  }
+  return { ok: true, errors: [], warnings };
+}
+export function init() { return { t: 0 }; }
+export function step(state) { return state; }
+
+export function measure(state, inputs, seed = 1, trial = 1) {
+  const rng = makeRng(seed + trial * 197);
+  if (inputs.conversion) {
+    const g = galvOf(inputs);
+    const ig = g.kMicro * 1e-6 * fullScaleDiv();
+    const defl = Math.min(fullScaleDiv(), (inputs.testValue / inputs.targetRange) * fullScaleDiv() + jitter(rng, 0.2));
+    return { trial, resistanceR: inputs.resistanceR, deflection: Number(defl.toFixed(1)), currentMicroA: sigFig(ig * (defl / fullScaleDiv()) * 1e6, 4) };
+  }
+  const defl = deflectionDiv(inputs) + jitter(rng, 0.15);
+  const g = galvOf(inputs);
+  return { trial, resistanceR: inputs.resistanceR, shuntS: inputs.shuntConnected ? inputs.shuntS : 0, deflection: Number(defl.toFixed(1)), currentMicroA: sigFig(defl * g.kMicro, 4) };
+}
+
+export function derive(rows, inputs = defaults) {
+  if (inputs.conversion) {
+    if (rows.length < 1) return { ok: false, reason: 'Take at least one reading with the converted meter.' };
+    return { ok: true, requiredResistance: sigFig(requiredResistance(inputs), 4), meterResistance: sigFig(meterResistance(inputs), 4), fullScaleCurrentMicroA: sigFig(galvOf(inputs).kMicro * fullScaleDiv(), 4), n: rows.length, points: rows.map((r) => ({ x: Number(r.trial), y: Number(r.deflection) })) };
+  }
+  const noShunt = rows.find((r) => Number(r.shuntS) === 0);
+  const withShunt = rows.filter((r) => Number(r.shuntS) > 0);
+  if (!noShunt || !withShunt.length) return { ok: false, reason: 'Record the deflection both without and with the shunt connected.' };
+  const theta = Number(noShunt.deflection);
+  const half = withShunt.reduce((a, b) => (Math.abs(Number(a.deflection) - theta / 2) <= Math.abs(Number(b.deflection) - theta / 2) ? a : b));
+  const R = Number(half.resistanceR);
+  const S = Number(half.shuntS);
+  const G = (S * R) / (R - S);
+  const k = Number(noShunt.currentMicroA) / theta;
+  return { ok: true, resistance: sigFig(G, 4), figureOfMeritMicro: sigFig(k, 4), fullScaleCurrentMicroA: sigFig(k * fullScaleDiv(), 4), approxG: sigFig(S, 4), n: rows.length, points: rows.map((r) => ({ x: Number(r.resistanceR), y: Number(r.deflection) })) };
+}
+
+export default { meta, defaults, GALVANOMETERS, CELLS, init, step, measure, derive, validate, galvOf, cellOf, deflectionDiv, halfDeflectionShunt, requiredResistance, meterResistance };

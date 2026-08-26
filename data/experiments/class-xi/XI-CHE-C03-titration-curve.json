@@ -1,0 +1,334 @@
+{
+  "id": "XI-CHE-C03",
+  "class": "XI",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "C",
+    "serial": 3,
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 6: Equilibrium — Ionic Equilibrium",
+    "topic": "Ionic equilibrium in solution; pH; titration of a strong base with a strong acid",
+    "subtopic": "Tracking pH continuously through an acid-base titration using a universal indicator",
+    "practical": "Study the pH change in the titration of a strong base using a universal indicator.",
+    "learningObjectives": [
+      "Follow the pH of a strong base as standard acid is run in from a burette",
+      "Identify the steep jump in pH near the equivalence point",
+      "Relate the mid-point of the jump to the equivalence volume found by N1V1=N2V2",
+      "Explain why an indicator's colour-change range must straddle this jump"
+    ],
+    "competencies": [
+      "Careful qualitative and quantitative observation",
+      "Relating an observation to the underlying chemical principle",
+      "Systematic, evidence-based reasoning"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-C, Experiment 3 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "pH change during the titration of a strong base with a strong acid",
+  "shortTitle": "Titration curve (pH vs volume)",
+  "objective": [
+    "Follow the pH of a strong base as standard acid is run in from a burette",
+    "Identify the steep jump in pH near the equivalence point",
+    "Relate the mid-point of the jump to the equivalence volume found by N1V1=N2V2",
+    "Explain why an indicator's colour-change range must straddle this jump"
+  ],
+  "theory": {
+    "statement": "As standard acid is added to a strong base, the pH falls only slowly at first (the base is in large excess), then falls very steeply over a tiny volume near the equivalence point, before levelling off again in the acidic region. A universal indicator lets the whole curve be followed by colour, from violet through green to red.",
+    "derivationNote": "For a strong base neutralised by a strong acid, [OH-] before equivalence is set by the excess base, [H+] after equivalence by the excess acid, and at equivalence the solution is exactly neutral (pH 7 at 298 K) because neither ion left in solution hydrolyses. The steepness of the jump follows from pH being a LOGARITHMIC measure: near equivalence, a very small volume of acid changes the H+/OH- concentration by orders of magnitude.",
+    "keyEquations": [
+      "pH = -log10[H+]",
+      "At the equivalence point of a strong acid/strong base titration, pH = 7 (298 K)",
+      "N1V1 = N2V2 locates the equivalence volume"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Burette",
+      "spec": "50 mL, least count 0.1 mL",
+      "why": "Delivers the standard acid in small, measured increments"
+    },
+    {
+      "name": "Conical flask",
+      "spec": "250 mL",
+      "why": "Holds the base solution being titrated"
+    },
+    {
+      "name": "Universal indicator solution",
+      "spec": "few drops",
+      "why": "Gives a continuous colour scale across the whole pH range, unlike a single-colour-change indicator"
+    },
+    {
+      "name": "pH colour chart",
+      "spec": "printed reference",
+      "why": "Converts the observed colour to an approximate pH"
+    },
+    {
+      "name": "Standard HCl",
+      "spec": "0.1 N",
+      "why": "The titrant of accurately known concentration"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "system",
+      "label": "System",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "naoh_hcl",
+      "options": [
+        "naoh_hcl"
+      ]
+    },
+    {
+      "id": "titrantConc",
+      "label": "Standard HCl",
+      "symbol": "N",
+      "unit": "N",
+      "type": "control",
+      "min": 0.05,
+      "max": 0.2,
+      "step": 0.01,
+      "default": 0.1
+    },
+    {
+      "id": "analyteVolume",
+      "label": "NaOH taken",
+      "symbol": "V",
+      "unit": "mL",
+      "type": "control",
+      "min": 10,
+      "max": 25,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "id": "indicator",
+      "label": "Indicator",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "universal",
+      "options": [
+        "universal"
+      ]
+    },
+    {
+      "id": "buretteVolume",
+      "label": "Burette reading",
+      "symbol": "V",
+      "unit": "mL",
+      "type": "independent",
+      "min": 0,
+      "max": 50,
+      "step": 0.1,
+      "default": 0
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Fill the burette with standard HCl and note the initial reading.",
+      "checkpoint": false
+    },
+    {
+      "step": 2,
+      "text": "Pipette 20 mL of the NaOH solution into a conical flask and add a few drops of universal indicator.",
+      "checkpoint": true,
+      "expects": "analyteVolume"
+    },
+    {
+      "step": 3,
+      "text": "Add acid in 1 mL portions, swirling and noting the colour (and approximate pH) after each addition.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 4,
+      "text": "As the colour begins to change rapidly, add the acid in single drops.",
+      "checkpoint": true,
+      "expects": "rows>=6"
+    },
+    {
+      "step": 5,
+      "text": "Continue a little past the point where the colour stops changing rapidly, to see the curve level off again.",
+      "checkpoint": false
+    },
+    {
+      "step": 6,
+      "text": "Plot pH against the volume of acid added, and locate the steepest part of the curve.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "titration",
+    "renderer": "titration",
+    "fps": 30,
+    "controls": [
+      {
+        "var": "buretteVolume",
+        "widget": "slider"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record pH at this volume",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Reading",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "volumeUsed",
+        "label": "Acid added",
+        "unit": "mL",
+        "decimals": 1
+      },
+      {
+        "key": "pHAtStop",
+        "label": "pH",
+        "unit": "",
+        "decimals": 2
+      }
+    ],
+    "graph": {
+      "x": "volumeUsed",
+      "y": "pHAtStop",
+      "xLabel": "Volume of HCl added (mL)",
+      "yLabel": "pH",
+      "throughOrigin": false
+    },
+    "minRows": 6
+  },
+  "calculations": {
+    "steps": [
+      "Record pH at increasing volumes of acid added",
+      "Identify the volume at which pH changes most steeply per mL",
+      "Compare that volume with N1V1=N2V2"
+    ],
+    "resultKeys": [
+      "meanTitre",
+      "normality"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Volume of acid at the steepest part of the curve (equivalence)",
+    "symbol": "V_eq",
+    "value": 19.5,
+    "tolerance": 1.5,
+    "unit": "mL",
+    "statement": "The pH falls slowly at first, plunges steeply through pH 7 near 19.5-20 mL of acid added, then levels off in the acidic region — the equivalence point located graphically agrees with N1V1=N2V2."
+  },
+  "safety": [
+    "Universal indicator and dilute acids are of low hazard, but avoid contact with eyes.",
+    "Handle the burette over a tray in case of drips."
+  ],
+  "sourcesOfError": [
+    "Reading the colour chart is subjective, especially in the green/yellow-green region.",
+    "Adding acid too fast near the jump can overshoot the steepest region entirely.",
+    "A stale or wrongly-prepared universal indicator gives misleading colours."
+  ],
+  "viva": [
+    {
+      "question": "Why is the pH change near the equivalence point so much steeper than elsewhere on the curve?",
+      "expectedConcept": "pH is a logarithmic scale. Near equivalence, both [H+] and [OH-] are very small and nearly equal, so a tiny addition of acid changes their ratio, and hence the logarithm, by a large amount.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Logarithmic sensitivity near neutrality.",
+      "commonMisconception": "Thinking the acid reacts unusually fast near equivalence."
+    },
+    {
+      "question": "What is the pH at the equivalence point of this titration, and why?",
+      "expectedConcept": "About 7, because the salt formed (NaCl) is from a strong acid and a strong base and does not hydrolyse.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Neither ion hydrolyses.",
+      "commonMisconception": "Assuming every titration's equivalence point is at pH 7."
+    },
+    {
+      "question": "Why must an indicator's colour-change range fall within the steep part of the curve?",
+      "expectedConcept": "Only there does a single drop of titrant produce a large, sharp colour change; elsewhere the colour would change gradually over many mL, giving an imprecise end point.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Sharpness requires the steep region.",
+      "commonMisconception": "Believing any indicator works for any titration."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "At the equivalence point of NaOH titrated with HCl, the pH is closest to:",
+        "options": [
+          "3",
+          "7",
+          "10",
+          "14"
+        ],
+        "answer": 1,
+        "feedback": "Both ions of the salt formed, Na+ and Cl-, are spectators that do not hydrolyse, so the solution is neutral."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record at least six readings, closely spaced near the jump.",
+        "check": "rows>=6"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "At what volume (mL) does the pH change most steeply?",
+        "answer": 20,
+        "tolerance": 2,
+        "feedback": "Close to the stoichiometric volume, about 19.5-20 mL for these concentrations."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 35,
+      "postLab": 25,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "pH = -log[H+]; equivalence pH = 7 for strong/strong",
+    "assumptions": [
+      "Ideal dilute solution behaviour",
+      "Indicator equilibrium is fast compared with mixing"
+    ],
+    "validRange": "0.05-0.2 N",
+    "unitSystem": "N, mL, pH",
+    "edgeCases": [
+      "A weak acid or base would shift the equivalence pH away from 7"
+    ],
+    "expectedBehaviour": [
+      "S-shaped curve with pH 7 at the steepest point"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

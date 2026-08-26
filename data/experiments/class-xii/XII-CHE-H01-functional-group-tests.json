@@ -1,0 +1,351 @@
+{
+  "id": "XII-CHE-H01",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "H",
+    "serial": 1,
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Unit 11-13: Alcohols/Phenols/Ethers, Aldehydes/Ketones/Carboxylic Acids, Amines",
+    "topic": "Characteristic tests for common organic functional groups",
+    "subtopic": "Qualitative tests distinguishing unsaturation, alcohol, phenol, aldehyde, ketone, carboxylic acid and amine",
+    "practical": "Tests for unsaturation, alcoholic, phenolic, aldehydic, ketonic, carboxylic and amino (primary) groups.",
+    "learningObjectives": [
+      "Apply bromine-water and Baeyer's tests to detect carbon-carbon unsaturation",
+      "Distinguish alcohols, phenols, aldehydes, ketones and carboxylic acids using selective reagents",
+      "Recognise that 2,4-DNP is positive for BOTH aldehydes and ketones, requiring a further test to distinguish them",
+      "Detect a primary aromatic amine by diazotisation and dye coupling"
+    ],
+    "competencies": [
+      "Careful qualitative and quantitative observation",
+      "Relating an observation to the underlying chemical principle",
+      "Systematic, evidence-based reasoning"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-H, Experiment 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Tests for unsaturation, and alcoholic, phenolic, aldehydic, ketonic, carboxylic and amino groups",
+  "shortTitle": "Functional Group Tests",
+  "objective": [
+    "Apply bromine-water and Baeyer's tests to detect carbon-carbon unsaturation",
+    "Distinguish alcohols, phenols, aldehydes, ketones and carboxylic acids using selective reagents",
+    "Recognise that 2,4-DNP is positive for BOTH aldehydes and ketones, requiring a further test to distinguish them",
+    "Detect a primary aromatic amine by diazotisation and dye coupling"
+  ],
+  "theory": {
+    "statement": "Each functional group reacts selectively with a particular reagent, giving a distinctive colour change, precipitate, or gas that identifies it. Applying the RIGHT reagent to the RIGHT compound, and interpreting a negative result as meaningfully as a positive one, is the skill being examined.",
+    "derivationNote": "Some tests are class tests (positive for a whole family, e.g. 2,4-DNP for any carbonyl), while others discriminate within a family (Tollens'/Fehling's positive for aldehydes but not ketones, since only an aldehyde's carbonyl carbon still bears a removable hydrogen that can be oxidised). Similarly, neutral FeCl3 detects a phenol's acidic -OH by complex formation, but a carboxylic acid — also acidic — gives no such colour and is instead detected by effervescence with NaHCO3, since only a carboxylic acid is a strong enough acid to liberate CO2 from bicarbonate.",
+    "keyEquations": [
+      "Alkene + Br2 → vicinal dibromide (decolourises bromine water)",
+      "RCHO + 2Cu2+(complexed) + 5OH- → RCOO- + Cu2O↓(brick red) + 3H2O (Fehling's, aldehyde only)",
+      "RCOOH + NaHCO3 → RCOONa + H2O + CO2↑ (carboxylic acid)"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Bromine water",
+      "spec": "dilute",
+      "why": "Tests for carbon-carbon unsaturation by addition"
+    },
+    {
+      "name": "Neutral ferric chloride solution",
+      "spec": "",
+      "why": "Selective colour test for phenols"
+    },
+    {
+      "name": "Tollens' reagent, Fehling's solution",
+      "spec": "freshly prepared",
+      "why": "Selective for aldehydes (oxidise them), negative for ketones"
+    },
+    {
+      "name": "2,4-Dinitrophenylhydrazine reagent",
+      "spec": "",
+      "why": "General test for any carbonyl (aldehyde or ketone)"
+    },
+    {
+      "name": "Sodium bicarbonate solution",
+      "spec": "",
+      "why": "Detects a carboxylic acid by effervescence of CO2"
+    },
+    {
+      "name": "Sodium nitrite, dilute HCl, β-naphthol",
+      "spec": "",
+      "why": "Diazotisation/coupling test for a primary aromatic amine"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "compound",
+      "label": "Compound",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "ethanol",
+      "options": [
+        "hexene",
+        "ethanol",
+        "phenol",
+        "acetaldehyde",
+        "acetone",
+        "aceticAcid",
+        "aniline",
+        "hexane"
+      ]
+    },
+    {
+      "id": "test",
+      "label": "Reagent",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "ceric",
+      "options": [
+        "bromineWater",
+        "baeyer",
+        "ceric",
+        "lucas",
+        "fecl3",
+        "tollens",
+        "fehling",
+        "dnp",
+        "iodoform",
+        "nahco3",
+        "diazotisation"
+      ]
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Select a compound and a reagent thought to match its suspected functional group.",
+      "checkpoint": true,
+      "expects": "compound"
+    },
+    {
+      "step": 2,
+      "text": "Add the reagent and note the observation (colour, precipitate, gas, odour).",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 3,
+      "text": "Repeat for at least four different compound/reagent combinations, including at least one expected negative.",
+      "checkpoint": true,
+      "expects": "rows>=4"
+    },
+    {
+      "step": 4,
+      "text": "Tabulate which functional group each positive result confirms.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "functional-group-test",
+    "renderer": "functional-group-test",
+    "fps": 10,
+    "controls": [
+      {
+        "var": "compound",
+        "widget": "segmented",
+        "options": [
+          "hexene",
+          "ethanol",
+          "phenol",
+          "acetaldehyde",
+          "acetone",
+          "aceticAcid",
+          "aniline",
+          "hexane"
+        ]
+      },
+      {
+        "var": "test",
+        "widget": "segmented",
+        "options": [
+          "bromineWater",
+          "baeyer",
+          "ceric",
+          "lucas",
+          "fecl3",
+          "tollens",
+          "fehling",
+          "dnp",
+          "iodoform",
+          "nahco3",
+          "diazotisation"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Run test",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "compound",
+        "label": "Compound",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "test",
+        "label": "Reagent",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "observation",
+        "label": "Observation",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "positive",
+        "label": "Positive?",
+        "unit": "",
+        "decimals": 0
+      }
+    ],
+    "graph": null,
+    "minRows": 4
+  },
+  "calculations": {
+    "steps": [
+      "Match each reagent to the group it tests for",
+      "Record the observation for each compound tested",
+      "Tally which functional groups were correctly identified"
+    ],
+    "resultKeys": [
+      "groupsIdentified",
+      "positiveCount"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Functional groups correctly identified from the compounds tested",
+    "symbol": "",
+    "value": null,
+    "unit": "",
+    "statement": "Each reagent gives a positive result only with the compound bearing its target functional group: bromine water/Baeyer's for unsaturation, ceric ammonium nitrate for the alcohol, FeCl3 for the phenol, Tollens'/Fehling's for the aldehyde (not the ketone), 2,4-DNP for both carbonyls, NaHCO3 for the acid, and diazotisation-coupling for the primary aromatic amine."
+  },
+  "safety": [
+    "Bromine water and concentrated acids are corrosive/irritating — handle with care and good ventilation.",
+    "Tollens' reagent must not be stored — it can form an explosive silver residue on standing; prepare fresh and discard promptly after use.",
+    "Aniline is toxic — avoid skin contact."
+  ],
+  "sourcesOfError": [
+    "Using a stale or wrongly prepared Fehling's/Tollens' reagent gives a false negative.",
+    "Confusing the general carbonyl test (2,4-DNP) with the aldehyde-specific tests (Tollens'/Fehling's) leads to misassigning ketones as aldehydes.",
+    "A phenol's mild acidity is sometimes mistaken for carboxylic-acid acidity — the NaHCO3 test distinguishes them, since phenol is too weak an acid to liberate CO2 from bicarbonate."
+  ],
+  "viva": [
+    {
+      "question": "Why does Fehling's solution distinguish an aldehyde from a ketone, when both are carbonyl compounds?",
+      "expectedConcept": "An aldehyde's carbonyl carbon bears a hydrogen atom that can be removed on oxidation to give a carboxylic acid, reducing Cu2+ to Cu2O in the process. A ketone's carbonyl carbon has no such hydrogen and cannot be oxidised this way, so it gives no reaction.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "Only an aldehyde's C-H at the carbonyl carbon permits this oxidation.",
+      "commonMisconception": "Thinking any carbonyl compound reduces Fehling's solution."
+    },
+    {
+      "question": "A compound is acidic to litmus but gives no colour with neutral FeCl3. What does this suggest?",
+      "expectedConcept": "It is likely a carboxylic acid rather than a phenol — both are acidic, but only phenols give the characteristic FeCl3 colour (forming an iron-phenolate complex); carboxylic acids do not. The NaHCO3 effervescence test would confirm a carboxylic acid.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "FeCl3 is phenol-selective among acidic organics.",
+      "commonMisconception": "Assuming FeCl3 detects acidity in general rather than the phenolic -OH specifically."
+    },
+    {
+      "question": "Why is 2,4-DNP alone not sufficient to identify a compound as an aldehyde?",
+      "expectedConcept": "2,4-DNP forms a coloured precipitate with ANY carbonyl compound — aldehyde or ketone alike — so a positive result only proves a C=O group is present, not which kind; a further test (Tollens'/Fehling's) is needed to tell them apart.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "2,4-DNP is a class test, not a discriminating one.",
+      "commonMisconception": "Treating a positive 2,4-DNP result as proof of an aldehyde specifically."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Which reagent gives a positive test for BOTH aldehydes and ketones?",
+        "options": [
+          "Tollens' reagent",
+          "Fehling's solution",
+          "2,4-DNP reagent",
+          "Iodoform reagent"
+        ],
+        "answer": 2,
+        "feedback": "2,4-DNP is a general carbonyl test; Tollens' and Fehling's are aldehyde-selective."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Test at least four compound/reagent combinations.",
+        "check": "rows>=4"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "mcq",
+        "question": "A carboxylic acid can be distinguished from a phenol by:",
+        "options": [
+          "Colour with neutral FeCl3",
+          "Effervescence with NaHCO3",
+          "Reaction with bromine water",
+          "Reaction with Tollens' reagent"
+        ],
+        "answer": 1,
+        "feedback": "Only a carboxylic acid is a strong enough acid to release CO2 from sodium bicarbonate; phenol is not."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 40,
+      "postLab": 20,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "Selective reagent tests for each functional group",
+    "assumptions": [
+      "Reagents are freshly prepared where required",
+      "One functional group dominates the compound's behaviour"
+    ],
+    "validRange": "Eight compounds across seven groups plus a saturated control",
+    "unitSystem": "Descriptive",
+    "edgeCases": [
+      "2,4-DNP does not discriminate aldehyde from ketone"
+    ],
+    "expectedBehaviour": [
+      "Each reagent positive only for its target group(s)"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

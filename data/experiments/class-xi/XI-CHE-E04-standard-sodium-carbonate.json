@@ -1,0 +1,344 @@
+{
+  "id": "XI-CHE-E04",
+  "class": "XI",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "E",
+    "serial": 4,
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 1: Some Basic Concepts of Chemistry",
+    "topic": "Mole concept; molarity, normality; primary standards",
+    "subtopic": "Preparing a standard solution of anhydrous sodium carbonate from a weighed mass",
+    "practical": "Preparation of standard solution of Sodium carbonate.",
+    "learningObjectives": [
+      "Calculate the mass of anhydrous Na2CO3 needed for a solution of stated normality and volume",
+      "Weigh, transfer completely and make up to the mark in a volumetric flask",
+      "Explain why anhydrous (not hydrated) sodium carbonate is used as the primary standard here",
+      "State the normality relation for a base that accepts two protons"
+    ],
+    "competencies": [
+      "Careful qualitative and quantitative observation",
+      "Relating an observation to the underlying chemical principle",
+      "Systematic, evidence-based reasoning"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-E, Experiment 4 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Preparation of standard sodium carbonate solution",
+  "shortTitle": "Standard Sodium Carbonate",
+  "objective": [
+    "Calculate the mass of anhydrous Na2CO3 needed for a solution of stated normality and volume",
+    "Weigh, transfer completely and make up to the mark in a volumetric flask",
+    "Explain why anhydrous (not hydrated) sodium carbonate is used as the primary standard here",
+    "State the normality relation for a base that accepts two protons"
+  ],
+  "theory": {
+    "statement": "Anhydrous sodium carbonate is a widely used primary standard for standardising acids, because it can be obtained pure and of exactly known, stable composition (unlike the hydrated form, which can lose or gain water of crystallisation on standing).",
+    "derivationNote": "Na2CO3 reacts with acid in two proton-accepting steps (to HCO3-, then to H2CO3/CO2+H2O), so its equivalent mass for full neutralisation is half its molar mass: 106.0/2 = 53.0. A 250 mL flask of 0.1 N sodium carbonate therefore needs mass = 0.1 × 53.0 × 0.250 ≈ 1.325 g.",
+    "keyEquations": [
+      "Molarity M = mass / (molar mass × V(L))",
+      "Normality N = M × 2 (Na2CO3 accepts two protons)",
+      "Equivalent mass = 106.0/2 = 53.0"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Anhydrous sodium carbonate (A.R.)",
+      "spec": "Na2CO3",
+      "why": "The primary standard being weighed out"
+    },
+    {
+      "name": "Electronic balance",
+      "spec": "readability 0.01 g",
+      "why": "Weighs the required mass accurately"
+    },
+    {
+      "name": "Volumetric flask",
+      "spec": "250 mL, graduated",
+      "why": "Made up to its precise, calibrated volume"
+    },
+    {
+      "name": "Funnel and wash bottle",
+      "spec": "",
+      "why": "Ensures complete transfer of the weighed solid"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "solute",
+      "label": "Solute",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "na2co3",
+      "options": [
+        "na2co3"
+      ]
+    },
+    {
+      "id": "massG",
+      "label": "Mass weighed",
+      "symbol": "m",
+      "unit": "g",
+      "type": "independent",
+      "min": 1,
+      "max": 10,
+      "step": 0.001,
+      "default": 1.325
+    },
+    {
+      "id": "flask",
+      "label": "Volumetric flask",
+      "symbol": "V",
+      "unit": "mL",
+      "type": "control",
+      "default": "f250",
+      "options": [
+        "f100",
+        "f250",
+        "f500",
+        "f1000"
+      ]
+    },
+    {
+      "id": "completeTransfer",
+      "label": "Complete transfer (rinsed in fully)",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "madeUpToMark",
+      "label": "Made up exactly to the mark",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Calculate the mass of anhydrous Na2CO3 needed for the stated normality and flask volume.",
+      "checkpoint": true,
+      "expects": "massG"
+    },
+    {
+      "step": 2,
+      "text": "Weigh out this mass accurately.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 3,
+      "text": "Transfer into the volumetric flask, rinsing the weighing bottle and funnel thoroughly.",
+      "checkpoint": true,
+      "expects": "completeTransfer"
+    },
+    {
+      "step": 4,
+      "text": "Dissolve completely, then make up to the mark exactly and mix well.",
+      "checkpoint": true,
+      "expects": "madeUpToMark"
+    },
+    {
+      "step": 5,
+      "text": "Calculate the exact molarity and normality of the solution.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "standard-solution",
+    "renderer": "standard-solution",
+    "fps": 10,
+    "controls": [
+      {
+        "var": "massG",
+        "widget": "slider"
+      },
+      {
+        "var": "flask",
+        "widget": "segmented",
+        "options": [
+          "f100",
+          "f250",
+          "f500",
+          "f1000"
+        ]
+      },
+      {
+        "var": "completeTransfer",
+        "widget": "switch"
+      },
+      {
+        "var": "madeUpToMark",
+        "widget": "switch"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Prepare solution",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "massG",
+        "label": "Mass",
+        "unit": "g",
+        "decimals": 3
+      },
+      {
+        "key": "volumeMl",
+        "label": "Volume",
+        "unit": "mL",
+        "decimals": 0
+      },
+      {
+        "key": "molarity",
+        "label": "Molarity",
+        "unit": "M",
+        "decimals": 4
+      },
+      {
+        "key": "normality",
+        "label": "Normality",
+        "unit": "N",
+        "decimals": 4
+      }
+    ],
+    "graph": null,
+    "minRows": 1
+  },
+  "calculations": {
+    "steps": [
+      "Molarity = mass / (molar mass × volume in L)",
+      "Normality = Molarity × 2 (two protons accepted)"
+    ],
+    "resultKeys": [
+      "molarity",
+      "normality"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Normality of the standard sodium carbonate solution prepared",
+    "symbol": "N",
+    "value": 0.1,
+    "tolerance": 0.005,
+    "unit": "N",
+    "statement": "Weighing 1.325 g of anhydrous sodium carbonate into a 250 mL volumetric flask and making up to the mark gives a solution of almost exactly 0.1 N, used to standardise hydrochloric acid in XI-CHE-E05."
+  },
+  "safety": [
+    "Sodium carbonate dust is a mild irritant — avoid inhaling while weighing.",
+    "Handle volumetric glassware carefully."
+  ],
+  "sourcesOfError": [
+    "Using the hydrated (washing soda) form by mistake gives a completely wrong concentration, since its molar mass includes ten water molecules.",
+    "Incomplete transfer or overshooting the mark, as with any standard solution."
+  ],
+  "viva": [
+    {
+      "question": "Why is anhydrous, not hydrated, sodium carbonate used here?",
+      "expectedConcept": "The hydrated form (washing soda, Na2CO3·10H2O) can lose water of crystallisation on standing in dry air, so its exact composition — and hence the mass needed for a given concentration — is not reliably known. The anhydrous form has a fixed, known molar mass.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Variable water content spoils the 'exactly known mass' requirement.",
+      "commonMisconception": "Assuming any form of sodium carbonate works equally well."
+    },
+    {
+      "question": "Why does sodium carbonate have an equivalent mass of half its molar mass here?",
+      "expectedConcept": "The carbonate ion accepts two protons in its full neutralisation by a strong acid (CO3^2- + 2H+ → H2O + CO2), so each mole supplies two 'equivalents', giving equivalent mass = molar mass/2.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Two-proton acceptance halves the equivalent mass.",
+      "commonMisconception": "Using the molar mass directly as if it were monoacidic."
+    },
+    {
+      "question": "This standard solution is later titrated against hydrochloric acid using methyl orange. Why not phenolphthalein?",
+      "expectedConcept": "Phenolphthalein changes colour around pH 8-10, at the bicarbonate stage of the reaction, ending the titration a full equivalence early. Methyl orange changes near pH 3-4, close to the true final equivalence point where all the carbonate has been converted to CO2 and water.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Indicator range must match the true equivalence pH, not an intermediate stage.",
+      "commonMisconception": "Choosing an indicator by habit rather than by the equivalence pH of this specific reaction."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The equivalent mass of Na2CO3 (molar mass 106) as a base is:",
+        "options": [
+          "106",
+          "53",
+          "35.3",
+          "212"
+        ],
+        "answer": 1,
+        "feedback": "It accepts two protons on complete neutralisation, so equivalent mass = 106/2 = 53."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Prepare and record the standard solution.",
+        "check": "rows>=1"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the normality of the 250 mL solution made from 1.325 g of anhydrous Na2CO3.",
+        "answer": 0.1,
+        "tolerance": 0.008,
+        "feedback": "N = (1.325/53.0)/0.250 ≈ 0.1 N."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 40,
+      "postLab": 20,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "M = m/(molar mass × V); N = M × 2",
+    "assumptions": [
+      "Anhydrous, pure solid of exactly known formula",
+      "Complete transfer and make-up to the mark"
+    ],
+    "validRange": "1-10 g in 100-1000 mL",
+    "unitSystem": "gram, mL, mol/L",
+    "edgeCases": [
+      "Using the hydrated form by mistake ruins the standard"
+    ],
+    "expectedBehaviour": [
+      "Concentration known exactly from mass and volume"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

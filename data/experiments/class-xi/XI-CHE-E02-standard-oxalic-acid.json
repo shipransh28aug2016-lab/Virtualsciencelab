@@ -1,0 +1,350 @@
+{
+  "id": "XI-CHE-E02",
+  "class": "XI",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XI",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "E",
+    "serial": 2,
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 1: Some Basic Concepts of Chemistry",
+    "topic": "Mole concept; molarity, normality; primary standards",
+    "subtopic": "Preparing a standard solution of a primary standard acid from a weighed mass",
+    "practical": "Preparation of standard solution of Oxalic acid.",
+    "learningObjectives": [
+      "Calculate the mass of oxalic acid crystals needed for a solution of stated normality and volume",
+      "Weigh the mass accurately and transfer it completely into a volumetric flask",
+      "Make the solution up to the mark and mix thoroughly",
+      "Explain why oxalic acid is a suitable PRIMARY standard"
+    ],
+    "competencies": [
+      "Careful qualitative and quantitative observation",
+      "Relating an observation to the underlying chemical principle",
+      "Systematic, evidence-based reasoning"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-E, Experiment 2 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Preparation of standard oxalic acid solution",
+  "shortTitle": "Standard Oxalic Acid",
+  "objective": [
+    "Calculate the mass of oxalic acid crystals needed for a solution of stated normality and volume",
+    "Weigh the mass accurately and transfer it completely into a volumetric flask",
+    "Make the solution up to the mark and mix thoroughly",
+    "Explain why oxalic acid is a suitable PRIMARY standard"
+  ],
+  "theory": {
+    "statement": "Oxalic acid crystals, H2C2O4·2H2O, are stable, of precisely known formula, and non-hygroscopic — the properties needed for a primary standard, a substance whose solution's concentration can be known exactly from its weighed mass alone, with no titration required.",
+    "derivationNote": "Molarity = mass / (molar mass × volume in litre). Because oxalic acid is diacidic (it can donate two protons), its normality for acid-base purposes is twice its molarity: N = M × 2. A 250 mL flask of 0.1 N oxalic acid therefore needs mass = 0.1 × 63.04(equivalent mass) × 0.250 L ≈ 1.575 g of the dihydrate.",
+    "keyEquations": [
+      "Molarity M = mass / (molar mass × V(L))",
+      "Normality N = M × basicity (= 2 for oxalic acid)",
+      "Equivalent mass = molar mass / basicity = 126.07/2 = 63.04"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Oxalic acid crystals (A.R.)",
+      "spec": "H2C2O4·2H2O",
+      "why": "The primary standard being weighed out"
+    },
+    {
+      "name": "Electronic balance",
+      "spec": "readability 0.01 g",
+      "why": "Weighs the required mass accurately"
+    },
+    {
+      "name": "Volumetric flask",
+      "spec": "250 mL, graduated",
+      "why": "Made up to its precise, calibrated volume — never a beaker"
+    },
+    {
+      "name": "Funnel and wash bottle",
+      "spec": "",
+      "why": "Ensures every trace of the weighed solid reaches the flask"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "solute",
+      "label": "Solute",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "oxalic",
+      "options": [
+        "oxalic"
+      ]
+    },
+    {
+      "id": "massG",
+      "label": "Mass weighed",
+      "symbol": "m",
+      "unit": "g",
+      "type": "independent",
+      "min": 1,
+      "max": 10,
+      "step": 0.001,
+      "default": 1.575
+    },
+    {
+      "id": "flask",
+      "label": "Volumetric flask",
+      "symbol": "V",
+      "unit": "mL",
+      "type": "control",
+      "default": "f250",
+      "options": [
+        "f100",
+        "f250",
+        "f500",
+        "f1000"
+      ]
+    },
+    {
+      "id": "completeTransfer",
+      "label": "Complete transfer (rinsed in fully)",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "madeUpToMark",
+      "label": "Made up exactly to the mark",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Calculate the mass of oxalic acid crystals needed for the stated normality and flask volume.",
+      "checkpoint": true,
+      "expects": "massG"
+    },
+    {
+      "step": 2,
+      "text": "Weigh out this mass accurately in a weighing bottle.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 3,
+      "text": "Transfer the solid into the volumetric flask through a funnel, rinsing the weighing bottle and funnel thoroughly with distilled water.",
+      "checkpoint": true,
+      "expects": "completeTransfer"
+    },
+    {
+      "step": 4,
+      "text": "Dissolve completely by swirling, then add water up to just below the graduation mark.",
+      "checkpoint": false
+    },
+    {
+      "step": 5,
+      "text": "Make up to the mark exactly, reading the meniscus at eye level, and mix by inverting several times.",
+      "checkpoint": true,
+      "expects": "madeUpToMark"
+    },
+    {
+      "step": 6,
+      "text": "Calculate the exact molarity and normality of the solution prepared.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "standard-solution",
+    "renderer": "standard-solution",
+    "fps": 10,
+    "controls": [
+      {
+        "var": "massG",
+        "widget": "slider"
+      },
+      {
+        "var": "flask",
+        "widget": "segmented",
+        "options": [
+          "f100",
+          "f250",
+          "f500",
+          "f1000"
+        ]
+      },
+      {
+        "var": "completeTransfer",
+        "widget": "switch"
+      },
+      {
+        "var": "madeUpToMark",
+        "widget": "switch"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Prepare solution",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "massG",
+        "label": "Mass",
+        "unit": "g",
+        "decimals": 3
+      },
+      {
+        "key": "volumeMl",
+        "label": "Volume",
+        "unit": "mL",
+        "decimals": 0
+      },
+      {
+        "key": "molarity",
+        "label": "Molarity",
+        "unit": "M",
+        "decimals": 4
+      },
+      {
+        "key": "normality",
+        "label": "Normality",
+        "unit": "N",
+        "decimals": 4
+      }
+    ],
+    "graph": null,
+    "minRows": 1
+  },
+  "calculations": {
+    "steps": [
+      "Molarity = mass / (molar mass × volume in L)",
+      "Normality = Molarity × 2 (oxalic acid is diacidic)"
+    ],
+    "resultKeys": [
+      "molarity",
+      "normality"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Normality of the standard oxalic acid solution prepared",
+    "symbol": "N",
+    "value": 0.1,
+    "tolerance": 0.005,
+    "unit": "N",
+    "statement": "Weighing 1.575 g of oxalic acid dihydrate into a 250 mL volumetric flask and making up to the mark gives a solution of almost exactly 0.1 N — known precisely from the mass alone, with no titration needed."
+  },
+  "safety": [
+    "Oxalic acid is toxic if ingested and irritating to skin/eyes — wash hands after use.",
+    "Handle the volumetric flask carefully; a chipped graduation mark makes the volume unreliable."
+  ],
+  "sourcesOfError": [
+    "Solid left in the weighing bottle or funnel lowers the true concentration below the calculated value.",
+    "Overshooting the graduation mark dilutes the solution.",
+    "A wet flask, if wrongly assumed dry, does not itself introduce an error since it is made up to volume, but wet weighing paper does."
+  ],
+  "viva": [
+    {
+      "question": "What properties make oxalic acid crystals suitable as a primary standard?",
+      "expectedConcept": "They are stable in air (not hygroscopic or efflorescent), of precisely known, constant composition, and available in high purity, so a weighed mass gives an exactly known number of moles.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Stability, known purity, known formula.",
+      "commonMisconception": "Thinking any solid acid would serve equally well as a primary standard."
+    },
+    {
+      "question": "Why must the solid be rinsed completely into the flask rather than just tipped in?",
+      "expectedConcept": "Any solid left in the weighing bottle or funnel is mass that was weighed but never dissolved, so the actual concentration would be lower than calculated from the weighed mass.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Weighed mass must equal dissolved mass.",
+      "commonMisconception": "Assuming a quick tip-in is close enough."
+    },
+    {
+      "question": "Why is a volumetric flask used instead of a beaker marked '250 mL'?",
+      "expectedConcept": "A volumetric flask is calibrated to contain its stated volume to a small, certified tolerance at its single graduation mark; a beaker's markings are only approximate and can be in error by several per cent.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Calibration precision differs by orders of magnitude.",
+      "commonMisconception": "Treating any graduated glassware as equally accurate."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The equivalent mass of oxalic acid (H2C2O4·2H2O, molar mass 126) for acid-base reactions is:",
+        "options": [
+          "126",
+          "63",
+          "42",
+          "252"
+        ],
+        "answer": 1,
+        "feedback": "Oxalic acid is diacidic (basicity 2), so equivalent mass = 126/2 = 63."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Prepare and record the standard solution.",
+        "check": "rows>=1"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the normality of the 250 mL solution made from 1.575 g of oxalic acid dihydrate.",
+        "answer": 0.1,
+        "tolerance": 0.008,
+        "feedback": "N = (1.575/63.04)/0.250 ≈ 0.1 N."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 40,
+      "postLab": 20,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "M = m/(molar mass × V); N = M × basicity",
+    "assumptions": [
+      "The solid is pure and of exactly known formula",
+      "All weighed solid dissolves and reaches the flask"
+    ],
+    "validRange": "1-10 g in 100-1000 mL",
+    "unitSystem": "gram, mL, mol/L",
+    "edgeCases": [
+      "Incomplete transfer lowers the true concentration below the calculated one"
+    ],
+    "expectedBehaviour": [
+      "Concentration is known exactly from mass and volume alone"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}

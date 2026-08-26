@@ -1,0 +1,313 @@
+{
+  "id": "XII-CHE-G01",
+  "class": "XII",
+  "subject": "Chemistry",
+  "contentStatus": "published",
+  "curriculumMapping": {
+    "curriculumYear": "2026-27",
+    "board": "CBSE",
+    "class": "XII",
+    "subject": "Chemistry",
+    "subjectCode": "043",
+    "section": "G",
+    "serial": 1,
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Unit 12: Aldehydes, Ketones and Carboxylic Acids / Amines (preparative organic chemistry)",
+    "topic": "Preparative organic chemistry: synthesis, isolation, purification and characterisation of an organic solid",
+    "subtopic": "Aniline is acetylated by acetic anhydride (or glacial acetic acid) to give acetanilide, an amide formed by nucleophilic acyl substitution at the anhydride's carbonyl carbon by aniline's nitrogen lone pair",
+    "practical": "Preparation of Acetanilide",
+    "learningObjectives": [
+      "Carry out the reaction under the specified conditions",
+      "Isolate the crude solid product by filtration/precipitation",
+      "Purify the product by recrystallisation",
+      "Determine the melting point of the purified product as a purity check, and calculate the percentage yield"
+    ],
+    "competencies": [
+      "Careful qualitative and quantitative observation",
+      "Relating an observation to the underlying chemical principle",
+      "Systematic, evidence-based reasoning"
+    ],
+    "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, SECTION-G, Experiment 1 — cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "verificationStatus": "verified"
+  },
+  "title": "Preparation of Acetanilide",
+  "shortTitle": "Acetanilide Preparation",
+  "objective": [
+    "Carry out the reaction under the specified conditions",
+    "Isolate the crude solid product by filtration/precipitation",
+    "Purify the product by recrystallisation",
+    "Determine the melting point of the purified product as a purity check, and calculate the percentage yield"
+  ],
+  "theory": {
+    "statement": "Aniline is acetylated by acetic anhydride (or glacial acetic acid) to give acetanilide, an amide formed by nucleophilic acyl substitution at the anhydride's carbonyl carbon by aniline's nitrogen lone pair. The reaction is exothermic and must be cooled to control side products.",
+    "derivationNote": "Crude yield is always higher than the yield after recrystallisation — the gap between the two is a direct, quantitative measure of the impurity removed in one recrystallisation. The melting point of the purified solid, sharp and close to the literature value, is the check that the removed material really was impurity and not product.",
+    "keyEquations": [
+      "C6H5NH2 + (CH3CO)2O → C6H5NHCOCH3 + CH3COOH"
+    ]
+  },
+  "apparatus": [
+    {
+      "name": "Aniline",
+      "spec": "freshly distilled",
+      "why": "The amine being acetylated"
+    },
+    {
+      "name": "Acetic anhydride",
+      "spec": "",
+      "why": "The acylating agent"
+    },
+    {
+      "name": "Ice bath",
+      "spec": "",
+      "why": "Controls the exothermic reaction and minimises oxidation/discolouration of aniline"
+    },
+    {
+      "name": "Buchner funnel",
+      "spec": "",
+      "why": "Filters the crude, then the recrystallised, product"
+    }
+  ],
+  "materials": [],
+  "variables": [
+    {
+      "id": "preparation",
+      "label": "Preparation",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "acetanilide",
+      "options": [
+        "acetanilide"
+      ]
+    },
+    {
+      "id": "startingMassG",
+      "label": "Aniline taken",
+      "symbol": "",
+      "unit": "g",
+      "type": "independent",
+      "min": 1.5,
+      "max": 6,
+      "step": 0.1,
+      "default": 3.0
+    },
+    {
+      "id": "coolingAdequate",
+      "label": "Adequately cooled during reaction",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "secondRecrystallisation",
+      "label": "Second recrystallisation performed",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": false
+    }
+  ],
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Set up the reaction with the specified reagents, cooling as required for this exothermic step.",
+      "checkpoint": true,
+      "expects": "coolingAdequate"
+    },
+    {
+      "step": 2,
+      "text": "Once the reaction is complete, isolate the crude solid by filtration (or by pouring onto crushed ice, as appropriate).",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 3,
+      "text": "Weigh the crude product and calculate the crude percentage yield.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 4,
+      "text": "Recrystallise from a suitable solvent, filter, and dry the purified crystals.",
+      "checkpoint": true,
+      "expects": "rows>=1"
+    },
+    {
+      "step": 5,
+      "text": "Determine the melting point of the purified product and compare with the literature value.",
+      "checkpoint": true,
+      "expects": "result"
+    }
+  ],
+  "simulation": {
+    "model": "organic-preparation",
+    "renderer": "organic-preparation",
+    "fps": 10,
+    "controls": [
+      {
+        "var": "startingMassG",
+        "widget": "slider"
+      },
+      {
+        "var": "coolingAdequate",
+        "widget": "switch"
+      },
+      {
+        "var": "secondRecrystallisation",
+        "widget": "switch"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record yield & m.p.",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "startingMassG",
+        "label": "Starting mass",
+        "unit": "g",
+        "decimals": 1
+      },
+      {
+        "key": "crudeYieldPct",
+        "label": "Crude yield",
+        "unit": "%",
+        "decimals": 1
+      },
+      {
+        "key": "purifiedYieldPct",
+        "label": "Purified yield",
+        "unit": "%",
+        "decimals": 1
+      },
+      {
+        "key": "meltingPointC",
+        "label": "M.p.",
+        "unit": "°C",
+        "decimals": 1
+      }
+    ],
+    "graph": null,
+    "minRows": 1
+  },
+  "calculations": {
+    "steps": [
+      "Isolate and weigh the crude product; crude % yield",
+      "Recrystallise, weigh again; purified % yield",
+      "Determine the melting point as a purity check"
+    ],
+    "resultKeys": [
+      "purifiedYield",
+      "meltingPoint"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Melting point of the purified product",
+    "symbol": "",
+    "value": 114.3,
+    "tolerance": 2,
+    "unit": "°C",
+    "statement": "The crude product is obtained in good yield; recrystallisation lowers the yield but sharpens the melting point towards the literature value of about 114.3 °C, confirming the gain in purity."
+  },
+  "safety": [
+    "Aniline is toxic and absorbed through skin — wear gloves and avoid inhalation.",
+    "Acetic anhydride is corrosive and reacts with moisture — handle in a fume cupboard.",
+    "Handle the ice bath and hot solutions with care."
+  ],
+  "sourcesOfError": [
+    "Insufficient cooling darkens the product through oxidation.",
+    "Incomplete removal of unreacted aniline lowers the melting point of the crude product.",
+    "Over-drying at high temperature can discolour acetanilide."
+  ],
+  "viva": [
+    {
+      "question": "Why is the reaction mixture cooled in ice?",
+      "expectedConcept": "The acetylation is exothermic; without cooling, the heat evolved can darken the product through oxidation of unreacted aniline and encourage side reactions, lowering both yield and purity.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Controls an exothermic step to protect yield/purity.",
+      "commonMisconception": "Thinking cooling is only to speed crystallisation, not to control the reaction itself."
+    },
+    {
+      "question": "Why is acetic anhydride generally preferred over acetyl chloride for this acetylation in a school laboratory?",
+      "expectedConcept": "Acetic anhydride reacts more controllably and safely, producing only acetic acid as a by-product, whereas acetyl chloride reacts violently with water/moisture, releasing corrosive HCl gas.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Safety and controllability of the acylating agent.",
+      "commonMisconception": "Assuming any acylating agent would work identically."
+    }
+  ],
+  "assessment": {
+    "preLab": [
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "Recrystallisation is expected to:",
+        "options": [
+          "Increase both yield and purity",
+          "Lower the yield but increase the purity",
+          "Increase the yield but lower the purity",
+          "Change the product into a different compound"
+        ],
+        "answer": 1,
+        "feedback": "Some product is always lost in the mother liquor during recrystallisation, but what remains is purer, shown by a sharper, higher melting point."
+      }
+    ],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Complete the preparation and record both crude and purified yield.",
+        "check": "rows>=1"
+      }
+    ],
+    "postLab": [
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the melting point of the purified product (°C).",
+        "answer": 114.3,
+        "tolerance": 3,
+        "feedback": "About 114.3 °C for the pure compound."
+      }
+    ],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 35,
+      "postLab": 25,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "% yield = (obtained/theoretical) × 100; melting point as purity check",
+    "assumptions": [
+      "Reaction goes to a realistic, not complete, conversion",
+      "One recrystallisation removes most but not all impurity"
+    ],
+    "validRange": "1.5-6 g starting material",
+    "unitSystem": "gram, %, °C",
+    "edgeCases": [
+      "Poor cooling during an exothermic step lowers both yield and purity"
+    ],
+    "expectedBehaviour": [
+      "Purified yield < crude yield; purified m.p. closer to literature value"
+    ],
+    "testFile": "tests/models.test.js"
+  }
+}
