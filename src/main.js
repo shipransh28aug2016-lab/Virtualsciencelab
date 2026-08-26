@@ -331,6 +331,32 @@ function bindChrome() {
   window.addEventListener('online', updateNet);
   window.addEventListener('offline', updateNet);
   updateNet();
+  initCollapsiblePanels();
+}
+
+/**
+ * The three auxiliary lab panels (controls / observation table / graph) can
+ * each be collapsed to keep the core experimental area — the canvas and its
+ * readouts — the visual focus. State persists per panel id in localStorage
+ * (via DB.getSetting/setSetting, already synchronous-safe at boot) so a
+ * student's layout choice survives navigating between experiments.
+ */
+function initCollapsiblePanels() {
+  $$('.panel-collapsible').forEach((panel) => {
+    const head = panel.querySelector('.panel-head');
+    if (!head || head.dataset.wired) return;
+    head.dataset.wired = '1';
+    const key = `collapsed:${panel.id}`;
+    const collapsed = !!DB.getSetting(key, false);
+    panel.classList.toggle('is-collapsed', collapsed);
+    head.setAttribute('aria-expanded', String(!collapsed));
+    head.onclick = () => {
+      const next = !panel.classList.contains('is-collapsed');
+      panel.classList.toggle('is-collapsed', next);
+      head.setAttribute('aria-expanded', String(!next));
+      DB.setSetting(key, next);
+    };
+  });
 }
 
 /** Header subtitle reflects the subject actually being studied. */
@@ -564,6 +590,7 @@ async function openLab(exp) {
 
   buildToolbar();
   buildControls();
+  renderLiveConfig();
   buildTabs();
   renderTable();
   renderStateTrack();
@@ -1241,7 +1268,44 @@ function onInputChange() {
   const v = app.model.validate(app.inputs);
   showFeedback(v);
   syncToolbar();
+  renderLiveConfig();
   draw();
+}
+
+/**
+ * "Live setup" strip above the feedback box: a pill per apparatus control
+ * showing its current value, in the exact same words (`optLabel`) the
+ * control widgets themselves use. It never states anything the model
+ * doesn't already hold in `app.inputs` — so substituting a chemical or
+ * swapping an apparatus setting is reflected here by construction, without
+ * per-experiment authoring, and can never drift out of sync with what is
+ * actually being simulated.
+ */
+function renderLiveConfig() {
+  const host = $('#liveConfig');
+  if (!host) return;
+  const exp = app.exp;
+  const controls = exp?.simulation?.controls;
+  if (!exp || !controls || !controls.length) { host.innerHTML = ''; return; }
+  const byId = Object.fromEntries(exp.variables.map((v) => [v.id, v]));
+  let html = '<span class="lc-label">Live setup</span>';
+  for (const c of controls) {
+    const v = byId[c.var];
+    if (!v) continue;
+    const raw = app.inputs[v.id];
+    let val;
+    if (c.widget === 'switch') {
+      val = raw ? 'On' : 'Off';
+    } else if (c.widget === 'slider') {
+      const n = Number(raw);
+      const dp = String(v.step).split('.')[1]?.length || 0;
+      val = `${Number.isInteger(v.step) ? n : n.toFixed(dp)}${v.unit ? ' ' + esc(v.unit) : ''}`;
+    } else {
+      val = esc(optLabel(v.id, raw));
+    }
+    html += `<span class="lc-pill">${esc(v.label)}: <b>${val}</b></span>`;
+  }
+  host.innerHTML = html;
 }
 
 /* ── feedback (error simulation §8) ── */
