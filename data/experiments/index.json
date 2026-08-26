@@ -1,158 +1,63 @@
 {
  "generatedBy": "tools/build-index.mjs",
- "count": 79,
+ "count": 100,
  "experiments": [
   {
-   "id": "XI-PHY-A07",
-   "file": "data/experiments/class-xi/XI-PHY-A07-simple-pendulum.json",
+   "id": "XI-CHE-B01",
+   "file": "data/experiments/class-xi/XI-CHE-B01-melting-point.json",
    "class": "XI",
-   "subject": "Physics",
+   "subject": "Chemistry",
    "contentStatus": "published",
-   "title": "Simple Pendulum: L-T² graph and the second's pendulum",
-   "shortTitle": "Simple Pendulum",
-   "objective0": "To plot the L-T² graph for a simple pendulum.",
+   "title": "Determination of the melting point of an organic compound",
+   "shortTitle": "Melting point",
+   "objective0": "To determine the melting point of a given organic compound by the capillary method.",
    "curriculumMapping": {
-    "section": "A",
-    "serial": 7,
+    "section": "B",
+    "serial": 1,
     "kind": "experiment",
-    "unit": "Unit X: Oscillations and Waves",
-    "chapter": "Chapter-13: Oscillations"
+    "unit": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques",
+    "chapter": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques"
    },
-   "vivaCount": 9,
-   "procedureCount": 9
+   "vivaCount": 10,
+   "procedureCount": 8
   },
   {
-   "id": "XI-PHY-B02",
-   "file": "data/experiments/class-xi/XI-PHY-B02-helical-spring.json",
+   "id": "XI-CHE-B02",
+   "file": "data/experiments/class-xi/XI-CHE-B02-boiling-point.json",
    "class": "XI",
-   "subject": "Physics",
+   "subject": "Chemistry",
    "contentStatus": "published",
-   "title": "Force constant of a helical spring",
-   "shortTitle": "Helical Spring",
-   "objective0": "To plot a graph between load and extension for a helical spring.",
+   "title": "Determination of the boiling point of an organic compound",
+   "shortTitle": "Boiling point",
+   "objective0": "To determine the boiling point of a given organic liquid by the Siwoloboff method.",
    "curriculumMapping": {
     "section": "B",
     "serial": 2,
     "kind": "experiment",
-    "unit": "Unit VII: Properties of Bulk Matter",
-    "chapter": "Chapter-8: Mechanical Properties of Solids"
+    "unit": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques",
+    "chapter": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques"
    },
-   "vivaCount": 8,
+   "vivaCount": 10,
    "procedureCount": 8
   },
   {
-   "id": "XI-CHE-E03",
-   "file": "data/experiments/class-xi/XI-CHE-E03-titration.json",
+   "id": "XI-CHE-B03",
+   "file": "data/experiments/class-xi/XI-CHE-B03-crystallisation.json",
    "class": "XI",
    "subject": "Chemistry",
    "contentStatus": "published",
-   "title": "Volumetric analysis: strength of NaOH by titration with oxalic acid",
-   "shortTitle": "Acid-Base Titration",
-   "objective0": "To prepare a standard solution of oxalic acid.",
-   "curriculumMapping": {
-    "section": "E",
-    "serial": 3,
-    "kind": "experiment",
-    "unit": "Unit 6: Equilibrium",
-    "chapter": "Unit 6: Equilibrium — Acids, Bases and Salts"
-   },
-   "vivaCount": 10,
-   "procedureCount": 10
-  },
-  {
-   "id": "XII-PHY-A01",
-   "file": "data/experiments/class-xii/XII-PHY-A01-resistivity.json",
-   "class": "XII",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Resistivity of wires from a V-I graph",
-   "shortTitle": "Resistivity (V-I graph)",
-   "objective0": "To plot a graph of potential difference versus current for a given wire.",
-   "curriculumMapping": {
-    "section": "A",
-    "serial": 1,
-    "kind": "experiment",
-    "unit": "Unit II: Current Electricity",
-    "chapter": "Chapter-3: Current Electricity"
-   },
-   "vivaCount": 9,
-   "procedureCount": 8
-  },
-  {
-   "id": "XII-PHY-B03",
-   "file": "data/experiments/class-xii/XII-PHY-B03-convex-lens.json",
-   "class": "XII",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Focal length of a convex lens by the u-v method",
-   "shortTitle": "Convex Lens (u-v)",
-   "objective0": "To find the focal length of a convex lens by locating real images for several object distances.",
+   "title": "Crystallisation of an impure sample",
+   "shortTitle": "Crystallisation",
+   "objective0": "To purify an impure sample of alum, copper sulphate or benzoic acid by crystallisation.",
    "curriculumMapping": {
     "section": "B",
     "serial": 3,
     "kind": "experiment",
-    "unit": "Unit VI: Optics",
-    "chapter": "Chapter-9: Ray Optics and Optical Instruments"
+    "unit": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques",
+    "chapter": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques"
    },
-   "vivaCount": 8,
+   "vivaCount": 10,
    "procedureCount": 8
-  },
-  {
-   "id": "XII-CHE-B01",
-   "file": "data/experiments/class-xii/XII-CHE-B01-reaction-kinetics.json",
-   "class": "XII",
-   "subject": "Chemistry",
-   "contentStatus": "published",
-   "title": "Rate of reaction between sodium thiosulphate and hydrochloric acid",
-   "shortTitle": "Chemical Kinetics",
-   "objective0": "To study the effect of concentration on the rate of reaction between sodium thiosulphate and hydrochloric acid.",
-   "curriculumMapping": {
-    "section": "B",
-    "serial": 1,
-    "kind": "experiment",
-    "unit": "Unit 3: Chemical Kinetics",
-    "chapter": "Unit 3: Chemical Kinetics"
-   },
-   "vivaCount": 10,
-   "procedureCount": 10
-  },
-  {
-   "id": "XI-PHY-A01",
-   "file": "data/experiments/class-xi/XI-PHY-A01-vernier-callipers.json",
-   "class": "XI",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Vernier Callipers: diameter, internal diameter, depth and volume",
-   "shortTitle": "Vernier Callipers",
-   "objective0": "To measure the diameter of a small spherical and a cylindrical body using vernier callipers.",
-   "curriculumMapping": {
-    "section": "A",
-    "serial": 1,
-    "kind": "experiment",
-    "unit": "Unit I: Physical World and Measurement",
-    "chapter": "Chapter-1: Units and Measurements"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XI-PHY-B04",
-   "file": "data/experiments/class-xi/XI-PHY-B04-surface-tension.json",
-   "class": "XI",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Surface tension of water by the capillary rise method",
-   "shortTitle": "Surface Tension",
-   "objective0": "To determine the surface tension of water by the capillary rise method.",
-   "curriculumMapping": {
-    "section": "B",
-    "serial": 4,
-    "kind": "experiment",
-    "unit": "Unit VII: Properties of Bulk Matter",
-    "chapter": "Chapter-9: Mechanical Properties of Fluids"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
   },
   {
    "id": "XI-CHE-C01",
@@ -174,58 +79,248 @@
    "procedureCount": 9
   },
   {
-   "id": "XII-PHY-A02",
-   "file": "data/experiments/class-xii/XII-PHY-A02-metre-bridge.json",
-   "class": "XII",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Metre bridge: resistance of a wire and the Wheatstone balance",
-   "shortTitle": "Metre Bridge",
-   "objective0": "To find the resistance of a given wire using a metre bridge.",
-   "curriculumMapping": {
-    "section": "A",
-    "serial": 2,
-    "kind": "experiment",
-    "unit": "Unit II: Current Electricity",
-    "chapter": "Chapter-3: Current Electricity"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XII-PHY-B09",
-   "file": "data/experiments/class-xii/XII-PHY-B09-pn-diode.json",
-   "class": "XII",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "I-V characteristics of a p-n junction diode",
-   "shortTitle": "p-n Junction Diode",
-   "objective0": "To draw the I-V characteristic curve of a p-n junction diode in forward bias.",
-   "curriculumMapping": {
-    "section": "B",
-    "serial": 9,
-    "kind": "experiment",
-    "unit": "Unit IX: Electronic Devices",
-    "chapter": "Chapter-14: Semiconductor Electronics: Materials, Devices and Simple Circuits"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XII-CHE-D01",
-   "file": "data/experiments/class-xii/XII-CHE-D01-electrochemical-cell.json",
-   "class": "XII",
+   "id": "XI-CHE-C02",
+   "file": "data/experiments/class-xi/XI-CHE-C02-strong-weak-acid-ph.json",
+   "class": "XI",
    "subject": "Chemistry",
    "contentStatus": "published",
-   "title": "Variation of cell potential with concentration: the Nernst equation",
-   "shortTitle": "Electrochemical Cell",
-   "objective0": "To set up the cell Zn | Zn²⁺ ‖ Cu²⁺ | Cu and measure its potential.",
+   "title": "Comparing the pH of strong and weak acids of the same concentration",
+   "shortTitle": "Strong vs Weak Acid",
+   "objective0": "To compare the pH of hydrochloric acid and acetic acid solutions of the same concentration.",
+   "curriculumMapping": {
+    "section": "C",
+    "serial": 2,
+    "kind": "experiment",
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 6: Equilibrium — Ionic Equilibrium"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XI-CHE-C03",
+   "file": "data/experiments/class-xi/XI-CHE-C03-titration-curve.json",
+   "class": "XI",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "pH change during the titration of a strong base with a strong acid",
+   "shortTitle": "Titration curve (pH vs volume)",
+   "objective0": "Follow the pH of a strong base as standard acid is run in from a burette",
+   "curriculumMapping": {
+    "section": "C",
+    "serial": 3,
+    "kind": "experiment",
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 6: Equilibrium — Ionic Equilibrium"
+   },
+   "vivaCount": 3,
+   "procedureCount": 6
+  },
+  {
+   "id": "XI-CHE-C04",
+   "file": "data/experiments/class-xi/XI-CHE-C04-common-ion-effect.json",
+   "class": "XI",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Common-ion effect on weak acids and weak bases",
+   "shortTitle": "Common-ion Effect",
+   "objective0": "Measure the pH of a weak acid (or base) alone",
+   "curriculumMapping": {
+    "section": "C",
+    "serial": 4,
+    "kind": "experiment",
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 6: Equilibrium — Ionic Equilibrium"
+   },
+   "vivaCount": 3,
+   "procedureCount": 6
+  },
+  {
+   "id": "XI-CHE-D01",
+   "file": "data/experiments/class-xi/XI-CHE-D01-equilibrium-fescn.json",
+   "class": "XI",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Shift in equilibrium: Fe3+ and SCN-",
+   "shortTitle": "Fe³⁺ / SCN⁻ Equilibrium",
+   "objective0": "Observe the intense red colour of the [FeSCN]2+ complex ion",
    "curriculumMapping": {
     "section": "D",
     "serial": 1,
     "kind": "experiment",
-    "unit": "Unit 2: Electrochemistry",
-    "chapter": "Unit 2: Electrochemistry — Galvanic Cells and the Nernst Equation"
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 6: Equilibrium — Chemical Equilibrium (Le Chatelier's Principle)"
+   },
+   "vivaCount": 3,
+   "procedureCount": 6
+  },
+  {
+   "id": "XI-CHE-D02",
+   "file": "data/experiments/class-xi/XI-CHE-D02-equilibrium-cocl.json",
+   "class": "XI",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Shift in equilibrium: [Co(H₂O)₆]²⁺ and Cl⁻",
+   "shortTitle": "Cobalt Chloride Equilibrium",
+   "objective0": "Observe the pink colour of the hexaaquacobalt(II) ion and the blue colour of the tetrachlorocobaltate(II) ion",
+   "curriculumMapping": {
+    "section": "D",
+    "serial": 2,
+    "kind": "experiment",
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 6: Equilibrium — Chemical Equilibrium (Le Chatelier's Principle)"
+   },
+   "vivaCount": 3,
+   "procedureCount": 5
+  },
+  {
+   "id": "XI-CHE-E01",
+   "file": "data/experiments/class-xi/XI-CHE-E01-electronic-balance.json",
+   "class": "XI",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Weighing by an electronic balance",
+   "shortTitle": "Electronic Balance",
+   "objective0": "Zero (tare) a balance correctly before weighing",
+   "curriculumMapping": {
+    "section": "E",
+    "serial": 1,
+    "kind": "experiment",
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 1: Some Basic Concepts of Chemistry"
+   },
+   "vivaCount": 3,
+   "procedureCount": 6
+  },
+  {
+   "id": "XI-CHE-E02",
+   "file": "data/experiments/class-xi/XI-CHE-E02-standard-oxalic-acid.json",
+   "class": "XI",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Preparation of standard oxalic acid solution",
+   "shortTitle": "Standard Oxalic Acid",
+   "objective0": "Calculate the mass of oxalic acid crystals needed for a solution of stated normality and volume",
+   "curriculumMapping": {
+    "section": "E",
+    "serial": 2,
+    "kind": "experiment",
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 1: Some Basic Concepts of Chemistry"
+   },
+   "vivaCount": 3,
+   "procedureCount": 6
+  },
+  {
+   "id": "XI-CHE-E03",
+   "file": "data/experiments/class-xi/XI-CHE-E03-titration.json",
+   "class": "XI",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Volumetric analysis: strength of NaOH by titration with oxalic acid",
+   "shortTitle": "Acid-Base Titration",
+   "objective0": "To prepare a standard solution of oxalic acid.",
+   "curriculumMapping": {
+    "section": "E",
+    "serial": 3,
+    "kind": "experiment",
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 6: Equilibrium — Acids, Bases and Salts"
+   },
+   "vivaCount": 10,
+   "procedureCount": 10
+  },
+  {
+   "id": "XI-CHE-E04",
+   "file": "data/experiments/class-xi/XI-CHE-E04-standard-sodium-carbonate.json",
+   "class": "XI",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Preparation of standard sodium carbonate solution",
+   "shortTitle": "Standard Sodium Carbonate",
+   "objective0": "Calculate the mass of anhydrous Na2CO3 needed for a solution of stated normality and volume",
+   "curriculumMapping": {
+    "section": "E",
+    "serial": 4,
+    "kind": "experiment",
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 1: Some Basic Concepts of Chemistry"
+   },
+   "vivaCount": 3,
+   "procedureCount": 5
+  },
+  {
+   "id": "XI-CHE-E05",
+   "file": "data/experiments/class-xi/XI-CHE-E05-hcl-carbonate.json",
+   "class": "XI",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Strength of hydrochloric acid by titration against standard sodium carbonate",
+   "shortTitle": "HCl vs Na₂CO₃",
+   "objective0": "To titrate a given solution of hydrochloric acid against a standard solution of sodium carbonate.",
+   "curriculumMapping": {
+    "section": "E",
+    "serial": 5,
+    "kind": "experiment",
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 6: Equilibrium — Acids, Bases and Salts"
+   },
+   "vivaCount": 10,
+   "procedureCount": 10
+  },
+  {
+   "id": "XI-CHE-F01",
+   "file": "data/experiments/class-xi/XI-CHE-F01-salt-analysis.json",
+   "class": "XI",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Salt Analysis: One Cation, One Anion",
+   "shortTitle": "Qualitative Salt Analysis",
+   "objective0": "Note the physical appearance (colour, form) of the salt as a preliminary clue",
+   "curriculumMapping": {
+    "section": "F",
+    "serial": 1,
+    "kind": "experiment",
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques"
+   },
+   "vivaCount": 3,
+   "procedureCount": 7
+  },
+  {
+   "id": "XI-CHE-F02",
+   "file": "data/experiments/class-xi/XI-CHE-F02-lassaigne-test.json",
+   "class": "XI",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Detection of N, S, Cl (Lassaigne's Test)",
+   "shortTitle": "Lassaigne's Test",
+   "objective0": "Prepare a sodium fusion extract from an organic compound",
+   "curriculumMapping": {
+    "section": "F",
+    "serial": 2,
+    "kind": "experiment",
+    "unit": "Unit 6: Equilibrium",
+    "chapter": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques"
+   },
+   "vivaCount": 3,
+   "procedureCount": 6
+  },
+  {
+   "id": "XI-PHY-A01",
+   "file": "data/experiments/class-xi/XI-PHY-A01-vernier-callipers.json",
+   "class": "XI",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Vernier Callipers: diameter, internal diameter, depth and volume",
+   "shortTitle": "Vernier Callipers",
+   "objective0": "To measure the diameter of a small spherical and a cylindrical body using vernier callipers.",
+   "curriculumMapping": {
+    "section": "A",
+    "serial": 1,
+    "kind": "experiment",
+    "unit": "Unit I: Physical World and Measurement",
+    "chapter": "Chapter-1: Units and Measurements"
    },
    "vivaCount": 10,
    "procedureCount": 9
@@ -326,6 +421,44 @@
    "procedureCount": 8
   },
   {
+   "id": "XI-PHY-A07",
+   "file": "data/experiments/class-xi/XI-PHY-A07-simple-pendulum.json",
+   "class": "XI",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Simple Pendulum: L-T² graph and the second's pendulum",
+   "shortTitle": "Simple Pendulum",
+   "objective0": "To plot the L-T² graph for a simple pendulum.",
+   "curriculumMapping": {
+    "section": "A",
+    "serial": 7,
+    "kind": "experiment",
+    "unit": "Unit X: Oscillations and Waves",
+    "chapter": "Chapter-13: Oscillations"
+   },
+   "vivaCount": 9,
+   "procedureCount": 9
+  },
+  {
+   "id": "XI-PHY-A08",
+   "file": "data/experiments/class-xi/XI-PHY-A08-pendulum-mass.json",
+   "class": "XI",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Simple Pendulum: does the time period depend on the mass of the bob?",
+   "shortTitle": "Pendulum: Mass",
+   "objective0": "To find the time period of a simple pendulum of fixed length using bobs of different masses.",
+   "curriculumMapping": {
+    "section": "A",
+    "serial": 8,
+    "kind": "experiment",
+    "unit": "Unit X: Oscillations and Waves",
+    "chapter": "Chapter-13: Oscillations"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
    "id": "XI-PHY-A09",
    "file": "data/experiments/class-xi/XI-PHY-A09-friction.json",
    "class": "XI",
@@ -359,424 +492,6 @@
     "kind": "experiment",
     "unit": "Unit III: Laws of Motion",
     "chapter": "Chapter-4: Laws of Motion"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XI-PHY-B05",
-   "file": "data/experiments/class-xi/XI-PHY-B05-viscosity.json",
-   "class": "XI",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Coefficient of viscosity by terminal velocity",
-   "shortTitle": "Viscosity",
-   "objective0": "To determine the coefficient of viscosity of a given viscous liquid by measuring the terminal velocity of a spherical body.",
-   "curriculumMapping": {
-    "section": "B",
-    "serial": 5,
-    "kind": "experiment",
-    "unit": "Unit VII: Properties of Bulk Matter",
-    "chapter": "Chapter-9: Mechanical Properties of Fluids"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XI-PHY-B06",
-   "file": "data/experiments/class-xi/XI-PHY-B06-cooling-curve.json",
-   "class": "XI",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Cooling curve: verification of Newton's law of cooling",
-   "shortTitle": "Cooling Curve",
-   "objective0": "To study how the temperature of a hot body falls with time.",
-   "curriculumMapping": {
-    "section": "B",
-    "serial": 6,
-    "kind": "experiment",
-    "unit": "Unit VII: Properties of Bulk Matter",
-    "chapter": "Chapter-10: Thermal Properties of Matter"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XI-PHY-B07",
-   "file": "data/experiments/class-xi/XI-PHY-B07-specific-heat.json",
-   "class": "XI",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Specific heat capacity of a solid by the method of mixtures",
-   "shortTitle": "Specific heat",
-   "objective0": "To determine the specific heat capacity of a given solid by the method of mixtures.",
-   "curriculumMapping": {
-    "section": "B",
-    "serial": 7,
-    "kind": "experiment",
-    "unit": "Unit VII: Properties of Bulk Matter",
-    "chapter": "Chapter-10: Thermal Properties of Matter"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XI-PHY-B10",
-   "file": "data/experiments/class-xi/XI-PHY-B10-resonance-tube.json",
-   "class": "XI",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Speed of sound in air by a resonance tube",
-   "shortTitle": "Resonance Tube",
-   "objective0": "To find the first and second resonance positions of an air column for a tuning fork of known frequency.",
-   "curriculumMapping": {
-    "section": "B",
-    "serial": 10,
-    "kind": "experiment",
-    "unit": "Unit X: Oscillations and Waves",
-    "chapter": "Chapter-14: Waves"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XI-CHE-C02",
-   "file": "data/experiments/class-xi/XI-CHE-C02-strong-weak-acid-ph.json",
-   "class": "XI",
-   "subject": "Chemistry",
-   "contentStatus": "published",
-   "title": "Comparing the pH of strong and weak acids of the same concentration",
-   "shortTitle": "Strong vs Weak Acid",
-   "objective0": "To compare the pH of hydrochloric acid and acetic acid solutions of the same concentration.",
-   "curriculumMapping": {
-    "section": "C",
-    "serial": 2,
-    "kind": "experiment",
-    "unit": "Unit 6: Equilibrium",
-    "chapter": "Unit 6: Equilibrium — Ionic Equilibrium"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XII-PHY-B05",
-   "file": "data/experiments/class-xii/XII-PHY-B05-prism-deviation.json",
-   "class": "XII",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Angle of minimum deviation for a prism, and refractive index",
-   "shortTitle": "Prism Deviation",
-   "objective0": "To determine the angle of deviation for several angles of incidence for a given prism.",
-   "curriculumMapping": {
-    "section": "B",
-    "serial": 5,
-    "kind": "experiment",
-    "unit": "Unit VI: Optics",
-    "chapter": "Chapter-9: Ray Optics and Optical Instruments"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XI-PHY-A08",
-   "file": "data/experiments/class-xi/XI-PHY-A08-pendulum-mass.json",
-   "class": "XI",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Simple Pendulum: does the time period depend on the mass of the bob?",
-   "shortTitle": "Pendulum: Mass",
-   "objective0": "To find the time period of a simple pendulum of fixed length using bobs of different masses.",
-   "curriculumMapping": {
-    "section": "A",
-    "serial": 8,
-    "kind": "experiment",
-    "unit": "Unit X: Oscillations and Waves",
-    "chapter": "Chapter-13: Oscillations"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XII-PHY-A03",
-   "file": "data/experiments/class-xii/XII-PHY-A03-combination-laws.json",
-   "class": "XII",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Laws of combination of resistances, verified with a metre bridge",
-   "shortTitle": "Combination Laws",
-   "objective0": "To determine the resistance of two coils separately using a metre bridge.",
-   "curriculumMapping": {
-    "section": "A",
-    "serial": 3,
-    "kind": "experiment",
-    "unit": "Unit II: Current Electricity",
-    "chapter": "Chapter-3: Current Electricity"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XI-CHE-E05",
-   "file": "data/experiments/class-xi/XI-CHE-E05-hcl-carbonate.json",
-   "class": "XI",
-   "subject": "Chemistry",
-   "contentStatus": "published",
-   "title": "Strength of hydrochloric acid by titration against standard sodium carbonate",
-   "shortTitle": "HCl vs Na₂CO₃",
-   "objective0": "To titrate a given solution of hydrochloric acid against a standard solution of sodium carbonate.",
-   "curriculumMapping": {
-    "section": "E",
-    "serial": 5,
-    "kind": "experiment",
-    "unit": "Unit 6: Equilibrium",
-    "chapter": "Unit 6: Equilibrium — Acids, Bases and Salts"
-   },
-   "vivaCount": 10,
-   "procedureCount": 10
-  },
-  {
-   "id": "XI-PHY-B01",
-   "file": "data/experiments/class-xi/XI-PHY-B01-youngs-modulus.json",
-   "class": "XI",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Young's modulus of the material of a wire by Searle's apparatus",
-   "shortTitle": "Young's Modulus",
-   "objective0": "To determine Young's modulus of elasticity of the material of a given wire.",
-   "curriculumMapping": {
-    "section": "B",
-    "serial": 1,
-    "kind": "experiment",
-    "unit": "Unit VII: Properties of Bulk Matter",
-    "chapter": "Chapter-8: Mechanical Properties of Solids"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XI-PHY-B03",
-   "file": "data/experiments/class-xi/XI-PHY-B03-boyles-law.json",
-   "class": "XI",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Boyle's law: variation of volume with pressure at constant temperature",
-   "shortTitle": "Boyle's Law",
-   "objective0": "To study how the volume of a fixed mass of air varies with pressure at constant temperature.",
-   "curriculumMapping": {
-    "section": "B",
-    "serial": 3,
-    "kind": "experiment",
-    "unit": "Unit IX: Behaviour of Perfect Gases and Kinetic Theory of Gases",
-    "chapter": "Chapter-12: Kinetic Theory"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XII-PHY-B01",
-   "file": "data/experiments/class-xii/XII-PHY-B01-concave-mirror.json",
-   "class": "XII",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Focal length of a concave mirror by the u-v method",
-   "shortTitle": "Concave Mirror",
-   "objective0": "To find the image distance v for several object distances u using a concave mirror.",
-   "curriculumMapping": {
-    "section": "B",
-    "serial": 1,
-    "kind": "experiment",
-    "unit": "Unit VI: Optics",
-    "chapter": "Chapter-9: Ray Optics and Optical Instruments"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XI-PHY-B08",
-   "file": "data/experiments/class-xi/XI-PHY-B08-sonometer-length.json",
-   "class": "XI",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Law of length: frequency against resonant length at constant tension",
-   "shortTitle": "Sonometer — Law of Length",
-   "objective0": "To study how the resonant length of a stretched wire depends on the frequency, at constant tension.",
-   "curriculumMapping": {
-    "section": "B",
-    "serial": 8,
-    "kind": "experiment",
-    "unit": "Unit X: Oscillations and Waves",
-    "chapter": "Chapter-14: Waves"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XI-PHY-B09",
-   "file": "data/experiments/class-xi/XI-PHY-B09-sonometer-tension.json",
-   "class": "XI",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Law of tension: resonant length against tension at constant frequency",
-   "shortTitle": "Sonometer — Law of Tension",
-   "objective0": "To study how the resonant length of a stretched wire depends on the tension, at constant frequency.",
-   "curriculumMapping": {
-    "section": "B",
-    "serial": 9,
-    "kind": "experiment",
-    "unit": "Unit X: Oscillations and Waves",
-    "chapter": "Chapter-14: Waves"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XII-PHY-A06",
-   "file": "data/experiments/class-xii/XII-PHY-A06-ac-mains-frequency.json",
-   "class": "XII",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Frequency of the AC mains using a sonometer",
-   "shortTitle": "AC Mains Frequency",
-   "objective0": "To find the frequency of the alternating current mains supply using a sonometer.",
-   "curriculumMapping": {
-    "section": "A",
-    "serial": 6,
-    "kind": "experiment",
-    "unit": "Unit IV: Electromagnetic Induction and Alternating Currents",
-    "chapter": "Chapter-7: Alternating Current"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XII-PHY-A04",
-   "file": "data/experiments/class-xii/XII-PHY-A04-galvanometer-half-deflection.json",
-   "class": "XII",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Resistance of a galvanometer by the half-deflection method, and its figure of merit",
-   "shortTitle": "Galvanometer — Half Deflection",
-   "objective0": "To determine the resistance of a moving-coil galvanometer by the half-deflection method.",
-   "curriculumMapping": {
-    "section": "A",
-    "serial": 4,
-    "kind": "experiment",
-    "unit": "Unit III: Magnetic Effects of Current and Magnetism",
-    "chapter": "Chapter-4: Moving Charges and Magnetism"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XII-PHY-A05",
-   "file": "data/experiments/class-xii/XII-PHY-A05-galvanometer-conversion.json",
-   "class": "XII",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Converting a galvanometer into an ammeter or a voltmeter of a desired range",
-   "shortTitle": "Galvanometer Conversion",
-   "objective0": "To convert a galvanometer of known resistance and figure of merit into an ammeter of a desired range.",
-   "curriculumMapping": {
-    "section": "A",
-    "serial": 5,
-    "kind": "experiment",
-    "unit": "Unit III: Magnetic Effects of Current and Magnetism",
-    "chapter": "Chapter-4: Moving Charges and Magnetism"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XII-PHY-B02",
-   "file": "data/experiments/class-xii/XII-PHY-B02-convex-mirror.json",
-   "class": "XII",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Focal length of a convex mirror using a convex lens",
-   "shortTitle": "Convex Mirror",
-   "objective0": "To find the radius of curvature of a convex mirror with the help of a convex lens.",
-   "curriculumMapping": {
-    "section": "B",
-    "serial": 2,
-    "kind": "experiment",
-    "unit": "Unit VI: Optics",
-    "chapter": "Chapter-9: Ray Optics and Optical Instruments"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XII-PHY-B04",
-   "file": "data/experiments/class-xii/XII-PHY-B04-concave-lens.json",
-   "class": "XII",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Focal length of a concave lens using a convex lens",
-   "shortTitle": "Concave Lens",
-   "objective0": "To find the focal length of a concave lens with the help of a convex lens.",
-   "curriculumMapping": {
-    "section": "B",
-    "serial": 4,
-    "kind": "experiment",
-    "unit": "Unit VI: Optics",
-    "chapter": "Chapter-9: Ray Optics and Optical Instruments"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XII-PHY-B06",
-   "file": "data/experiments/class-xii/XII-PHY-B06-refractive-index-slab.json",
-   "class": "XII",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Refractive index of a glass slab using a travelling microscope",
-   "shortTitle": "Refractive Index — Slab",
-   "objective0": "To determine the refractive index of the material of a glass slab.",
-   "curriculumMapping": {
-    "section": "B",
-    "serial": 6,
-    "kind": "experiment",
-    "unit": "Unit VI: Optics",
-    "chapter": "Chapter-9: Ray Optics and Optical Instruments"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XII-PHY-B07",
-   "file": "data/experiments/class-xii/XII-PHY-B07-refractive-index-liquid-lens.json",
-   "class": "XII",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Refractive index of a liquid using a convex lens and a plane mirror",
-   "shortTitle": "Refractive Index — Liquid Lens",
-   "objective0": "To find the refractive index of a given transparent liquid.",
-   "curriculumMapping": {
-    "section": "B",
-    "serial": 7,
-    "kind": "experiment",
-    "unit": "Unit VI: Optics",
-    "chapter": "Chapter-9: Ray Optics and Optical Instruments"
-   },
-   "vivaCount": 10,
-   "procedureCount": 9
-  },
-  {
-   "id": "XII-PHY-B08",
-   "file": "data/experiments/class-xii/XII-PHY-B08-refractive-index-mirror.json",
-   "class": "XII",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Refractive index of a liquid using a concave mirror and a plane mirror",
-   "shortTitle": "Refractive Index — Concave Mirror",
-   "objective0": "To find the refractive index of a transparent liquid using a concave mirror.",
-   "curriculumMapping": {
-    "section": "B",
-    "serial": 8,
-    "kind": "experiment",
-    "unit": "Unit VI: Optics",
-    "chapter": "Chapter-9: Ray Optics and Optical Instruments"
    },
    "vivaCount": 10,
    "procedureCount": 9
@@ -1048,61 +763,726 @@
    "procedureCount": 8
   },
   {
-   "id": "XI-CHE-B01",
-   "file": "data/experiments/class-xi/XI-CHE-B01-melting-point.json",
+   "id": "XI-PHY-B01",
+   "file": "data/experiments/class-xi/XI-PHY-B01-youngs-modulus.json",
    "class": "XI",
-   "subject": "Chemistry",
+   "subject": "Physics",
    "contentStatus": "published",
-   "title": "Determination of the melting point of an organic compound",
-   "shortTitle": "Melting point",
-   "objective0": "To determine the melting point of a given organic compound by the capillary method.",
+   "title": "Young's modulus of the material of a wire by Searle's apparatus",
+   "shortTitle": "Young's Modulus",
+   "objective0": "To determine Young's modulus of elasticity of the material of a given wire.",
    "curriculumMapping": {
     "section": "B",
     "serial": 1,
     "kind": "experiment",
-    "unit": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques",
-    "chapter": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques"
+    "unit": "Unit VII: Properties of Bulk Matter",
+    "chapter": "Chapter-8: Mechanical Properties of Solids"
    },
    "vivaCount": 10,
-   "procedureCount": 8
+   "procedureCount": 9
   },
   {
-   "id": "XI-CHE-B02",
-   "file": "data/experiments/class-xi/XI-CHE-B02-boiling-point.json",
+   "id": "XI-PHY-B02",
+   "file": "data/experiments/class-xi/XI-PHY-B02-helical-spring.json",
    "class": "XI",
-   "subject": "Chemistry",
+   "subject": "Physics",
    "contentStatus": "published",
-   "title": "Determination of the boiling point of an organic compound",
-   "shortTitle": "Boiling point",
-   "objective0": "To determine the boiling point of a given organic liquid by the Siwoloboff method.",
+   "title": "Force constant of a helical spring",
+   "shortTitle": "Helical Spring",
+   "objective0": "To plot a graph between load and extension for a helical spring.",
    "curriculumMapping": {
     "section": "B",
     "serial": 2,
     "kind": "experiment",
-    "unit": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques",
-    "chapter": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques"
+    "unit": "Unit VII: Properties of Bulk Matter",
+    "chapter": "Chapter-8: Mechanical Properties of Solids"
+   },
+   "vivaCount": 8,
+   "procedureCount": 8
+  },
+  {
+   "id": "XI-PHY-B03",
+   "file": "data/experiments/class-xi/XI-PHY-B03-boyles-law.json",
+   "class": "XI",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Boyle's law: variation of volume with pressure at constant temperature",
+   "shortTitle": "Boyle's Law",
+   "objective0": "To study how the volume of a fixed mass of air varies with pressure at constant temperature.",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 3,
+    "kind": "experiment",
+    "unit": "Unit IX: Behaviour of Perfect Gases and Kinetic Theory of Gases",
+    "chapter": "Chapter-12: Kinetic Theory"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XI-PHY-B04",
+   "file": "data/experiments/class-xi/XI-PHY-B04-surface-tension.json",
+   "class": "XI",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Surface tension of water by the capillary rise method",
+   "shortTitle": "Surface Tension",
+   "objective0": "To determine the surface tension of water by the capillary rise method.",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 4,
+    "kind": "experiment",
+    "unit": "Unit VII: Properties of Bulk Matter",
+    "chapter": "Chapter-9: Mechanical Properties of Fluids"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XI-PHY-B05",
+   "file": "data/experiments/class-xi/XI-PHY-B05-viscosity.json",
+   "class": "XI",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Coefficient of viscosity by terminal velocity",
+   "shortTitle": "Viscosity",
+   "objective0": "To determine the coefficient of viscosity of a given viscous liquid by measuring the terminal velocity of a spherical body.",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 5,
+    "kind": "experiment",
+    "unit": "Unit VII: Properties of Bulk Matter",
+    "chapter": "Chapter-9: Mechanical Properties of Fluids"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XI-PHY-B06",
+   "file": "data/experiments/class-xi/XI-PHY-B06-cooling-curve.json",
+   "class": "XI",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Cooling curve: verification of Newton's law of cooling",
+   "shortTitle": "Cooling Curve",
+   "objective0": "To study how the temperature of a hot body falls with time.",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 6,
+    "kind": "experiment",
+    "unit": "Unit VII: Properties of Bulk Matter",
+    "chapter": "Chapter-10: Thermal Properties of Matter"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XI-PHY-B07",
+   "file": "data/experiments/class-xi/XI-PHY-B07-specific-heat.json",
+   "class": "XI",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Specific heat capacity of a solid by the method of mixtures",
+   "shortTitle": "Specific heat",
+   "objective0": "To determine the specific heat capacity of a given solid by the method of mixtures.",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 7,
+    "kind": "experiment",
+    "unit": "Unit VII: Properties of Bulk Matter",
+    "chapter": "Chapter-10: Thermal Properties of Matter"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XI-PHY-B08",
+   "file": "data/experiments/class-xi/XI-PHY-B08-sonometer-length.json",
+   "class": "XI",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Law of length: frequency against resonant length at constant tension",
+   "shortTitle": "Sonometer — Law of Length",
+   "objective0": "To study how the resonant length of a stretched wire depends on the frequency, at constant tension.",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 8,
+    "kind": "experiment",
+    "unit": "Unit X: Oscillations and Waves",
+    "chapter": "Chapter-14: Waves"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XI-PHY-B09",
+   "file": "data/experiments/class-xi/XI-PHY-B09-sonometer-tension.json",
+   "class": "XI",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Law of tension: resonant length against tension at constant frequency",
+   "shortTitle": "Sonometer — Law of Tension",
+   "objective0": "To study how the resonant length of a stretched wire depends on the tension, at constant frequency.",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 9,
+    "kind": "experiment",
+    "unit": "Unit X: Oscillations and Waves",
+    "chapter": "Chapter-14: Waves"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XI-PHY-B10",
+   "file": "data/experiments/class-xi/XI-PHY-B10-resonance-tube.json",
+   "class": "XI",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Speed of sound in air by a resonance tube",
+   "shortTitle": "Resonance Tube",
+   "objective0": "To find the first and second resonance positions of an air column for a tuning fork of known frequency.",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 10,
+    "kind": "experiment",
+    "unit": "Unit X: Oscillations and Waves",
+    "chapter": "Chapter-14: Waves"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XII-CHE-A01",
+   "file": "data/experiments/class-xii/XII-CHE-A01-sol-preparation.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Preparation of a lyophilic and a lyophobic sol",
+   "shortTitle": "Lyophilic and lyophobic sols",
+   "objective0": "To prepare a lyophilic sol and a lyophobic sol by standard methods.",
+   "curriculumMapping": {
+    "section": "A",
+    "serial": 1,
+    "kind": "experiment",
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Chapter-5: Surface Chemistry"
+   },
+   "vivaCount": 10,
+   "procedureCount": 7
+  },
+  {
+   "id": "XII-CHE-A02",
+   "file": "data/experiments/class-xii/XII-CHE-A02-dialysis.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Dialysis of a sol",
+   "shortTitle": "Dialysis",
+   "objective0": "To purify a sol by removing the electrolyte left over from its preparation.",
+   "curriculumMapping": {
+    "section": "A",
+    "serial": 2,
+    "kind": "experiment",
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Chapter-5: Surface Chemistry"
    },
    "vivaCount": 10,
    "procedureCount": 8
   },
   {
-   "id": "XI-CHE-B03",
-   "file": "data/experiments/class-xi/XI-CHE-B03-crystallisation.json",
-   "class": "XI",
+   "id": "XII-CHE-A03",
+   "file": "data/experiments/class-xii/XII-CHE-A03-emulsion.json",
+   "class": "XII",
    "subject": "Chemistry",
    "contentStatus": "published",
-   "title": "Crystallisation of an impure sample",
-   "shortTitle": "Crystallisation",
-   "objective0": "To purify an impure sample of alum, copper sulphate or benzoic acid by crystallisation.",
+   "title": "Role of emulsifying agents in stabilising an emulsion",
+   "shortTitle": "Emulsifying agents",
+   "objective0": "To prepare emulsions of different oils in water, with and without an emulsifying agent.",
    "curriculumMapping": {
-    "section": "B",
+    "section": "A",
     "serial": 3,
     "kind": "experiment",
-    "unit": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques",
-    "chapter": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques"
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Chapter-5: Surface Chemistry"
+   },
+   "vivaCount": 10,
+   "procedureCount": 7
+  },
+  {
+   "id": "XII-CHE-B01",
+   "file": "data/experiments/class-xii/XII-CHE-B01-reaction-kinetics.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Rate of reaction between sodium thiosulphate and hydrochloric acid",
+   "shortTitle": "Chemical Kinetics",
+   "objective0": "To study the effect of concentration on the rate of reaction between sodium thiosulphate and hydrochloric acid.",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 1,
+    "kind": "experiment",
+    "unit": "Unit 3: Chemical Kinetics",
+    "chapter": "Unit 3: Chemical Kinetics"
+   },
+   "vivaCount": 10,
+   "procedureCount": 10
+  },
+  {
+   "id": "XII-CHE-B02",
+   "file": "data/experiments/class-xii/XII-CHE-B02-clock-reaction.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Rate of reaction: I⁻ + H2O2 (iodine clock)",
+   "shortTitle": "Iodine Clock Reaction",
+   "objective0": "Set up the iodine-clock reaction between iodide and hydrogen peroxide",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 2,
+    "kind": "experiment",
+    "unit": "Unit 3: Chemical Kinetics",
+    "chapter": "Unit 3: Chemical Kinetics"
+   },
+   "vivaCount": 3,
+   "procedureCount": 6
+  },
+  {
+   "id": "XII-CHE-C01",
+   "file": "data/experiments/class-xii/XII-CHE-C01-enthalpy-dissolution.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Enthalpy of dissolution of copper sulphate or potassium nitrate",
+   "shortTitle": "Enthalpy of dissolution",
+   "objective0": "To measure the temperature change when a weighed salt dissolves in a known mass of water.",
+   "curriculumMapping": {
+    "section": "C",
+    "serial": 1,
+    "kind": "experiment",
+    "unit": "Unit III: Chemical Thermodynamics",
+    "chapter": "Chapter-4: Chemical Thermodynamics"
+   },
+   "vivaCount": 10,
+   "procedureCount": 7
+  },
+  {
+   "id": "XII-CHE-C02",
+   "file": "data/experiments/class-xii/XII-CHE-C02-enthalpy-neutralisation.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Enthalpy of neutralisation of a strong acid and a strong base",
+   "shortTitle": "Enthalpy of neutralisation",
+   "objective0": "To measure the temperature rise when equal volumes of acid and alkali are mixed.",
+   "curriculumMapping": {
+    "section": "C",
+    "serial": 2,
+    "kind": "experiment",
+    "unit": "Unit III: Chemical Thermodynamics",
+    "chapter": "Chapter-4: Chemical Thermodynamics"
+   },
+   "vivaCount": 10,
+   "procedureCount": 7
+  },
+  {
+   "id": "XII-CHE-C03",
+   "file": "data/experiments/class-xii/XII-CHE-C03-enthalpy-mixing.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Enthalpy change on mixing acetone and chloroform",
+   "shortTitle": "Acetone and chloroform",
+   "objective0": "To measure the temperature change when acetone and chloroform are mixed.",
+   "curriculumMapping": {
+    "section": "C",
+    "serial": 3,
+    "kind": "experiment",
+    "unit": "Unit III: Chemical Thermodynamics",
+    "chapter": "Chapter-4: Chemical Thermodynamics"
+   },
+   "vivaCount": 10,
+   "procedureCount": 7
+  },
+  {
+   "id": "XII-CHE-D01",
+   "file": "data/experiments/class-xii/XII-CHE-D01-electrochemical-cell.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Variation of cell potential with concentration: the Nernst equation",
+   "shortTitle": "Electrochemical Cell",
+   "objective0": "To set up the cell Zn | Zn²⁺ ‖ Cu²⁺ | Cu and measure its potential.",
+   "curriculumMapping": {
+    "section": "D",
+    "serial": 1,
+    "kind": "experiment",
+    "unit": "Unit 2: Electrochemistry",
+    "chapter": "Unit 2: Electrochemistry — Galvanic Cells and the Nernst Equation"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XII-CHE-E01",
+   "file": "data/experiments/class-xii/XII-CHE-E01-paper-chromatography-pigments.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Separation of pigments from leaf and flower extracts by paper chromatography",
+   "shortTitle": "Chromatography of pigments",
+   "objective0": "To separate the pigments present in a leaf or flower extract on chromatography paper.",
+   "curriculumMapping": {
+    "section": "E",
+    "serial": 1,
+    "kind": "experiment",
+    "unit": "Unit VIII: Analytical and separation techniques",
+    "chapter": "Chromatography"
    },
    "vivaCount": 10,
    "procedureCount": 8
+  },
+  {
+   "id": "XII-CHE-E02",
+   "file": "data/experiments/class-xii/XII-CHE-E02-chromatography-two-cations.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Separation of two cations from an inorganic mixture by paper chromatography",
+   "shortTitle": "Chromatography of cations",
+   "objective0": "To separate two metal cations from a mixture on chromatography paper.",
+   "curriculumMapping": {
+    "section": "E",
+    "serial": 2,
+    "kind": "experiment",
+    "unit": "Unit VIII: Analytical and separation techniques",
+    "chapter": "Chromatography"
+   },
+   "vivaCount": 10,
+   "procedureCount": 8
+  },
+  {
+   "id": "XII-CHE-F01",
+   "file": "data/experiments/class-xii/XII-CHE-F01-mohrs-salt.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Preparation of Ferrous Ammonium Sulphate",
+   "shortTitle": "Mohr's Salt Preparation",
+   "objective0": "Calculate the stoichiometric masses of FeSO4·7H2O and (NH4)2SO4 needed",
+   "curriculumMapping": {
+    "section": "F",
+    "serial": 1,
+    "kind": "experiment",
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Unit 1: The Solid State / Preparative Inorganic Chemistry"
+   },
+   "vivaCount": 3,
+   "procedureCount": 5
+  },
+  {
+   "id": "XII-CHE-F02",
+   "file": "data/experiments/class-xii/XII-CHE-F02-potassium-ferric-oxalate.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Preparation of Potassium Ferric Oxalate",
+   "shortTitle": "Potassium Ferric Oxalate",
+   "objective0": "Prepare ferrous oxalate as an intermediate, then oxidise it to the ferric complex",
+   "curriculumMapping": {
+    "section": "F",
+    "serial": 2,
+    "kind": "experiment",
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Unit 9: Coordination Compounds / Preparative Inorganic Chemistry"
+   },
+   "vivaCount": 3,
+   "procedureCount": 6
+  },
+  {
+   "id": "XII-CHE-G01",
+   "file": "data/experiments/class-xii/XII-CHE-G01-acetanilide.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Preparation of Acetanilide",
+   "shortTitle": "Acetanilide Preparation",
+   "objective0": "Carry out the reaction under the specified conditions",
+   "curriculumMapping": {
+    "section": "G",
+    "serial": 1,
+    "kind": "experiment",
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Unit 12: Aldehydes, Ketones and Carboxylic Acids / Amines (preparative organic chemistry)"
+   },
+   "vivaCount": 2,
+   "procedureCount": 5
+  },
+  {
+   "id": "XII-CHE-G02",
+   "file": "data/experiments/class-xii/XII-CHE-G02-dibenzalacetone.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Preparation of Di-benzal acetone",
+   "shortTitle": "Dibenzalacetone Preparation",
+   "objective0": "Carry out the reaction under the specified conditions",
+   "curriculumMapping": {
+    "section": "G",
+    "serial": 2,
+    "kind": "experiment",
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Unit 12: Aldehydes, Ketones and Carboxylic Acids / Amines (preparative organic chemistry)"
+   },
+   "vivaCount": 2,
+   "procedureCount": 5
+  },
+  {
+   "id": "XII-CHE-G03",
+   "file": "data/experiments/class-xii/XII-CHE-G03-p-nitroacetanilide.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Preparation of p-Nitroacetanilide",
+   "shortTitle": "p-Nitroacetanilide Preparation",
+   "objective0": "Carry out the reaction under the specified conditions",
+   "curriculumMapping": {
+    "section": "G",
+    "serial": 3,
+    "kind": "experiment",
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Unit 12: Aldehydes, Ketones and Carboxylic Acids / Amines (preparative organic chemistry)"
+   },
+   "vivaCount": 2,
+   "procedureCount": 5
+  },
+  {
+   "id": "XII-CHE-G04",
+   "file": "data/experiments/class-xii/XII-CHE-G04-aniline-yellow.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Preparation of Aniline Yellow",
+   "shortTitle": "Aniline Yellow Dye Preparation",
+   "objective0": "Carry out the reaction under the specified conditions",
+   "curriculumMapping": {
+    "section": "G",
+    "serial": 4,
+    "kind": "experiment",
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Unit 12: Aldehydes, Ketones and Carboxylic Acids / Amines (preparative organic chemistry)"
+   },
+   "vivaCount": 2,
+   "procedureCount": 5
+  },
+  {
+   "id": "XII-CHE-H01",
+   "file": "data/experiments/class-xii/XII-CHE-H01-functional-group-tests.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Tests for unsaturation, and alcoholic, phenolic, aldehydic, ketonic, carboxylic and amino groups",
+   "shortTitle": "Functional Group Tests",
+   "objective0": "Apply bromine-water and Baeyer's tests to detect carbon-carbon unsaturation",
+   "curriculumMapping": {
+    "section": "H",
+    "serial": 1,
+    "kind": "experiment",
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Unit 11-13: Alcohols/Phenols/Ethers, Aldehydes/Ketones/Carboxylic Acids, Amines"
+   },
+   "vivaCount": 3,
+   "procedureCount": 4
+  },
+  {
+   "id": "XII-CHE-I01",
+   "file": "data/experiments/class-xii/XII-CHE-I01-biomolecule-tests.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Tests for carbohydrates, fats and proteins",
+   "shortTitle": "Biomolecule Tests",
+   "objective0": "Apply Molisch's test as a general test for all carbohydrates",
+   "curriculumMapping": {
+    "section": "I",
+    "serial": 1,
+    "kind": "experiment",
+    "unit": "Unit V: Surface Chemistry",
+    "chapter": "Unit 14: Biomolecules"
+   },
+   "vivaCount": 3,
+   "procedureCount": 5
+  },
+  {
+   "id": "XII-CHE-J01",
+   "file": "data/experiments/class-xii/XII-CHE-J01-kmno4-oxalic.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Molarity of KMnO4 vs Standard Oxalic Acid",
+   "shortTitle": "KMnO₄ vs Oxalic Acid",
+   "objective0": "Titrate KMnO4 against standard standard oxalic acid in acidic medium",
+   "curriculumMapping": {
+    "section": "J",
+    "serial": 1,
+    "kind": "experiment",
+    "unit": "Unit 2: Electrochemistry",
+    "chapter": "Unit 2: Electrochemistry / Redox Reactions"
+   },
+   "vivaCount": 2,
+   "procedureCount": 6
+  },
+  {
+   "id": "XII-CHE-J02",
+   "file": "data/experiments/class-xii/XII-CHE-J02-kmno4-mohr.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Molarity of KMnO4 vs Standard Mohr's Salt",
+   "shortTitle": "KMnO₄ vs Mohr's Salt",
+   "objective0": "Titrate KMnO4 against standard standard Mohr's salt (Fe²⁺) in acidic medium",
+   "curriculumMapping": {
+    "section": "J",
+    "serial": 2,
+    "kind": "experiment",
+    "unit": "Unit 2: Electrochemistry",
+    "chapter": "Unit 2: Electrochemistry / Redox Reactions"
+   },
+   "vivaCount": 2,
+   "procedureCount": 6
+  },
+  {
+   "id": "XII-CHE-K01",
+   "file": "data/experiments/class-xii/XII-CHE-K01-salt-analysis.json",
+   "class": "XII",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Salt Analysis (Class XII): One Cation, One Anion",
+   "shortTitle": "Qualitative Salt Analysis (XII)",
+   "objective0": "Apply the same systematic scheme as XI-CHE-F01, with the anion list extended to include oxalate",
+   "curriculumMapping": {
+    "section": "K",
+    "serial": 1,
+    "kind": "experiment",
+    "unit": "Unit 2: Electrochemistry",
+    "chapter": "Unit 12: Organic Chemistry — Some Basic Principles and Techniques"
+   },
+   "vivaCount": 3,
+   "procedureCount": 6
+  },
+  {
+   "id": "XII-PHY-A01",
+   "file": "data/experiments/class-xii/XII-PHY-A01-resistivity.json",
+   "class": "XII",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Resistivity of wires from a V-I graph",
+   "shortTitle": "Resistivity (V-I graph)",
+   "objective0": "To plot a graph of potential difference versus current for a given wire.",
+   "curriculumMapping": {
+    "section": "A",
+    "serial": 1,
+    "kind": "experiment",
+    "unit": "Unit II: Current Electricity",
+    "chapter": "Chapter-3: Current Electricity"
+   },
+   "vivaCount": 9,
+   "procedureCount": 8
+  },
+  {
+   "id": "XII-PHY-A02",
+   "file": "data/experiments/class-xii/XII-PHY-A02-metre-bridge.json",
+   "class": "XII",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Metre bridge: resistance of a wire and the Wheatstone balance",
+   "shortTitle": "Metre Bridge",
+   "objective0": "To find the resistance of a given wire using a metre bridge.",
+   "curriculumMapping": {
+    "section": "A",
+    "serial": 2,
+    "kind": "experiment",
+    "unit": "Unit II: Current Electricity",
+    "chapter": "Chapter-3: Current Electricity"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XII-PHY-A03",
+   "file": "data/experiments/class-xii/XII-PHY-A03-combination-laws.json",
+   "class": "XII",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Laws of combination of resistances, verified with a metre bridge",
+   "shortTitle": "Combination Laws",
+   "objective0": "To determine the resistance of two coils separately using a metre bridge.",
+   "curriculumMapping": {
+    "section": "A",
+    "serial": 3,
+    "kind": "experiment",
+    "unit": "Unit II: Current Electricity",
+    "chapter": "Chapter-3: Current Electricity"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XII-PHY-A04",
+   "file": "data/experiments/class-xii/XII-PHY-A04-galvanometer-half-deflection.json",
+   "class": "XII",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Resistance of a galvanometer by the half-deflection method, and its figure of merit",
+   "shortTitle": "Galvanometer — Half Deflection",
+   "objective0": "To determine the resistance of a moving-coil galvanometer by the half-deflection method.",
+   "curriculumMapping": {
+    "section": "A",
+    "serial": 4,
+    "kind": "experiment",
+    "unit": "Unit III: Magnetic Effects of Current and Magnetism",
+    "chapter": "Chapter-4: Moving Charges and Magnetism"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XII-PHY-A05",
+   "file": "data/experiments/class-xii/XII-PHY-A05-galvanometer-conversion.json",
+   "class": "XII",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Converting a galvanometer into an ammeter or a voltmeter of a desired range",
+   "shortTitle": "Galvanometer Conversion",
+   "objective0": "To convert a galvanometer of known resistance and figure of merit into an ammeter of a desired range.",
+   "curriculumMapping": {
+    "section": "A",
+    "serial": 5,
+    "kind": "experiment",
+    "unit": "Unit III: Magnetic Effects of Current and Magnetism",
+    "chapter": "Chapter-4: Moving Charges and Magnetism"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XII-PHY-A06",
+   "file": "data/experiments/class-xii/XII-PHY-A06-ac-mains-frequency.json",
+   "class": "XII",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Frequency of the AC mains using a sonometer",
+   "shortTitle": "AC Mains Frequency",
+   "objective0": "To find the frequency of the alternating current mains supply using a sonometer.",
+   "curriculumMapping": {
+    "section": "A",
+    "serial": 6,
+    "kind": "experiment",
+    "unit": "Unit IV: Electromagnetic Induction and Alternating Currents",
+    "chapter": "Chapter-7: Alternating Current"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
   },
   {
    "id": "XII-PHY-ACT-A1",
@@ -1135,25 +1515,6 @@
    "curriculumMapping": {
     "section": "A",
     "serial": 2,
-    "kind": "activity",
-    "unit": "Unit III: Current Electricity",
-    "chapter": "Chapter-3: Current Electricity"
-   },
-   "vivaCount": 10,
-   "procedureCount": 7
-  },
-  {
-   "id": "XII-PHY-ACT-A5",
-   "file": "data/experiments/class-xii/XII-PHY-ACT-A5-potential-drop.json",
-   "class": "XII",
-   "subject": "Physics",
-   "contentStatus": "published",
-   "title": "Variation of potential drop with length of a wire for a steady current",
-   "shortTitle": "Potential drop vs length",
-   "objective0": "To measure the potential drop across different lengths of a uniform wire carrying a steady current.",
-   "curriculumMapping": {
-    "section": "A",
-    "serial": 5,
     "kind": "activity",
     "unit": "Unit III: Current Electricity",
     "chapter": "Chapter-3: Current Electricity"
@@ -1200,6 +1561,25 @@
    "procedureCount": 7
   },
   {
+   "id": "XII-PHY-ACT-A5",
+   "file": "data/experiments/class-xii/XII-PHY-ACT-A5-potential-drop.json",
+   "class": "XII",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Variation of potential drop with length of a wire for a steady current",
+   "shortTitle": "Potential drop vs length",
+   "objective0": "To measure the potential drop across different lengths of a uniform wire carrying a steady current.",
+   "curriculumMapping": {
+    "section": "A",
+    "serial": 5,
+    "kind": "activity",
+    "unit": "Unit III: Current Electricity",
+    "chapter": "Chapter-3: Current Electricity"
+   },
+   "vivaCount": 10,
+   "procedureCount": 7
+  },
+  {
    "id": "XII-PHY-ACT-A6",
    "file": "data/experiments/class-xii/XII-PHY-ACT-A6-circuit-fault.json",
    "class": "XII",
@@ -1217,6 +1597,63 @@
    },
    "vivaCount": 10,
    "procedureCount": 7
+  },
+  {
+   "id": "XII-PHY-ACT-B1",
+   "file": "data/experiments/class-xii/XII-PHY-ACT-B1-component-id.json",
+   "class": "XII",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Identifying a diode, an LED, a resistor and a capacitor",
+   "shortTitle": "Identifying components",
+   "objective0": "To examine a mixed collection of electronic components and identify each one.",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 1,
+    "kind": "activity",
+    "unit": "Unit IX: Electronic Devices",
+    "chapter": "Chapter-14: Semiconductor Electronics"
+   },
+   "vivaCount": 10,
+   "procedureCount": 6
+  },
+  {
+   "id": "XII-PHY-ACT-B2",
+   "file": "data/experiments/class-xii/XII-PHY-ACT-B2-diode-tester.json",
+   "class": "XII",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Unidirectional flow in a diode and an LED, and testing working order",
+   "shortTitle": "Testing a diode with a multimeter",
+   "objective0": "To show with a multimeter that a diode and an LED conduct in one direction only.",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 2,
+    "kind": "activity",
+    "unit": "Unit IX: Electronic Devices",
+    "chapter": "Chapter-14: Semiconductor Electronics"
+   },
+   "vivaCount": 10,
+   "procedureCount": 6
+  },
+  {
+   "id": "XII-PHY-ACT-B3",
+   "file": "data/experiments/class-xii/XII-PHY-ACT-B3-ldr-intensity.json",
+   "class": "XII",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Effect of the intensity of light on an LDR",
+   "shortTitle": "LDR and light intensity",
+   "objective0": "To measure how the resistance of an LDR changes as a lamp is moved away from it.",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 3,
+    "kind": "activity",
+    "unit": "Unit IX: Electronic Devices",
+    "chapter": "Chapter-14: Semiconductor Electronics"
+   },
+   "vivaCount": 10,
+   "procedureCount": 6
   },
   {
    "id": "XII-PHY-ACT-B4",
@@ -1295,213 +1732,175 @@
    "procedureCount": 7
   },
   {
-   "id": "XII-PHY-ACT-B1",
-   "file": "data/experiments/class-xii/XII-PHY-ACT-B1-component-id.json",
+   "id": "XII-PHY-B01",
+   "file": "data/experiments/class-xii/XII-PHY-B01-concave-mirror.json",
    "class": "XII",
    "subject": "Physics",
    "contentStatus": "published",
-   "title": "Identifying a diode, an LED, a resistor and a capacitor",
-   "shortTitle": "Identifying components",
-   "objective0": "To examine a mixed collection of electronic components and identify each one.",
+   "title": "Focal length of a concave mirror by the u-v method",
+   "shortTitle": "Concave Mirror",
+   "objective0": "To find the image distance v for several object distances u using a concave mirror.",
    "curriculumMapping": {
     "section": "B",
     "serial": 1,
-    "kind": "activity",
-    "unit": "Unit IX: Electronic Devices",
-    "chapter": "Chapter-14: Semiconductor Electronics"
+    "kind": "experiment",
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-9: Ray Optics and Optical Instruments"
    },
    "vivaCount": 10,
-   "procedureCount": 6
+   "procedureCount": 9
   },
   {
-   "id": "XII-PHY-ACT-B2",
-   "file": "data/experiments/class-xii/XII-PHY-ACT-B2-diode-tester.json",
+   "id": "XII-PHY-B02",
+   "file": "data/experiments/class-xii/XII-PHY-B02-convex-mirror.json",
    "class": "XII",
    "subject": "Physics",
    "contentStatus": "published",
-   "title": "Unidirectional flow in a diode and an LED, and testing working order",
-   "shortTitle": "Testing a diode with a multimeter",
-   "objective0": "To show with a multimeter that a diode and an LED conduct in one direction only.",
+   "title": "Focal length of a convex mirror using a convex lens",
+   "shortTitle": "Convex Mirror",
+   "objective0": "To find the radius of curvature of a convex mirror with the help of a convex lens.",
    "curriculumMapping": {
     "section": "B",
     "serial": 2,
-    "kind": "activity",
-    "unit": "Unit IX: Electronic Devices",
-    "chapter": "Chapter-14: Semiconductor Electronics"
+    "kind": "experiment",
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-9: Ray Optics and Optical Instruments"
    },
    "vivaCount": 10,
-   "procedureCount": 6
+   "procedureCount": 9
   },
   {
-   "id": "XII-PHY-ACT-B3",
-   "file": "data/experiments/class-xii/XII-PHY-ACT-B3-ldr-intensity.json",
+   "id": "XII-PHY-B03",
+   "file": "data/experiments/class-xii/XII-PHY-B03-convex-lens.json",
    "class": "XII",
    "subject": "Physics",
    "contentStatus": "published",
-   "title": "Effect of the intensity of light on an LDR",
-   "shortTitle": "LDR and light intensity",
-   "objective0": "To measure how the resistance of an LDR changes as a lamp is moved away from it.",
+   "title": "Focal length of a convex lens by the u-v method",
+   "shortTitle": "Convex Lens (u-v)",
+   "objective0": "To find the focal length of a convex lens by locating real images for several object distances.",
    "curriculumMapping": {
     "section": "B",
     "serial": 3,
-    "kind": "activity",
+    "kind": "experiment",
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-9: Ray Optics and Optical Instruments"
+   },
+   "vivaCount": 8,
+   "procedureCount": 8
+  },
+  {
+   "id": "XII-PHY-B04",
+   "file": "data/experiments/class-xii/XII-PHY-B04-concave-lens.json",
+   "class": "XII",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Focal length of a concave lens using a convex lens",
+   "shortTitle": "Concave Lens",
+   "objective0": "To find the focal length of a concave lens with the help of a convex lens.",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 4,
+    "kind": "experiment",
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-9: Ray Optics and Optical Instruments"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XII-PHY-B05",
+   "file": "data/experiments/class-xii/XII-PHY-B05-prism-deviation.json",
+   "class": "XII",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Angle of minimum deviation for a prism, and refractive index",
+   "shortTitle": "Prism Deviation",
+   "objective0": "To determine the angle of deviation for several angles of incidence for a given prism.",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 5,
+    "kind": "experiment",
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-9: Ray Optics and Optical Instruments"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XII-PHY-B06",
+   "file": "data/experiments/class-xii/XII-PHY-B06-refractive-index-slab.json",
+   "class": "XII",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Refractive index of a glass slab using a travelling microscope",
+   "shortTitle": "Refractive Index — Slab",
+   "objective0": "To determine the refractive index of the material of a glass slab.",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 6,
+    "kind": "experiment",
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-9: Ray Optics and Optical Instruments"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XII-PHY-B07",
+   "file": "data/experiments/class-xii/XII-PHY-B07-refractive-index-liquid-lens.json",
+   "class": "XII",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Refractive index of a liquid using a convex lens and a plane mirror",
+   "shortTitle": "Refractive Index — Liquid Lens",
+   "objective0": "To find the refractive index of a given transparent liquid.",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 7,
+    "kind": "experiment",
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-9: Ray Optics and Optical Instruments"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XII-PHY-B08",
+   "file": "data/experiments/class-xii/XII-PHY-B08-refractive-index-mirror.json",
+   "class": "XII",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "Refractive index of a liquid using a concave mirror and a plane mirror",
+   "shortTitle": "Refractive Index — Concave Mirror",
+   "objective0": "To find the refractive index of a transparent liquid using a concave mirror.",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 8,
+    "kind": "experiment",
+    "unit": "Unit VI: Optics",
+    "chapter": "Chapter-9: Ray Optics and Optical Instruments"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
+  {
+   "id": "XII-PHY-B09",
+   "file": "data/experiments/class-xii/XII-PHY-B09-pn-diode.json",
+   "class": "XII",
+   "subject": "Physics",
+   "contentStatus": "published",
+   "title": "I-V characteristics of a p-n junction diode",
+   "shortTitle": "p-n Junction Diode",
+   "objective0": "To draw the I-V characteristic curve of a p-n junction diode in forward bias.",
+   "curriculumMapping": {
+    "section": "B",
+    "serial": 9,
+    "kind": "experiment",
     "unit": "Unit IX: Electronic Devices",
-    "chapter": "Chapter-14: Semiconductor Electronics"
+    "chapter": "Chapter-14: Semiconductor Electronics: Materials, Devices and Simple Circuits"
    },
    "vivaCount": 10,
-   "procedureCount": 6
-  },
-  {
-   "id": "XII-CHE-A01",
-   "file": "data/experiments/class-xii/XII-CHE-A01-sol-preparation.json",
-   "class": "XII",
-   "subject": "Chemistry",
-   "contentStatus": "published",
-   "title": "Preparation of a lyophilic and a lyophobic sol",
-   "shortTitle": "Lyophilic and lyophobic sols",
-   "objective0": "To prepare a lyophilic sol and a lyophobic sol by standard methods.",
-   "curriculumMapping": {
-    "section": "A",
-    "serial": 1,
-    "kind": "experiment",
-    "unit": "Unit V: Surface Chemistry",
-    "chapter": "Chapter-5: Surface Chemistry"
-   },
-   "vivaCount": 10,
-   "procedureCount": 7
-  },
-  {
-   "id": "XII-CHE-A02",
-   "file": "data/experiments/class-xii/XII-CHE-A02-dialysis.json",
-   "class": "XII",
-   "subject": "Chemistry",
-   "contentStatus": "published",
-   "title": "Dialysis of a sol",
-   "shortTitle": "Dialysis",
-   "objective0": "To purify a sol by removing the electrolyte left over from its preparation.",
-   "curriculumMapping": {
-    "section": "A",
-    "serial": 2,
-    "kind": "experiment",
-    "unit": "Unit V: Surface Chemistry",
-    "chapter": "Chapter-5: Surface Chemistry"
-   },
-   "vivaCount": 10,
-   "procedureCount": 8
-  },
-  {
-   "id": "XII-CHE-A03",
-   "file": "data/experiments/class-xii/XII-CHE-A03-emulsion.json",
-   "class": "XII",
-   "subject": "Chemistry",
-   "contentStatus": "published",
-   "title": "Role of emulsifying agents in stabilising an emulsion",
-   "shortTitle": "Emulsifying agents",
-   "objective0": "To prepare emulsions of different oils in water, with and without an emulsifying agent.",
-   "curriculumMapping": {
-    "section": "A",
-    "serial": 3,
-    "kind": "experiment",
-    "unit": "Unit V: Surface Chemistry",
-    "chapter": "Chapter-5: Surface Chemistry"
-   },
-   "vivaCount": 10,
-   "procedureCount": 7
-  },
-  {
-   "id": "XII-CHE-C01",
-   "file": "data/experiments/class-xii/XII-CHE-C01-enthalpy-dissolution.json",
-   "class": "XII",
-   "subject": "Chemistry",
-   "contentStatus": "published",
-   "title": "Enthalpy of dissolution of copper sulphate or potassium nitrate",
-   "shortTitle": "Enthalpy of dissolution",
-   "objective0": "To measure the temperature change when a weighed salt dissolves in a known mass of water.",
-   "curriculumMapping": {
-    "section": "C",
-    "serial": 1,
-    "kind": "experiment",
-    "unit": "Unit III: Chemical Thermodynamics",
-    "chapter": "Chapter-4: Chemical Thermodynamics"
-   },
-   "vivaCount": 10,
-   "procedureCount": 7
-  },
-  {
-   "id": "XII-CHE-C02",
-   "file": "data/experiments/class-xii/XII-CHE-C02-enthalpy-neutralisation.json",
-   "class": "XII",
-   "subject": "Chemistry",
-   "contentStatus": "published",
-   "title": "Enthalpy of neutralisation of a strong acid and a strong base",
-   "shortTitle": "Enthalpy of neutralisation",
-   "objective0": "To measure the temperature rise when equal volumes of acid and alkali are mixed.",
-   "curriculumMapping": {
-    "section": "C",
-    "serial": 2,
-    "kind": "experiment",
-    "unit": "Unit III: Chemical Thermodynamics",
-    "chapter": "Chapter-4: Chemical Thermodynamics"
-   },
-   "vivaCount": 10,
-   "procedureCount": 7
-  },
-  {
-   "id": "XII-CHE-C03",
-   "file": "data/experiments/class-xii/XII-CHE-C03-enthalpy-mixing.json",
-   "class": "XII",
-   "subject": "Chemistry",
-   "contentStatus": "published",
-   "title": "Enthalpy change on mixing acetone and chloroform",
-   "shortTitle": "Acetone and chloroform",
-   "objective0": "To measure the temperature change when acetone and chloroform are mixed.",
-   "curriculumMapping": {
-    "section": "C",
-    "serial": 3,
-    "kind": "experiment",
-    "unit": "Unit III: Chemical Thermodynamics",
-    "chapter": "Chapter-4: Chemical Thermodynamics"
-   },
-   "vivaCount": 10,
-   "procedureCount": 7
-  },
-  {
-   "id": "XII-CHE-E01",
-   "file": "data/experiments/class-xii/XII-CHE-E01-paper-chromatography-pigments.json",
-   "class": "XII",
-   "subject": "Chemistry",
-   "contentStatus": "published",
-   "title": "Separation of pigments from leaf and flower extracts by paper chromatography",
-   "shortTitle": "Chromatography of pigments",
-   "objective0": "To separate the pigments present in a leaf or flower extract on chromatography paper.",
-   "curriculumMapping": {
-    "section": "E",
-    "serial": 1,
-    "kind": "experiment",
-    "unit": "Unit VIII: Analytical and separation techniques",
-    "chapter": "Chromatography"
-   },
-   "vivaCount": 10,
-   "procedureCount": 8
-  },
-  {
-   "id": "XII-CHE-E02",
-   "file": "data/experiments/class-xii/XII-CHE-E02-chromatography-two-cations.json",
-   "class": "XII",
-   "subject": "Chemistry",
-   "contentStatus": "published",
-   "title": "Separation of two cations from an inorganic mixture by paper chromatography",
-   "shortTitle": "Chromatography of cations",
-   "objective0": "To separate two metal cations from a mixture on chromatography paper.",
-   "curriculumMapping": {
-    "section": "E",
-    "serial": 2,
-    "kind": "experiment",
-    "unit": "Unit VIII: Analytical and separation techniques",
-    "chapter": "Chromatography"
-   },
-   "vivaCount": 10,
-   "procedureCount": 8
+   "procedureCount": 9
   }
  ]
 }

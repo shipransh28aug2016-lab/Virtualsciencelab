@@ -87,6 +87,16 @@ const MODEL_LOADERS = {
   'emulsion': () => import('./simulation/models/emulsion.js'),
   'calorimetry': () => import('./simulation/models/calorimetry.js'),
   'chromatography': () => import('./simulation/models/chromatography.js'),
+  'equilibrium-shift': () => import('./simulation/models/equilibrium-shift.js'),
+  'electronic-balance': () => import('./simulation/models/electronic-balance.js'),
+  'standard-solution': () => import('./simulation/models/standard-solution.js'),
+  'salt-analysis': () => import('./simulation/models/salt-analysis.js'),
+  'lassaigne-test': () => import('./simulation/models/lassaigne-test.js'),
+  'clock-reaction': () => import('./simulation/models/clock-reaction.js'),
+  'salt-preparation': () => import('./simulation/models/salt-preparation.js'),
+  'organic-preparation': () => import('./simulation/models/organic-preparation.js'),
+  'functional-group-test': () => import('./simulation/models/functional-group-test.js'),
+  'biomolecule-test': () => import('./simulation/models/biomolecule-test.js'),
 };
 
 /** Model ids, for code that only needs to know what exists. */
@@ -1376,6 +1386,22 @@ function updateReadouts() {
       ['Sharpness', `${Math.round((app.state.sharp || 0) * 100)}`, '%'],
       ['Magnification', Number.isFinite(v) ? (-v / app.inputs.objectDistanceCm).toFixed(2) : '—', ''],
     ];
+  } else {
+    /* Generic fallback for every experiment without bespoke readout wiring
+       above: show the live value of its own independent/control variables,
+       plus any time-in-progress the model is tracking. Better than a blank
+       panel, and correct by construction since it only reads what the
+       experiment itself declares. */
+    const vars = (app.exp.variables || []).filter((v) => v.type === 'independent' || v.type === 'control').slice(0, 4);
+    items = vars.map((v) => {
+      const raw = app.inputs[v.id];
+      let shown;
+      if (typeof raw === 'boolean') shown = raw ? 'On' : 'Off';
+      else if (typeof raw === 'number') shown = raw.toFixed(v.step && v.step < 1 ? 2 : 0);
+      else shown = String(raw ?? '—');
+      return [v.label, shown, v.unit || ''];
+    });
+    if (Number.isFinite(app.state?.t)) items.push(['Elapsed', app.state.t.toFixed(1), 's']);
   }
   $('#readouts').innerHTML = items.map(([l, v, u]) =>
     `<div class="ro"><span>${esc(l)}</span><b>${esc(v)}${u ? `<i>${esc(u)}</i>` : ''}</b></div>`).join('');
