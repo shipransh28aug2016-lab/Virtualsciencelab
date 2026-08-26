@@ -2,11 +2,9 @@
  * Apparatus renderers — chemistry (Classes XI and XII).
  */
 import {
-  label, drawBeaker, drawConicalFlask, drawBurette, drawTestTube, drawThermometer,
-  drawRetortStand, drawBurner, drawSwatch, theme, heatingAssembly, drawClamp,
-  drawTripod, drawGauze, heatAt, noteBounds, drawDigitalReadout,
+  label, drawBeaker, drawConicalFlask, drawBurette, drawTestTube, drawThermometer, drawRetortStand, drawBurner, drawSwatch, theme, heatingAssembly, drawClamp, drawTripod, drawGauze, heatAt, noteBounds, drawDigitalReadout, brushedMetal, chrome, plastic, contactShadow, incandescence,
 } from './apparatus.js';
-import { clock, rgba, shade, mixColor, clamp, noise1 } from './realism.js';
+import { clock, rgba, shade, mixColor, clamp, lerp, noise1 } from './realism.js';
 
 /* The bench top every chemistry scene stands on. Fixed in scene space —
    the frame is fitted to the apparatus afterwards, so a scene never has to
@@ -277,21 +275,104 @@ export function titration(ctx, w, h, state, inputs) {
 }
 export function solPreparation(ctx, w, h, state, inputs) {
   const th = theme();
-  const cx = w / 2;
-  const { bot } = drawBeaker(ctx, cx, 30, 120, 120, 0.55, '#c98b4a', { label: inputs?.sol ? `${inputs.sol} sol` : 'Colloidal sol' });
-  if (inputs?.test === 'tyndall') {
-    ctx.save(); ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.moveTo(cx - 70, 40); ctx.lineTo(cx + 40, 90); ctx.stroke(); ctx.restore();
-    label(ctx, cx - 70, 40, 'Light beam (Tyndall cone)', { anchor: 'above' });
+  const cx = 380;
+  /* A sol scatters light (the Tyndall cone) because its particles are big
+     enough to scatter but too small to settle. Adding enough electrolyte
+     coagulates it: the particles clump, the beam fades, and the floc
+     settles out. The beam's brightness IS the model's `tyndall`. */
+  const tyn = clamp(state?.tyndall ?? 1, 0, 1);
+  const settled = clamp(state?.settled ?? 0, 0, 1);
+  const base = inputs?.sol === 'fe' ? '#a8521f' : '#c98b4a';
+
+  const B = drawBeaker(ctx, cx, BENCH_Y - 170, 200, 170, 0.62,
+    mixColor(base, '#dfe6ee', 1 - tyn), {
+      label: inputs?.sol ? `${inputs.sol} sol` : 'Colloidal sol',
+      precipitate: settled * 0.9,
+      precipitateColor: base,
+      coarsePrecipitate: true,
+      graduations: false,
+    });
+
+  // The beam, and the cone it lights up inside the sol.
+  const beamY = B.topY + 60;
+  ctx.save();
+  ctx.strokeStyle = rgba('#fff3c8', 0.9); ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.moveTo(cx - 240, beamY - 24); ctx.lineTo(cx - 100, beamY); ctx.stroke();
+  // Inside the sol the beam becomes visible — that is the Tyndall effect.
+  if (tyn > 0.03) {
+    const g = ctx.createLinearGradient(cx - 100, 0, cx + 100, 0);
+    g.addColorStop(0, rgba('#fff6d8', 0.62 * tyn));
+    g.addColorStop(1, rgba('#fff6d8', 0.06 * tyn));
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.moveTo(cx - 100, beamY - 4); ctx.lineTo(cx + 100, beamY - 22);
+    ctx.lineTo(cx + 100, beamY + 22); ctx.lineTo(cx - 100, beamY + 4);
+    ctx.closePath(); ctx.fill();
   }
+  ctx.restore();
+  label(ctx, cx - 244, beamY - 26, 'Light beam', { anchor: 'left' });
+  label(ctx, cx, B.topY - 30,
+    state?.coagulation > 0.05
+      ? `Coagulating — Tyndall beam fading (${(100 * (1 - tyn)).toFixed(0)}% gone)`
+      : 'Sol is stable — the beam shows a clear Tyndall cone',
+    { anchor: 'above', bold: true, color: state?.coagulation > 0.05 ? '#8a5a00' : '#0d7a52' });
+  label(ctx, cx, B.bot + 28,
+    `${inputs?.electrolyte || 'Electrolyte'} at ${(inputs?.concentrationMm ?? 0).toFixed(1)} mmol/L`,
+    { anchor: 'below', size: 11 });
 }
 export function dialysis(ctx, w, h, state, inputs) {
   const th = theme();
-  const cx = w / 2;
-  drawBeaker(ctx, cx, 30, 160, 120, 0.7, th.liquid, { label: 'Outer water (dialysing tank)' });
-  ctx.save(); ctx.strokeStyle = th.glassStroke; ctx.setLineDash([3, 2]); ctx.lineWidth = 1.4;
-  ctx.beginPath(); ctx.roundRect(cx - 40, 55, 80, 60, 10); ctx.stroke(); ctx.setLineDash([]); ctx.restore();
-  label(ctx, cx, 55, `Sol in membrane bag (${inputs?.membrane || 'parchment'})`, { anchor: 'above' });
+  const cx = 380;
+  /* Crystalloid leaves the bag through the membrane; the colloid cannot
+     follow, because its particles are too large for the pores. So the bag
+     lightens and the tank darkens, and the two together conserve what
+     started inside. */
+  const frac = clamp(state?.fraction ?? 1, 0, 1);
+  const outside = 1 - frac;
+
+  const B = drawBeaker(ctx, cx, BENCH_Y - 200, 300, 200, 0.72,
+    mixColor('#eaf1f8', '#8fb8dd', outside), {
+      label: 'Outer water (dialysing tank)', graduations: false,
+      stirring: inputs?.stirred ? 0.3 : 0,
+    });
+
+  // The membrane bag, suspended in it.
+  const bagY = B.topY + 46, bagH = 108, bagW = 120;
+  ctx.save();
+  ctx.strokeStyle = rgba(th.ink, 0.55); ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(cx, B.topY - 30); ctx.lineTo(cx, bagY); ctx.stroke();
+  ctx.fillStyle = rgba(mixColor('#c98b4a', '#e3d9c6', outside), 0.85);
+  ctx.strokeStyle = rgba('#6f5b3a', 0.85);
+  ctx.setLineDash([4, 3]); ctx.lineWidth = 1.6;
+  ctx.beginPath();
+  if (ctx.roundRect) ctx.roundRect(cx - bagW / 2, bagY, bagW, bagH, 16);
+  else ctx.rect(cx - bagW / 2, bagY, bagW, bagH);
+  ctx.fill(); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+  label(ctx, cx, bagY - 4, `Membrane bag (${inputs?.membrane || 'parchment'})`, { anchor: 'above' });
+
+  // Crystalloid crossing the membrane — the process itself.
+  ctx.save();
+  const t = clock();
+  for (let i = 0; i < 14; i++) {
+    const ph = ((t * 0.35 + i / 14) % 1);
+    const side = i % 2 ? 1 : -1;
+    const px = cx + side * (bagW / 2 + ph * 70);
+    const py = bagY + 20 + ((i * 13) % (bagH - 30));
+    ctx.fillStyle = rgba('#3d7ae5', 0.55 * (1 - ph) * frac);
+    ctx.beginPath(); ctx.arc(px, py, 2.6, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.restore();
+
+  label(ctx, cx + 190, B.topY + 40,
+    `Inside ${(frac * 100).toFixed(0)}% · outside ${(outside * 100).toFixed(0)}%`,
+    { anchor: 'right', bold: true });
+  label(ctx, cx, B.bot + 28,
+    inputs?.water === 'standing'
+      ? 'Standing water saturates — dialysis stalls at a plateau'
+      : 'Water changed regularly — the gradient is kept up',
+    { anchor: 'below', size: 11 });
 }
 export function emulsion(ctx, w, h, state, inputs) {
   const th = theme();
@@ -320,13 +401,76 @@ export function calorimetry(ctx, w, h, state, inputs) {
 }
 export function electrochemicalCell(ctx, w, h, state, inputs) {
   const th = theme();
-  const cx = w / 2;
-  drawBeaker(ctx, cx - 90, 40, 100, 100, 0.7, '#dcefe8', { label: `${inputs?.anode || 'zn'} half-cell` });
-  drawBeaker(ctx, cx + 90, 40, 100, 100, 0.7, '#eaf0dc', { label: `${inputs?.cathode || 'cu'} half-cell` });
-  ctx.save(); ctx.strokeStyle = th.dim; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(cx - 40, 90); ctx.lineTo(cx + 40, 90); ctx.stroke(); ctx.restore();
-  label(ctx, cx, 90, 'Salt bridge', { anchor: 'above' });
-  ctx.save(); ctx.strokeStyle = th.metal; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(cx - 90, 20); ctx.lineTo(cx + 90, 20); ctx.stroke(); ctx.restore();
-  label(ctx, cx, 20, `EMF ≈ ${(state?.pH ?? 0)} V`, { anchor: 'above', bg: false });
+  const cx = 380, topY = BENCH_Y - 190;
+  const bridge = inputs?.saltBridge !== false;
+  const emf = state?.emf ?? 0;
+
+  const L = drawBeaker(ctx, cx - 150, topY, 170, 190, 0.66, '#dcefe8',
+    { label: `${inputs?.anode || 'Zn'} in ZnSO₄`, graduations: false });
+  const R = drawBeaker(ctx, cx + 150, topY, 170, 190, 0.66, '#bfe0f2',
+    { label: `${inputs?.cathode || 'Cu'} in CuSO₄`, graduations: false });
+
+  // Electrodes dipping into each.
+  for (const [x, base, name] of [[cx - 150, '#b7bcc4', 'Zinc electrode (anode, −)'],
+                                  [cx + 150, '#c98b4a', 'Copper electrode (cathode, +)']]) {
+    ctx.save();
+    const g = ctx.createLinearGradient(x - 11, 0, x + 11, 0);
+    g.addColorStop(0, shade(base, -0.4)); g.addColorStop(0.35, shade(base, 0.35)); g.addColorStop(1, shade(base, -0.45));
+    ctx.fillStyle = g;
+    ctx.fillRect(x - 11, topY - 60, 22, 190);
+    ctx.restore();
+    label(ctx, x, topY - 64, name, { anchor: 'above', size: 11 });
+  }
+
+  /* The salt bridge completes the circuit. Without it charge separation
+     builds up at once and the reading collapses -- which is exactly what
+     the model does, and why the bridge is not optional. */
+  if (bridge) {
+    ctx.save();
+    ctx.strokeStyle = shade('#e6e9ef', -0.1); ctx.lineWidth = 15; ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(cx - 90, topY + 40);
+    ctx.quadraticCurveTo(cx, topY - 40, cx + 90, topY + 40);
+    ctx.stroke();
+    ctx.strokeStyle = rgba('#9fb2cc', 0.9); ctx.lineWidth = 11;
+    ctx.beginPath();
+    ctx.moveTo(cx - 90, topY + 40);
+    ctx.quadraticCurveTo(cx, topY - 40, cx + 90, topY + 40);
+    ctx.stroke();
+    ctx.restore();
+    label(ctx, cx, topY - 34, 'Salt bridge (KCl in agar)', { anchor: 'above' });
+    // Ions migrating through it, keeping each half-cell neutral.
+    const m = state?.migration ?? 0;
+    ctx.save();
+    for (let i = 0; i < 6; i++) {
+      const f = ((m + i / 6) % 1);
+      const bx = lerp(cx - 90, cx + 90, f);
+      const by = topY + 40 - Math.sin(Math.PI * f) * 80;
+      ctx.fillStyle = rgba(i % 2 ? '#c02626' : '#1d5fd4', 0.75);
+      ctx.beginPath(); ctx.arc(bx, by, 3, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+  } else {
+    label(ctx, cx, topY - 34, 'NO salt bridge — the circuit cannot be completed',
+      { anchor: 'above', bold: true, color: '#c02626' });
+  }
+
+  // Voltmeter across the electrodes.
+  ctx.save();
+  ctx.strokeStyle = th.ink; ctx.lineWidth = 1.6;
+  ctx.beginPath();
+  ctx.moveTo(cx - 150, topY - 80); ctx.lineTo(cx - 150, topY - 140);
+  ctx.lineTo(cx - 60, topY - 140);
+  ctx.moveTo(cx + 60, topY - 140); ctx.lineTo(cx + 150, topY - 140);
+  ctx.lineTo(cx + 150, topY - 80);
+  ctx.stroke();
+  ctx.restore();
+  drawDigitalReadout(ctx, cx - 60, topY - 168, 120, 52, `${emf.toFixed(3)} V`,
+    { label: 'Digital voltmeter', size: 20, color: Math.abs(emf) > 0.02 ? '#7CFC9A' : '#5f8f6f' });
+
+  label(ctx, cx, topY - 200,
+    bridge ? `E_cell = ${emf.toFixed(3)} V` : 'Reading has collapsed — replace the salt bridge',
+    { anchor: 'above', bold: true, color: bridge ? '#0d7a52' : '#c02626' });
 }
 export function chromatography(ctx, w, h, state, inputs) {
   const th = theme();

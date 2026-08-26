@@ -2,10 +2,9 @@
  * Apparatus renderers — ray optics.
  */
 import {
-  label, drawOpticalBench, drawUpright, drawConvexLens, drawConcaveLens, drawConcaveMirror,
-  drawConvexMirror, drawScreen, drawCandle, drawPrism, drawSlab, drawDial, theme,
-  drawRayDiagram, drawImageOnScreen,
+  label, drawOpticalBench, drawUpright, drawConvexLens, drawConcaveLens, drawConcaveMirror, drawConvexMirror, drawScreen, drawCandle, drawPrism, drawSlab, drawDial, theme, drawRayDiagram, drawImageOnScreen, dashedLine, brushedMetal, chrome, contactShadow, noteBounds,
 } from './apparatus.js';
+import { clock, rgba, shade, mixColor, clamp, lerp } from './realism.js';
 
 /* Pixels per centimetre along the optical bench. One constant, so the
    object, the image and the printed scale can never drift apart. */
@@ -117,58 +116,248 @@ export function auxiliaryLens(ctx, w, h, state, inputs) {
   }
 }
 export function refractiveIndex(ctx, w, h, state, inputs) {
-  const y = h / 2;
-  if (inputs?.method === 'concaveMirror') {
-    drawConcaveMirror(ctx, w / 2 + 40, y, 60);
-    ctx.save(); ctx.fillStyle = theme().liquid; ctx.globalAlpha = 0.5; ctx.fillRect(w / 2 - 40, y - 10, 80, 20); ctx.globalAlpha = 1; ctx.restore();
-    label(ctx, w / 2, y + 12, 'Thin liquid layer', { anchor: 'below' });
-  } else if (inputs?.method === 'liquidLens') {
-    drawConvexLens(ctx, w / 2, y - 30, 45, { label: 'Plano-convex lens' });
-    ctx.save(); ctx.fillStyle = theme().liquid; ctx.globalAlpha = 0.5; ctx.fillRect(w / 2 - 45, y - 4, 90, 12); ctx.globalAlpha = 1; ctx.restore();
-    label(ctx, w / 2, y + 8, 'Liquid film on plane mirror', { anchor: 'below' });
-  } else {
-    drawSlab(ctx, w / 2 - 60, y - 50, 120, 100, { label: 'Glass slab' });
-    label(ctx, w / 2, y - 70, 'Travelling microscope above', { anchor: 'above' });
-  }
+  const th = theme();
+  const cx = 380, baseY = 400;
+
+  /* Real and apparent depth. The mark under the slab appears RAISED by
+     t(1 - 1/n); the microscope is focused first on the mark, then on the
+     mark through the slab, and the difference gives n. Both positions are
+     drawn, because the whole measurement is the gap between them. */
+  const t = (inputs?.thicknessCm ?? 3) * 34;
+  const apparent = clamp((state?.apparent ?? 0) * 34, 0, t);
+
+  drawSlab(ctx, cx - 130, baseY - t, 260, t, { label: `Glass slab · t = ${(inputs?.thicknessCm ?? 3).toFixed(1)} cm` });
+
+  // The ink mark on the paper under it.
+  ctx.save();
+  ctx.strokeStyle = '#1a2333'; ctx.lineWidth = 3.4; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(cx - 12, baseY - 3); ctx.lineTo(cx + 12, baseY - 3);
+  ctx.moveTo(cx, baseY - 15); ctx.lineTo(cx, baseY + 9);
+  ctx.stroke();
+  ctx.restore();
+  label(ctx, cx - 140, baseY, 'Ink cross on paper', { anchor: 'left', size: 11 });
+
+  // Where it appears to be, seen through the slab.
+  const appY = baseY - (t - apparent);
+  ctx.save();
+  ctx.globalAlpha = 0.55;
+  ctx.strokeStyle = '#c02626'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(cx - 12, appY); ctx.lineTo(cx + 12, appY);
+  ctx.moveTo(cx, appY - 12); ctx.lineTo(cx, appY + 12);
+  ctx.stroke();
+  ctx.restore();
+  label(ctx, cx + 16, appY, 'Apparent position (raised)', { anchor: 'right', size: 11, color: '#c02626' });
+
+  // The travelling microscope above.
+  ctx.save();
+  brushedMetal(ctx, cx + 190, baseY - 300, 14, 300, { axis: 'v' });
+  brushedMetal(ctx, cx - 40, appY - 150, 240, 22, { axis: 'h' });
+  ctx.fillStyle = shade(th.metal, -0.2);
+  ctx.beginPath(); ctx.ellipse(cx, appY - 132, 22, 9, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+  label(ctx, cx - 44, appY - 140, 'Travelling microscope', { anchor: 'left' });
+
+  // The shift being measured.
+  ctx.save();
+  ctx.strokeStyle = '#0d7a52'; ctx.lineWidth = 1.6;
+  ctx.beginPath(); ctx.moveTo(cx - 170, baseY - 3); ctx.lineTo(cx - 170, appY); ctx.stroke();
+  ctx.restore();
+  label(ctx, cx - 174, (baseY + appY) / 2,
+    `Shift = t(1 − 1/n)`, { anchor: 'left', bold: true, color: '#0d7a52' });
+  label(ctx, cx, baseY - t - 70,
+    state?.focus ? 'Focused — take the microscope reading' : 'Focusing…',
+    { anchor: 'above', bold: true, color: state?.focus ? '#0d7a52' : '#8a5a00' });
 }
 export function prismDeviation(ctx, w, h, state, inputs) {
-  const cx = w / 2, cy = h / 2;
-  drawPrism(ctx, cx, cy - 20, 80, { label: 'Equilateral prism' });
-  const i = ((inputs?.incidenceDeg ?? 50) * Math.PI) / 180;
-  ctx.save(); ctx.strokeStyle = theme().accent; ctx.lineWidth = 1.8;
-  ctx.beginPath(); ctx.moveTo(40, cy - 20 - 80 * Math.tan(i - 0.6)); ctx.lineTo(cx - 40, cy + 20); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(cx + 40, cy + 20); ctx.lineTo(w - 40, cy - 20 + (state?.deviation ?? 0) * 1.2); ctx.stroke();
+  const th = theme();
+  const cx = 380, cy = 260, size = 90;
+  const iDeg = state?.incidence ?? inputs?.incidenceDeg ?? 30;
+  const dDeg = state?.deviation ?? 0;
+
+  drawPrism(ctx, cx, cy, size, { label: `Glass prism (A = ${inputs?.angleA ?? 60}°)` });
+
+  /* Light entering the prism is refracted at both faces and comes out
+     deviated. As the prism is rotated the deviation falls to a minimum and
+     rises again -- the turning point, at which the ray passes
+     symmetrically, is what the experiment is looking for. */
+  const i = iDeg * Math.PI / 180;
+  const entry = { x: cx - size * 0.52, y: cy - 6 };
+  const inLen = 210;
+  ctx.save();
+  ctx.strokeStyle = '#e07a1f'; ctx.lineWidth = 2.2;
+  ctx.beginPath();
+  ctx.moveTo(entry.x - inLen * Math.cos(i * 0.5), entry.y - inLen * Math.sin(i * 0.5));
+  ctx.lineTo(entry.x, entry.y);
+  const exit = { x: cx + size * 0.52, y: cy + 6 };
+  ctx.lineTo(exit.x, exit.y);
+  const out = (i * 0.5) + dDeg * Math.PI / 180;
+  ctx.lineTo(exit.x + inLen * Math.cos(out), exit.y + inLen * Math.sin(out));
+  ctx.stroke();
+  // The undeviated continuation, so the deviation angle has something to
+  // be measured against.
+  ctx.strokeStyle = rgba(th.dim, 0.8); ctx.setLineDash([5, 4]); ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(entry.x, entry.y);
+  ctx.lineTo(entry.x + (inLen + size) * Math.cos(i * 0.5), entry.y + (inLen + size) * Math.sin(i * 0.5));
+  ctx.stroke();
+  ctx.setLineDash([]);
   ctx.restore();
-  label(ctx, 40, cy - 20 - 80 * Math.tan(i - 0.6), 'Incident ray', { anchor: 'above', bg: false });
-  label(ctx, w - 40, cy - 20 + (state?.deviation ?? 0) * 1.2, 'Emergent ray', { anchor: 'above', bg: false });
+
+  // Dispersion at the emergent face — a prism separates colours.
+  const cols = ['#c02626', '#e07a1f', '#e3d02c', '#3fae5a', '#3d7ae5', '#7a3fc4'];
+  ctx.save();
+  cols.forEach((c, k) => {
+    ctx.strokeStyle = rgba(c, 0.75);
+    ctx.lineWidth = 1.6;
+    const a = out + (k - 2.5) * 0.012;
+    ctx.beginPath();
+    ctx.moveTo(exit.x, exit.y);
+    ctx.lineTo(exit.x + inLen * Math.cos(a), exit.y + inLen * Math.sin(a));
+    ctx.stroke();
+  });
+  ctx.restore();
+
+  label(ctx, cx, cy - size - 60,
+    state?.atMinimum ? `MINIMUM DEVIATION — D = ${dDeg.toFixed(1)}° at i = ${iDeg.toFixed(1)}°`
+      : `i = ${iDeg.toFixed(1)}° · D = ${dDeg.toFixed(1)}° — rotate to find the minimum`,
+    { anchor: 'above', bold: true, color: state?.atMinimum ? '#0d7a52' : '#8a5a00' });
 }
 export function lateralDeviation(ctx, w, h, state, inputs) {
-  const cx = w / 2, cy = h / 2;
-  drawSlab(ctx, cx - 60, cy - 60, 120, 120, { label: 'Glass slab' });
-  const i = ((inputs?.incidenceDeg ?? 45) * Math.PI) / 180;
-  ctx.save(); ctx.strokeStyle = theme().accent; ctx.lineWidth = 1.8;
-  ctx.beginPath(); ctx.moveTo(30, cy - 60 - 60 * Math.tan(i)); ctx.lineTo(cx - 60, cy - 60); ctx.stroke();
-  const shift = (state?.shiftMm ?? 0) / 3;
-  ctx.beginPath(); ctx.moveTo(cx + 60, cy + 60); ctx.lineTo(w - 30, cy + 60 + (w - 30 - cx - 60) * Math.tan(i) + shift); ctx.stroke();
+  const th = theme();
+  const cx = 380, cy = 250;
+  const tW = 180, tH = 110;
+  // The slab.
+  drawSlab(ctx, cx - tW / 2, cy - tH / 2, tW, tH, { label: 'Rectangular glass slab' });
+
+  /* A ray through a parallel-sided slab emerges PARALLEL to the incident
+     ray but displaced sideways. Drawing the undeviated continuation as a
+     dashed line beside the emergent ray is what makes the lateral shift
+     visible rather than merely stated. */
+  const i = (inputs?.incidenceDeg ?? 40) * Math.PI / 180;
+  const n = inputs?.refractiveIndex ?? 1.5;
+  const r = Math.asin(Math.sin(i) / n);
+  const entryX = cx - tW / 2, entryY = cy - 20;
+  const inLen = 190;
+  const sx = entryX - inLen * Math.cos(i), sy = entryY - inLen * Math.sin(i);
+
+  ctx.save();
+  ctx.strokeStyle = '#e07a1f'; ctx.lineWidth = 2.2;
+  ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(entryX, entryY); ctx.stroke();
+  // Inside the slab, bent towards the normal.
+  const exitY = entryY + tW * Math.tan(r);
+  ctx.beginPath(); ctx.moveTo(entryX, entryY); ctx.lineTo(entryX + tW, exitY); ctx.stroke();
+  // Emergent ray, parallel to the incident one.
+  ctx.beginPath();
+  ctx.moveTo(entryX + tW, exitY);
+  ctx.lineTo(entryX + tW + inLen * Math.cos(i), exitY + inLen * Math.sin(i));
+  ctx.stroke();
+  // The undeviated path, for comparison.
+  ctx.strokeStyle = rgba(th.dim, 0.85); ctx.setLineDash([5, 4]); ctx.lineWidth = 1.3;
+  ctx.beginPath();
+  ctx.moveTo(entryX, entryY);
+  ctx.lineTo(entryX + tW + inLen * Math.cos(i), entryY + (tW + inLen * Math.cos(i)) * Math.tan(i));
+  ctx.stroke();
+  ctx.setLineDash([]);
   ctx.restore();
-  label(ctx, w - 30, cy + 60, `shift ≈ ${(state?.shiftMm ?? 0).toFixed(1)} mm`, { anchor: 'right', bg: false });
+
+  // Normals at both faces.
+  for (const x of [entryX, entryX + tW]) {
+    dashedLine(ctx, x - 60, x === entryX ? entryY : exitY, x + 60, x === entryX ? entryY : exitY, rgba(th.dim, 0.7));
+  }
+  label(ctx, sx, sy, 'Incident ray', { anchor: 'left', size: 11, color: '#e07a1f' });
+
+  // The shift itself.
+  const shiftPx = clamp((state?.shift ?? 0) * 4, 0, 90);
+  ctx.save();
+  ctx.strokeStyle = '#c02626'; ctx.lineWidth = 1.8;
+  const ex = entryX + tW + 60;
+  ctx.beginPath();
+  ctx.moveTo(ex, exitY + 60 * Math.tan(i));
+  ctx.lineTo(ex, exitY + 60 * Math.tan(i) - shiftPx);
+  ctx.stroke();
+  ctx.restore();
+  label(ctx, ex + 6, exitY + 60 * Math.tan(i) - shiftPx / 2,
+    `Lateral shift ${(state?.shift ?? 0).toFixed(2)} mm`, { anchor: 'right', bold: true, color: '#c02626' });
+  label(ctx, cx, cy - tH / 2 - 70,
+    `i = ${(inputs?.incidenceDeg ?? 40).toFixed(0)}° · r = ${(r * 180 / Math.PI).toFixed(1)}° — the emergent ray is parallel to the incident ray`,
+    { anchor: 'above', bold: true });
 }
 export function singleSlitDiffraction(ctx, w, h, state, inputs) {
-  const cx = w / 3;
-  ctx.save(); ctx.fillStyle = '#333'; ctx.fillRect(cx - 4, 20, 8, h - 100); ctx.fillRect(cx - 4, h / 2 + 6, 8, h - 100); ctx.restore();
-  label(ctx, cx, h - 80, 'Slit', { anchor: 'below' });
-  const screenX = w - 60;
+  const th = theme();
+  const slitX = 220, screenX = 700, axisY = 250;
+
+  // Source and slit.
   ctx.save();
-  const wpx = Math.min(120, (state?.pending ? 20 : (state?.width ?? 40)));
-  const centralW = 30;
-  ctx.fillStyle = theme().accent; ctx.globalAlpha = 0.6;
-  ctx.fillRect(screenX - 3, h / 2 - centralW / 2, 6, centralW);
-  ctx.globalAlpha = 0.25;
-  ctx.fillRect(screenX - 3, h / 2 - centralW, 6, centralW / 2 - 4);
-  ctx.fillRect(screenX - 3, h / 2 + centralW / 2 + 4, 6, centralW / 2 - 4);
-  ctx.globalAlpha = 1; ctx.restore();
-  label(ctx, screenX, h / 2 + centralW, 'Screen: diffraction pattern', { anchor: 'below' });
-  ctx.save(); ctx.strokeStyle = theme().dim; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(cx, h / 2); ctx.lineTo(screenX, h / 2); ctx.stroke(); ctx.setLineDash([]); ctx.restore();
+  ctx.fillStyle = '#c02626';
+  ctx.beginPath(); ctx.arc(90, axisY, 8, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+  bloomAt(ctx, 90, axisY);
+  label(ctx, 90, axisY - 12, inputs?.source || 'Monochromatic source', { anchor: 'above' });
+
+  const slitGap = clamp(30 - (inputs?.slitMm ?? 0.2) * 40, 5, 26);
+  ctx.save();
+  ctx.fillStyle = shade(th.metal, -0.35);
+  ctx.fillRect(slitX - 6, axisY - 140, 12, 140 - slitGap / 2);
+  ctx.fillRect(slitX - 6, axisY + slitGap / 2, 12, 140 - slitGap / 2);
+  ctx.restore();
+  label(ctx, slitX, axisY - 146, `Single slit · a = ${(inputs?.slitMm ?? 0.2).toFixed(2)} mm`, { anchor: 'above' });
+
+  // Screen.
+  ctx.save();
+  ctx.fillStyle = th.isDark ? '#0b111c' : '#141a25';
+  ctx.fillRect(screenX - 6, axisY - 170, 12, 340);
+  ctx.restore();
+  label(ctx, screenX, axisY + 176, 'Screen', { anchor: 'below' });
+
+  /* The pattern: a broad central maximum with much fainter minima either
+     side, its width INVERSELY proportional to the slit width. That inverse
+     relation is the whole experiment, so it is computed from the model's
+     own central width rather than drawn to look pretty. */
+  const cw = clamp((state?.width ?? 4) * 9, 20, 300);
+  ctx.save();
+  for (let dy = -168; dy <= 168; dy += 2) {
+    const beta = (dy / cw) * Math.PI * 2;
+    const I = beta === 0 ? 1 : (Math.sin(beta) / beta) ** 2;
+    if (I < 0.004) continue;
+    ctx.fillStyle = rgba('#ff3a2f', Math.min(1, I * 1.15));
+    ctx.fillRect(screenX - 5, axisY + dy, 10, 2);
+    // The pattern spilling into the space in front of the screen.
+    ctx.fillStyle = rgba('#ff3a2f', Math.min(0.5, I * 0.35));
+    ctx.fillRect(screenX - 26, axisY + dy, 20, 2);
+  }
+  ctx.restore();
+
+  // Envelope of the beam from slit to screen.
+  ctx.save();
+  ctx.fillStyle = rgba('#ff6a4a', 0.1);
+  ctx.beginPath();
+  ctx.moveTo(slitX + 6, axisY - slitGap / 2);
+  ctx.lineTo(screenX - 6, axisY - cw);
+  ctx.lineTo(screenX - 6, axisY + cw);
+  ctx.lineTo(slitX + 6, axisY + slitGap / 2);
+  ctx.closePath(); ctx.fill();
+  ctx.restore();
+
+  ctx.save();
+  ctx.strokeStyle = '#0d7a52'; ctx.lineWidth = 1.4;
+  ctx.beginPath(); ctx.moveTo(screenX + 20, axisY - cw); ctx.lineTo(screenX + 20, axisY + cw); ctx.stroke();
+  ctx.restore();
+  label(ctx, screenX + 24, axisY,
+    `Central maximum ${(state?.width ?? 0).toFixed(2)} mm`, { anchor: 'right', bold: true, color: '#0d7a52' });
+  label(ctx, 400, 70, 'Narrowing the slit WIDENS the central maximum', { anchor: 'above', size: 12 });
+}
+
+/** Small helper: a source glows. */
+function bloomAt(ctx, x, y) {
+  ctx.save();
+  const g = ctx.createRadialGradient(x, y, 1, x, y, 26);
+  g.addColorStop(0, 'rgba(255,90,70,0.55)');
+  g.addColorStop(1, 'rgba(255,90,70,0)');
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(x, y, 26, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
 }
 export function imageFormation(ctx, w, h, state, inputs) {
   const y = benchScene(ctx, w, h);
