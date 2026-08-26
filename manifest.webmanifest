@@ -1,0 +1,27 @@
+{
+  "name": "CBSE V-LAB 2026-27 — Virtual Physics Laboratory",
+  "short_name": "CBSE V-Lab",
+  "description": "Offline-first virtual laboratory for CBSE Class XI and XII Physics (042), curriculum 2026-27.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#eef2f8",
+  "theme_color": "#eef2f8",
+  "categories": ["education", "science"],
+  "lang": "en-IN",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='42' fill='%230c1424'/%3E%3Cpath d='M72 40h48M80 40v46l-34 58a11 11 0 0 0 9.6 16.5h80.8A11 11 0 0 0 146 144l-34-58V40' stroke='%234f8cff' stroke-width='11' fill='none' stroke-linejoin='round'/%3E%3Cpath d='M62 116h68' stroke='%236ee7c8' stroke-width='9' stroke-linecap='round'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230c1424'/%3E%3Cpath d='M192 106h128M213 106v123l-91 155a29 29 0 0 0 25 44h215a29 29 0 0 0 25-44l-91-155V106' stroke='%234f8cff' stroke-width='29' fill='none' stroke-linejoin='round'/%3E%3Cpath d='M165 309h182' stroke='%236ee7c8' stroke-width='24' stroke-linecap='round'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>CBSE V-LAB 2026–27 · Virtual Physics Laboratory</title>
+<meta name="description" content="Offline-first virtual laboratory for CBSE Class XI and XII Physics (042). Interactive experiments, observation notebook, viva and assessment. Works with no internet." />
+<meta name="theme-color" content="#eef2f8" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="stylesheet" href="assets/app.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f8cff'/%3E%3Cpath d='M12 6h8M13 6v8l-6 10a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-6-10V6' stroke='%23fff' stroke-width='2' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E" />
+</head>
+<body>
+<a href="#main" class="skip">Skip to main content</a>
+
+<div class="shell">
+  <header class="topbar glass">
+    <button class="brand" id="brandBtn" aria-label="CBSE V-Lab home">
+      <span class="mark" aria-hidden="true">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 3h6M10 3v6.2L4.6 18.3A2 2 0 0 0 6.3 21h11.4a2 2 0 0 0 1.7-2.7L14 9.2V3"/><path d="M7.5 15h9"/>
+        </svg>
+      </span>
+      <span>
+        <h1>CBSE V-Lab</h1>
+        <small id="brandSub">Physics 042 · 2026–27</small>
+      </span>
+    </button>
+    <div class="grow"></div>
+    <span class="chip" id="netChip" title="Runtime needs no network"><span class="dot" id="netDot"></span><span id="netTxt" class="hide-s">Offline ready</span></span>
+    <button class="chip" id="themeBtn" aria-pressed="false" title="Switch between the bright classroom theme and a dim-room theme">
+      <span aria-hidden="true">☀</span><span class="hide-s" id="themeTxt">Classroom</span>
+    </button>
+    <button class="chip hide-s" id="modeBtn" aria-pressed="false">Teacher mode</button>
+    <button class="chip" id="installBtn" hidden>Install</button>
+  </header>
+
+  <main id="main">
+    <!-- ═══════════ HOME ═══════════ -->
+    <section id="viewHome">
+      <div class="hero glass">
+        <span class="eyebrow">Offline-first · CBSE verified · Class XI &amp; XII</span>
+        <div class="metrics" id="metrics"></div>
+      </div>
+
+      <div class="filters glass" role="search">
+        <div class="seg-class" role="group" aria-label="Select class">
+          <button data-class="XI" aria-pressed="true">Class XI</button>
+          <button data-class="XII" aria-pressed="false">Class XII</button>
+        </div>
+        <div class="seg-class seg-subject" role="group" aria-label="Select subject">
+          <button data-subject="Physics" aria-pressed="true">Physics</button>
+          <button data-subject="Chemistry" aria-pressed="false">Chemistry</button>
+        </div>
+        <label class="search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7080a0" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <span class="sr-only">Search experiments</span>
+          <input id="q" type="search" placeholder="Search experiment, chapter or concept…" autocomplete="off" />
+        </label>
+        <select class="chip" id="fSection" aria-label="Filter by section or category">
+          <option value="">All sections</option>
+        </select>
+        <select class="chip" id="fUnit" aria-label="Filter by unit"><option value="">All units</option></select>
+      </div>
+
+      <div id="cards"></div>
+    </section>
+
+    <!-- ═══════════ LAB ═══════════ -->
+    <section id="viewLab" hidden>
+      <div class="labbar glass">
+        <button class="btn ghost" id="backBtn">← Experiments</button>
+        <div style="min-width:190px;flex:1">
+          <h2 id="labTitle">—</h2>
+          <div class="sub" id="labSub">—</div>
+        </div>
+        <div class="states" id="stateTrack" aria-label="Experiment stage"></div>
+        <button class="btn sm" id="printBtn">Print record</button>
+      </div>
+
+      <div class="lab">
+        <div>
+          <div class="stage glass">
+            <div class="canvas-wrap"><canvas id="cv" width="900" height="560" role="img" aria-label="Experiment apparatus"></canvas></div>
+            <div class="toolbar" id="toolbar"></div>
+            <div class="readouts" id="readouts"></div>
+            <div class="feedback" id="feedback" role="alert" aria-live="polite"></div>
+          </div>
+
+          <div class="panel glass">
+            <div class="tabs" id="tabs" role="tablist"></div>
+            <div class="tabbody" id="tabbody" role="tabpanel" tabindex="0"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="panel glass">
+            <h4>Apparatus controls</h4>
+            <div id="controls"></div>
+          </div>
+
+          <div class="panel glass">
+            <h4>Observation table</h4>
+            <div class="tblwrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+            <div class="toolbar" style="margin-top:9px">
+              <button class="btn sm" id="csvBtn">Export CSV</button>
+              <button class="btn sm ghost" id="clearBtn">Clear table</button>
+            </div>
+            <div class="result-box" id="resultBox">Take readings, then calculate the result.</div>
+          </div>
+
+          <div class="panel glass" id="graphPanel">
+            <h4>Graph</h4>
+            <div id="graph"></div>
+            <div class="hint" id="graphHint"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ TEACHER ═══════════ -->
+    <section id="viewTeacher" hidden>
+      <div class="hero glass" style="padding:20px 22px">
+        <span class="eyebrow">Teacher dashboard</span>
+        <h2 style="font-size:24px;margin:12px 0 6px">Class progress &amp; common errors</h2>
+        <p>Everything below is read from this device's local store. No student data leaves the machine.</p>
+      </div>
+      <div class="panel glass">
+        <h4>Overview</h4>
+        <div class="tstat" id="tStats"></div>
+        <h4>Experiments</h4>
+        <div id="tRows"></div>
+        <div class="toolbar" style="margin-top:12px">
+          <button class="btn sm" id="tExport">Export all observations (CSV)</button>
+          <button class="btn sm ghost" id="tReset">Reset local progress</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>CBSE V-LAB 2026–27 · Curriculum traced to <span style="color:var(--muted)">cbseacademic.nic.in</span> Physics (042) 2026–27 · runs fully offline after first load.</div>
+    <div style="margin-top:6px;font-size:11px">Simulations are pedagogical models. Always follow your school's safety rules in a physical laboratory.</div>
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
