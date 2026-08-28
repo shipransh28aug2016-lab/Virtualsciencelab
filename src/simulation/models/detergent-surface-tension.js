@@ -70,15 +70,37 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   return { trial, concentrationGPerL: inputs.concentrationGPerL, radiusMm: r, riseMm: Number(h.toFixed(2)), productMm2: sigFig(r * h, 4), surfaceTensionMNm: sigFig(T * 1000, 4) };
 }
 
-export function derive(rows) {
+export function derive(rows, inputs = defaults) {
   if (rows.length < 4) return { ok: false, reason: 'Record the rise at at least four detergent concentrations.' };
   const pure = rows.find((r) => Number(r.concentrationGPerL) === 0) || rows[0];
-  const highest = rows.reduce((a, b) => (Number(a.concentrationGPerL) >= Number(b.concentrationGPerL) ? a : b));
-  const drop = ((Number(pure.surfaceTensionMNm) - Number(highest.surfaceTensionMNm)) / Number(pure.surfaceTensionMNm)) * 100;
+  const lowestRow = rows.reduce((a, b) => (Number(a.surfaceTensionMNm) <= Number(b.surfaceTensionMNm) ? a : b));
+  const pureT = Number(pure.surfaceTensionMNm);
+  const lowestT = Number(lowestRow.surfaceTensionMNm);
+  const drop = sigFig(pureT - lowestT, 4);
+  const dropPercent = sigFig((drop / pureT) * 100, 4);
   const sorted = [...rows].sort((a, b) => Number(a.concentrationGPerL) - Number(b.concentrationGPerL));
   const lastTwo = sorted.slice(-2);
   const plateauSeen = lastTwo.length === 2 && Math.abs(Number(lastTwo[0].surfaceTensionMNm) - Number(lastTwo[1].surfaceTensionMNm)) < 3;
-  return { ok: true, surfaceTensionPure: sigFig(Number(pure.surfaceTensionMNm), 4), drop: sigFig(drop, 4), plateauSeen, n: rows.length, points: rows.map((r) => ({ x: Number(r.concentrationGPerL), y: Number(r.surfaceTensionMNm) })) };
+
+  // Different tube radii should still recover the same tension -- the
+  // check that the capillary-rise method itself is sound.
+  const byTube = new Map();
+  for (const r of rows) {
+    const key = Number(r.radiusMm);
+    if (!byTube.has(key)) byTube.set(key, []);
+    byTube.get(key).push(Number(r.surfaceTensionMNm));
+  }
+  const tubeCheck = byTube.size >= 2
+    ? [...byTube.entries()].sort((a, b) => a[0] - b[0]).map(([radiusMm, vals]) => ({ radiusMm, meanT: sigFig(vals.reduce((a, b) => a + b, 0) / vals.length, 4) }))
+    : null;
+
+  return {
+    ok: true, surfaceTensionPure: sigFig(pureT, 4), surfaceTensionLowest: sigFig(lowestT, 4),
+    lowestAtConcentration: Number(lowestRow.concentrationGPerL), drop, dropPercent, plateauSeen,
+    accepted: sigFig(T_PURE * 1000, 4), cmc: CMC, tubesCompared: byTube.size, tubeCheck,
+    greasyUsed: inputs.tubeState === 'greasy',
+    n: rows.length, points: rows.map((r) => ({ x: Number(r.concentrationGPerL), y: Number(r.surfaceTensionMNm) })),
+  };
 }
 
 export default { meta, defaults, TUBES, G, RHO, T_PURE, T_PLATEAU, CMC, init, step, measure, derive, validate, tubeOf, surfaceTensionNPerM, riseMm };

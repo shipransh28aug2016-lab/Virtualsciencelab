@@ -48,7 +48,45 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const trueTemp = inputs.roomTempC + inputs.startExcessC * Math.exp(-k * t);
   const temp = toLeastCount(trueTemp + jitter(rng, 0.3), 0.5);
   const excess = temp - inputs.roomTempC;
-  return { trial, timeS: t, tempC: Number(temp.toFixed(1)), excessC: Number(excess.toFixed(1)), lnExcess: excess > 0 ? Number(Math.log(excess).toFixed(4)) : null, surface: inputs.surface };
+  return {
+    trial, timeS: t, tempC: Number(temp.toFixed(1)), excessC: Number(excess.toFixed(1)),
+    lnExcess: excess > 0 ? Number(Math.log(excess).toFixed(4)) : null,
+    surface: inputs.surface, cover: inputs.cover, volumeCm3: inputs.volumeCm3,
+  };
+}
+
+/**
+ * A calorimeter-shaped vessel (height ≈ diameter is the usual proportion)
+ * of the given volume, purely to put a plausible exposed-area figure and
+ * an area-to-volume ratio in the result text -- coolingConstant() itself
+ * folds area into the simplified 1/volume scaling the activity's own
+ * "doubling the volume roughly halves k" rule of thumb rests on, so this
+ * geometry is descriptive, not a second independent formula for k.
+ */
+export function vesselAreaCm2(volumeCm3) {
+  const d = Math.cbrt((4 * volumeCm3) / Math.PI); // height = diameter
+  return 1.5 * Math.PI * d * d; // curved side (πd·d) + top + bottom (2·π(d/2)²)
+}
+
+/** Fit ln(excess) vs time separately within each value of one factor, so a
+ * genuine per-group cooling constant can be compared -- rather than
+ * assuming the activity's rule of thumb rather than checking it. */
+function checkByFactor(usableRows, keyFn, labelFn) {
+  const groups = new Map();
+  for (const r of usableRows) {
+    const key = keyFn(r);
+    if (key == null) continue;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push({ x: Number(r.timeS), y: Number(r.lnExcess) });
+  }
+  if (groups.size < 2) return null;
+  const out = [];
+  for (const [key, pts] of groups) {
+    if (pts.length < 2) continue;
+    const gFit = linearFit(pts);
+    if (gFit) out.push({ name: labelFn(key), k: sigFig(-gFit.slope, 4) });
+  }
+  return out.length >= 2 ? out : null;
 }
 
 export function derive(rows, inputs = defaults) {
@@ -58,7 +96,23 @@ export function derive(rows, inputs = defaults) {
   const fit = linearFit(pts);
   if (!fit) return { ok: false, reason: 'Space the readings out in time.' };
   const k = -fit.slope;
-  return { ok: true, coolingConstant: sigFig(k, 4), accepted: sigFig(coolingConstant(inputs), 4), halfLifeMin: sigFig(Math.log(2) / k / 60, 4), r2: Number(fit.r2.toFixed(4)), n: usable.length, points: rows.map((r) => ({ x: Number(r.timeS), y: Number(r.tempC) })) };
+  const accepted = coolingConstant(inputs);
+  const areaCm2 = vesselAreaCm2(inputs.volumeCm3);
+
+  const surfaceCheck = checkByFactor(usable, (r) => r.surface, (key) => (SURFACES[key] || {}).label || key);
+  const volumeCheck = checkByFactor(usable, (r) => Number(r.volumeCm3), (key) => key);
+  const factorsVaried = ['surface', 'cover', 'volumeCm3'].filter((f) => new Set(rows.map((r) => r[f])).size >= 2).length;
+
+  return {
+    ok: true, coolingConstant: sigFig(k, 4), accepted: sigFig(accepted, 4),
+    percentError: sigFig((Math.abs(k - accepted) / accepted) * 100, 4),
+    halfLifeMin: sigFig(Math.log(2) / k / 60, 4), r2: Number(fit.r2.toFixed(4)),
+    volumeCm3: inputs.volumeCm3, liquid: (LIQUIDS[inputs.liquid] || LIQUIDS.water).label,
+    surface: (SURFACES[inputs.surface] || SURFACES.dullBlack).label,
+    surfaceAreaCm2: sigFig(areaCm2, 4), areaPerVolume: sigFig(areaCm2 / inputs.volumeCm3, 4),
+    surfaceCheck, volumeCheck, factorsVaried, covered: inputs.cover === 'lid',
+    n: usable.length, points: rows.map((r) => ({ x: Number(r.timeS), y: Number(r.tempC) })),
+  };
 }
 
-export default { meta, defaults, LIQUIDS, SURFACES, COVERS, init, step, measure, derive, validate, coolingConstant };
+export default { meta, defaults, LIQUIDS, SURFACES, COVERS, init, step, measure, derive, validate, coolingConstant, vesselAreaCm2 };
