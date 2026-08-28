@@ -98,7 +98,6 @@ export function electronicBalance(ctx, w, h, state, inputs) {
 
   // Pan, and the sample on it.
   chrome(ctx, cx - 58, cy - 26, 116, 7, 3);
-  const mass = (typeof state?.reading === 'number') ? state.reading : null;
   ctx.save();
   const g = ctx.createLinearGradient(0, cy - 58, 0, cy - 26);
   g.addColorStop(0, '#fbfcfe'); g.addColorStop(1, '#c9d3e2');

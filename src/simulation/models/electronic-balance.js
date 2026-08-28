@@ -50,7 +50,7 @@ export function step(state, inputs, dt) {
      count or two -- which is why a balance is read with the draught shield
      closed, and why "wait for the stability mark" is drilled into every
      student. */
-  const lc = inputs.balance === 'digital3' ? 0.001 : 0.01;
+  const lc = balanceOf(inputs).lc;
   s.drift = inputs.shieldClosed === false ? Math.sin(s.t * 5.1) * lc : 0;
   s.settled = Math.abs(target - s.displayG) < lc * 0.5;
   return s;

@@ -10,7 +10,7 @@ export const meta = {
   unitSystem: 'Descriptive (colour change / precipitate / gas)',
   assumptions: ['One compound is tested at a time, with the reagent appropriate to the group suspected', 'A positive test is read against a known-negative control mentally, not literally run here'],
   validRange: 'Eight compounds spanning the seven functional groups plus a saturated hydrocarbon control',
-  edgeCases: ['Aldehydes give a positive Tollens\' AND Fehling\'s test; ketones give neither', 'Phenols give a violet/blue colour with neutral FeCl₃; carboxylic acids do not, but DO release CO₂ from NaHCO₃'],
+  edgeCases: ['Aldehydes give a positive Tollens\' AND Fehling\'s test; ketones give neither', 'Phenols give a violet/blue colour with neutral FeCl₃; carboxylic acids do not, but DO release CO₂ from NaHCO₃', 'Ethanol gives a POSITIVE iodoform test despite being a primary alcohol — iodine first oxidises it to acetaldehyde, which carries the CH₃CO– group the test actually detects'],
   expectedBehaviour: ['Each compound gives a positive result only with the reagent matched to its actual functional group'],
 };
 
@@ -43,11 +43,25 @@ export const defaults = { compound: 'ethanol', test: 'ceric' };
 export function compoundOf(inputs) { return COMPOUNDS[inputs.compound] || COMPOUNDS.ethanol; }
 export function testOf(inputs) { return TESTS[inputs.test] || TESTS.ceric; }
 
+/*
+ * Compounds that give a positive iodoform test: anything with a CH3-CO-
+ * group already in place (acetone, and acetaldehyde too -- any methyl
+ * ketone OR methyl-bearing aldehyde qualifies, not "ketones only"), plus
+ * any CH3-CH(OH)- alcohol that the mild alkaline hypoiodite first
+ * oxidises to one. Ethanol is the classic case: it is a PRIMARY alcohol,
+ * so it is easy to assume it must fail, but oxidising it gives
+ * acetaldehyde (CH3CHO), which itself carries the CH3-CO- group -- this
+ * is one of the most frequently exam-tested "exceptions" in CBSE Class
+ * XII organic chemistry, and marking only acetone positive taught the
+ * simulation's own students the wrong answer to it.
+ */
+const IODOFORM_POSITIVE = new Set(['acetone', 'acetaldehyde', 'ethanol']);
+
 /** Whether this reagent gives a positive result for this compound's actual group. */
 export function isPositive(inputs) {
   const c = compoundOf(inputs); const t = testOf(inputs);
   if (t.target === 'carbonyl') return c.group === 'aldehyde' || c.group === 'ketone';
-  if (t.target === 'methylKetone') return inputs.compound === 'acetone';
+  if (t.target === 'methylKetone') return IODOFORM_POSITIVE.has(inputs.compound);
   return t.target === c.group;
 }
 export function observation(inputs) {

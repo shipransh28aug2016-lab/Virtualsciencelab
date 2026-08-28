@@ -17,7 +17,7 @@ export const meta = {
   unitSystem: 'Descriptive (colour, precipitate, gas evolved)',
   assumptions: ['One cation and one anion are present, from the syllabus list, in a soluble salt', 'Reagents are added in the standard order so earlier tests do not mask later ones', 'A confirmatory test is only valid once a preliminary test has narrowed the group'],
   validRange: 'Eight salts covering common cations and anions',
-  edgeCases: ['Carbonate and sulphite both effervesce with acid; only carbonate\'s gas turns lime water milky AND leaves it milky on continued passage', 'A coloured salt (e.g. blue, green) is itself evidence for a transition-metal cation before any reagent is added'],
+  edgeCases: ['Carbonate and sulphite both effervesce with dilute acid and both turn lime water milky at first; passing the gas in EXCESS re-clears it for carbonate (soluble calcium bicarbonate forms) but not for sulphite, which is what actually tells the two apart', 'A coloured salt (e.g. blue, green) is itself evidence for a transition-metal cation before any reagent is added'],
   expectedBehaviour: ['Each confirmatory test gives a distinct, reproducible observation for its target ion', 'Combining anion + cation evidence, not either alone, identifies the salt'],
 };
 

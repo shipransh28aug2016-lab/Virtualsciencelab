@@ -8,7 +8,7 @@ export const meta = {
   unitSystem: 'Descriptive (colour change / precipitate)',
   assumptions: ['Pure samples are tested first, then unknown foodstuffs, so the reagent\'s behaviour is calibrated on a known case first', 'Reagents are freshly prepared (Fehling\'s A and B mixed just before use, for instance)'],
   validRange: 'Six pure samples and two foodstuff extracts',
-  edgeCases: ['Sucrose does NOT reduce Fehling\'s solution directly (it must first be hydrolysed) — a common source of a mistaken "negative" verdict', 'A protein containing no tyrosine/tryptophan gives a weak or negative xanthoproteic test despite being a protein'],
+  edgeCases: ['Sucrose does NOT reduce Fehling\'s solution directly (it must first be hydrolysed) — a common source of a mistaken "negative" verdict', 'A protein containing no tyrosine/tryptophan gives a weak or negative xanthoproteic test despite being a protein', "Milk's sugar is lactose, a reducing disaccharide (unlike sucrose), so milk DOES give a genuine positive Fehling's/Benedict's test"],
   expectedBehaviour: ['Molisch\'s test is positive for every carbohydrate tested, including sucrose', 'Only reducing sugars are positive with Fehling\'s/Benedict\'s'],
 };
 
@@ -19,7 +19,11 @@ export const SAMPLES = {
   oil: { label: 'Vegetable oil', kind: 'fat' },
   eggAlbumin: { label: 'Egg albumin solution', kind: 'protein' },
   gelatin: { label: 'Gelatin solution', kind: 'protein', weakXanthoproteic: true },
-  milk: { label: 'Milk (foodstuff)', kind: 'mixed', hasProtein: true, hasCarb: true, reducingCarb: false, hasFat: true },
+  // Milk's sugar is lactose, a REDUCING disaccharide (its glycosidic bond
+  // leaves the glucose unit's anomeric carbon free, unlike sucrose's,
+  // which ties up both anomeric carbons) -- so milk gives a genuine
+  // positive Fehling's/Benedict's test, not a negative one.
+  milk: { label: 'Milk (foodstuff)', kind: 'mixed', hasProtein: true, hasCarb: true, reducingCarb: true, hasFat: true },
   potatoExtract: { label: 'Potato extract (foodstuff)', kind: 'mixed', hasProtein: false, hasCarb: true, reducingCarb: false, isStarch: true, hasFat: false },
 };
 export const TESTS = {
