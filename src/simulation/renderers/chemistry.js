@@ -488,15 +488,34 @@ export function chromatography(ctx, w, h, state, inputs) {
   const cx = w / 2, chamberY = 30, chamberH = h - 90;
   ctx.save(); ctx.strokeStyle = th.glassStroke; ctx.fillStyle = th.glass; ctx.lineWidth = 1.6;
   ctx.strokeRect(cx - 60, chamberY, 120, chamberH); ctx.restore();
-  const front = Math.min(chamberH - 20, (state?.progress ?? 1) * (chamberH - 20));
+  const baseY = chamberY + chamberH - 20;
+  /*
+   * The paper's usable length (PAPER_LENGTH_CM, 15) sets the pixel scale,
+   * so real centimetre distances from the model -- the actual sample's
+   * spots and the actual solvent front for the chosen solvent and run
+   * time -- map onto the chamber consistently. This used to draw three
+   * hardcoded dots at fixed relative heights regardless of which sample,
+   * solvent or run time was selected, so a cation separation looked
+   * identical to a leaf-pigment one and neither ever moved with the
+   * actual chemistry.
+   */
+  const pxPerCm = (chamberH - 20) / 15;
+  const frontCm = state?.frontCm ?? 0;
+  const frontY = baseY - frontCm * pxPerCm;
   ctx.save(); ctx.strokeStyle = th.dim; ctx.setLineDash([4, 3]); ctx.beginPath();
-  ctx.moveTo(cx - 60, chamberY + chamberH - 20 - front); ctx.lineTo(cx + 60, chamberY + chamberH - 20 - front); ctx.stroke(); ctx.setLineDash([]); ctx.restore();
-  label(ctx, cx + 60, chamberY + chamberH - 20 - front, 'Solvent front', { anchor: 'right', bg: false });
-  ['#e8890c', '#2f7d4f', '#8fc45c'].forEach((c, i) => {
-    ctx.save(); ctx.fillStyle = c; ctx.beginPath();
-    ctx.arc(cx - 20 + i * 20, chamberY + chamberH - 10 - front * (0.5 + i * 0.15), 4, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  ctx.moveTo(cx - 60, frontY); ctx.lineTo(cx + 60, frontY); ctx.stroke(); ctx.setLineDash([]); ctx.restore();
+  label(ctx, cx + 60, frontY, 'Solvent front', { anchor: 'right', bg: false });
+
+  const spots = state?.spots ?? [];
+  const n = spots.length || 1;
+  spots.forEach((spot, i) => {
+    const spotX = cx - 20 + ((i - (n - 1) / 2) * 40) / Math.max(1, n - 1 || 1);
+    const spotY = baseY - spot.distanceCm * pxPerCm;
+    ctx.save(); ctx.fillStyle = spot.colour || th.liquid; ctx.beginPath();
+    ctx.arc(spotX, spotY, 4, 0, Math.PI * 2); ctx.fill(); ctx.restore();
   });
-  ctx.save(); ctx.fillStyle = th.liquid; ctx.fillRect(cx - 60, chamberY + chamberH - 10, 120, 8); ctx.restore();
+
+  ctx.save(); ctx.fillStyle = th.liquid; ctx.fillRect(cx - 60, baseY + 10, 120, 8); ctx.restore();
   label(ctx, cx, chamberY + chamberH, 'Chromatography chamber', { anchor: 'below' });
 }
 

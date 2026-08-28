@@ -208,7 +208,16 @@ export function spotPositions(inputs) {
 /**
  * Are all the components resolved from one another?
  *
- * Two spots closer than about 5 mm on the paper are not separated in practice.
+ * Two spots closer than about 5 mm on the paper are not separated in
+ * practice. This is judged on the actual developed distance (Rf x front),
+ * not on Rf alone, deliberately: real spot resolution improves with a
+ * longer run even at fixed Rf, which is exactly why "run it further" is
+ * standard chromatography practice, and it is also why nickelCobalt (a
+ * genuinely close Rf pair, 0.54 vs 0.47) needs its own slow, cation-suited
+ * solvent and a realistic run time to show the failed separation it is
+ * there to demonstrate -- an unrealistically fast run can rescue even a
+ * poorly-chosen pair, which is a real limitation worth letting a student
+ * discover rather than hiding behind a synthetic Rf-only cutoff.
  */
 export function resolved(inputs) {
   const spots = spotPositions(inputs);
@@ -321,6 +330,21 @@ export function step(state, inputs, dt) {
     s.finishedAt = s.t;
     s.progress = 1;
   }
+  /*
+   * The renderer draws whatever is in `state` (it never imports a model,
+   * by design), so the ACTUAL sample's components -- their real colours
+   * and real Rf-scaled positions -- have to be handed to it here, scaled
+   * by how far the run has progressed. Without this the renderer had no
+   * way to know which sample was even running and fell back to three
+   * hardcoded, fixed-position dots regardless of whether the experiment
+   * was five leaf pigments, two cations, or which solvent and run time
+   * had actually been chosen.
+   */
+  const finalFront = solventFrontCm(inputs);
+  s.frontCm = finalFront * s.progress;
+  s.spots = spotSubmerged(inputs)
+    ? []
+    : spotPositions(inputs).map((c) => ({ name: c.name, colour: c.colour, distanceCm: c.distanceCm * s.progress }));
   return s;
 }
 
