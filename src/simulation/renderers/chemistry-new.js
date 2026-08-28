@@ -340,9 +340,25 @@ export function clockReaction(ctx, w, h, state, inputs) {
     { anchor: 'right', bold: true });
 }
 
+/*
+ * Mirrors PRODUCTS' own `colour` field in models/salt-preparation.js
+ * (kept local rather than imported, per this file's own rule that
+ * renderers draw from state+inputs only). Mohr's salt is pale GREEN
+ * (ferrous sulphate's own colour), not blue; potash alum is essentially
+ * colourless. A blue/green binary split on "is this the ferric one"
+ * used to show identical light-blue liquor and crystals for both Mohr's
+ * salt and alum -- chemically wrong for Mohr's salt and misleading for
+ * the (colourless) alum.
+ */
+const SALT_COLOURS = {
+  mohr: { liquid: '#c9dfc0', crystal: 'rgba(170,212,150,0.92)' },
+  alum: { liquid: '#eef3fb', crystal: 'rgba(232,240,250,0.95)' },
+  ferricOxalate: { liquid: '#2f9e57', crystal: 'rgba(120,220,160,0.92)' },
+};
+
 export function saltPreparation(ctx, w, h, state, inputs) {
   const cx = 380;
-  const ferric = inputs?.product === 'ferricOxalate';
+  const colours = SALT_COLOURS[inputs?.product] || SALT_COLOURS.mohr;
   const evap = clamp(state?.evaporated ?? 0, 0, 1);
   const cry = clamp(state?.crystals ?? 0, 0, 1);
   const heating = state?.phase === 'evaporating';
@@ -351,7 +367,7 @@ export function saltPreparation(ctx, w, h, state, inputs) {
     vesselWidth: 176, vesselHeight: 120,
     // The liquor concentrates as it evaporates, so it deepens in colour.
     fill: 0.66 - evap * 0.3,
-    liquid: ferric ? '#2f9e57' : '#9fd8ea',
+    liquid: colours.liquid,
     lit: heating, air: 1, flameHeight: 42,
     vesselLabel: 'Evaporating dish (reaction mixture)',
   });
@@ -367,7 +383,7 @@ export function saltPreparation(ctx, w, h, state, inputs) {
       ctx.save();
       ctx.translate(rx, ry);
       ctx.rotate(((i * 53) % 90) * Math.PI / 180);
-      ctx.fillStyle = ferric ? 'rgba(120,220,160,0.92)' : 'rgba(180,215,240,0.92)';
+      ctx.fillStyle = colours.crystal;
       ctx.strokeStyle = 'rgba(60,110,160,0.8)'; ctx.lineWidth = 0.8;
       ctx.beginPath();
       ctx.moveTo(0, -size); ctx.lineTo(size * 0.6, 0); ctx.lineTo(0, size); ctx.lineTo(-size * 0.6, 0);
