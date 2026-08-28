@@ -884,15 +884,20 @@ export function pendulumDamping(ctx, w, h, state, inputs) {
 
   /* Amplitude comes from the model's exponential envelope, and the swing
      inside it from the pendulum's own period, so the decay drawn here is
-     the decay the student will plot. */
-  const ampDeg = state?.amplitude ?? (inputs.startAmplitudeDeg ?? 15);
-  const angle = ((state?.angle ?? ampDeg) * Math.PI) / 180;
+     the decay the student will plot. This activity reads the amplitude as
+     a linear displacement in cm off a scale under the bob (not an angle in
+     degrees, and never `startAmplitudeDeg`, a field this experiment does
+     not have) -- converted to the small-angle swing angle via x = Lθ. */
+  const lengthCm = inputs.lengthCm ?? 100;
+  const initialAmpCm = inputs.initialAmplitudeCm ?? 12;
+  const ampCm = state?.amplitude ?? initialAmpCm;
+  const angle = (state?.angle ?? ampCm) / lengthCm;
   const env = ((state?.envelope ?? 1));
 
   // The envelope itself, traced as the arc the bob no longer reaches.
   ctx.save();
   ctx.strokeStyle = rgba('#c02626', 0.4); ctx.setLineDash([4, 4]); ctx.lineWidth = 1.2;
-  const a0 = ((inputs.startAmplitudeDeg ?? 15) * Math.PI) / 180;
+  const a0 = initialAmpCm / lengthCm;
   for (const sgn of [-1, 1]) {
     ctx.beginPath();
     ctx.arc(pivotX, pivotY, len, Math.PI / 2 - sgn * a0, Math.PI / 2 - sgn * a0 * env, sgn > 0);
@@ -903,7 +908,7 @@ export function pendulumDamping(ctx, w, h, state, inputs) {
 
   drawPendulumBob(ctx, pivotX, pivotY, len, angle, { label: 'Bob', r: 12 });
   label(ctx, pivotX + 210, pivotY + 120,
-    `Amplitude ${ampDeg.toFixed(1)}° · ${(env * 100).toFixed(0)}% of the start`,
+    `Amplitude ${ampCm.toFixed(1)} cm · ${(env * 100).toFixed(0)}% of the start`,
     { anchor: 'right', bold: true });
   label(ctx, pivotX, 420, 'Amplitude decays exponentially — energy ∝ amplitude²', { anchor: 'below', size: 11 });
 }

@@ -42,10 +42,18 @@ export function step(state, inputs, dt) {
   s.t += dt;
   if (!s.running) return s;
   const T = periodOf(inputs);
-  const a0 = inputs.startAmplitudeDeg ?? 15;
+  /*
+   * `a0` used to read `inputs.startAmplitudeDeg`, a field that does not
+   * exist anywhere in this experiment (the real control is
+   * `initialAmplitudeCm`, and this activity measures a linear displacement
+   * on a scale beneath the bob, not an angle in degrees) -- so a0 was
+   * always the hardcoded fallback of 15, and the whole on-screen swing and
+   * its decay ignored the amplitude the student actually set.
+   */
+  const a0 = inputs.initialAmplitudeCm ?? defaults.initialAmplitudeCm;
   s.envelope = amplitudeAt(inputs, s.t) / Math.max(1e-6, a0);
-  s.amplitude = a0 * s.envelope;
-  s.angle = s.amplitude * Math.cos((2 * Math.PI * s.t) / Math.max(0.2, T));
+  s.amplitude = a0 * s.envelope; // cm of horizontal displacement, not degrees
+  s.angle = s.amplitude * Math.cos((2 * Math.PI * s.t) / Math.max(0.2, T)); // cm
   return s;
 }
 
@@ -57,7 +65,7 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   return { trial, timeS: Number(t.toFixed(1)), amplitude: Number(amp.toFixed(2)), amplitudeSq: Number(ampSq.toFixed(3)), lnAmpSq: Number(Math.log(ampSq).toFixed(4)), energyMJ: sigFig(ampSq * 0.05, 4) };
 }
 
-export function derive(rows) {
+export function derive(rows, inputs = defaults) {
   if (rows.length < 4) return { ok: false, reason: 'Record the amplitude at at least four different times.' };
   const pts = rows.map((r) => ({ x: Number(r.timeS), y: Number(r.lnAmpSq) }));
   const fit = linearFit(pts);
@@ -66,7 +74,17 @@ export function derive(rows) {
   const halfLife = Math.log(2) / (2 * b);
   const first = Number(rows[0].amplitudeSq);
   const last = Number(rows[rows.length - 1].amplitudeSq);
-  return { ok: true, dampingConstant: sigFig(b, 4), halfLifeS: sigFig(halfLife, 4), energyLostPercent: sigFig(((first - last) / first) * 100, 4), r2: Number(fit.r2.toFixed(4)), n: rows.length, points: rows.map((r) => ({ x: Number(r.timeS), y: Number(r.amplitudeSq) })) };
+  const times = rows.map((r) => Number(r.timeS));
+  return {
+    ok: true, dampingConstant: sigFig(b, 4), halfLifeS: sigFig(halfLife, 4), halfLifeMin: sigFig(halfLife / 60, 4),
+    accepted: sigFig(decayConstant(inputs), 4), energyLostPercent: sigFig(((first - last) / first) * 100, 4),
+    r2: Number(fit.r2.toFixed(4)), n: rows.length,
+    elapsedS: sigFig(Math.max(...times) - Math.min(...times), 4),
+    bob: bobOf(inputs).label, medium: (MEDIA[inputs.medium] || MEDIA.air).label,
+    initialAmplitude: Number(rows[0].amplitude), finalAmplitude: Number(rows[rows.length - 1].amplitude),
+    period: sigFig(periodOf(inputs), 4),
+    points: rows.map((r) => ({ x: Number(r.timeS), y: Number(r.amplitudeSq) })),
+  };
 }
 
 export default { meta, defaults, BOBS, MEDIA, G_TRUE, init, step, measure, derive, validate, bobOf, decayConstant, amplitudeAt, periodOf };

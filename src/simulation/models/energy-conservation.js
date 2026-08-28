@@ -68,11 +68,40 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   };
 }
 
-export function derive(rows) {
+export function derive(rows, inputs = defaults) {
   const ratios = rows.map((r) => Number(r.ratio)).filter(Number.isFinite);
   if (ratios.length < 3) return { ok: false, reason: 'Record at least three release heights.' };
   const m = mean(ratios);
-  return { ok: true, ratio: sigFig(m, 4), percentRetained: sigFig(m * 100, 4), energyLost: sigFig(mean(rows.map((r) => Number(r.lostMJ))), 4), n: ratios.length, points: rows.map((r) => ({ x: Number(r.h1), y: Number(r.h2) })) };
+  const percentRetained = sigFig(m * 100, 4);
+  const meanH1 = sigFig(mean(rows.map((r) => Number(r.h1))), 4);
+  const meanH2 = sigFig(mean(rows.map((r) => Number(r.h2))), 4);
+  const energyIn = sigFig(mean(rows.map((r) => Number(r.pe1))), 4);
+  const energyOut = sigFig(mean(rows.map((r) => Number(r.pe2))), 4);
+
+  /*
+   * A solid sphere rolling without slipping: KE = (1/2)mv² + (1/2)Iω², with
+   * I = (2/5)mr² and ω = v/r, so KE_rot = (1/5)mv² and KE_total = (7/10)mv².
+   * The rotational share of the total is (1/5)/(7/10) = 2/7 ≈ 28.6% of the
+   * kinetic energy, independent of the ball's mass, radius or speed — it is
+   * a fixed geometric fact about a uniform sphere, which is exactly why it
+   * is the same number regardless of which ball or height was used.
+   */
+  const rotationalShare = sigFig((2 / 7) * 100, 4);
+  const h1m = (inputs.releaseHeightCm ?? defaults.releaseHeightCm) / 100;
+  const speedRolling = sigFig(Math.sqrt((10 * G * h1m) / 7), 4);
+  const speedIfSliding = sigFig(Math.sqrt(2 * G * h1m), 4);
+  const speedRatio = sigFig(speedRolling / speedIfSliding, 4);
+
+  const distinctHeights = [...new Set(rows.map((r) => Number(r.h1)))];
+
+  return {
+    ok: true, ratio: sigFig(m, 4), percentRetained, percentLost: sigFig(100 - percentRetained, 4),
+    energyLost: sigFig(mean(rows.map((r) => Number(r.lostMJ))), 4), energyIn, energyOut,
+    meanH1, meanH2, ball: ballOf(inputs).label, track: trackOf(inputs).label,
+    rotationalShare, speedRolling, speedIfSliding, speedRatio,
+    variedHeight: distinctHeights.length >= 2, heightsTested: distinctHeights.length,
+    n: ratios.length, points: rows.map((r) => ({ x: Number(r.h1), y: Number(r.h2) })),
+  };
 }
 
 export default { meta, defaults, TRACKS, BALLS, G, init, step, measure, derive, validate, trackOf, ballOf, regainedHeightCm };

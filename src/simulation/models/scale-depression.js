@@ -5,7 +5,7 @@
  * loaded centrally: δ = WL³/(48YI). The ratio of the two is exactly 16.
  */
 import { makeRng, jitter } from '../../utils/rng.js';
-import { fitThroughOrigin, sigFig } from '../../utils/measure.js';
+import { fitThroughOrigin, sigFig, sciText } from '../../utils/measure.js';
 
 export const meta = {
   id: 'XI-PHY-ACT-B6',
@@ -19,6 +19,8 @@ export const meta = {
 
 export const G = 9.792;
 export const SCALES = { wood: { label: 'Wooden metre scale', Y: 11e9, bMm: 30, dMm: 6 }, steel: { label: 'Steel scale', Y: 200e9, bMm: 25, dMm: 3 }, plastic: { label: 'Plastic scale', Y: 3e9, bMm: 30, dMm: 4 } };
+
+export const ARRANGEMENTS = { cantileverEnd: 'Cantilever, loaded at the free end', supportedCentre: 'Supported at both ends, loaded centrally' };
 
 export const defaults = { arrangement: 'cantileverEnd', loadG: 50, spanCm: 40, scale: 'wood', orientation: 'flat', gauge: 'mm05' };
 
@@ -68,17 +70,73 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 }
 
 export function derive(rows, inputs = defaults) {
-  const pts = rows.map((r) => ({ x: Number(r.loadN), y: Number(r.depressionMm) }));
-  if (pts.length < 4) return { ok: false, reason: 'Record the depression for at least four different loads.' };
+  /*
+   * Rows can mix BOTH arrangements (that comparison is the actual point of
+   * this activity), so a fit for THIS arrangement's Young's modulus must
+   * use only this arrangement's own points -- averaging cantilever and
+   * centrally-supported readings together into one straight line, as the
+   * previous version did over every recorded row regardless of
+   * arrangement, mixes two lines whose slopes differ by a factor of 16 and
+   * produces a fit, and a Y, that describes neither arrangement.
+   */
+  const byArr = new Map();
+  for (const r of rows) {
+    const a = r.arrangement || inputs.arrangement;
+    if (!byArr.has(a)) byArr.set(a, []);
+    byArr.get(a).push(r);
+  }
+  const ownRows = byArr.get(inputs.arrangement) || [];
+  const pts = ownRows.map((r) => ({ x: Number(r.loadN), y: Number(r.depressionMm) }));
+  if (pts.length < 4) return { ok: false, reason: `Record the depression for at least four different loads in the "${ARRANGEMENTS[inputs.arrangement] || inputs.arrangement}" arrangement.` };
   const fit = fitThroughOrigin(pts);
   const L = inputs.spanCm / 100;
   const I = secondMomentM4(inputs);
   const slopeSI = fit.slope / 1000; // m per N
   const Y = inputs.arrangement === 'supportedCentre' ? L ** 3 / (48 * I * slopeSI) : L ** 3 / (3 * I * slopeSI);
-  const other = inputs.arrangement === 'supportedCentre' ? depressionMm({ ...inputs, arrangement: 'cantileverEnd' }) : depressionMm({ ...inputs, arrangement: 'supportedCentre' });
-  const thisD = depressionMm(inputs);
-  const ratio = inputs.arrangement === 'supportedCentre' ? other / thisD : thisD / other;
-  return { ok: true, youngsModulus: sigFig(Y, 4), slope: sigFig(fit.slope, 4), ratio: sigFig(ratio, 4), r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts };
+  const acceptedY = scaleOf(inputs).Y;
+  const percentError = sigFig((Math.abs(Y - acceptedY) / acceptedY) * 100, 4);
+
+  /*
+   * The 16x stiffness ratio compared here is measured from the two
+   * arrangements' own fitted slopes (mm of depression per newton, for the
+   * same span and scale), not recomputed from the theoretical formula --
+   * that would "confirm" 16 unconditionally even if only one arrangement
+   * had ever actually been tried.
+   */
+  let arrangementCheck = null, ratio = null;
+  const arrKeys = [...byArr.keys()].filter((k) => (byArr.get(k) || []).length >= 3);
+  if (arrKeys.length >= 2) {
+    arrangementCheck = arrKeys.map((key) => {
+      const arrPts = byArr.get(key).map((r) => ({ x: Number(r.loadN), y: Number(r.depressionMm) }));
+      const arrFit = fitThroughOrigin(arrPts);
+      return { arrangement: ARRANGEMENTS[key] || key, slope: sigFig(arrFit ? arrFit.slope : NaN, 4) };
+    }).filter((a) => Number.isFinite(a.slope));
+    if (arrangementCheck.length >= 2) {
+      const cantilever = arrangementCheck.find((a) => a.arrangement === ARRANGEMENTS.cantileverEnd);
+      const centre = arrangementCheck.find((a) => a.arrangement === ARRANGEMENTS.supportedCentre);
+      if (cantilever && centre && centre.slope > 0) ratio = sigFig(cantilever.slope / centre.slope, 4);
+    }
+  }
+  const expectedRatio = 16;
+  const ratioAgrees = ratio !== null && Math.abs(ratio - expectedRatio) <= 0.25 * expectedRatio;
+
+  // Depression should scale as span cubed (L³): compare per-newton depression across whatever spans were actually recorded.
+  const bySpan = new Map();
+  for (const r of ownRows) {
+    const key = Number(r.spanCm);
+    if (!bySpan.has(key)) bySpan.set(key, []);
+    bySpan.get(key).push(Number(r.perNewton));
+  }
+  const spanCheck = bySpan.size >= 2
+    ? [...bySpan.entries()].sort((a, b) => a[0] - b[0]).map(([spanCm, vals]) => ({ spanCm, perNewton: sigFig(vals.reduce((a, b) => a + b, 0) / vals.length, 4) }))
+    : null;
+
+  return {
+    ok: true, youngsModulus: sigFig(Y, 4), youngsText: sciText(Y, 'Pa', 3), acceptedYoungsText: sciText(acceptedY, 'Pa', 3),
+    percentError, slope: sigFig(fit.slope, 4), ratio, expectedRatio, ratioAgrees, arrangementCheck, spanCheck,
+    scale: scaleOf(inputs).label, arrangement: ARRANGEMENTS[inputs.arrangement] || inputs.arrangement,
+    r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts,
+  };
 }
 
-export default { meta, defaults, SCALES, G, init, step, measure, derive, validate, scaleOf, secondMomentM4, depressionMm };
+export default { meta, defaults, SCALES, ARRANGEMENTS, G, init, step, measure, derive, validate, scaleOf, secondMomentM4, depressionMm };
