@@ -53,14 +53,42 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init() { return { t: 0, settled: true }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, elapsed: 0, heating: true, temperature: 20, yieldFraction: 0, phase: 'dissolving' }; }
+/**
+ * Dissolve hot, then cool. The renderer reads `state.heating`,
+ * `state.temperature` and `state.yieldFraction` to decide whether to show
+ * a hot solution or crystals forming -- step() was a bare no-op, so
+ * `state.heating` was permanently undefined, the renderer's own
+ * `state?.heating ?? true` fallback made it permanently true, and its
+ * `heating ? 0 : ...` branch meant yieldFraction was permanently 0: this
+ * scene showed "Hot saturated solution" with not one crystal in it,
+ * whether the burner had been lit for a second or for a minute.
+ *
+ * Crash-cooling in ice really is FASTER than slow, undisturbed cooling —
+ * that speed is exactly why it gives small crystals that trap mother
+ * liquor, so the cooling method sets the rate here, not just the outcome.
+ */
+const COOL_RATE = { slow: 0.05, bench: 0.16, ice: 0.5 };
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt; s.elapsed += dt;
+  if (s.heating) {
+    s.temperature = Math.min(82, s.temperature + dt * 25);
+    if (s.temperature >= 80) { s.heating = false; s.phase = 'cooling'; }
+    return s;
+  }
+  const rate = COOL_RATE[inputs.cooling] || COOL_RATE.slow;
+  s.temperature = Math.max(20, s.temperature - dt * rate * 70);
+  s.yieldFraction = Math.min(1, s.yieldFraction + dt * rate * 0.7);
+  if (s.yieldFraction >= 1) s.phase = 'complete';
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 173);
   const crystalMass = Math.max(0, crystalMassG(inputs) + jitter(rng, 0.15));
   const mp = purityMeltingPoint(inputs) + jitter(rng, 0.3);
-  return { trial, compound: compoundOf(inputs).label, crudeMassG: inputs.massG, solventMl: inputs.solventMl, crystalMassG: sigFig(crystalMass, 4), recoveryPct: sigFig((crystalMass / inputs.massG) * 100, 4), meltingPointC: sigFig(mp, 4) };
+  return { trial, compound: compoundOf(inputs).label, crudeMassG: inputs.massG, solventMl: inputs.solventMl, cooling: inputs.cooling, crystalMassG: sigFig(crystalMass, 4), recoveryPct: sigFig((crystalMass / inputs.massG) * 100, 4), meltingPointC: sigFig(mp, 4) };
 }
 
 export function derive(rows, inputs = defaults) {
@@ -68,7 +96,59 @@ export function derive(rows, inputs = defaults) {
   const recovery = mean(rows.map((r) => Number(r.recoveryPct)));
   const crystalMass = mean(rows.map((r) => Number(r.crystalMassG)));
   const meltingPoint = mean(rows.map((r) => Number(r.meltingPointC)));
-  return { ok: true, recovery: sigFig(recovery, 4), crystalMass: sigFig(crystalMass, 4), meltingPoint: sigFig(meltingPoint, 4), accepted: compoundOf(inputs).mp, n: rows.length, points: rows.map((r) => ({ x: Number(r.solventMl), y: Number(r.recoveryPct) })) };
+  const accepted = compoundOf(inputs).mp;
+  const c = compoundOf(inputs);
+  const cooling = COOLING[inputs.cooling] || COOLING.slow;
+  const crude = CRUDE[inputs.crude] || CRUDE.moderate;
+
+  const meltingPointDeficit = Math.max(0, sigFig(accepted - meltingPoint, 3));
+  const purified = meltingPointDeficit < 1.5;
+  // What fraction of the CRUDE sample's own impurity is still present, judged
+  // by how much of the melting-point depression survives recrystallisation
+  // (purityMeltingPoint's own impurityLeft term against the crude's starting
+  // depression, evaluated at the settings actually used).
+  const startingDepression = c.mp - (c.mp - crude.impurityPct * 0.4); // the crude sample before any purification
+  const impurityLeftFrac = startingDepression > 0 ? Math.min(1, meltingPointDeficit / startingDepression) : 0;
+  const impurityRemovedPct = sigFig((1 - impurityLeftFrac) * 100, 3);
+  const productImpurityPct = sigFig(impurityLeftFrac * crude.impurityPct, 3);
+
+  const minimumSolventMl = sigFig((inputs.massG / c.solubilityHot) * 100, 3);
+  const usedSolventMl = inputs.solventMl;
+  const lostToMotherLiquorG = sigFig((c.solubilityCold * inputs.solventMl) / 100, 3);
+
+  const crystalSize = cooling.sizeFactor >= 0.85 ? 'large, well-formed' : cooling.sizeFactor >= 0.5 ? 'medium' : 'small, fine';
+  const crystalHabit = c.label.toLowerCase().includes('alum') ? 'octahedral' : c.label.toLowerCase().includes('sulphate') ? 'triclinic (blue)' : 'needle-like';
+
+  const byCooling = new Map();
+  const bySolvent = new Map();
+  for (const r of rows) {
+    const coolKey = r.cooling ?? inputs.cooling ?? 'slow';
+    if (!byCooling.has(coolKey)) byCooling.set(coolKey, []);
+    byCooling.get(coolKey).push(r);
+    const solKey = Number(r.solventMl);
+    if (!bySolvent.has(solKey)) bySolvent.set(solKey, []);
+    bySolvent.get(solKey).push(r);
+  }
+  const coolingCheck = byCooling.size >= 2
+    ? [...byCooling.entries()].map(([name, rs]) => ({
+      name: (COOLING[name] || cooling).label ?? String(name),
+      mass: sigFig(mean(rs.map((r) => Number(r.crystalMassG))), 3),
+      meltingPoint: sigFig(mean(rs.map((r) => Number(r.meltingPointC))), 4),
+    }))
+    : null;
+  const solventCheck = bySolvent.size >= 2
+    ? [...bySolvent.entries()].sort((a, b) => a[0] - b[0]).map(([solventMl, rs]) => ({
+      solventMl, recovery: sigFig(mean(rs.map((r) => Number(r.recoveryPct))), 3),
+    }))
+    : null;
+
+  return {
+    ok: true, recovery: sigFig(recovery, 4), crystalMass: sigFig(crystalMass, 4), meltingPoint: sigFig(meltingPoint, 4),
+    accepted, acceptedMeltingPoint: accepted, n: rows.length, points: rows.map((r) => ({ x: Number(r.solventMl), y: Number(r.recoveryPct) })),
+    compound: c.label, crystalSize, crystalHabit, purified, meltingPointDeficit,
+    impurityRemovedPct, productImpurityPct, lostToMotherLiquorG, minimumSolventMl, usedSolventMl,
+    coolingCheck, solventCheck,
+  };
 }
 
 export default { meta, defaults, COMPOUNDS, CRUDE, COOLING, init, step, measure, derive, validate, compoundOf, crystalMassG, recoveryPct, purityMeltingPoint };

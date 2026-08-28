@@ -5,7 +5,7 @@
  * choice of scale, drawing error bars, and taking the slope from the line
  * rather than from two isolated points.
  */
-import { linearFit, sigFig } from '../../utils/measure.js';
+import { linearFit, fitThroughOrigin, sigFig } from '../../utils/measure.js';
 
 export const meta = {
   id: 'XI-PHY-ACT-A3',
@@ -54,20 +54,39 @@ export function derive(rows, inputs = defaults) {
   if (rows.length < 4) return { ok: false, reason: 'Plot at least four points from the dataset.' };
   const d = datasetOf(inputs);
   const pts = rows.map((r) => ({ x: Number(r.x), y: Number(r.y) }));
-  let slope;
+  const useOrigin = !!inputs.forceThroughOrigin;
+  // Forcing the fit through the origin has to actually change the fit, or
+  // the whole judgement this activity is testing (should this line pass
+  // through zero?) has no visible consequence when got wrong.
+  const fit = useOrigin ? fitThroughOrigin(pts) : linearFit(pts);
+
+  let slope, intercept;
   if (inputs.slopeMethod === 'twoPoints' && pts.length >= 2) {
     const a = pts[0]; const b = pts[pts.length - 1];
     slope = (b.y - a.y) / (b.x - a.x);
+    intercept = useOrigin ? 0 : a.y - slope * a.x;
   } else {
-    const fit = linearFit(pts);
     slope = fit ? fit.slope : null;
+    intercept = useOrigin ? 0 : (fit ? fit.intercept : null);
   }
-  const fit = linearFit(pts);
   const within = rows.filter((r) => {
-    const pred = fit ? fit.slope * Number(r.x) + fit.intercept : Number(r.y);
+    const pred = fit ? fit.slope * Number(r.x) + (fit.intercept ?? 0) : Number(r.y);
     return Math.abs(pred - Number(r.y)) <= Number(r.errorBar);
   }).length;
-  return { ok: true, slope: slope !== null ? sigFig(slope, 4) : null, r2: fit ? Number(fit.r2.toFixed(4)) : null, pointsWithinError: within, n: rows.length, points: pts, xLabel: d.xLabel, yLabel: d.yLabel };
+
+  const usedBestFit = inputs.slopeMethod !== 'twoPoints';
+  const shouldPassOrigin = !!d.throughOrigin;
+  const scaleUtilisation = { veryCoarse: 22, auto: 78, fine: 92 }[inputs.yScale] ?? 78;
+
+  return {
+    ok: true, slope: slope !== null ? sigFig(slope, 4) : null, intercept: intercept !== null ? sigFig(intercept, 4) : null,
+    r2: fit ? Number(fit.r2.toFixed(4)) : null, pointsWithinError: within, n: rows.length, points: pts,
+    xLabel: d.xLabel, yLabel: d.yLabel, datasetLabel: d.label,
+    slopeMethod: usedBestFit ? 'Best-fit line' : 'Two-point slope', usedBestFit,
+    goodScale: inputs.yScale !== 'veryCoarse', scaleUtilisation,
+    shouldPassOrigin, originHandled: useOrigin === shouldPassOrigin,
+    errorBarsShown: !!inputs.showErrorBars,
+  };
 }
 
 export default { meta, defaults, DATASETS, init, step, measure, derive, validate, datasetOf };

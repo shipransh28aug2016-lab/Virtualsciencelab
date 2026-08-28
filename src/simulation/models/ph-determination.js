@@ -111,7 +111,7 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const nature = pH < 6.5 ? 'acidic' : pH > 7.5 ? 'basic' : 'neutral';
   return {
     trial, sample: s.label, concentration: s.C || null, method: m.label, pH: Number(pH.toFixed(2)),
-    pOH: Number((14 - pH).toFixed(2)), hIon: sigFig(10 ** -pH, 3), nature,
+    pOH: Number((14 - pH).toFixed(2)), hIon: sigFig(10 ** -pH, 3), nature, dilution: inputs.dilution ?? 1,
     index: trial,
   };
 }
@@ -120,10 +120,40 @@ export function derive(rows) {
   if (rows.length < 2) return { ok: false, reason: 'Test at least two solutions to compare.' };
   const mostAcidic = rows.reduce((a, b) => (Number(a.pH) <= Number(b.pH) ? a : b));
   const mostBasic = rows.reduce((a, b) => (Number(a.pH) >= Number(b.pH) ? a : b));
-  const dilutionRows = rows.filter((r) => r.sample === rows[0].sample);
-  const dilutionCheck = dilutionRows.length > 1;
+
+  /*
+   * dilutionCheck used to be a bare boolean, but the result panel reads
+   * dilutionCheck.sample/.deltaPH/.decades/.perDecade — a boolean has none
+   * of those, so the "check" text would have silently rendered
+   * "undefined" units all the way down the moment two dilutions of the
+   * same sample were actually recorded.
+   */
+  const bySample = new Map();
+  for (const r of rows) {
+    if (!bySample.has(r.sample)) bySample.set(r.sample, []);
+    bySample.get(r.sample).push(r);
+  }
+  let dilutionCheck = null;
+  for (const [sample, rs] of bySample) {
+    const distinct = [...new Set(rs.map((r) => Number(r.dilution)))];
+    if (distinct.length < 2) continue;
+    const sorted = [...rs].sort((a, b) => Number(a.dilution) - Number(b.dilution));
+    const lo = sorted[0], hi = sorted[sorted.length - 1];
+    const decades = Math.log10(Number(hi.dilution) / Number(lo.dilution));
+    if (!(decades > 0)) continue;
+    const deltaPH = Number(hi.pH) - Number(lo.pH);
+    dilutionCheck = { sample, deltaPH: sigFig(deltaPH, 3), decades: sigFig(decades, 3), perDecade: sigFig(deltaPH / decades, 3) };
+    break;
+  }
+
+  const acids = rows.filter((r) => r.nature === 'acidic').length;
+  const bases = rows.filter((r) => r.nature === 'basic').length;
+  const neutral = rows.filter((r) => r.nature === 'neutral').length;
+
   return {
-    ok: true, mostAcidic: mostAcidic.sample, mostAcidicPH: Number(mostAcidic.pH), mostBasic: mostBasic.sample,
+    ok: true, mostAcidic: mostAcidic.sample, mostAcidicPH: Number(mostAcidic.pH),
+    mostBasic: mostBasic.sample, mostBasicPH: Number(mostBasic.pH),
+    acids, bases, neutral,
     dilutionCheck, n: rows.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.pH) })),
   };
 }

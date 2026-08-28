@@ -749,7 +749,12 @@ function startProcess() {
   app.state[flag] = true;
   // A launcher needs its initial velocity components as well as the flag.
   if (flag === 'flying') {
-    const u = app.inputs.speedMs ?? 6;
+    // The projectile-range model exposes its own speed lookup (soft/medium/
+    // strong spring settings); reading a plain `speedMs` input here always
+    // fell back to 6 m/s, so every shot animated at the medium setting's
+    // speed no matter which spring the student actually chose.
+    const launcher = app.model.launcherOf ? app.model.launcherOf(app.inputs) : null;
+    const u = launcher ? launcher.speed : (app.inputs.speedMs ?? 6);
     const a = ((app.inputs.angleDeg ?? 45) * Math.PI) / 180;
     app.state.vx = u * Math.cos(a);
     app.state.vy = u * Math.sin(a);

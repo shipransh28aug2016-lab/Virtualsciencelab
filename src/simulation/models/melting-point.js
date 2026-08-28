@@ -6,7 +6,7 @@
  * to the amount present — the cryoscopic effect.
  */
 import { makeRng, jitter } from '../../utils/rng.js';
-import { toLeastCount, sigFig } from '../../utils/measure.js';
+import { toLeastCount, sigFig, mean, percentError } from '../../utils/measure.js';
 
 export const meta = {
   id: 'XI-CHE-B01',
@@ -40,8 +40,38 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init(inputs = defaults) {
+  return { t: 0, running: true, bathTemp: 28, meltingPoint: trueMeltingPoint(inputs), heating: true, finishedAt: null };
+}
+/**
+ * The bath actually heats. This was `step(state) { return state; }` -- state
+ * never carried a temperature at all, so the renderer's `state?.bathTemp`
+ * permanently fell back to its hardcoded 30, the capillary sample never
+ * visually melted no matter how long the burner burned, and every
+ * screenshot of this experiment showed the identical "Bath 30.0 °C" whether
+ * the flame had been lit for one second or one minute.
+ *
+ * Real time compression: at the CBSE-recommended 1-2 °C/min this experiment
+ * takes many real minutes to reach a melting point of 80-130 °C, which is
+ * why the rate is compressed 20x here for the simulation, not because the
+ * underlying rate itself is wrong -- `trueRange`/`trueMeltingPoint` (used
+ * by measure()) are untouched and still reason in real °C per minute.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  if (s.finishedAt) return s;
+  const COMPRESSION = 20;
+  const minutes = (dt * COMPRESSION) / 60;
+  const ceiling = (BATHS[inputs.bath] || BATHS.oil).maxC;
+  const rate = inputs.heatingRate ?? 2;
+  s.bathTemp = Math.min(ceiling, s.bathTemp + rate * minutes);
+  s.meltingPoint = trueMeltingPoint(inputs);
+  s.heating = true;
+  const range = trueRange(inputs);
+  if (s.bathTemp >= s.meltingPoint + range / 2 + 2) s.finishedAt = s.t;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   if (!bathAdequate(inputs)) return null;
@@ -57,10 +87,48 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 export function derive(rows, inputs = defaults) {
   if (rows.length < 2) return { ok: false, reason: 'Determine the melting point at least twice.' };
   const mps = rows.map((r) => Number(r.lastCrystalC));
-  const meltingPoint = sigFig(mps.reduce((a, b) => a + b, 0) / mps.length, 4);
+  const meltingPoint = sigFig(mean(mps), 4);
   const ranges = rows.map((r) => Number(r.rangeC));
-  const rangeC = sigFig(ranges.reduce((a, b) => a + b, 0) / ranges.length, 3);
-  return { ok: true, meltingPoint, rangeC, sharp: rangeC < 1.0, accepted: compoundOf(inputs).mp, n: rows.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.lastCrystalC) })) };
+  const rangeC = sigFig(mean(ranges), 3);
+  const sharp = rangeC < 1.0;
+  const accepted = compoundOf(inputs).mp;
+  const depressionC = Math.max(0, sigFig(accepted - meltingPoint, 3));
+  const pure = depressionC < 1.0;
+  /*
+   * CBSE's melting-point practical asks the student to judge purity from
+   * the SHARPNESS and DEPTH of the depression, not to compute a mole
+   * fraction (that calculation belongs to freezing-point-depression
+   * colligative-properties work, with a cryoscopic constant this practical
+   * does not supply). This is an illustrative proportional estimate,
+   * calibrated so the "crude sample" preset (a 6.5 degree depression)
+   * reads as a clearly-impure ~10 mole per cent, not a claimed rigorous
+   * molar analysis.
+   */
+  const impurityPct = sigFig((depressionC / 6.5) * 10, 3);
+
+  const heatedTooFast = (inputs.heatingRate ?? 2) > 3;
+  const thermometerLagC = heatedTooFast ? sigFig(Math.max(0, (inputs.heatingRate - 2)) * 0.6, 2) : 0;
+
+  const groups = new Map();
+  for (const r of rows) {
+    if (!groups.has(r.purity)) groups.set(r.purity, []);
+    groups.get(r.purity).push(r);
+  }
+  const purityCheck = groups.size >= 2
+    ? [...groups.entries()].map(([name, rs]) => ({
+      name,
+      meltingPoint: sigFig(mean(rs.map((r) => Number(r.lastCrystalC))), 4),
+      range: sigFig(mean(rs.map((r) => Number(r.rangeC))), 3),
+    }))
+    : null;
+
+  return {
+    ok: true, meltingPoint, rangeC, sharp, accepted, n: rows.length,
+    compound: compoundOf(inputs).label, meltingRangeText: `${mps[0] !== undefined ? sigFig(meltingPoint - rangeC, 4) : meltingPoint}–${meltingPoint} °C`,
+    percentError: sigFig(percentError(meltingPoint, accepted), 3),
+    pure, impurityPct: pure ? 0 : impurityPct, depressionC, heatedTooFast, thermometerLagC, purityCheck,
+    points: rows.map((r, i) => ({ x: i + 1, y: Number(r.lastCrystalC) })),
+  };
 }
 
 export default { meta, defaults, COMPOUNDS, PURITY, BATHS, THERMOMETERS, init, step, measure, derive, validate, compoundOf, trueMeltingPoint, trueRange, bathAdequate };

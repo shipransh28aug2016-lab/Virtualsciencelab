@@ -44,10 +44,34 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   return { trial, object: objectOf(inputs).label, leastCount: lc, divisions: Math.round(reading / lc), reading, maxError, percentError: sigFig((maxError / reading) * 100, 3) };
 }
 
-export function derive(rows) {
+export function derive(rows, inputs = defaults) {
   if (rows.length < 3) return { ok: false, reason: 'Take at least three readings.' };
   const vals = rows.map((r) => Number(r.reading));
-  return { ok: true, meanReading: sigFig(mean(vals), 4), leastCount: Number(rows[0].leastCount), maxError: Number(rows[0].maxError), n: vals.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.reading) })) };
+  const meanReading = mean(vals);
+  const leastCount = Number(rows[0].leastCount);
+  const maxError = Number(rows[0].maxError);
+  const trueLen = objectOf(inputs).trueCm;
+  const withinLeastCount = Math.abs(meanReading - trueLen) <= leastCount;
+
+  const scales = new Map();
+  for (const r of rows) {
+    const key = Number(r.leastCount);
+    if (!scales.has(key)) scales.set(key, []);
+    scales.get(key).push(Number(r.reading));
+  }
+  const comparison = scales.size >= 2
+    ? [...scales.entries()].sort((a, b) => b[0] - a[0]).map(([lc, readings]) => ({
+      leastCount: lc, mean: sigFig(mean(readings), 4), maxError: sigFig(lc / 2, 3),
+    }))
+    : null;
+
+  return {
+    ok: true, meanReading: sigFig(meanReading, 4), leastCount, maxError,
+    percentError: sigFig((maxError / meanReading) * 100, 3), spread: sigFig(Math.max(...vals) - Math.min(...vals), 3),
+    object: objectOf(inputs).label, divisions: Number(rows[rows.length - 1].divisions),
+    comparison, scalesCompared: scales.size, withinLeastCount,
+    n: vals.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.reading) })),
+  };
 }
 
 export default { meta, defaults, SCALES, OBJECTS, init, step, measure, derive, validate, scaleOf, objectOf };

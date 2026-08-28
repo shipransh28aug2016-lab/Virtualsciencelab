@@ -689,36 +689,53 @@ export function projectileRange(ctx, w, h, state, inputs) {
   const th = theme();
   const groundY = 400, launchX = 70;
   const angle = ((inputs.angleDeg ?? 45) * Math.PI) / 180;
+  /* Mirrors LAUNCHERS/TABLE_HEIGHT_M in models/projectile-range.js. Kept as
+     a small local lookup (renderers draw from state+inputs only, never
+     import a model) rather than duplicating the whole table. */
+  const LAUNCHER_SPEED = { soft: 4.0, medium: 6.0, strong: 8.2 };
+  const G = 9.792;
+  const u0 = LAUNCHER_SPEED[inputs.launcher] ?? LAUNCHER_SPEED.medium;
+  const h0 = inputs.mount === 'table' ? 0.9 : 0;
   /* Scale the bench to the flight, not the other way round: a fixed
      pixels-per-metre left a 3 m throw as a thumbnail in the corner of a
-     wide canvas. */
-  const u0 = inputs.speedMs ?? 6;
-  const predicted = Math.max(0.5, (u0 * u0 * Math.sin(2 * angle)) / 9.792);
+     wide canvas. Predicted range measured from a height needs the full
+     time of flight, not the ground-level R = u²sin(2θ)/g shortcut. */
+  const uy0 = u0 * Math.sin(angle);
+  const flightT = (uy0 + Math.sqrt(uy0 * uy0 + 2 * G * h0)) / G;
+  const predicted = Math.max(0.5, u0 * Math.cos(angle) * flightT);
   const PX = clamp(560 / predicted, 18, 200);
+  const launchY = groundY - h0 * PX;
 
   ctx.save();
   ctx.strokeStyle = rgba(th.stroke, 0.6); ctx.lineWidth = 2;
   ctx.beginPath(); ctx.moveTo(30, groundY); ctx.lineTo(launchX + predicted * PX + 80, groundY); ctx.stroke();
   ctx.restore();
 
+  // A table under the launcher when it is mounted above the floor.
+  if (h0 > 0) {
+    brushedMetal(ctx, launchX - 34, launchY, 68, groundY - launchY, { axis: 'v' });
+    contactShadow(ctx, launchX, groundY, 50, { strength: 0.5 });
+    label(ctx, launchX, groundY + 6, `Table · h = ${h0.toFixed(2)} m`, { anchor: 'below' });
+  }
+
   // The launcher, aimed where it is actually aimed.
   ctx.save();
-  ctx.translate(launchX, groundY);
+  ctx.translate(launchX, launchY);
   ctx.rotate(-angle);
   brushedMetal(ctx, 0, -9, 58, 18, { axis: 'h' });
   ctx.restore();
-  contactShadow(ctx, launchX, groundY, 60, { strength: 0.6 });
-  label(ctx, launchX, groundY + 6, `Launcher · θ = ${(inputs.angleDeg ?? 45).toFixed(0)}°`, { anchor: 'below' });
+  contactShadow(ctx, launchX, launchY, 60, { strength: 0.6 });
+  label(ctx, launchX, launchY + 6, `Launcher · θ = ${(inputs.angleDeg ?? 45).toFixed(0)}°`, { anchor: 'below' });
 
   // The predicted path, and the projectile actually on it.
-  const u = inputs.speedMs ?? 6;
   ctx.save();
   ctx.strokeStyle = rgba(th.dim, 0.75); ctx.setLineDash([4, 4]); ctx.lineWidth = 1.2;
   ctx.beginPath();
-  for (let t = 0; t <= 4; t += 0.02) {
-    const x = launchX + u * Math.cos(angle) * t * PX;
-    const y = groundY - (u * Math.sin(angle) * t - 0.5 * 9.792 * t * t) * PX;
-    if (y > groundY) break;
+  for (let t = 0; t <= flightT + 0.02; t += 0.02) {
+    const x = launchX + u0 * Math.cos(angle) * t * PX;
+    const heightAboveFloor = h0 + u0 * Math.sin(angle) * t - 0.5 * G * t * t;
+    const y = groundY - heightAboveFloor * PX;
+    if (heightAboveFloor < 0) break;
     t === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
   }
   ctx.stroke(); ctx.setLineDash([]);
@@ -726,7 +743,7 @@ export function projectileRange(ctx, w, h, state, inputs) {
 
   if (state?.flying || state?.landed) {
     const bx = launchX + (state.x ?? 0) * PX;
-    const by = groundY - (state.y ?? 0) * PX;
+    const by = groundY - (state.y ?? h0) * PX;
     ctx.save();
     const g = ctx.createRadialGradient(bx - 3, by - 4, 1, bx, by, 9);
     g.addColorStop(0, '#f5f8fc'); g.addColorStop(0.5, '#8d97a8'); g.addColorStop(1, '#39414f');
