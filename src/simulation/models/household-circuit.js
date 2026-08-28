@@ -50,17 +50,23 @@ export function init() { return { t: 0, current: 0, lamps: 0, fuseBlown: false, 
  * the same supply, so the total rises with every one switched on — and
  * past the fuse rating the fuse goes, which is the safety lesson the
  * experiment carries.
+ *
+ * This used to read inputs.supplyV/lampsOn/lamps/lampWatt/fuseA -- none of
+ * which are fields this experiment actually has (the real controls are
+ * lamp/wiring/switches/fuse/earthing/fuseRatingA) -- so the animation
+ * always fell back to its hardcoded defaults (220 V, one 60 W lamp, a 5 A
+ * fuse) regardless of the lamp rating, wiring, or fuse rating the student
+ * had actually chosen. Now driven by the model's own totalCurrentA(),
+ * which already accounts for the chosen lamp, wiring and (for series) the
+ * voltage each lamp actually gets.
  */
 export function step(state, inputs, dt) {
   const s = { ...state };
   s.t += dt;
-  const V = inputs.supplyV ?? 220;
-  const n = inputs.lampsOn ?? inputs.lamps ?? 1;
-  const perLampW = inputs.lampWatt ?? 60;
-  const target = s.fuseBlown ? 0 : (n * perLampW) / V;
+  const target = s.fuseBlown ? 0 : totalCurrentA(inputs);
   s.current += (target - s.current) * Math.min(1, dt * 6);
-  s.lamps = s.fuseBlown ? 0 : n;
-  if (!s.fuseBlown && s.current > (inputs.fuseA ?? 5)) { s.fuseBlown = true; }
+  s.lamps = s.fuseBlown ? 0 : 3;
+  if (!s.fuseBlown && s.current > (inputs.fuseRatingA ?? defaults.fuseRatingA)) { s.fuseBlown = true; }
   s.switchPhase = (s.switchPhase + dt) % 1;
   return s;
 }
@@ -70,13 +76,34 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const v = voltagePerLampV(inputs) + jitter(rng, 1);
   const p = (v * v) / lampResistanceOhm(inputs);
   const iTotal = totalCurrentA(inputs) + jitter(rng, 0.01);
-  return { trial, wiring: inputs.wiring, switches: inputs.switches, fuse: inputs.fuse, voltagePerLamp: Number(v.toFixed(1)), powerPerLamp: sigFig(p, 4), totalCurrent: sigFig(iTotal, 4) };
+  return { trial, wiring: inputs.wiring, switches: inputs.switches, fuse: inputs.fuse, earthing: inputs.earthing, voltagePerLamp: Number(v.toFixed(1)), powerPerLamp: sigFig(p, 4), totalCurrent: sigFig(iTotal, 4) };
 }
 
-export function derive(rows) {
+/** The three safety faults this activity specifically tests for. */
+function rowUnsafe(r) { return r.switches === 'eachNeutral' || r.fuse !== 'live' || r.earthing !== 'earthed'; }
+/** The one fully correct assembly: parallel lamps, a switch per lamp in the live wire, fuse in the live wire, earthed casing. */
+function rowCorrect(r) { return r.wiring === 'parallel' && r.switches === 'eachLive' && r.fuse === 'live' && r.earthing === 'earthed'; }
+
+export function derive(rows, inputs = defaults) {
   if (rows.length < 1) return { ok: false, reason: 'Assemble and test at least one wiring arrangement.' };
   const last = rows[rows.length - 1];
-  return { ok: true, voltagePerLamp: Number(last.voltagePerLamp), totalCurrent: Number(last.totalCurrent), recommendedFuseA: Math.ceil(Number(last.totalCurrent) * 1.3), n: rows.length, points: [] };
+  const arrangements = new Set(rows.map((r) => `${r.wiring}|${r.switches}|${r.fuse}|${r.earthing}`));
+  const unsafeRows = rows.filter(rowUnsafe);
+  const correctRow = rows.find(rowCorrect);
+  return {
+    ok: true, voltagePerLamp: Number(last.voltagePerLamp), totalCurrent: Number(last.totalCurrent),
+    recommendedFuseA: Math.ceil(Number(last.totalCurrent) * 1.3),
+    arrangementsTried: arrangements.size, lamp: lampOf(inputs).label, ratedPower: lampOf(inputs).ratedW,
+    powerPerLamp: Number(last.powerPerLamp),
+    parallelCurrent: sigFig(totalCurrentA({ ...inputs, wiring: 'parallel' }), 4),
+    seriesCurrent: sigFig(totalCurrentA({ ...inputs, wiring: 'series' }), 4),
+    foundUnsafe: unsafeRows.length > 0, unsafeCount: unsafeRows.length,
+    // rowCorrect() only ever matches one exact combination, so its parts are fixed, readable text rather than raw option keys.
+    foundCorrect: !!correctRow,
+    finalWiring: correctRow ? 'parallel' : null, finalSwitches: correctRow ? 'a switch per lamp in the live wire' : null,
+    finalFuse: correctRow ? 'in the live wire' : null, finalEarthing: correctRow ? 'earthed' : null,
+    n: rows.length, points: [],
+  };
 }
 
 export default { meta, defaults, LAMPS, SUPPLY_V, init, step, measure, derive, validate, lampOf, lampResistanceOhm, voltagePerLampV, powerPerLampW, totalCurrentA, safeFuse, switchesSafe, fuseInLive };

@@ -299,7 +299,7 @@ export function householdCircuit(ctx, w, h, state, inputs) {
   }
 
   label(ctx, (x0 + x1) / 2, live - 60,
-    blown ? `Fuse blew at ${(inputs?.fuseA ?? 5)} A — too many lamps on this circuit`
+    blown ? `Fuse blew at ${(inputs?.fuseRatingA ?? 5)} A — too many lamps on this circuit`
       : `Total current ${(state?.current ?? 0).toFixed(2)} A · lamps in ${inputs?.wiring || 'parallel'}`,
     { anchor: 'above', bold: true, color: blown ? '#c02626' : undefined });
 }

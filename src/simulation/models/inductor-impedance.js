@@ -66,22 +66,52 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const frac = 0.3 + 0.14 * ((trial - 1) % 6);
   const I = currentA(inputs) * frac + jitter(rng, 0.005);
   const V = I * oppositionOhm(inputs);
-  return { trial, supply: inputs.supply, core: inputs.core, voltageV: Number(V.toFixed(3)), currentA: Number(I.toFixed(4)), oppositionOhm: sigFig(V / I, 4) };
+  return { trial, supply: inputs.supply, core: inputs.core, frequencyHz: inputs.frequencyHz, voltageV: Number(V.toFixed(3)), currentA: Number(I.toFixed(4)), oppositionOhm: sigFig(V / I, 4) };
 }
 
 export function derive(rows, inputs = defaults) {
   const dc = rows.filter((r) => r.supply === 'dc');
   const ac = rows.filter((r) => r.supply === 'ac');
+  const coilLabel = coilOf(inputs).label;
+  const coreLabel = (CORES[inputs.core] || CORES.air).label;
+  const hasCore = inputs.core !== 'air';
+  const mean = (vals) => vals.reduce((a, b) => a + b, 0) / vals.length;
   if (dc.length < 3) return { ok: false, reason: 'Record at least three DC readings to find the winding resistance.' };
   const dcFit = fitThroughOrigin(dc.map((r) => ({ x: Number(r.currentA), y: Number(r.voltageV) })));
   const R = dcFit.slope;
-  if (ac.length < 3) return { ok: true, resistance: sigFig(R, 4), impedance: null, reactance: null, inductance: null, n: dc.length, points: dc.map((r) => ({ x: Number(r.currentA), y: Number(r.voltageV) })) };
+  const dcCurrentA = sigFig(mean(dc.map((r) => Number(r.currentA))), 4);
+  if (ac.length < 3) {
+    return {
+      ok: true, resistance: sigFig(R, 4), impedance: null, reactance: null, inductance: null, inductanceMH: null,
+      nDc: dc.length, nAc: 0, coil: coilLabel, core: coreLabel, hasCore, dcCurrentA,
+      n: dc.length, points: dc.map((r) => ({ x: Number(r.currentA), y: Number(r.voltageV) })),
+    };
+  }
   const acFit = fitThroughOrigin(ac.map((r) => ({ x: Number(r.currentA), y: Number(r.voltageV) })));
   const Z = acFit.slope;
   const XL = Math.sqrt(Math.max(0, Z * Z - R * R));
   const f = Number(ac[0].frequencyHz) || inputs.frequencyHz;
   const L = XL / (2 * Math.PI * f);
-  return { ok: true, resistance: sigFig(R, 4), impedance: sigFig(Z, 4), reactance: sigFig(XL, 4), inductance: sigFig(L, 4), n: rows.length, points: rows.map((r) => ({ x: Number(r.currentA), y: Number(r.voltageV) })) };
+  const accepted = inductanceH(inputs);
+  /*
+   * The naive (wrong) approach a student might try: subtracting Z and R
+   * arithmetically instead of combining them in quadrature. Shown
+   * alongside the correct value precisely to make the size of that
+   * mistake concrete, not to recommend it.
+   */
+  const naiveReactance = Z - R;
+  const naiveInductance = naiveReactance / (2 * Math.PI * f);
+  const phaseAngle = (Math.atan2(XL, R) * 180) / Math.PI;
+  return {
+    ok: true, resistance: sigFig(R, 4), impedance: sigFig(Z, 4), reactance: sigFig(XL, 4),
+    inductance: sigFig(L, 4), inductanceMH: sigFig(L * 1000, 4), frequencyHz: f,
+    percentError: sigFig((Math.abs(L - accepted) / accepted) * 100, 4), phaseAngle: sigFig(phaseAngle, 3),
+    naiveReactance: sigFig(naiveReactance, 4), naiveInductanceMH: sigFig(naiveInductance * 1000, 4),
+    naiveErrorPct: sigFig((Math.abs(naiveInductance - L) / L) * 100, 4),
+    nDc: dc.length, nAc: ac.length, coil: coilLabel, core: coreLabel, hasCore,
+    dcCurrentA, acCurrentA: sigFig(mean(ac.map((r) => Number(r.currentA))), 4),
+    n: rows.length, points: rows.map((r) => ({ x: Number(r.currentA), y: Number(r.voltageV) })),
+  };
 }
 
 export default { meta, defaults, COILS, CORES, init, step, measure, derive, validate, coilOf, inductanceH, resistanceOhm, reactanceOhm, oppositionOhm, ammeterRangeA, currentA, overRange };

@@ -86,12 +86,25 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   return { trial, target: t.label, func: inputs.func, range: inputs.func === 'ohm' ? inputs.resistanceRange : inputs.func.startsWith('v') ? inputs.voltageRange : inputs.currentRange, connection: inputs.connection, reading, _correct: correct };
 }
 
+const FUNC_LABELS = { ohm: 'resistance (Ω)', cont: 'continuity', vdc: 'DC voltage', vac: 'AC voltage', aac: 'AC current' };
+
 export function derive(rows) {
   if (rows.length < 3) return { ok: false, reason: 'Test at least three different targets.' };
   const correctRows = rows.filter((r) => r._correct);
-  const functionsUsed = new Set(correctRows.map((r) => r.func)).size;
+  const usedFuncs = [...new Set(correctRows.map((r) => r.func))];
+  const functionsUsed = usedFuncs.length;
   const foundBreak = correctRows.some((r) => typeof r.reading === 'string' && r.reading.includes('OL'));
-  return { ok: true, functionsUsed, correctReadings: correctRows.length, foundBreak, n: rows.length, points: [] };
+  const foundGood = correctRows.some((r) => typeof r.reading === 'string' && r.reading.includes('continuity') && !r.reading.includes('OL'));
+  return {
+    ok: true, functionsUsed, correctReadings: correctRows.length, foundBreak, foundGood,
+    targetsTested: new Set(rows.map((r) => r.target)).size,
+    functionList: `Functions used: ${usedFuncs.map((f) => FUNC_LABELS[f] || f).join(', ') || 'none valid yet'}`,
+    allValid: correctRows.length === rows.length, continuityDone: rows.some((r) => r.func === 'cont' && r._correct),
+    resistanceRows: correctRows.filter((r) => r.func === 'ohm').length,
+    voltageRows: correctRows.filter((r) => r.func === 'vdc' || r.func === 'vac').length,
+    currentRows: correctRows.filter((r) => r.func === 'aac').length,
+    n: rows.length, points: [],
+  };
 }
 
 export default { meta, defaults, TARGETS, RANGES, init, step, measure, derive, validate, targetOf, correctFunc, correctConnection };
