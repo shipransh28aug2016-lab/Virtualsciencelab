@@ -83,7 +83,16 @@ export function derive(rows, inputs = defaults) {
   if (!plateauRows.length) return { ok: false, reason: 'No plateau was captured. Space the readings further apart or start hotter.' };
   const meltingPoint = sigFig(plateauRows.reduce((a, r) => a + Number(r.tempC), 0) / plateauRows.length, 4);
   const times = plateauRows.map((r) => Number(r.timeS));
-  return { ok: true, meltingPoint, plateauDurationS: Math.max(...times) - Math.min(...times) + Number(rows[0].timeS === 0 ? INTERVALS[inputs.interval] || 30 : 0), kSolid: waxOf(inputs).kSolid, n: rows.length, points: rows.map((r) => ({ x: Number(r.timeS), y: Number(r.tempC) })) };
+  const w = waxOf(inputs);
+  const accepted = w.mp;
+  return {
+    ok: true, meltingPoint, hasPlateau: true, plateauPoints: plateauRows.length,
+    plateauDurationS: Math.max(...times) - Math.min(...times) + Number(rows[0].timeS === 0 ? INTERVALS[inputs.interval] || 30 : 0),
+    kSolid: w.kSolid, kLiquid: w.kLiquid, solidCoolsFaster: w.kSolid > w.kLiquid,
+    accepted, percentError: sigFig((Math.abs(meltingPoint - accepted) / accepted) * 100, 4),
+    wax: w.label, roomTempC: inputs.roomTempC, stirred: inputs.stirred !== false,
+    n: rows.length, points: rows.map((r) => ({ x: Number(r.timeS), y: Number(r.tempC) })),
+  };
 }
 
 export default { meta, defaults, WAXES, THERMOMETERS, INTERVALS, init, step, measure, derive, validate, waxOf, temperatureAt, stateAt };

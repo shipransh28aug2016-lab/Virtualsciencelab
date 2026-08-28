@@ -6,7 +6,7 @@
  * the vessel warms (and so expands) before the liquid inside it does.
  */
 import { makeRng, jitter } from '../../utils/rng.js';
-import { fitThroughOrigin, sigFig } from '../../utils/measure.js';
+import { fitThroughOrigin, sigFig, sciText } from '../../utils/measure.js';
 
 export const meta = {
   id: 'XI-PHY-ACT-B3',
@@ -28,11 +28,13 @@ export function liquidOf(inputs) { return LIQUIDS[inputs.liquid] || LIQUIDS.wate
 export function vesselOf(inputs) { return VESSELS[inputs.vessel] || VESSELS.glass; }
 export function gammaApparent(inputs) { return liquidOf(inputs).gammaReal - vesselOf(inputs).gamma; }
 
+export function boreAreaCm2(inputs) {
+  const bore = (STEMS[inputs.stem] || STEMS.wide).boreMm / 10; // cm
+  return Math.PI * (bore / 2) ** 2;
+}
 export function levelRiseMm(inputs) {
   const dV = inputs.volumeCm3 * gammaApparent(inputs) * inputs.deltaTempC; // cm3
-  const bore = (STEMS[inputs.stem] || STEMS.wide).boreMm / 10; // cm
-  const area = Math.PI * (bore / 2) ** 2;
-  return (dV / area) * 10; // mm
+  return (dV / boreAreaCm2(inputs)) * 10; // mm
 }
 
 export function validate(inputs) {
@@ -40,8 +42,40 @@ export function validate(inputs) {
   if (gammaApparent(inputs) <= 0) warnings.push({ field: 'liquid', code: 'VESSEL_DOMINATES', message: 'The vessel expands as much as, or more than, the liquid.', why: 'The apparent expansivity would be zero or negative, so the level would not rise at all.', fix: 'Choose a liquid with a larger real expansivity, such as alcohol.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init() { return { t: 0, elapsed: 0, heating: true, tempVesselC: 0, tempLiquidC: 0, levelMm: 0 }; }
+/**
+ * The dip-then-rise is not decoration: the glass vessel, having far less
+ * thermal mass than the litre or so of liquid it holds, heats up (and so
+ * expands) noticeably faster than the bulk liquid does. For a few seconds
+ * the container is getting bigger while the liquid inside is still cold,
+ * so the level FALLS -- only once the liquid's own (much larger) real
+ * expansivity catches up does the level turn round and climb past its
+ * start point. Was a bare `return state` no-op: the flask, its narrow
+ * stem, and the level in it never changed at all, however long the burner
+ * had apparently been lit.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  if (!s.heating) return s;
+  s.elapsed += dt * 6; // a slow classroom heating, compressed for the screen
+  const dT = inputs.deltaTempC ?? defaults.deltaTempC;
+  /* The vessel is thin glass (or steel) with little thermal mass, so it
+     reaches the flame's temperature in seconds; the litre or so of bulk
+     liquid it holds takes minutes. A 30:1 ratio of time constants is what
+     actually produces the dip for ordinary liquid/vessel pairs (needs
+     tau_liquid/tau_vessel > gammaReal/gammaVessel, about 8 for water in
+     glass) while correctly all but erasing it for pyrex, whose expansivity
+     is so small that no plausible head start makes its contribution
+     compete with the liquid's. */
+  s.tempVesselC = dT * (1 - Math.exp(-s.elapsed / 3));
+  s.tempLiquidC = dT * (1 - Math.exp(-s.elapsed / 90));
+  const area = boreAreaCm2(inputs);
+  const dV = inputs.volumeCm3 * (liquidOf(inputs).gammaReal * s.tempLiquidC - vesselOf(inputs).gamma * s.tempVesselC);
+  s.levelMm = (dV / area) * 10;
+  if (s.elapsed > 400) s.heating = false;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 149);
@@ -54,18 +88,22 @@ export function derive(rows, inputs = defaults) {
   const pts = rows.map((r) => ({ x: Number(r.deltaTempC), y: Number(r.levelRiseMm) }));
   if (pts.length < 4) return { ok: false, reason: 'Record the rise for at least four different temperature rises.' };
   const fit = fitThroughOrigin(pts);
-  const bore = (STEMS[inputs.stem] || STEMS.wide).boreMm / 10;
-  const area = Math.PI * (bore / 2) ** 2;
+  const area = boreAreaCm2(inputs);
   // slope = mm rise per °C; convert to gamma_apparent = (slope(mm->cm)/10 * area) / (V * 1)
   const gammaApp = ((fit.slope / 10) * area) / inputs.volumeCm3;
-  const gammaReported = inputs.correctForVessel ? gammaApp + vesselOf(inputs).gamma : gammaApp;
+  const correctedForVessel = !!inputs.correctForVessel;
+  const gammaReported = correctedForVessel ? gammaApp + vesselOf(inputs).gamma : gammaApp;
   const accepted = liquidOf(inputs).gammaReal;
+  const vesselShare = sigFig((vesselOf(inputs).gamma / accepted) * 100, 3);
   return {
     ok: true, gammaApparent: sigFig(gammaApp, 4), gammaReported: sigFig(gammaReported, 4), accepted: sigFig(accepted, 4),
+    gammaApparentText: sciText(gammaApp, 'K⁻¹', 3), gammaReportedText: sciText(gammaReported, 'K⁻¹', 3),
+    gammaVesselText: sciText(vesselOf(inputs).gamma, 'K⁻¹', 3), acceptedText: sciText(accepted, 'K⁻¹', 3),
     percentError: sigFig(((gammaReported - accepted) / accepted) * 100, 3),
-    vesselSharePercent: sigFig((vesselOf(inputs).gamma / accepted) * 100, 3),
+    vesselSharePercent: vesselShare, vesselShare, correctedForVessel,
+    liquid: liquidOf(inputs).label, vessel: vesselOf(inputs).label, stemBoreMm: (STEMS[inputs.stem] || STEMS.wide).boreMm,
     r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts,
   };
 }
 
-export default { meta, defaults, LIQUIDS, VESSELS, STEMS, init, step, measure, derive, validate, liquidOf, vesselOf, gammaApparent, levelRiseMm };
+export default { meta, defaults, LIQUIDS, VESSELS, STEMS, init, step, measure, derive, validate, liquidOf, vesselOf, gammaApparent, levelRiseMm, boreAreaCm2 };

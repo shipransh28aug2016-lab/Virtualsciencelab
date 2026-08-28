@@ -371,9 +371,21 @@ export function liquidExpansion(ctx, w, h, state, inputs) {
   const { topY, bot } = drawBeaker(ctx, cx, h - 120, 160, 90, 0.85, th.liquid, { label: 'Flask of liquid' });
   ctx.save(); ctx.strokeStyle = th.glassStroke; ctx.lineWidth = 1.4;
   ctx.beginPath(); ctx.moveTo(cx - 4, topY - 100); ctx.lineTo(cx - 4, topY); ctx.lineTo(cx + 4, topY); ctx.lineTo(cx + 4, topY - 100); ctx.stroke();
-  ctx.fillStyle = th.liquid; ctx.fillRect(cx - 3, topY - 40, 6, 40); ctx.restore();
+  /* The stem level is read straight off the model's own levelMm, which
+     dips first (the glass warms, and so expands, before the bulk liquid
+     does) and only then climbs past its start -- the physical point of
+     the activity. A bare rectangle at a fixed 40px used to sit here,
+     changing with nothing: not the heating, not the liquid, not time. */
+  const baselinePx = 40;
+  const levelPx = clamp(baselinePx + (state?.levelMm ?? 0) * 2.2, 4, 96);
+  ctx.fillStyle = th.liquid; ctx.fillRect(cx - 3, topY - levelPx, 6, levelPx); ctx.restore();
   label(ctx, cx, topY - 100, 'Narrow stem', { anchor: 'above' });
-  drawBurner(ctx, cx, h - 10, true);
+  drawBurner(ctx, cx, h - 10, state?.heating !== false);
+  label(ctx, cx, h - 30,
+    state?.heating
+      ? `Heating — vessel +${(state?.tempVesselC ?? 0).toFixed(1)} °C, liquid +${(state?.tempLiquidC ?? 0).toFixed(1)} °C · level ${(state?.levelMm ?? 0).toFixed(2)} mm`
+      : 'Press start to heat the flask',
+    { anchor: 'below', size: 11 });
 }
 
 export function detergentSurfaceTension(ctx, w, h, state, inputs) {
