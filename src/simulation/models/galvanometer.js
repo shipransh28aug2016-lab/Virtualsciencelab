@@ -20,7 +20,25 @@ export const meta = {
 export const GALVANOMETERS = { g1: { label: 'Galvanometer 1', G: 60, kMicro: 26 }, g2: { label: 'Galvanometer 2', G: 100, kMicro: 15 }, g3: { label: 'Galvanometer 3', G: 40, kMicro: 40 } };
 export const CELLS = { c2: { label: '2 V cell', emf: 2 }, c3: { label: '3 V cell', emf: 3 }, c4: { label: '4 V cell', emf: 4 } };
 
-export const defaults = { resistanceR: 3000, shuntS: 0, shuntConnected: false, galvanometer: 'g1', cell: 'c2', conversion: 'ammeter', targetRange: 1, testValue: 0.5 };
+/*
+ * `conversion` is NOT given a default here on purpose. This one model
+ * serves two experiments (XII-PHY-A04 half-deflection, XII-PHY-A05
+ * ammeter/voltmeter conversion) and measure()/derive() use
+ * `if (inputs.conversion)` to tell which is running. XII-PHY-A04's own
+ * experiment JSON never declares a `conversion` variable at all -- and
+ * main.js's initialInputs() only OVERRIDES model defaults with an
+ * experiment's own declared variables, it never clears fields the
+ * experiment doesn't mention. A default of 'ammeter' here would have
+ * leaked into every XII-PHY-A04 run un-overridden, permanently truthy, so
+ * the half-deflection experiment would ALWAYS have taken the conversion
+ * branch of measure() and derive() -- recording a conversion-mode
+ * pseudo-deflection instead of the actual half-deflection circuit, and
+ * showing "Conversion into an ammeter..." instead of G and the figure of
+ * merit, no matter what the student actually did. XII-PHY-A05 is
+ * unaffected: it declares `conversion` itself, with its own default of
+ * 'ammeter', in its own JSON.
+ */
+export const defaults = { resistanceR: 3000, shuntS: 0, shuntConnected: false, galvanometer: 'g1', cell: 'c2', targetRange: 1, testValue: 0.5 };
 
 export function galvOf(inputs) { return GALVANOMETERS[inputs.galvanometer] || GALVANOMETERS.g1; }
 export function cellOf(inputs) { return CELLS[inputs.cell] || CELLS.c2; }
@@ -82,7 +100,17 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 export function derive(rows, inputs = defaults) {
   if (inputs.conversion) {
     if (rows.length < 1) return { ok: false, reason: 'Take at least one reading with the converted meter.' };
-    return { ok: true, requiredResistance: sigFig(requiredResistance(inputs), 4), meterResistance: sigFig(meterResistance(inputs), 4), fullScaleCurrentMicroA: sigFig(galvOf(inputs).kMicro * fullScaleDiv(), 4), n: rows.length, points: rows.map((r) => ({ x: Number(r.trial), y: Number(r.deflection) })) };
+    const g = galvOf(inputs);
+    const isAmmeter = inputs.conversion === 'ammeter';
+    return {
+      ok: true, mode: inputs.conversion, range: inputs.targetRange, unit: isAmmeter ? 'A' : 'V',
+      connection: isAmmeter ? 'shunt, in parallel with the galvanometer' : 'resistance, in series with the galvanometer',
+      formula: isAmmeter ? 'S = IgG/(I−Ig)' : 'R = V/Ig − G',
+      galvanometerResistance: g.G,
+      requiredResistance: sigFig(requiredResistance(inputs), 4), meterResistance: sigFig(meterResistance(inputs), 4),
+      fullScaleCurrentMicroA: sigFig(g.kMicro * fullScaleDiv(), 4),
+      n: rows.length, points: rows.map((r) => ({ x: Number(r.trial), y: Number(r.deflection) })),
+    };
   }
   const noShunt = rows.find((r) => Number(r.shuntS) === 0);
   const withShunt = rows.filter((r) => Number(r.shuntS) > 0);
@@ -93,7 +121,13 @@ export function derive(rows, inputs = defaults) {
   const S = Number(half.shuntS);
   const G = (S * R) / (R - S);
   const k = Number(noShunt.currentMicroA) / theta;
-  return { ok: true, resistance: sigFig(G, 4), figureOfMeritMicro: sigFig(k, 4), fullScaleCurrentMicroA: sigFig(k * fullScaleDiv(), 4), approxG: sigFig(S, 4), n: rows.length, points: rows.map((r) => ({ x: Number(r.resistanceR), y: Number(r.deflection) })) };
+  const g = galvOf(inputs);
+  return {
+    ok: true, mode: 'half-deflection', resistance: sigFig(G, 4), figureOfMeritMicro: sigFig(k, 4),
+    fullScaleCurrentMicroA: sigFig(k * fullScaleDiv(), 4), approxG: sigFig(S, 4), approxResistance: sigFig(S, 4),
+    accepted: g.G, acceptedK: g.kMicro,
+    n: rows.length, points: rows.map((r) => ({ x: Number(r.resistanceR), y: Number(r.deflection) })),
+  };
 }
 
 export default { meta, defaults, GALVANOMETERS, CELLS, init, step, measure, derive, validate, galvOf, cellOf, deflectionDiv, halfDeflectionShunt, requiredResistance, meterResistance };
