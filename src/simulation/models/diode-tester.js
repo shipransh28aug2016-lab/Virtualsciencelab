@@ -43,25 +43,41 @@ export function validate(inputs) {
   if (inputs.func !== 'diode') warnings.push({ field: 'func', code: 'WRONG_FUNCTION', message: 'The diode-test function is needed, not the ohms range.', why: 'The diode-test range supplies enough voltage to show the forward drop directly; the ordinary ohms range on many meters cannot forward-bias a junction at all.' });
   return { ok: true, errors: [], warnings };
 }
+export const TEST_VOLTAGE_V = 3; // typical open-circuit voltage a meter's diode-test range supplies
 export function init() { return { t: 0, current: 0, conducting: false, reading: 0 }; }
 /**
  * Testing a diode. Forward biased it conducts once past its knee (about
- * 0.7 V for silicon, 0.3 V for germanium) and the current then climbs
+ * 0.7 V for silicon, 1.9 V for the LEDs here) and the current then climbs
  * steeply; reverse biased essentially nothing flows. The meter is eased
  * towards the value so the student sees it swing, as a real one does.
+ *
+ * This used to read inputs.appliedV/bias/diode/material -- none of which
+ * are fields this experiment has (the real controls are component/func/
+ * polarity/verdict) -- so V was always 0, forward was always true, and
+ * the animated needle never actually reflected which component, fault, or
+ * polarity was selected. Now driven by the model's own componentOf() and
+ * inputs.polarity, exactly like reading() (measure()'s own source of
+ * truth) already is.
  */
 export function step(state, inputs, dt) {
   const s = { ...state };
   s.t += dt;
-  const V = inputs.appliedV ?? 0;
-  const forward = (inputs.bias ?? 'forward') === 'forward';
-  const knee = (inputs.diode === 'Ge' || inputs.material === 'germanium') ? 0.3 : 0.7;
-  // Shockley-like: exponential above the knee, leakage below.
-  const target = forward
-    ? (V > knee ? 0.001 * (Math.exp((V - knee) / 0.05) - 1) : 1e-6 * V)
-    : -2e-6;
-  s.current += (Math.max(-0.01, Math.min(0.08, target)) - s.current) * Math.min(1, dt * 8);
-  s.conducting = forward && V > knee;
+  const c = componentOf(inputs);
+  const forward = (inputs.polarity ?? 'forward') === 'forward';
+  let target;
+  if (c.fault === 'open') {
+    target = forward ? 1e-6 * TEST_VOLTAGE_V : -2e-6; // never conducts, either way
+  } else if (c.fault === 'short') {
+    target = forward ? 0.04 : -0.04; // near-zero-drop conduction both ways
+  } else if (!forward) {
+    target = -2e-6; // healthy junction, reverse: only leakage
+  } else {
+    // healthy, forward: Shockley-like rise once past the component's own knee.
+    const knee = c.forwardV ?? 0.7;
+    target = TEST_VOLTAGE_V > knee ? 0.001 * (Math.exp((TEST_VOLTAGE_V - knee) / 0.05) - 1) : 1e-6 * TEST_VOLTAGE_V;
+  }
+  s.current += (Math.max(-0.05, Math.min(0.08, target)) - s.current) * Math.min(1, dt * 8);
+  s.conducting = target > 0.0005;
   s.reading = s.current;
   return s;
 }
@@ -79,8 +95,22 @@ export function derive(rows) {
   const components = new Set(rows.map((r) => r.component));
   if (components.size < 4) return { ok: false, reason: 'Test at least four different components.' };
   const correct = rows.filter((r) => r.correct);
-  const faultsFound = new Set(correct.filter((r) => r.verdict !== 'good').map((r) => r.component)).size;
-  return { ok: true, accuracyPct: sigFig((correct.length / rows.length) * 100, 3), faultsFound, n: rows.length, points: [] };
+  const foundFaults = correct.filter((r) => r.verdict !== 'good');
+  const faultVerdicts = new Set(foundFaults.map((r) => r.verdict));
+
+  const healthyUniRows = rows.filter((r) => r.verdict === 'good');
+  const sawUnidirectional = healthyUniRows.some((r) => r.unidirectional === 'yes');
+  const allGoodUnidirectional = healthyUniRows.length > 0 && healthyUniRows.every((r) => r.unidirectional === 'yes');
+
+  return {
+    ok: true, accuracyPct: sigFig((correct.length / rows.length) * 100, 3),
+    faultsFound: foundFaults.length ? [...new Map(foundFaults.map((r) => [r.component, r])).values()].map((r) => `${r.verdict} (${r.component})`).join(', ') : 'none yet',
+    componentsTested: components.size, correctCount: correct.length,
+    allGoodUnidirectional, sawUnidirectional,
+    bothFaults: faultVerdicts.has('open') && faultVerdicts.has('short'),
+    bothKinds: new Set(rows.map((r) => r._type)).size >= 2,
+    n: rows.length, points: [],
+  };
 }
 
 export default { meta, defaults, COMPONENTS, init, step, measure, derive, validate, componentOf, reading, trueVerdict };

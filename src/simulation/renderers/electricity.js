@@ -367,7 +367,7 @@ export function diodeTester(ctx, w, h, state, inputs) {
   // Circuit round it.
   drawWireRect(ctx, cx - 200, cy - 120, cx + 200, cy + 120,
     { current: conducting ? Math.abs(state?.current ?? 0) * 30 : 0 });
-  drawCell(ctx, cx - 200, cy, { label: `Supply ${(inputs?.appliedV ?? 0).toFixed(2)} V` });
+  drawCell(ctx, cx - 200, cy, { label: 'Meter’s diode-test range' });
   drawResistor(ctx, cx, cy - 120, 70, { label: 'Series resistor' });
   drawDial(ctx, cx + 200, cy, 38, clamp((state?.current ?? 0) / 0.05, -1, 1),
     { label: 'Milliammeter', unit: 'mA', zeroCentre: true });

@@ -5,7 +5,7 @@
  * potentiometer.
  */
 import { makeRng, jitter } from '../../utils/rng.js';
-import { fitThroughOrigin, sigFig } from '../../utils/measure.js';
+import { fitThroughOrigin, linearFit, sigFig } from '../../utils/measure.js';
 
 export const meta = {
   id: 'XII-PHY-ACT-A5',
@@ -40,7 +40,14 @@ export function init() { return { t: 0, jockeyM: 0.5, voltage: 0, settled: false
 export function step(state, inputs, dt) {
   const s = { ...state };
   s.t += dt;
-  const at = inputs.tapPositionM ?? state.jockeyM ?? 0.5;
+  /*
+   * This read inputs.tapPositionM, a field the experiment does not have
+   * (the real control is tapLengthCm, in centimetres) -- so `at` always
+   * fell through to state.jockeyM itself, meaning the jockey chased its
+   * own previous position forever and never actually moved to wherever
+   * the tapLengthCm slider was set.
+   */
+  const at = (inputs.tapLengthCm ?? defaults.tapLengthCm) / 100;
   s.jockeyM += (at - s.jockeyM) * Math.min(1, dt * 4);
   const target = voltageAt(inputs, s.jockeyM);
   s.voltage += (target - s.voltage) * Math.min(1, dt * 6);
@@ -55,12 +62,32 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   return { trial, lengthCm: inputs.tapLengthCm, voltageV: Number(v.toFixed(3)), ratioVPerM: sigFig(v / (inputs.tapLengthCm / 100), 4) };
 }
 
-export function derive(rows) {
+export function derive(rows, inputs = defaults) {
   const pts = rows.map((r) => ({ x: Number(r.lengthCm), y: Number(r.voltageV) }));
   if (pts.length < 4) return { ok: false, reason: 'Record the potential drop for at least four different lengths.' };
   const fit = fitThroughOrigin(pts);
-  const free = fit;
-  return { ok: true, gradient: sigFig(fit.slope * 100, 4), intercept: 0, r2: Number(free.r2.toFixed(4)), n: pts.length, points: pts };
+  const gradient = sigFig(fit.slope * 100, 4); // V/cm -> V/m
+  const accepted = sigFig(gradientVPerM(inputs), 4);
+  /*
+   * fitThroughOrigin always reports an intercept of exactly 0 by
+   * construction, so it could never actually detect a genuine non-zero
+   * intercept (e.g. a contact resistance at the terminal) -- the free fit
+   * below is the only one that can fail the "should be zero" check the
+   * result text claims to make.
+   */
+  const freeFit = linearFit(pts);
+  const intercept = freeFit ? sigFig(freeFit.intercept, 4) : 0;
+  const typicalV = rows.reduce((a, r) => a + Math.abs(Number(r.voltageV)), 0) / rows.length;
+  return {
+    ok: true, gradient, gradientVPerCm: sigFig(gradient / 100, 4), accepted,
+    percentError: sigFig((Math.abs(gradient - accepted) / accepted) * 100, 3),
+    intercept, interceptPct: sigFig((Math.abs(intercept) / Math.max(1e-9, typicalV)) * 100, 3),
+    throughOrigin: Math.abs(intercept) < 0.03 * typicalV,
+    linear: fit.r2 > 0.98, r2: Number(fit.r2.toFixed(4)),
+    wire: wireOf(inputs).label, driver: (DRIVERS[inputs.driver] || DRIVERS.cell30).label,
+    currentA: sigFig(circuitCurrent(inputs), 4), fullWireV: sigFig(gradient * WIRE_LENGTH_M, 4),
+    n: pts.length, points: pts,
+  };
 }
 
 export default { meta, defaults, WIRES, DRIVERS, VOLTMETERS, WIRE_LENGTH_M, init, step, measure, derive, validate, wireOf, wireResistanceOhm, circuitCurrent, gradientVPerM, voltageAt };
