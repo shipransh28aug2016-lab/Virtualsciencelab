@@ -91,12 +91,26 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   return { trial, markAlone: Number(markAlone.toFixed(4)), markThroughSlab: Number(markThroughSlab.toFixed(4)), slabTop: Number(slabTop.toFixed(3)), realThicknessCm: realT, apparentThicknessCm: Number(apparentT.toFixed(4)), mu: sigFig(realT / apparentT, 4) };
 }
 
+const METHOD_LABELS = { slab: 'Travelling microscope (glass slab)', liquidLens: 'Liquid-lens method', concaveMirror: 'Concave-mirror method' };
+
 export function derive(rows, inputs = defaults) {
   const mus = rows.map((r) => Number(r.mu)).filter(Number.isFinite);
   if (mus.length < 2) return { ok: false, reason: 'Take at least two readings.' };
   const m = mean(mus);
   const accepted = inputs.method === 'slab' ? slabOf(inputs).mu : liquidOf(inputs).mu;
-  return { ok: true, refractiveIndex: sigFig(m, 4), accepted: sigFig(accepted, 4), percentError: sigFig(percentError(m, accepted), 3), n: mus.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.mu) })) };
+  const last = rows[rows.length - 1];
+  const extra = inputs.method === 'liquidLens'
+    ? { lensFocalCm: Number(last.lensFocalCm), combinationFocalCm: Number(last.combinationFocalCm), liquidLensFocalCm: Number(last.liquidLensFocalCm) }
+    : inputs.method === 'concaveMirror'
+      ? { radiusCm: Number(last.radiusCm), apparentRadiusCm: Number(last.apparentRadiusCm) }
+      : { realThicknessCm: Number(last.realThicknessCm), apparentThicknessCm: Number(last.apparentThicknessCm) };
+  return {
+    ok: true, refractiveIndex: sigFig(m, 4), accepted: sigFig(accepted, 4), percentError: sigFig(percentError(m, accepted), 3),
+    mode: inputs.method, methodLabel: METHOD_LABELS[inputs.method] || METHOD_LABELS.slab,
+    sample: inputs.method === 'slab' ? slabOf(inputs).label : liquidOf(inputs).label,
+    spread: sigFig(Math.max(...mus) - Math.min(...mus), 4), plausible: m >= 1,
+    ...extra, n: mus.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.mu) })),
+  };
 }
 
 export default { meta, defaults, SLABS, LIQUIDS, LENSES, MIRRORS, init, step, measure, derive, validate, slabOf, liquidOf, apparentThicknessCm, liquidLensF2, combinationF, apparentRadiusCm };
