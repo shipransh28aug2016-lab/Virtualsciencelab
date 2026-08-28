@@ -260,7 +260,14 @@ export function parallelogramLaw(ctx, w, h, state, inputs) {
   const cx = 400, cy = 210;
   const P = inputs.pGwt ?? 100, Q = inputs.qGwt ?? 100;
   const scale = 0.85;
-  const angP = Math.PI * 0.78, angQ = Math.PI * 0.22;
+  /* These angles come from the model's own equilibrium solution
+     (stringAnglesRad), not a fixed guess — they are exactly the angles at
+     which the resultant of P and Q is vertical, equal and opposite to S.
+     Drawing them at any fixed angle instead (as an earlier version did)
+     produces a picture whose own resultant is NOT vertical: a diagram that
+     visibly contradicts the equilibrium it claims to show. */
+  const angP = state?.angPScreen ?? Math.PI * 0.78;
+  const angQ = state?.angQScreen ?? Math.PI * 0.22;
   // The knot settles into equilibrium rather than being pinned there.
   const kx = cx + (state?.knotX ?? 0) * 40;
   const ky = cy + (state?.knotY ?? 0) * 40;

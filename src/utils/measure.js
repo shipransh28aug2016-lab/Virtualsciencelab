@@ -113,3 +113,27 @@ export function clamp(value, lo, hi) {
 export function lerp(a, b, t) {
   return a + (b - a) * t;
 }
+
+const SUPERSCRIPT_DIGITS = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+
+/**
+ * A physical quantity in "mantissa × 10ⁿ unit" form — the way a resistivity
+ * (~10⁻⁷ Ω·m) or a linear-expansivity difference (~10⁻⁶ K⁻¹) is written on a
+ * blackboard, rather than as `4.9e-7` or a string of leading zeros a
+ * student has to count.
+ */
+export function sciText(value, unit = '', sig = 3) {
+  if (!Number.isFinite(value)) return `— ${unit}`.trim();
+  if (value === 0) return `0 ${unit}`.trim();
+  const sign = value < 0 ? '−' : '';
+  const abs = Math.abs(value);
+  const exp = Math.floor(Math.log10(abs));
+  const mantissa = abs / 10 ** exp;
+  // Rounding the mantissa can carry it to 10.0 — renormalise if so.
+  let m = Number(mantissa.toPrecision(sig));
+  let e = exp;
+  if (m >= 10) { m /= 10; e += 1; }
+  const expText = String(e).split('').map((c) => SUPERSCRIPT_DIGITS[c] ?? c).join('');
+  const powerText = e === 0 ? '' : ` × 10${expText}`;
+  return `${sign}${m}${powerText} ${unit}`.trim();
+}

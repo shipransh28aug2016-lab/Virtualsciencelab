@@ -54,9 +54,14 @@ export function step(state, inputs, dt) {
   s.t += dt;
   const target = inputs.incidenceDeg ?? state.incidence ?? 30;
   s.incidence += (target - s.incidence) * Math.min(1, dt * 3);
-  const tr = trace(inputs, s.incidence);
-  s.deviation = tr?.deviationDeg ?? s.deviation;
-  s.tir = !!tr?.totalInternalReflection;
+  const tr = trace({ ...inputs, incidenceDeg: s.incidence });
+  s.deviation = tr?.delta ?? s.deviation;
+  // trace() returns null exactly when the ray totally internally reflects
+  // at the second face — that IS the TIR condition, not a field on its
+  // result (trace()'s object never had `totalInternalReflection`, so this
+  // was permanently false and the "no ray emerges" case never registered
+  // in state at all).
+  s.tir = !tr;
   // At minimum deviation the ray passes symmetrically through the prism.
   s.atMinimum = !!tr && Math.abs((tr.r1 ?? 0) - (tr.r2 ?? 0)) < 0.4;
   return s;
@@ -76,7 +81,15 @@ export function derive(rows, inputs = defaults) {
   const A = prismOf(inputs).A;
   const dm = Number(minRow.deviation);
   const mu = Math.sin(((A + dm) * Math.PI) / 360) / Math.sin((A * Math.PI) / 360);
-  return { ok: true, minimumDeviation: sigFig(dm, 4), refractiveIndex: sigFig(mu, 4), incidenceAtMinimum: Number(minRow.incidence), accepted: muOf(inputs), n: rows.length, points: rows.map((r) => ({ x: Number(r.incidence), y: Number(r.deviation) })) };
+  const acceptedMu = muOf(inputs);
+  // Invert mu = sin((A+dm)/2)/sin(A/2) for the theoretical minimum deviation
+  // at this prism's accepted refractive index, to compare against.
+  const acceptedDeltaM = (2 * Math.asin(acceptedMu * Math.sin((A * Math.PI) / 360)) * 180) / Math.PI - A;
+  return {
+    ok: true, minimumDeviation: sigFig(dm, 4), refractiveIndex: sigFig(mu, 4), incidenceAtMinimum: Number(minRow.incidence),
+    accepted: acceptedMu, acceptedMu: sigFig(acceptedMu, 4), acceptedDeltaM: sigFig(acceptedDeltaM, 4), angleA: A,
+    n: rows.length, points: rows.map((r) => ({ x: Number(r.incidence), y: Number(r.deviation) })),
+  };
 }
 
 export default { meta, defaults, PRISMS, SOURCES, init, step, measure, derive, validate, prismOf, muOf, trace };

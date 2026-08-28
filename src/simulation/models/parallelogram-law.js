@@ -56,6 +56,25 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
+/**
+ * The angle each string makes with the UPWARD vertical, on its own side of
+ * it. The three tensions balance only when the resultant of P and Q is
+ * exactly vertical (equal and opposite to S hanging straight down), so
+ * these two angles are not free — they are fixed by P, Q and the angle
+ * between them (thetaDeg), via the standard resultant-angle formula
+ * tan(angleFromP) = Q·sinθ / (P + Q·cosθ), with angleFromQ = θ − angleFromP.
+ * The renderer draws the strings at exactly these angles: drawing them at
+ * any other (e.g. fixed) angle would show a picture whose resultant is NOT
+ * vertical — a diagram that visibly contradicts the equilibrium it claims.
+ */
+export function stringAnglesRad(inputs) {
+  const { pGwt: P, qGwt: Q } = inputs;
+  const theta = (thetaDeg(inputs) ?? 90) * Math.PI / 180;
+  const angleP = Math.atan2(Q * Math.sin(theta), P + Q * Math.cos(theta));
+  const angleQ = theta - angleP;
+  return { angleP, angleQ, theta };
+}
+
 export function init() { return { t: 0, knotX: 0, knotY: 0, vx: 0, vy: 0, settled: false }; }
 /**
  * The knot finding equilibrium. Released off-balance it is pulled to the
@@ -66,15 +85,21 @@ export function init() { return { t: 0, knotX: 0, knotY: 0, vx: 0, vy: 0, settle
 export function step(state, inputs, dt) {
   const s = { ...state };
   s.t += dt;
-  // Net pull towards equilibrium, damped.
-  const theta = (thetaDeg(inputs) ?? 90) * Math.PI / 180;
-  const tx = Math.cos(theta) * 0.0, ty = 0;                 // equilibrium at origin
+  // Net pull towards equilibrium, damped. The knot's rest position is the
+  // origin of this local wobble frame; the STRING DIRECTIONS (not this
+  // wobble) are what must carry the real equilibrium angle, so those are
+  // computed separately and exposed for the renderer via stringAnglesRad().
   const k = 30, c = 6.4;
-  s.vx += (k * (tx - s.knotX) - c * s.vx) * dt;
-  s.vy += (k * (ty - s.knotY) - c * s.vy) * dt;
+  s.vx += (0 - s.knotX) * k * dt - c * s.vx * dt;
+  s.vy += (0 - s.knotY) * k * dt - c * s.vy * dt;
   s.knotX += s.vx * dt; s.knotY += s.vy * dt;
   s.settled = Math.hypot(s.vx, s.vy) < 0.01;
   s.balanced = canBalance(inputs);
+  const { angleP, angleQ } = stringAnglesRad(inputs);
+  // Screen-space angles (standard math convention, y increasing downward is
+  // handled by the renderer): P hangs up-and-left of vertical, Q up-and-right.
+  s.angPScreen = Math.PI / 2 + angleP;
+  s.angQScreen = Math.PI / 2 - angleQ;
   return s;
 }
 
@@ -89,18 +114,21 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   return { trial, pGwt: inputs.pGwt, qGwt: inputs.qGwt, thetaDeg: theta, resultantGwt: sigFig(R, 4), weightN: sigFig((R / 1000) * G, 4) };
 }
 
-export function derive(rows) {
+export function derive(rows, inputs = defaults) {
   const vals = rows.map((r) => Number(r.resultantGwt)).filter(Number.isFinite);
   if (vals.length < 3) return { ok: false, reason: 'Record equilibrium for at least three different pairs of P and Q.' };
-  const settingsVaried = new Set(rows.map((r) => `${r.pGwt},${r.qGwt}`)).size >= vals.length - 1;
+  const distinctSettings = new Set(rows.map((r) => `${r.pGwt},${r.qGwt}`)).size;
+  const settingsVaried = distinctSettings >= vals.length - 1;
   const m = mean(vals);
+  const acceptedGwt = bodyOf(inputs).trueGwt;
   return {
     ok: true, meanResultant: sigFig(m, 4), weightN: sigFig((m / 1000) * G, 4),
     meanAngle: sigFig(mean(rows.map((r) => Number(r.thetaDeg))), 4),
     spreadPercent: sigFig(((Math.max(...vals) - Math.min(...vals)) / m) * 100, 3),
-    settingsVaried, n: vals.length,
+    settingsVaried, variedSettings: settingsVaried, distinctSettings, n: vals.length,
+    body: bodyOf(inputs).label, accepted: acceptedGwt, acceptedN: sigFig((acceptedGwt / 1000) * G, 4),
     points: rows.map((r) => ({ x: Number(r.thetaDeg), y: Number(r.resultantGwt) })),
   };
 }
 
-export default { meta, defaults, BODIES, PULLEYS, G, init, step, measure, derive, validate, bodyOf, canBalance, thetaDeg };
+export default { meta, defaults, BODIES, PULLEYS, G, init, step, measure, derive, validate, bodyOf, canBalance, thetaDeg, stringAnglesRad };

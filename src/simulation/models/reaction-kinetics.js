@@ -82,12 +82,21 @@ export function derive(rows, inputs = defaults) {
     const fit = linearFit(pts);
     if (!fit) return { ok: false, reason: 'Vary the temperature between readings.' };
     const Ea = -fit.slope * R_GAS / 1000;
-    return { ok: true, order: 1, activationEnergy: sigFig(Ea, 4), slope: sigFig(fit.slope, 4), r2: Number(fit.r2.toFixed(4)), n: rows.length, points: rows.map((r) => ({ x: Number(r.thioConc), y: Number(r.rate) })) };
+    return {
+      ok: true, mode: 'arrhenius', order: 1, activationEnergy: sigFig(Ea, 4), acceptedEa: sigFig(EA_JMOL / 1000, 4),
+      slope: sigFig(fit.slope, 4), r2: Number(fit.r2.toFixed(4)), n: rows.length,
+      points: rows.map((r) => ({ x: Number(r.thioConc), y: Number(r.rate) })),
+    };
   }
   const pts = rows.map((r) => ({ x: Number(r.thioConc), y: Number(r.rate) }));
   if (pts.length < 4) return { ok: false, reason: 'Record the rate for at least four different thiosulphate concentrations (or vary temperature for the Arrhenius plot).' };
   const fit = fitThroughOrigin(pts);
-  return { ok: true, order: fit && fit.r2 > 0.9 ? 1 : null, activationEnergy: sigFig(EA_JMOL / 1000, 4), slope: fit ? sigFig(fit.slope, 4) : null, r2: fit ? Number(fit.r2.toFixed(4)) : null, n: pts.length, points: pts };
+  const order = fit && fit.r2 > 0.9 ? 1 : null;
+  return {
+    ok: true, mode: 'concentration', order, orderRounded: order === null ? null : Math.round(order),
+    activationEnergy: sigFig(EA_JMOL / 1000, 4), slope: fit ? sigFig(fit.slope, 4) : null,
+    r2: fit ? Number(fit.r2.toFixed(4)) : null, n: pts.length, points: pts,
+  };
 }
 
 export default { meta, defaults, STOCK_THIO_M, R_GAS, EA_JMOL, A_FACTOR, init, step, measure, derive, validate, thioConc, rateConstant, reactionTimeS };

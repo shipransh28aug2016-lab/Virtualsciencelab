@@ -79,6 +79,7 @@ export function derive(rows, inputs = defaults) {
   const meanProduct = products.reduce((a, b) => a + b, 0) / products.length;
   return {
     ok: true, surfaceTension: sigFig(T, 4), tFromGraph: sigFig(T, 4), productConstant: sigFig(meanProduct, 4),
+    accepted: sigFig(surfaceTensionAt(inputs), 4),
     r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts,
   };
 }

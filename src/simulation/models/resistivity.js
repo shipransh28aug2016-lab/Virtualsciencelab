@@ -4,7 +4,7 @@
  * V = IR (Ohm's law); ρ = RA/L = RπD²/(4L).
  */
 import { makeRng, jitter } from '../../utils/rng.js';
-import { fitThroughOrigin, sigFig } from '../../utils/measure.js';
+import { fitThroughOrigin, sigFig, sciText } from '../../utils/measure.js';
 
 export const meta = {
   id: 'XII-PHY-A01',
@@ -84,7 +84,11 @@ export function derive(rows, inputs = defaults) {
   if (pts.length < 4) return { ok: false, reason: 'Record at least four different current settings.' };
   const fit = fitThroughOrigin(pts);
   const rho = (fit.slope * areaM2(inputs)) / (inputs.lengthCm / 100);
-  return { ok: true, resistance: sigFig(fit.slope, 4), rho: sigFig(rho, 3), accepted: wireOf(inputs).rho, r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts };
+  const accepted = wireOf(inputs).rho;
+  return {
+    ok: true, resistance: sigFig(fit.slope, 4), rho: sigFig(rho, 3), accepted, r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts,
+    rhoText: sciText(rho, 'Ω·m'), acceptedText: sciText(accepted, 'Ω·m'),
+  };
 }
 
 export default { meta, defaults, WIRES, init, step, measure, derive, validate, wireOf, areaM2, resistanceOhm, wiredCorrectly, circuitCurrent };

@@ -75,15 +75,38 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   return { trial, loadG: inputs.loadG, totalMassG: inputs.blockMassG + inputs.loadG, normalReaction: sigFig(R, 4), panG: inputs.panG, limitingFriction: F, ratio: sigFig(F / R, 3), face: inputs.face };
 }
 
-export function derive(rows) {
+export function derive(rows, inputs = defaults) {
   const pts = rows.map((r) => ({ x: Number(r.normalReaction), y: Number(r.limitingFriction) }));
   if (pts.length < 4) return { ok: false, reason: 'Record the limiting friction for at least four different loads.' };
   const fit = fitThroughOrigin(pts);
   if (!fit) return { ok: false, reason: 'Vary the load between readings.' };
   const faces = new Set(rows.map((r) => r.face));
+
+  // Resting the same block on a different face changes the normal reaction
+  // and the friction together, so mu should come out the same either way —
+  // that invariance IS the check "does friction depend on contact area".
+  let areaCheck = null;
+  if (faces.size >= 2) {
+    const perFace = [...faces].map((face) => {
+      const facePts = rows.filter((r) => r.face === face).map((r) => ({ x: Number(r.normalReaction), y: Number(r.limitingFriction) }));
+      const faceFit = facePts.length >= 2 ? fitThroughOrigin(facePts) : null;
+      return faceFit ? { face, mu: sigFig(faceFit.slope, 3) } : null;
+    }).filter(Boolean);
+    if (perFace.length >= 2) {
+      const spread = (Math.max(...perFace.map((f) => f.mu)) - Math.min(...perFace.map((f) => f.mu))) / fit.slope;
+      areaCheck = {
+        faces: perFace,
+        verdict: spread < 0.12
+          ? 'μ is essentially the same on both faces — friction does not depend on the area of contact, as the laws of friction predict.'
+          : 'μ differs more than expected between faces — check that the block was genuinely on the point of slipping (not already sliding, and not still static) in both sets of readings.',
+      };
+    }
+  }
+
   return {
     ok: true, mu: sigFig(fit.slope, 3), angleOfFriction: sigFig((Math.atan(fit.slope) * 180) / Math.PI, 4),
-    r2: Number(fit.r2.toFixed(4)), facesCompared: faces.size, n: pts.length, points: pts,
+    surface: surfaceOf(inputs).label, accepted: surfaceOf(inputs).mu,
+    r2: Number(fit.r2.toFixed(4)), facesCompared: faces.size, areaCheck, n: pts.length, points: pts,
   };
 }
 

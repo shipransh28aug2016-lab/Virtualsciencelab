@@ -5,7 +5,7 @@
  * longer obeys Hooke's law and such readings must be discarded.
  */
 import { makeRng, jitter } from '../../utils/rng.js';
-import { fitThroughOrigin, sigFig } from '../../utils/measure.js';
+import { fitThroughOrigin, sigFig, sciText } from '../../utils/measure.js';
 
 export const meta = {
   id: 'XI-PHY-B01',
@@ -97,9 +97,12 @@ export function derive(rows, inputs = defaults) {
   const slopeSI = fit.slope * 1000; // N per mm -> N per m
   const Y = (slopeSI * inputs.lengthM) / areaM2(inputs);
   const discarded = rows.length - usable.length;
+  const wire = wireOf(inputs);
   return {
     ok: true, youngsModulus: sigFig(Y, 4), slope: sigFig(slopeSI, 4), r2: Number(fit.r2.toFixed(4)),
-    discardedBeyondLimit: discarded, n: usable.length, points: pts,
+    discardedBeyondLimit: discarded, discarded, n: usable.length, points: pts,
+    material: wire.label, areaM2: areaM2(inputs),
+    youngsModulusText: sciText(Y, 'Pa'), acceptedText: sciText(wire.Y, 'Pa'),
   };
 }
 

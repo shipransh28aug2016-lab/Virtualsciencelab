@@ -32,7 +32,13 @@ export function trueS(inputs) {
 export function balanceLengthCm(inputs) {
   const R = inputs.resistanceBox;
   const S = trueS(inputs);
-  return (100 * S) / (R + S);
+  // l is measured from the LEFT end of the wire — the same side as the
+  // resistance box R — matching the standard CBSE mnemonic R/S = l/(100-l).
+  // (This was previously l = 100S/(R+S), the length on S's side; measure()
+  // below recovers S with the opposite-convention formula R(100-l)/l, so the
+  // two disagreed and every reported unknown resistance came out as R²/S
+  // instead of S — confirmed numerically: R=5, S=4.7 recovered 5.32, not 4.7.)
+  return (100 * R) / (R + S);
 }
 export function atBalance(inputs) { return Math.abs(inputs.jockeyCm - balanceLengthCm(inputs)) <= 0.3; }
 
