@@ -42,8 +42,39 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init() { return { t: 0, settled: true }; }
-export function step(state) { return state; }
+export function init(inputs = defaults) {
+  return { t: 0, elapsed: 0, heating: true, dropped: false, settled: false, solidTempNow: inputs.waterTempC, waterTempNow: inputs.waterTempC };
+}
+/**
+ * Two real phases: the solid heats in its own boiling tube (burner lit,
+ * thermometer in the calorimeter reading room temperature, nothing mixed
+ * yet), then it is dropped in and the calorimeter's own thermometer climbs
+ * from the water's starting temperature towards the mixture's final
+ * temperature while the solid cools the same way -- both towards the same
+ * finalTempC(inputs), which is the whole content of the heat-balance
+ * equation this activity tests. Was a bare no-op: the thermometer sat at a
+ * hardcoded reading and the burner stayed lit forever, whatever the
+ * chosen masses or starting temperatures actually implied.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  s.elapsed += dt * 8; // a few minutes of heating, compressed for the screen
+  if (s.heating) {
+    s.solidTempNow += (inputs.solidTempC - s.solidTempNow) * Math.min(1, dt * 8 * 0.35);
+    if (Math.abs(inputs.solidTempC - s.solidTempNow) < 0.5) { s.heating = false; s.dropped = true; }
+    return s;
+  }
+  if (s.dropped) {
+    const target = finalTempC(inputs);
+    // A quick transfer and mixing takes seconds, not minutes.
+    const rate = inputs.transfer === 'slow' ? 1.1 : 2.6;
+    s.solidTempNow += (target - s.solidTempNow) * Math.min(1, dt * rate);
+    s.waterTempNow += (target - s.waterTempNow) * Math.min(1, dt * rate);
+    s.settled = Math.abs(target - s.waterTempNow) < 0.05;
+  }
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 97);
@@ -63,10 +94,16 @@ export function derive(rows, inputs = defaults) {
   const vals = rows.map((r) => Number(r.specificHeat)).filter((v) => Number.isFinite(v) && v > 0);
   if (vals.length < 3) return { ok: false, reason: 'Record at least three trials.' };
   const c = calOf(inputs);
+  const s = solidOf(inputs);
+  const specificHeatMean = mean(vals);
+  const distinctMasses = new Set(rows.map((r) => r.solidMassG)).size;
   return {
-    ok: true, specificHeat: sigFig(mean(vals), 4), specificHeatCal: sigFig(mean(vals) / 4186, 4),
+    ok: true, specificHeat: sigFig(specificHeatMean, 4), specificHeatCal: sigFig(specificHeatMean / 4186, 4),
+    accepted: s.c, percentError: sigFig((Math.abs(specificHeatMean - s.c) / s.c) * 100, 4),
     waterEquivalentG: sigFig((c.massG * c.c) / C_WATER, 4), meanRise: sigFig(mean(rows.map((r) => Number(r.riseC))), 4),
-    massVaried: new Set(rows.map((r) => r.solidMassG)).size > 1,
+    meanFinalTemp: sigFig(mean(rows.map((r) => Number(r.finalTempC))), 4),
+    solid: s.label, calorimeter: c.label, includedWaterEquivalent: !!inputs.includeWaterEquivalent,
+    slowTransfer: inputs.transfer === 'slow', variedMass: distinctMasses > 1, distinctMasses,
     n: vals.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.specificHeat) })),
   };
 }

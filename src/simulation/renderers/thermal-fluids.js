@@ -179,10 +179,25 @@ export function specificHeat(ctx, w, h, state, inputs) {
   const cx = w / 2 - 40;
   drawRetortStand(ctx, cx, h - 30, h - 100);
   const { topY, bot } = drawBeaker(ctx, cx, 70, 90, 90, 0.6, th.liquid, { label: 'Calorimeter + water' });
-  drawThermometer(ctx, cx, topY - 30, 120, 0.5);
-  drawBurner(ctx, w - 70, h - 30, true);
-  ctx.save(); ctx.fillStyle = '#8b93a3'; ctx.beginPath(); ctx.arc(w - 70, h - 100, 12, 0, Math.PI * 2); ctx.fill(); ctx.restore();
-  label(ctx, w - 70, h - 116, 'Solid in a boiling tube', { anchor: 'above' });
+  /* The calorimeter's own thermometer, and the solid's ball in its boiling
+     tube, both track the model's live temperatures: room temperature and
+     a lit burner throughout used to sit here regardless of how far the
+     solid had heated or how long it had been mixing into the water. */
+  const waterT = state?.waterTempNow ?? inputs.waterTempC ?? 25;
+  const solidT = state?.solidTempNow ?? inputs.waterTempC ?? 25;
+  drawThermometer(ctx, cx, topY - 30, 120, clamp((waterT - 15) / 90, 0, 1));
+  drawBurner(ctx, w - 70, h - 30, state?.heating !== false);
+  const ballFrac = clamp((solidT - 15) / 90, 0, 1);
+  ctx.save();
+  ctx.fillStyle = mixColor('#8b93a3', '#c02626', ballFrac * 0.7);
+  ctx.beginPath(); ctx.arc(w - 70, h - 100, 12, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+  label(ctx, w - 70, h - 116, state?.dropped ? 'Solid, transferred into the calorimeter' : 'Solid heating in a boiling tube', { anchor: 'above' });
+  label(ctx, cx, bot + 24,
+    state?.dropped
+      ? (state?.settled ? `Settled at ${waterT.toFixed(1)} °C` : `Mixing — ${waterT.toFixed(1)} °C`)
+      : `Solid at ${solidT.toFixed(1)} °C, heating`,
+    { anchor: 'below', bold: true });
 }
 
 export function sonometer(ctx, w, h, state, inputs) {
