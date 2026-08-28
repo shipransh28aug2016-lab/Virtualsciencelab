@@ -79,7 +79,16 @@ export function derive(rows, inputs = defaults) {
   const maxShiftMm = Math.max(...shifts);
   const sorted = [...usable].sort((a, b) => Number(a.incidenceDeg) - Number(b.incidenceDeg));
   const shiftIncreases = Number(sorted[sorted.length - 1].shiftMm) > Number(sorted[0].shiftMm);
-  return { ok: true, mu: sigFig(bestMu, 4), maxShiftMm: sigFig(maxShiftMm, 4), shiftIncreases, n: usable.length, points: rows.map((r) => ({ x: Number(r.incidenceDeg), y: Number(r.shiftMm) })) };
+  const accepted = slabOf(inputs).mu;
+  const thickness = thicknessCm(inputs);
+  const angles = usable.map((r) => Number(r.incidenceDeg));
+  return {
+    ok: true, mu: sigFig(bestMu, 4), maxShiftMm: sigFig(maxShiftMm, 4), shiftIncreases,
+    slab: slabOf(inputs).label, thickness, accepted, percentError: sigFig((Math.abs(bestMu - accepted) / accepted) * 100, 3),
+    angleSpan: `angles ${Math.min(...angles)}°-${Math.max(...angles)}°`,
+    fractionOfLimit: sigFig((maxShiftMm / 10 / thickness) * 100, 3), limitingShift: thickness,
+    n: usable.length, points: rows.map((r) => ({ x: Number(r.incidenceDeg), y: Number(r.shiftMm) })),
+  };
 }
 
 export default { meta, defaults, SLABS, THICKNESSES, SCALES, init, step, measure, derive, validate, slabOf, thicknessCm, refractionDeg, shiftMm };

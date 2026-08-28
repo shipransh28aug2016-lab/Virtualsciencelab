@@ -64,7 +64,23 @@ export function derive(rows, inputs = defaults) {
   if (!fit) return { ok: false, reason: 'Vary the distance between readings.' };
   const gamma = fit.slope / 2;
   const accepted = cellOf(inputs).gamma;
-  return { ok: true, gamma: sigFig(gamma, 4), slope: sigFig(fit.slope, 4), accepted, percentError: sigFig(((gamma - accepted) / accepted) * 100, 3), r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts };
+  const r2 = Number(fit.r2.toFixed(4));
+
+  const distances = rows.map((r) => Number(r.distanceCm));
+  const minD = Math.min(...distances), maxD = Math.max(...distances);
+  const lampI = (LAMPS[inputs.lamp] || LAMPS.lamp40).I;
+  const ambientLux = (ROOMS[inputs.room] || ROOMS.dark).ambientLux;
+  const lampLuxAtFar = lampI / (maxD / 100) ** 2;
+  const ambientPctAtFurthest = sigFig((ambientLux / (lampLuxAtFar + ambientLux)) * 100, 3);
+
+  return {
+    ok: true, gamma: sigFig(gamma, 4), slope: sigFig(fit.slope, 4), accepted,
+    percentError: sigFig(((gamma - accepted) / accepted) * 100, 3), r2, fitR2: r2,
+    n: pts.length, points: pts,
+    distancesUsed: new Set(distances).size, rangeText: `${minD}-${maxD} cm`, rangeFactor: sigFig(maxD / minD, 3),
+    powerLawConfirmed: r2 > 0.98, ambientSpoiled: ambientPctAtFurthest > 25, ambientPctAtFurthest,
+    inRange: gamma >= 0.7 && gamma <= 0.9,
+  };
 }
 
 export default { meta, defaults, CELLS, LAMPS, ROOMS, init, step, measure, derive, validate, cellOf, illuminance, resistanceOhm };

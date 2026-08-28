@@ -59,9 +59,33 @@ export function derive(rows, inputs = defaults) {
   if (pts.length < 4) return { ok: false, reason: 'Record the central maximum width for at least four different slit widths.' };
   const fit = fitThroughOrigin(pts);
   const D = inputs.screenDistanceM;
-  const lambdaM = (fit.slope / 1000) * (D === 0 ? 1 : 1) / (2 * D); // slope(mm per 1/mm) -> m
-  const lambdaNm = ((fit.slope / 1000) / (2 * D)) * 1e9;
-  return { ok: true, wavelength: sigFig(lambdaNm, 4), inverseConfirmed: fit.r2 > 0.9, narrowerIsWider: true, r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts };
+  /*
+   * w(mm) = 2*lambda(m)*D(m)/a(m) * 1000, and a(m) = slitMm/1000, so
+   * w(mm) = 2*lambda(m)*D(m)*1e6 * (1/slitMm) = 2*lambda(m)*D(m)*1e6 * x.
+   * The fit's slope is therefore 2*lambda(m)*D(m)*1e6, so
+   * lambda(m) = slope/(2*D*1e6), and lambda(nm) = lambda(m)*1e9 =
+   * slope*1e3/(2*D). The previous formula divided fit.slope by 1000
+   * first (as if x were already in 1/m rather than 1/mm) and so reported
+   * a wavelength exactly 1000x too large -- 650,700 nm instead of 650 nm
+   * for the default red laser, verified directly against
+   * sourceOf(inputs).nm.
+   */
+  const lambdaNm = (fit.slope * 1000) / (2 * D);
+  const accepted = sourceOf(inputs).nm;
+  const r2 = Number(fit.r2.toFixed(4));
+
+  const narrowestRow = rows.reduce((a, b) => (Number(a.slitMm) <= Number(b.slitMm) ? a : b));
+  const widestRow = rows.reduce((a, b) => (Number(a.slitMm) >= Number(b.slitMm) ? a : b));
+  return {
+    ok: true, wavelength: sigFig(lambdaNm, 4), accepted, percentError: sigFig((Math.abs(lambdaNm - accepted) / accepted) * 100, 3),
+    inverseConfirmed: fit.r2 > 0.9, r2, fitR2: r2,
+    narrowerIsWider: Number(narrowestRow.centralWidthMm) > Number(widestRow.centralWidthMm),
+    narrowestSlit: Number(narrowestRow.slitMm), narrowestWidth: Number(narrowestRow.centralWidthMm),
+    widestSlit: Number(widestRow.slitMm), widestWidth: Number(widestRow.centralWidthMm),
+    source: sourceOf(inputs).label, slitsUsed: new Set(rows.map((r) => r.slitMm)).size,
+    distancesUsed: new Set(rows.map((r) => r.screenDistanceM)).size,
+    n: pts.length, points: pts,
+  };
 }
 
 export default { meta, defaults, SOURCES, SLITS, SCALES, init, step, measure, derive, validate, sourceOf, slitMm, centralWidthMm };
