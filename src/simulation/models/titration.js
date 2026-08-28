@@ -27,15 +27,34 @@ export const meta = {
  * Each system names which side is unknown, the true normality of that
  * unknown (what the lab is designed to reveal), the correct indicator (or
  * 'self' for a self-indicating redox titrant), and the pH (or, for redox,
- * a nominal 7) at which the colour genuinely changes.
+ * a nominal 7) at which the colour genuinely changes. `titrantIsAcid`
+ * fixes the DIRECTION of the pH curve: pH must FALL as delivered volume
+ * rises when an acid is being run in from the burette, and RISE when a
+ * base (or carbonate) is -- pHAt() got this backwards for every acid-
+ * titrant system until the fix below (it always made pH climb with
+ * delivered volume, which is only correct when the titrant is a base).
+ * `valid: false` marks a selectable analyte/titrant pairing that is not a
+ * real titration at all (acid run into acid, or base into base -- neither
+ * reacts with the other, so there is no equivalence point to find).
  */
 export const SYSTEMS = {
-  naoh_oxalic: { label: 'NaOH (unknown) vs standard oxalic acid', analyte: 'Sodium hydroxide', titrant: 'Standard oxalic acid', unknownSide: 'analyte', trueUnknownN: 0.0975, equivalencePH: 8.2, correctIndicator: 'phenolphthalein', selfIndicating: false, eqMassUnknown: 40 },
-  hcl_na2co3: { label: 'HCl (unknown) vs standard sodium carbonate', analyte: 'Hydrochloric acid', titrant: 'Standard sodium carbonate', unknownSide: 'analyte', trueUnknownN: 0.104, equivalencePH: 3.9, correctIndicator: 'methylOrange', selfIndicating: false, eqMassUnknown: 36.5 },
-  hcl_oxalic: { label: 'HCl (unknown) vs standard oxalic acid', analyte: 'Hydrochloric acid', titrant: 'Standard oxalic acid', unknownSide: 'analyte', trueUnknownN: 0.104, equivalencePH: 7.0, correctIndicator: 'methylOrange', selfIndicating: false, eqMassUnknown: 36.5 },
-  naoh_hcl: { label: 'Strong base vs strong acid (pH curve)', analyte: 'Sodium hydroxide', titrant: 'Standard hydrochloric acid', unknownSide: 'none', trueUnknownN: 0.1, equivalencePH: 7.0, correctIndicator: 'universal', selfIndicating: false, eqMassUnknown: 40 },
-  kmno4_oxalic: { label: 'KMnO₄ (unknown) vs standard oxalic acid', analyte: 'Standard oxalic acid', titrant: 'Potassium permanganate', unknownSide: 'titrant', trueUnknownN: 0.02, equivalencePH: 7.0, correctIndicator: 'self', selfIndicating: true, eqMassUnknown: 31.6 },
-  kmno4_mohr: { label: "KMnO₄ (unknown) vs standard Mohr's salt", analyte: "Standard Mohr's salt (Fe²⁺)", titrant: 'Potassium permanganate', unknownSide: 'titrant', trueUnknownN: 0.02, equivalencePH: 7.0, correctIndicator: 'self', selfIndicating: true, eqMassUnknown: 31.6 },
+  naoh_oxalic: { label: 'NaOH (unknown) vs standard oxalic acid', analyte: 'Sodium hydroxide', titrant: 'Standard oxalic acid', unknownSide: 'analyte', trueUnknownN: 0.0975, equivalencePH: 8.2, correctIndicator: 'phenolphthalein', selfIndicating: false, eqMassUnknown: 40, titrantIsAcid: true },
+  hcl_na2co3: { label: 'HCl (unknown) vs standard sodium carbonate', analyte: 'Hydrochloric acid', titrant: 'Standard sodium carbonate', unknownSide: 'analyte', trueUnknownN: 0.104, equivalencePH: 3.9, correctIndicator: 'methylOrange', selfIndicating: false, eqMassUnknown: 36.5, titrantIsAcid: false },
+  naoh_hcl: { label: 'Strong base vs strong acid (pH curve)', analyte: 'Sodium hydroxide', titrant: 'Standard hydrochloric acid', unknownSide: 'none', trueUnknownN: 0.1, equivalencePH: 7.0, correctIndicator: 'universal', selfIndicating: false, eqMassUnknown: 40, titrantIsAcid: true },
+  kmno4_oxalic: { label: 'KMnO₄ (unknown) vs standard oxalic acid', analyte: 'Standard oxalic acid', titrant: 'Potassium permanganate', unknownSide: 'titrant', trueUnknownN: 0.02, equivalencePH: 7.0, correctIndicator: 'self', selfIndicating: true, eqMassUnknown: 31.6, titrantIsAcid: false },
+  kmno4_mohr: { label: "KMnO₄ (unknown) vs standard Mohr's salt", analyte: "Standard Mohr's salt (Fe²⁺)", titrant: 'Potassium permanganate', unknownSide: 'titrant', trueUnknownN: 0.02, equivalencePH: 7.0, correctIndicator: 'self', selfIndicating: true, eqMassUnknown: 31.6, titrantIsAcid: false },
+  /*
+   * XI-CHE-E05 lets a student pick the flask contents ("analyte": hcl or
+   * naoh) and the burette contents ("titrant": na2co3 or oxalic)
+   * independently, so two of the four combinations a student can actually
+   * select are not real titrations at all: an acid run into an acid, or a
+   * base run into a base, neither of which reacts with the other. Both
+   * are kept here (rather than letting systemOf() silently fall back to
+   * an unrelated system, which is what happened before) so validate() can
+   * reject them by name instead of quietly simulating the wrong chemistry.
+   */
+  hcl_oxalic: { label: 'Hydrochloric acid vs oxalic acid — not a real titration', analyte: 'Hydrochloric acid', titrant: 'Standard oxalic acid', unknownSide: 'analyte', trueUnknownN: 0.104, equivalencePH: 7.0, correctIndicator: 'methylOrange', selfIndicating: false, eqMassUnknown: 36.5, titrantIsAcid: true, valid: false, invalidReason: 'Hydrochloric acid and oxalic acid are both acids. Neither neutralises the other, so no colour change marks a genuine equivalence point.' },
+  naoh_na2co3: { label: 'Sodium hydroxide vs sodium carbonate — not a real titration', analyte: 'Sodium hydroxide', titrant: 'Standard sodium carbonate', unknownSide: 'analyte', trueUnknownN: 0.1, equivalencePH: 7.0, correctIndicator: 'phenolphthalein', selfIndicating: false, eqMassUnknown: 40, titrantIsAcid: false, valid: false, invalidReason: 'Sodium hydroxide and sodium carbonate are both alkaline. Neither neutralises the other, so no colour change marks a genuine equivalence point.' },
 };
 
 export const INDICATORS = {
@@ -56,6 +75,11 @@ export function systemOf(inputs) {
   if (inputs.analyte === 'hcl' && inputs.titrant === 'na2co3') return SYSTEMS.hcl_na2co3;
   if (inputs.analyte === 'hcl' && inputs.titrant === 'oxalic') return SYSTEMS.hcl_oxalic;
   if (inputs.analyte === 'naoh' && inputs.titrant === 'oxalic') return SYSTEMS.naoh_oxalic;
+  // This combination (both alkaline) used to fall through to the
+  // naoh_oxalic default below -- silently telling a student who had
+  // selected "sodium carbonate" in the burette that they were titrating
+  // against oxalic acid instead, a completely different reaction.
+  if (inputs.analyte === 'naoh' && inputs.titrant === 'na2co3') return SYSTEMS.naoh_na2co3;
   return SYSTEMS.naoh_oxalic;
 }
 
@@ -71,14 +95,36 @@ export function equivalenceVolume(inputs) {
   return (s.trueUnknownN * inputs.analyteVolume) / inputs.titrantConc;
 }
 
-/** pH during the titration, modelled as a sigmoid jump at the equivalence point (acid-base only). */
+/**
+ * pH during the titration, modelled as a sigmoid jump at the equivalence
+ * point (acid-base only).
+ *
+ * The direction of that jump depends on what is actually being run in
+ * from the burette: adding a BASE to the flask raises pH as delivered
+ * volume rises (correct as x goes from negative to positive below), but
+ * adding an ACID must LOWER pH as delivered volume rises. This used to
+ * always rise regardless, which was correct for hcl_na2co3 (a base run
+ * into acid) but backwards for naoh_oxalic and naoh_hcl -- e.g. the
+ * XI-CHE-C03 pH curve for NaOH titrated with HCl should start near pH 13
+ * and fall to near pH 1, and instead started low and climbed, an
+ * inverted, chemically wrong curve for exactly the titration this
+ * activity exists to plot.
+ */
 export function pHAt(inputs, delivered) {
   const s = systemOf(inputs);
   if (s.selfIndicating) return 7; // redox: pH is not the observable, colour is
   const vEq = equivalenceVolume(inputs);
   if (vEq <= 0) return 7;
   const x = (delivered - vEq) / Math.max(0.6, vEq * 0.06); // steepness of the jump
-  return s.equivalencePH + 6 * Math.tanh(x);
+  const direction = s.titrantIsAcid ? -1 : 1;
+  const ph = s.equivalencePH + direction * 6 * Math.tanh(x);
+  // The pH scale itself runs 0-14 (it is -log[H+] for water at 25 degC,
+  // and [H+] cannot exceed about 1 M in these dilute, sub-1 N solutions);
+  // clamping here matters because main.js's live readout prints this pH
+  // straight to the student (e.g. hcl_na2co3's own equivalencePH of 3.9
+  // minus the model's full 6-unit swing would otherwise show "pH -2.10"
+  // well before the equivalence point, a value the scale cannot have).
+  return Math.max(0, Math.min(14, ph));
 }
 
 export function colourAt(inputs, delivered) {
@@ -100,8 +146,16 @@ export function correctIndicator(inputs) { return inputs.indicator === systemOf(
 
 export function validate(inputs) {
   const errors = [], warnings = [];
+  const s = systemOf(inputs);
+  if (s.valid === false) {
+    errors.push({
+      field: 'titrant', code: 'NO_REACTION',
+      message: `${s.analyte} and ${s.titrant} do not react with each other.`,
+      why: s.invalidReason,
+      fix: 'Put an acid in one vessel and a base (or a carbonate) in the other.',
+    });
+  }
   if (!correctIndicator(inputs)) {
-    const s = systemOf(inputs);
     warnings.push({
       field: 'indicator', code: 'WRONG_INDICATOR',
       message: `${(INDICATORS[inputs.indicator] || {}).label || inputs.indicator} is not the right indicator for this titration.`,
