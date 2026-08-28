@@ -5,7 +5,7 @@
  * f = (1/2l)√(T/μ).
  */
 import { makeRng, jitter } from '../../utils/rng.js';
-import { fitThroughOrigin, sigFig, mean } from '../../utils/measure.js';
+import { fitThroughOrigin, linearFit, sigFig, mean } from '../../utils/measure.js';
 
 export const meta = {
   id: 'XI-PHY-B08',
@@ -101,7 +101,22 @@ export function derive(rows, inputs = defaults) {
     const spread = ((Math.max(...products) - Math.min(...products)) / m) * 100;
     const pts = rows.map((r) => ({ x: Number(r.invLength), y: Number(r.frequencyHz) }));
     const fit = fitThroughOrigin(pts);
-    return { ok: true, meanProduct: sigFig(m, 5), spreadPercent: sigFig(spread, 3), waveSpeed: fit ? sigFig(fit.slope / 100, 4) : null, r2: fit ? Number(fit.r2.toFixed(4)) : null, n: rows.length, points: pts };
+    /*
+     * f = v/(2l_m), and x here is 1/l_cm = 100/l_m, so
+     * f = v/(2 l_cm/100) = 50v * (1/l_cm) = 50v * x -- the slope of this
+     * fit is 50v, not 100v. Dividing by 100 (mistaking the fit for one
+     * against 1/l already in metres, off by an extra factor of the l_cm-
+     * to-l_m conversion folded into x) reported a wave speed half the
+     * true value, e.g. 50.0 m/s instead of 99.98 m/s for the default
+     * steel wire at 1 kg tension against a directly computed
+     * sqrt(T/mu) = 99.95 m/s.
+     */
+    return {
+      ok: true, mode: 'law-of-length', tensionN: sigFig(tensionN(inputs), 4),
+      meanProduct: sigFig(m, 5), spreadPercent: sigFig(spread, 3), constant: spread < 4,
+      waveSpeed: fit ? sigFig(fit.slope / 50, 4) : null, r2: fit ? Number(fit.r2.toFixed(4)) : null,
+      n: rows.length, points: pts,
+    };
   }
 
   if (loads.size >= 3) {
@@ -114,7 +129,18 @@ export function derive(rows, inputs = defaults) {
     const f = Number(rows[0].frequencyHz);
     const slopeSI = fit ? fit.slope / 100 : null; // cm per sqrt(N) -> m per sqrt(N)
     const linDensity = slopeSI ? 1 / (2 * f * slopeSI) ** 2 : null;
-    return { ok: true, meanRatio: sigFig(m, 4), spreadPercent: sigFig(spread, 3), linearDensity: linDensity ? sigFig(linDensity, 4) : null, r2: fit ? Number(fit.r2.toFixed(4)) : null, n: rows.length, points: pts };
+    // A free (not forced-through-origin) fit is the only way to actually
+    // CHECK "intercept should be zero" -- fitThroughOrigin always reports
+    // an intercept of exactly 0 by construction, so it could never fail
+    // the very check the result text claims to be making.
+    const freeFit = pts.length >= 3 ? linearFit(pts) : null;
+    return {
+      ok: true, mode: 'law-of-tension', frequencyHz: f,
+      meanRatio: sigFig(m, 4), spreadPercent: sigFig(spread, 3), proportional: spread < 4,
+      intercept: freeFit ? sigFig(freeFit.intercept, 3) : null,
+      linearDensity: linDensity ? sigFig(linDensity, 4) : null, acceptedDensity: sigFig(linearDensity(inputs), 4),
+      r2: fit ? Number(fit.r2.toFixed(4)) : null, n: rows.length, points: pts,
+    };
   }
 
   // XII-PHY-A06: mains frequency from a single (or few) driver settings.
@@ -124,8 +150,10 @@ export function derive(rows, inputs = defaults) {
   const drivenFreq = fit ? 1 / (2 * (fit.slope / 100) * Math.sqrt(mu)) : null;
   const multiplier = (DRIVERS[inputs.driver] || DRIVERS.permanentMagnet).multiplier;
   return {
-    ok: true, drivenFrequency: drivenFreq ? sigFig(drivenFreq, 4) : null,
+    ok: true, mode: 'mains-frequency', driver: (DRIVERS[inputs.driver] || DRIVERS.permanentMagnet).label,
+    drivenFrequency: drivenFreq ? sigFig(drivenFreq, 4) : null,
     mainsFrequency: drivenFreq ? sigFig(drivenFreq / multiplier, 4) : null,
+    accepted: MAINS_HZ, halvingRequired: multiplier === 2,
     multiplier, r2: fit ? Number(fit.r2.toFixed(4)) : null, n: rows.length, points: pts,
   };
 }
