@@ -65,12 +65,22 @@ export function meltingPoint(ctx, w, h, state, inputs) {
 export function boilingPoint(ctx, w, h, state, inputs) {
   const th = theme();
   const cx = 380;
-  const T0 = state?.temperature ?? state?.bathTemp ?? 30;
-  const bp = state?.boilingPoint ?? inputs?.boilingPoint ?? 78;
+  /*
+   * The model's actual state fields are `tempC` and `bubbleRate` (init()
+   * never sets `temperature`, `bathTemp` or `boilingPoint` at all) -- so
+   * this always fell through to the hardcoded fallbacks of 30 degC and
+   * 78 degC, frozen regardless of which liquid was chosen, how long the
+   * bath had been heating, or what phase (warming/bubbling/cooling/read)
+   * the run was actually in. The thermometer and bubble stream never
+   * moved. bubbleRate is the model's own 0-1 bubbling intensity for
+   * exactly this purpose -- no need to re-derive it from a boiling point
+   * this renderer has no correct way to know independently.
+   */
+  const T0 = state?.tempC ?? 30;
+  const near = state?.bubbleRate ?? 0;
   const A = heatingAssembly(ctx, cx, BENCH_Y, {
     vesselWidth: 152, vesselHeight: 130, fill: 0.68,
-    liquid: '#e8c877', lit: state?.heating !== false,
-    vesselLabel: 'Heating bath', flameHeight: 44,
+    liquid: '#e8c877', lit: state?.phase === 'warming' || state?.phase === 'bubbling', vesselLabel: 'Heating bath', flameHeight: 44,
   });
   const rodX = cx - 130;
   drawClamp(ctx, rodX, A.topY + 20, cx - 40, { label: 'Clamp' });
@@ -81,10 +91,9 @@ export function boilingPoint(ctx, w, h, state, inputs) {
     { label: 'Siwoloboff tube (liquid under test)', inRack: true });
   const tubeBot = tubeTop + 150;
 
-  /* The observation: a rapid, continuous stream of bubbles from the
-     inverted capillary means the vapour pressure has reached atmospheric —
-     the boiling point is read as the stream just stops on cooling. */
-  const near = clamp((T0 - (bp - 12)) / 12, 0, 1);
+  // The observation: a rapid, continuous stream of bubbles from the
+  // inverted capillary means the vapour pressure has reached atmospheric —
+  // the boiling point is read as the stream just stops on cooling.
   ctx.save();
   ctx.strokeStyle = 'rgba(205,220,240,0.95)';
   ctx.lineWidth = 3.4;
@@ -106,10 +115,12 @@ export function boilingPoint(ctx, w, h, state, inputs) {
   ctx.restore();
   label(ctx, cx + 14, tubeBot - 4, 'Inverted capillary', { anchor: 'below', leader: true });
 
-  drawThermometer(ctx, cx - 24, A.topY - 100, 214, clamp((T0 - 20) / 140, 0, 1));
-  label(ctx, cx + 128, A.topY + 40,
-    near >= 0.98 ? `Rapid stream — ${T0.toFixed(1)} °C` : `${T0.toFixed(1)} °C`,
-    { anchor: 'right', bold: true, color: near >= 0.98 ? '#c02626' : undefined });
+  drawThermometer(ctx, cx - 24, A.topY - 100, 214, clamp((T0 - 20) / 200, 0, 1));
+  const phaseText = state?.phase === 'read'
+    ? `Bubbling ceased here — ${T0.toFixed(1)} °C`
+    : near >= 0.98 ? `Rapid stream — ${T0.toFixed(1)} °C` : `${T0.toFixed(1)} °C`;
+  label(ctx, cx + 128, A.topY + 40, phaseText,
+    { anchor: 'right', bold: true, color: state?.phase === 'read' || near >= 0.98 ? '#c02626' : undefined });
 }
 export function crystallisation(ctx, w, h, state, inputs) {
   const cx = 380;
