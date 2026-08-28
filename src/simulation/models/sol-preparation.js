@@ -95,7 +95,7 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const observation = inputs.test === 'tyndall'
     ? 'Bright cone of scattered light — confirms colloidal particle size'
     : (coagulates(inputs) ? 'Flocculates / precipitates' : (v === null ? 'No visible change' : 'Stays clear (below coagulation value)'));
-  return { trial, sol: s.label, solType: s.type, test: inputs.test, electrolyte: e.label, coagulationMm: v !== null ? sigFig(v * (1 + jitter(rng, 0.03)), 4) : null, observation };
+  return { trial, sol: s.label, solType: s.type, test: inputs.test, electrolyte: e.label, ionCharge: e.ionCharge, coagulationMm: v !== null ? sigFig(v * (1 + jitter(rng, 0.03)), 4) : null, observation };
 }
 
 export function derive(rows) {
@@ -103,7 +103,35 @@ export function derive(rows) {
   if (!coagRows.length) return { ok: false, reason: 'Determine the coagulation value for at least one lyophobic sol / electrolyte pair.' };
   const best = coagRows.reduce((a, b) => (Number(a.coagulationMm) <= Number(b.coagulationMm) ? a : b));
   const worst = coagRows.reduce((a, b) => (Number(a.coagulationMm) >= Number(b.coagulationMm) ? a : b));
-  return { ok: true, mostEffective: best.electrolyte, powerRatio: sigFig(Number(worst.coagulationMm) / Number(best.coagulationMm), 4), n: rows.length, points: [] };
+
+  const solLabels = [...new Set(rows.map((r) => r.sol))];
+  const tyndallTypes = new Set(rows.filter((r) => r.test === 'tyndall').map((r) => r.solType));
+  const bothScatter = tyndallTypes.has('lyophilic') && tyndallTypes.has('lyophobic');
+
+  // Hardy-Schulze: coagulation value should fall as the active ion's own
+  // charge rises, across whatever distinct charges were actually tested.
+  const byCharge = new Map();
+  for (const r of coagRows) {
+    const q = Number(r.ionCharge);
+    if (!byCharge.has(q)) byCharge.set(q, []);
+    byCharge.get(q).push(Number(r.coagulationMm));
+  }
+  const chargePoints = [...byCharge.entries()].sort((a, b) => a[0] - b[0]);
+  const chargesUsed = chargePoints.map(([q]) => q).join(', ');
+  let hardySchulzeConfirmed = false;
+  if (chargePoints.length >= 2) {
+    const meanAt = (vals) => vals.reduce((a, b) => a + b, 0) / vals.length;
+    hardySchulzeConfirmed = chargePoints.every(([, vals], i) => i === 0 || meanAt(vals) < meanAt(chargePoints[i - 1][1]));
+  }
+
+  return {
+    ok: true, mostEffective: best.electrolyte, leastEffective: worst.electrolyte,
+    lowestValue: Number(best.coagulationMm), highestValue: Number(worst.coagulationMm),
+    powerRatio: sigFig(Number(worst.coagulationMm) / Number(best.coagulationMm), 4),
+    coagulationCount: coagRows.length, solsSeen: solLabels.join(', '), bothScatter,
+    hardySchulzeConfirmed, chargesUsed,
+    n: rows.length, points: [],
+  };
 }
 
 export default { meta, defaults, SOLS, ELECTROLYTES, init, step, measure, derive, validate, solOf, electrolyteOf, coagulationValueMm, coagulates };

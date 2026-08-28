@@ -87,7 +87,19 @@ export function derive(rows, inputs = defaults) {
   if (!fit || fit.slope >= 0) return { ok: false, reason: 'Space the readings out over a longer time so the concentration visibly falls.' };
   const tau = -1 / fit.slope;
   const accepted = effectiveTau(inputs);
-  return { ok: true, tau: sigFig(tau, 4), accepted: sigFig(accepted, 4), percentError: sigFig(percentError(tau, accepted), 3), r2: Number(fit.r2.toFixed(4)), n: rows.length, points: rows.map((r) => ({ x: Number(r.timeMin), y: Number(r.insideMm) })) };
+  const times = rows.map((r) => Number(r.timeMin));
+  const stalled = inputs.water === 'standing';
+  const r2 = Number(fit.r2.toFixed(4));
+  const lastRow = [...rows].sort((a, b) => Number(a.timeMin) - Number(b.timeMin)).at(-1);
+  return {
+    ok: true, tau: sigFig(tau, 4), accepted: sigFig(accepted, 4), percentError: sigFig(percentError(tau, accepted), 3),
+    r2, fitR2: r2, slope: sigFig(fit.slope, 5), firstOrderConfirmed: r2 > 0.98 && !stalled,
+    stalled, plateauPct: sigFig((plateauMm(inputs) / C0) * 100, 3), removedPct: Number(lastRow.removedPct),
+    timesUsed: new Set(times).size, spanMin: sigFig(Math.max(...times) - Math.min(...times), 4),
+    waterLabel: (WATER_REGIMES[inputs.water] || WATER_REGIMES.changed).label,
+    membraneIntact: !membraneOf(inputs).leaksColloid,
+    n: rows.length, points: rows.map((r) => ({ x: Number(r.timeMin), y: Number(r.insideMm) })),
+  };
 }
 
 export default { meta, defaults, MEMBRANES, WATER_REGIMES, SCALES, C0, init, step, measure, derive, validate, membraneOf, effectiveTau, plateauMm, concentrationAt };

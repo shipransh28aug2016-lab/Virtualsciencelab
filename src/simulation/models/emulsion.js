@@ -55,15 +55,28 @@ export function step(state, inputs, dt) {
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 277);
   const t = separationTimeS(inputs) * (1 + jitter(rng, 0.04));
-  return { trial, oil: oilOf(inputs).label, agent: agentOf(inputs).label, agentPct: inputs.agentPct, separationS: sigFig(t, 4), emulsionType: emulsionType(inputs) };
+  return { trial, test: inputs.test, oil: oilOf(inputs).label, agent: agentOf(inputs).label, agentPct: inputs.agentPct, separationS: sigFig(t, 4), emulsionType: emulsionType(inputs) };
 }
 
 export function derive(rows, inputs = defaults) {
   if (rows.length < 2) return { ok: false, reason: 'Compare at least the plain mixture and one emulsified trial.' };
-  const control = rows.find((r) => r.agent === AGENTS.none.label) || rows.reduce((a, b) => (Number(a.separationS) <= Number(b.separationS) ? a : b));
-  const best = rows.reduce((a, b) => (Number(a.separationS) >= Number(b.separationS) ? a : b));
+  const sepRows = rows.filter((r) => r.test !== 'dilution');
+  const usable = sepRows.length >= 2 ? sepRows : rows;
+  const control = usable.find((r) => r.agent === AGENTS.none.label) || usable.reduce((a, b) => (Number(a.separationS) <= Number(b.separationS) ? a : b));
+  const best = usable.reduce((a, b) => (Number(a.separationS) >= Number(b.separationS) ? a : b));
   const ratio = Number(best.separationS) / Number(control.separationS);
-  return { ok: true, stabilisationRatio: sigFig(ratio, 4), bestAgent: best.agent, n: rows.length, points: [] };
+
+  const dilutionRows = rows.filter((r) => r.test === 'dilution');
+  const typesFoundSet = new Set(dilutionRows.map((r) => r.emulsionType).filter((t) => t && t !== emulsionType({ agent: 'none' })));
+
+  return {
+    ok: true, stabilisationRatio: sigFig(ratio, 4), bestAgent: best.agent,
+    separationCount: usable.length, agentCount: new Set(rows.map((r) => r.agent)).size,
+    bareTimeS: Number(control.separationS), bestTimeS: Number(best.separationS),
+    stabilised: ratio >= 10, comparable: control.oil === best.oil,
+    typesFound: [...typesFoundSet].join(' and '), typeCount: typesFoundSet.size, bothTypesFound: typesFoundSet.size >= 2,
+    n: rows.length, points: [],
+  };
 }
 
 export default { meta, defaults, OILS, AGENTS, init, step, measure, derive, validate, oilOf, agentOf, separationTimeS, emulsionType };
