@@ -546,7 +546,7 @@
       "The boiling point falls by about 0.04 °C for each mm Hg the pressure drops",
       "The reading is taken as bubbling ceases on cooling, not while boiling vigorously"
     ],
-    "validRange": "A rapid stream of bubbles marks the boiling point, and the sharper reading is ta",
+    "validRange": "Liquids boiling between 55 and 220 °C at 760 mm Hg: acetone ≈ 56.1 °C, ethanol ≈ 78.4 °C, water = 100.0 °C, toluene ≈ 110.6 °C, aniline ≈ 184.1 °C. A water bath (max ≈ 98 °C) suits acetone or ethanol only; toluene and aniline need the liquid paraffin bath (up to ≈ 220 °C). Pressure 600-800 mm Hg; impurity 0-6 mole per cent.",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Superheating in the absence of a boiling chip, giving a value that is too high.",

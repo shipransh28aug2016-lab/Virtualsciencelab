@@ -494,7 +494,7 @@
       "n = moles of water formed = moles of the limiting reagent",
       "ΔH(ionisation of weak acid) = ΔH(strong) − ΔH(weak)"
     ],
-    "validRange": "Hydrochloric acid with sodium hydroxide gives about −57.1 kJ per mole of water f",
+    "validRange": "Solute 1 to 10 g in 50 to 200 cm³ of water; acid and base 0.5 to 2.0 M; calorimeter water equivalent 2 to 60 g",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Failing to bring both solutions to the same starting temperature before mixing.",

@@ -539,7 +539,7 @@
       "The coefficient is the slope of the F against R graph, through the origin",
       "Coefficient of rolling resistance = coefficient of rolling friction times the radius, a length"
     ],
-    "validRange": "The graph of rolling friction against normal reaction is a straight line through",
+    "validRange": "Normal reaction up to about 4 N",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "The finest weights available may be too coarse to resolve so small a force.",

@@ -530,7 +530,7 @@
       "Two convex lenses always give F smaller than either focal length",
       "A concave lens has negative power and weakens the combination"
     ],
-    "validRange": "A +15 cm and a +20 cm lens have powers of 6.67 D and 5.00 D, which add to 11.67 ",
+    "validRange": "Focal lengths ±10 to ±30 cm; separation 0-5 cm",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "A gap between the lenses, so the contact formula no longer applies and the combination is weaker than calculated.",

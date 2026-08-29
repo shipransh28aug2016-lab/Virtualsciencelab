@@ -544,7 +544,7 @@
       "In series: each lamp has V/3, so P falls to a NINTH of its rating",
       "Fuse rating must exceed the working current but stay below the fault current"
     ],
-    "validRange": "In parallel each 60 W lamp has the full 220 V across it and draws 0.27 A, so the",
+    "validRange": "Lamp rating 40-100 W",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "A switch wired into the neutral conductor: the lamp turns off, so the fault is invisible until someone is shocked.",

@@ -522,7 +522,7 @@
       "The deflection depends on the DIFFERENCE of the expansivities, never on one alone",
       "Deflection is proportional to the square of the length and inversely to the thickness"
     ],
-    "validRange": "The strip bends with the brass on the outside, because brass expands far more th",
+    "validRange": "Strips 40–160 mm long and 0.4–1.6 mm thick, heated 0–200 °C above room temperature",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "The temperature of the strip is not the same as that of the flame, and may not be uniform along it.",

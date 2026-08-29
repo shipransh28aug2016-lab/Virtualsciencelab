@@ -574,7 +574,7 @@
       "Percentage recovery = (mass of crystals ÷ mass of pure compound taken) × 100",
       "Slow cooling gives large crystals of high purity; rapid cooling gives fine impure powder"
     ],
-    "validRange": "Dissolving in the minimum volume of hot solvent and cooling slowly gives large, ",
+    "validRange": "Crude mass 3-15 g, solvent 10-150 mL",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Using more solvent than the minimum, so much of the product stays dissolved and is lost.",

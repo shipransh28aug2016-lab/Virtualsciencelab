@@ -457,7 +457,7 @@
       "The heat effect varies as x(1 − x), greatest at x = 0.5",
       "Hydrogen bond: Cl₃C–H ··· O=C(CH₃)₂"
     ],
-    "validRange": "Mixing acetone and chloroform is exothermic and the temperature rises. The heat ",
+    "validRange": "Solute 1 to 10 g in 50 to 200 cm³ of water; acid and base 0.5 to 2.0 M; calorimeter water equivalent 2 to 60 g",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Letting either liquid evaporate before mixing, which cools it and masks the rise.",

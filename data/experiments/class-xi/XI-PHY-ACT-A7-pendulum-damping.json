@@ -499,7 +499,7 @@
       "The square of the amplitude decays exponentially with decay constant twice b",
       "The natural logarithm of the square of the amplitude is linear in time, with slope minus twice b"
     ],
-    "validRange": "The square of the amplitude falls exponentially with time, showing that the ener",
+    "validRange": "Initial amplitude 4-20 cm",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Reading the amplitude at the extreme position is difficult, since the bob is there only momentarily.",

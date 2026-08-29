@@ -534,7 +534,7 @@
       "The initial dip occurs because the vessel warms before the liquid does",
       "A narrow stem magnifies a small change of volume into a large change of level"
     ],
-    "validRange": "The level dips briefly as the flask expands before the water does, then rises st",
+    "validRange": "Temperature rise 0-80 °C",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "The liquid may not have reached the temperature shown by the thermometer when the reading is taken.",

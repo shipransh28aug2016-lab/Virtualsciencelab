@@ -540,7 +540,7 @@
       "A pure compound melts within about 0.5 °C",
       "Heating too fast makes the thermometer lag, and the melting point reads high"
     ],
-    "validRange": "The recrystallised sample melts sharply at about 80.5 °C, within half a degree. ",
+    "validRange": "Melting point 60-130 °C",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Heating too fast, so the thermometer lags behind the sample and the melting point reads high.",

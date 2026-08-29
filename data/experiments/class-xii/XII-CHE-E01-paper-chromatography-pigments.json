@@ -464,7 +464,7 @@
       "Accepted values: carotene 0.95, pheophytin 0.83, xanthophyll 0.71, chlorophyll a 0.65, chlorophyll b 0.45",
       "Larger Rf means greater solubility in the mobile phase and weaker adsorption on the paper"
     ],
-    "validRange": "Spinach extract separates into as many as five bands. Carotene runs almost with ",
+    "validRange": "Solvent front 2 to 14 cm; spotting line 1 to 3 cm above the base; run time 5 to 60 minutes",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Letting the solvent level reach the spot, which washes the sample off the paper entirely.",

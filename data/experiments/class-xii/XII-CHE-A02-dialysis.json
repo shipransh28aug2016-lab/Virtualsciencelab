@@ -492,7 +492,7 @@
       "Rate of diffusion ∝ concentration difference across the membrane",
       "Fraction removed = 1 − C(t)/C₀"
     ],
-    "validRange": "The concentration inside the bag falls exponentially and the plot of ln C agains",
+    "validRange": "Time 0-180 min",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Not changing the outer water, so the process stalls at equilibrium and the sol is never fully purified.",

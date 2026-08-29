@@ -458,7 +458,7 @@
       "R = A·E^(−γ) gives R ∝ d^(2γ) once the two are combined.",
       "The slope of log R against log d is 2γ, so γ is half the slope."
     ],
-    "validRange": "The resistance rises steadily as the lamp is moved away, and a log-log plot is a",
+    "validRange": "Distance 10-120 cm",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Room light adding to the illuminance, which flattens the graph and lowers the fitted γ.",

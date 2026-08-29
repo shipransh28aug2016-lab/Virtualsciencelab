@@ -478,7 +478,7 @@
       "m = mass of solution + water equivalent of the calorimeter",
       "ΔH(dissolution) = lattice enthalpy + hydration enthalpy"
     ],
-    "validRange": "Potassium nitrate cools the water, giving ΔH of about +35 kJ mol⁻¹, while anhydr",
+    "validRange": "Solute 1 to 10 g in 50 to 200 cm³ of water; acid and base 0.5 to 2.0 M; calorimeter water equivalent 2 to 60 g",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Ignoring the water equivalent of the calorimeter, which makes every enthalpy too small in magnitude.",

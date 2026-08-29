@@ -457,7 +457,7 @@
       "Halving the droplet radius multiplies the separation time by four",
       "Stabilisation ratio = separation time with agent / separation time without"
     ],
-    "validRange": "Oil and water alone separate in a little over a minute. With about one per cent ",
+    "validRange": "Emulsifier 0-5%",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Shaking for different times or with different vigour between runs, which changes the initial droplet size and invalidates the comparison.",

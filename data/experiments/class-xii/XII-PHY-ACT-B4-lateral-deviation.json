@@ -493,7 +493,7 @@
       "Lateral deviation: d = t sin(i − r) / cos r",
       "At normal incidence d = 0; as i → 90°, d → t"
     ],
-    "validRange": "The ray bends towards the normal on entering the glass and away from it on leavi",
+    "validRange": "Incidence 0°-80°",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "The pins not vertical, so the line joining them is not the true path of the ray.",

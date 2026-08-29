@@ -411,7 +411,7 @@
       "An LED’s forward reading is much higher than a diode’s, because its junction needs more voltage.",
       "A capacitor reads open in the steady state, but the initial kick separates it from a break."
     ],
-    "validRange": "All four kinds can be identified from the ohmmeter readings alone. The resistors",
+    "validRange": "Eight specimens covering four component types, tested on the ohms range in both directions",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Judging by appearance instead of testing: several specimens look like each other.",

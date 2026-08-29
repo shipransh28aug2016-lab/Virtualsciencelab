@@ -566,7 +566,7 @@
       "Ohmmeter: uses its own internal cell, so the circuit must be dead",
       "For a sinusoid, V_rms = V_peak / √2, and AC ranges are calibrated in RMS"
     ],
-    "validRange": "The 470 Ω resistor reads 470 Ω on the 2 kΩ range; the dry cell reads about 1.53 ",
+    "validRange": "Eight targets across five functions",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Leaving the meter on a current range from the previous measurement and connecting it across a supply.",

@@ -503,7 +503,7 @@
       "Radius times height is constant for a given liquid, whatever the tube",
       "Beyond the critical micelle concentration the surface tension stops falling"
     ],
-    "validRange": "Clean water gives a surface tension of about 72 mN/m. Adding detergent lowers it",
+    "validRange": "Concentration 0-0.4 g/L",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "A greasy tube raises the angle of contact and reduces the rise for reasons unrelated to surface tension.",

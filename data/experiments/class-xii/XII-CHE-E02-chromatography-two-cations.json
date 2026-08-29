@@ -470,7 +470,7 @@
       "Separation on paper = (Rf₁ − Rf₂) × distance travelled by the front",
       "Fe³⁺ ≈ 0.86 and Cu²⁺ ≈ 0.30 in acetone : conc. HCl 8:2"
     ],
-    "validRange": "In acetone with concentrated hydrochloric acid, Fe³⁺ travels near Rf 0.86 and Cu",
+    "validRange": "Solvent front 2 to 14 cm; spotting line 1 to 3 cm above the base; run time 5 to 60 minutes",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Choosing two cations whose Rf values are too close, so the spots never resolve.",

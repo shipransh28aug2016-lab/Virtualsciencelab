@@ -556,7 +556,7 @@
       "The ratio of the two depressions is 16",
       "Second moment of area of a rectangle = breadth times depth cubed, divided by 12"
     ],
-    "validRange": "The depression is directly proportional to the load in both arrangements, giving",
+    "validRange": "Span 30-90 cm, load 0-500 g",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "A clamp that is not perfectly rigid lets the scale rotate, adding to the apparent depression.",

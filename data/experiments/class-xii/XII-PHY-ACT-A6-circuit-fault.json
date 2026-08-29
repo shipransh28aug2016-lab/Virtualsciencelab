@@ -532,7 +532,7 @@
       "Reversed cell: magnitudes unchanged, both needles driven backwards",
       "Shorted key: readings do not fall to zero when the key is opened"
     ],
-    "validRange": "Each board carries a different fault and each produces its own symptom: a large ",
+    "validRange": "Six standard faults on a cell, rheostat, key, ammeter and voltmeter circuit",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Guessing the fault instead of reading it from the symptoms.",

@@ -542,7 +542,7 @@
       "The temperature of the plateau is the melting point",
       "The solid branch cools faster because its specific heat capacity is lower"
     ],
-    "validRange": "The cooling curve falls steeply at first, then flattens into a plateau at about ",
+    "validRange": "Start 40-100 °C, room 20-70 °C",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "The thermometer bulb may touch the wall of the tube and read the glass rather than the wax.",

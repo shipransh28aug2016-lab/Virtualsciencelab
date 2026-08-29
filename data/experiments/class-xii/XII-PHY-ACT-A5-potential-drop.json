@@ -505,7 +505,7 @@
       "Potential gradient: k = V/l = Iρ/A, in volt per metre",
       "The V–l graph is a straight line through the origin, of slope k"
     ],
-    "validRange": "The potential drop rises in direct proportion to the length tapped off. With the",
+    "validRange": "Tapped length 0-100 cm",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "The wire may not be perfectly uniform along its length, so the gradient varies slightly from place to place.",

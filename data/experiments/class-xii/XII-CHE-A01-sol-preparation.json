@@ -443,7 +443,7 @@
       "Hardy-Schulze: coagulating power rises steeply with the charge on the active ion",
       "For As₂S₃ (negative): NaCl 51, BaCl₂ 0.69, AlCl₃ 0.093 millimole per litre"
     ],
-    "validRange": "Both sols show a bright Tyndall cone, so both are colloidal. The lyophobic sol c",
+    "validRange": "Electrolyte concentration 0-120 mM",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Judging the endpoint after the turbidity has become obvious rather than at the FIRST permanent cloudiness, which overestimates the coagulation value.",

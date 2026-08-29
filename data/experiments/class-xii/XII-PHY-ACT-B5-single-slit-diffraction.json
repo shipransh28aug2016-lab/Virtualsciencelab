@@ -500,7 +500,7 @@
       "Width of the central maximum: w = 2λD/a",
       "The central maximum is twice as wide as each secondary maximum"
     ],
-    "validRange": "The pattern is a broad central band with fainter bands either side, and the cent",
+    "validRange": "Slit width 0.05-0.40 mm; screen distance 0.5-3 m",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "The centres of the dark fringes are hard to fix precisely, since a minimum is a region of gradual darkening rather than a sharp line.",

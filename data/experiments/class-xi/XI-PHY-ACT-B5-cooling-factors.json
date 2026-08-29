@@ -558,7 +558,7 @@
       "Excess temperature falls exponentially with time",
       "A plot of the logarithm of the excess against time is a straight line of slope minus the cooling constant"
     ],
-    "validRange": "The logarithm of the excess temperature falls linearly with time, verifying Newt",
+    "validRange": "Volume 100-500 cm³, excess up to about 70 °C",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "The room temperature may drift during a run lasting many minutes.",

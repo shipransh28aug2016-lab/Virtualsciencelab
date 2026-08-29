@@ -496,7 +496,7 @@
       "Pressure difference = half the density times the difference of the squares of the velocities",
       "The pressure difference is proportional to the square of the flow rate"
     ],
-    "validRange": "The limb tapped into the throat stands lower than the one in the wide section, s",
+    "validRange": "Flow rates of 0–300 cm³/s through throats of 0.20–1.00 cm² bore",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "The flow may not be truly steady if the head is not constant.",

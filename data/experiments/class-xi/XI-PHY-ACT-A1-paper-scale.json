@@ -473,7 +473,7 @@
       "Reading = (number of divisions) × L.C.",
       "Percentage error = (maximum error / measured length) × 100"
     ],
-    "validRange": "The pencil measures about 11.3 cm. With a least count of 0.2 cm the maximum erro",
+    "validRange": "Least count 0.1-1.0 cm",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Unequal spacing of the divisions, which makes the stated least count untrue.",

@@ -512,7 +512,7 @@
       "In both cases m = height of image / height of object",
       "At u = 2F the image is at 2F and the same size, so f = u/2"
     ],
-    "validRange": "Beyond 2F the image is real, inverted and diminished; at 2F it is real, inverted",
+    "validRange": "Object distance 5-100 cm",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Judging the point of sharpest focus by eye, which is uncertain by a centimetre or so.",

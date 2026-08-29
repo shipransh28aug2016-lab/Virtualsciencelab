@@ -508,7 +508,7 @@
       "A good fit passes within the error bars of most points",
       "Force the origin only when zero on one axis must mean zero on the other"
     ],
-    "validRange": "With a scale chosen to fill the paper, the six points lie close to a straight li",
+    "validRange": "Six-point datasets",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "A scale so coarse that the points occupy a small part of the paper, hiding the trend.",

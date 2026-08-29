@@ -577,7 +577,7 @@
       "Voltmeter in series: about 10 kΩ enters the path and the current all but vanishes",
       "Check of the assembly: R = V/I should return the value of the load"
     ],
-    "validRange": "With the ammeter in series, the voltmeter across the load and the rheostat wired",
+    "validRange": "Supply 1.5 to 12 V; load 5 to 100 Ω; rheostat 0 to 50 Ω",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Interchanging the ammeter and the voltmeter, which is the commonest single mistake in the whole practical course.",

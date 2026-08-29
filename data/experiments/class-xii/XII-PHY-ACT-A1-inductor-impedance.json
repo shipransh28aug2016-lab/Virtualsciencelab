@@ -543,7 +543,7 @@
       "X_L = 2πfL, the inductive reactance in ohm",
       "Z = √(R² + X_L²), because R and X_L are in quadrature"
     ],
-    "validRange": "The DC reading gives the resistance of the winding, about 8.6 Ω for the 800-turn",
+    "validRange": "Frequency 50-200 Hz",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "The winding warms as the current flows, and the resistance of copper rises with temperature, so R drifts upward during a long run.",

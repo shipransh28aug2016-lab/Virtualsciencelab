@@ -428,7 +428,7 @@
       "An open fault gives no conduction either way.",
       "A short fault gives conduction both ways at nearly zero ohms."
     ],
-    "validRange": "A healthy diode reads about 0.7 V forward and open reverse; a healthy LED reads ",
+    "validRange": "Three diodes/LEDs healthy, three carrying a planted fault",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Testing in one direction only, which cannot establish either one-way flow or a fault.",

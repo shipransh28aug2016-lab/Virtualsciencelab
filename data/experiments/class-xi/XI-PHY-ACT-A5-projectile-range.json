@@ -489,7 +489,7 @@
       "Time of flight from ground level = twice the vertical component divided by g",
       "Range = square of the speed times sine of twice the angle, divided by g"
     ],
-    "validRange": "The range rises to a maximum at a projection angle of 45 degrees and falls away ",
+    "validRange": "Angle 5°-85°",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "The launch speed may vary slightly from shot to shot as the spring wears.",

@@ -521,7 +521,7 @@
       "Speed at the bottom = square root of ten g h divided by seven",
       "Ideally the height regained equals the height of release, whatever the angles"
     ],
-    "validRange": "On the polished track the ball returns to about 89 percent of its release height",
+    "validRange": "Release height 5-40 cm",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "Judging the highest point reached by eye, since the ball is at rest there only for an instant.",

@@ -520,7 +520,7 @@
       "m·g·d₁ = M·g·d₂, so m = M·d₂/d₁",
       "The weight of the scale has zero moment when the pivot is at its centre of gravity"
     ],
-    "validRange": "Body P has a mass of about 74.5 g. The same value is obtained with different kno",
+    "validRange": "d1 2-48 cm from the pivot, d2 2-48 cm",
     "unitSystem": "SI units with practical laboratory units as noted",
     "edgeCases": [
       "The knife edge not being exactly at the centre of gravity of the scale.",
