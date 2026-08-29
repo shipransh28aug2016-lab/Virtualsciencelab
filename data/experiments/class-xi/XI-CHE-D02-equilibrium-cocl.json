@@ -40,11 +40,12 @@
   ],
   "theory": {
     "statement": "In aqueous solution, cobalt(II) exists in equilibrium between the pink, octahedral hexaaqua ion and the blue, tetrahedral tetrachloro ion: [Co(H2O)6]2+(pink) + 4Cl-(aq) ⇌ [CoCl4]2-(blue) + 6H2O(l). Because the two forms are such visually distinct colours, this is one of the clearest classroom demonstrations of Le Chatelier's principle.",
-    "derivationNote": "Adding concentrated HCl raises [Cl-] sharply, shifting the equilibrium to the right (towards blue), by Le Chatelier's principle. Adding water has TWO reinforcing effects: it dilutes [Cl-] (shifting left) AND it is itself a product of the reverse reaction being effectively added in large excess (also favouring the reactant side, since water is the solvent and its 'concentration' effectively can't be driven down) — so dilution with water always drives the equilibrium back towards pink, unlike a simple dilution of a solute-only equilibrium.",
+    "derivationNote": "Adding concentrated HCl raises [Cl-] sharply, shifting the equilibrium to the right (towards blue), by Le Chatelier's principle. Adding water has TWO reinforcing effects: it dilutes [Cl-] (shifting left) AND it is itself a product of the reverse reaction being effectively added in large excess (also favouring the reactant side, since water is the solvent and its 'concentration' effectively can't be driven down) — so dilution with water always drives the equilibrium back towards pink, unlike a simple dilution of a solute-only equilibrium. Temperature is a second, independent stress: the forward (pink to blue) reaction is ENDOTHERMIC, so a water bath is itself a stress that shifts the equilibrium further RIGHT, deepening the blue, while an ice bath shifts it LEFT, favouring pink — this can be used as a cross-check independent of any reagent, or combined with one.",
     "keyEquations": [
       "[Co(H2O)6]2+(aq) + 4Cl-(aq) ⇌ [CoCl4]2-(aq) + 6H2O(l)",
       "Kc = [CoCl4^2-]/([Co(H2O)6^2+][Cl-]^4)",
-      "Adding Cl- (via HCl or NaCl) shifts right (blue); adding water shifts left (pink)"
+      "Adding Cl- (via HCl or NaCl) shifts right (blue); adding water shifts left (pink)",
+      "Le Chatelier on heat: since the forward reaction is endothermic, heating shifts equilibrium towards products (deepens blue); cooling shifts it towards reactants (favours pink)"
     ]
   },
   "apparatus": [
@@ -111,6 +112,17 @@
       "max": 100,
       "step": 5,
       "default": 20
+    },
+    {
+      "id": "temperatureC",
+      "label": "Temperature (water/ice bath, optional)",
+      "symbol": "T",
+      "unit": "°C",
+      "type": "independent",
+      "min": 5,
+      "max": 80,
+      "step": 5,
+      "default": 25
     }
   ],
   "procedure": [
@@ -139,6 +151,12 @@
     },
     {
       "step": 5,
+      "text": "Optional cross-check: warm a fresh portion in a water bath, then cool another in an ice bath, and compare the colour with the room-temperature reference (this forward reaction is endothermic, so heating should deepen the blue and cooling should favour pink).",
+      "checkpoint": false,
+      "expects": "temperatureC"
+    },
+    {
+      "step": 6,
       "text": "Explain both directions of the colour change in terms of Le Chatelier's principle.",
       "checkpoint": true,
       "expects": "result"
@@ -161,6 +179,10 @@
       },
       {
         "var": "concentrationMm",
+        "widget": "slider"
+      },
+      {
+        "var": "temperatureC",
         "widget": "slider"
       }
     ],
@@ -188,6 +210,12 @@
         "key": "concentrationMm",
         "label": "Amount",
         "unit": "mM",
+        "decimals": 0
+      },
+      {
+        "key": "temperatureC",
+        "label": "Temperature",
+        "unit": "°C",
         "decimals": 0
       },
       {
@@ -317,13 +345,15 @@
       "Equilibrium is reached quickly relative to observation",
       "HCl and NaCl both act simply as sources of Cl-"
     ],
-    "validRange": "0-100 mM added Cl-",
-    "unitSystem": "Millimolar; colour-shift index 0-1",
+    "validRange": "0-100 mM added Cl-; 5-80 °C (ice bath to a near-boiling water bath)",
+    "unitSystem": "Millimolar for reagent; degrees Celsius for temperature; colour-shift index 0-1",
     "edgeCases": [
-      "Very dilute Cl- keeps the solution pink regardless of small further additions"
+      "Very dilute Cl- keeps the solution pink regardless of small further additions",
+      "The forward reaction is endothermic, so heating and cooling shift the equilibrium the OPPOSITE way to the Fe3+/SCN- demonstration (XI-CHE-D01), where heating fades rather than deepens the colour"
     ],
     "expectedBehaviour": [
-      "Pink to blue on adding Cl-; blue to pink on adding water"
+      "Pink to blue on adding Cl-; blue to pink on adding water",
+      "Heating deepens the blue (shifts towards products); cooling favours pink (shifts towards reactants), since the forward reaction is endothermic"
     ],
     "testFile": "tests/models.test.js"
   }

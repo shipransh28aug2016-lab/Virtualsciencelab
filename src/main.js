@@ -2241,6 +2241,13 @@ function renderResult(d) {
       <span class="big">b = ${d.dampingConstant} s⁻¹</span>
       Half-life of the energy ${d.halfLifeS ?? '—'} s (${d.halfLifeMin ?? '—'} min) &nbsp;·&nbsp; accepted b = ${d.accepted} s⁻¹ &nbsp;·&nbsp; r² = ${d.r2}
       <div style="font-size:12px;margin-top:4px;color:var(--muted)">Amplitude fell from ${d.initialAmplitude} cm to ${d.finalAmplitude} cm, so the energy — proportional to A² — dropped by ${d.energyLostPercent} %. The A² against t curve is an exponential, not a straight line; b comes from the slope of ln(A²) against t, which is −2b. Because the decay is exponential the half-life is the same wherever it is measured. Period T = ${d.period} s, essentially unchanged as the swing dies away, which is why readings can be taken at regular intervals.</div>`;
+  } else if (m === 'equilibrium-shift') {
+    html = `<b>${d.n} readings</b> &nbsp;·&nbsp; ${esc(d.equationFull || d.systemLabel)}
+      <span class="big">${d.bothDirectionsShown ? 'Both directions demonstrated' : 'Only one direction shown so far'}</span>
+      Colour-shift index ranged ${d.minShift} – ${d.maxShift} (0 = pure reactant colour, 1 = pure product colour)
+      <div style="font-size:12px;margin-top:4px;color:var(--muted)">${d.bothDirectionsShown
+        ? 'The readings cover a shift towards products AND a shift towards reactants, so both directions of Le Chatelier\'s principle have been demonstrated on this equilibrium.'
+        : '<b>Record at least one reagent/temperature that shifts the equilibrium the OTHER way</b> — so far every reading moved it in the same direction, which only shows half of Le Chatelier\'s principle.'} ${esc(d.enthalpyNote || '')}</div>`;
   }
 
   /*

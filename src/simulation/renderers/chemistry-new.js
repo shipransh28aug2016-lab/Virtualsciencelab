@@ -13,7 +13,7 @@ import {
   label, drawTestTube, drawBeaker, drawConicalFlask, drawSwatch, drawBurner,
   drawRetortStand, drawClamp, drawDigitalReadout, drawTripod, drawGauze,
   heatingAssembly, theme, noteBounds, brushedMetal, chrome, plastic,
-  contactShadow,
+  contactShadow, drawThermometer,
 } from './apparatus.js';
 import { clock, rgba, shade, mixColor, clamp, lerp, noise1 } from './realism.js';
 
@@ -50,6 +50,16 @@ export function equilibriumShift(ctx, w, h, state, inputs) {
   const pos = clamp(state?.position ?? 0.5, 0, 1);
   const mix = mixColor(colourA, colourB, pos);
 
+  // The FULL balanced equilibrium — not just the short "Fe3+/SCN-" tube
+  // label — read from state.equationFull (resolved in the model; renderers
+  // never import models here), since that is "the total reaction" a
+  // student looks for and could not previously see anywhere on the scene.
+  label(ctx, cx, 22, state?.equationFull || (cocl ? '[Co(H₂O)₆]²⁺ + 4Cl⁻ ⇌ [CoCl₄]²⁻ + 6H₂O' : 'Fe³⁺ + SCN⁻ ⇌ [FeSCN]²⁺'),
+    { anchor: 'below', bold: true, size: 13 });
+  label(ctx, cx, 48,
+    state?.shifting ? `Shifting ${pos > 0.5 ? 'forward' : 'backward'} — ${inputs?.reagent || 'reagent'} added`
+      : 'At equilibrium', { anchor: 'below', bold: true, color: state?.shifting ? '#8a5a00' : '#0d7a52' });
+
   drawRack(ctx, cx, BENCH_Y, 1, 120);
   drawTestTube(ctx, cx, BENCH_Y - 250, 250, 52, 0.72, mix, {
     label: cocl ? 'Cobalt chloride equilibrium' : 'Fe³⁺ / SCN⁻ equilibrium',
@@ -61,8 +71,26 @@ export function equilibriumShift(ctx, w, h, state, inputs) {
   drawSwatch(ctx, cx + 150, BENCH_Y - 250, 54, colourA, cocl ? '[Co(H₂O)₆]²⁺ pink' : 'Fe³⁺ pale yellow');
   drawSwatch(ctx, cx + 150, BENCH_Y - 160, 54, colourB, cocl ? '[CoCl₄]²⁻ blue' : '[Fe(SCN)]²⁺ blood red');
 
+  // Temperature is a second, independent Le Chatelier stress on this same
+  // equilibrium (this experiment's own apparatus list and viva already say
+  // so), read from state.tempC — a thermometer standing in the water/ice
+  // bath the "Temperature" slider represents, plus which way it is
+  // currently pushing the colour for THIS system's own enthalpy sign.
+  const tempC = state?.tempC ?? 25;
+  const tempFrac = clamp((tempC - 5) / (80 - 5), 0, 1);
+  drawThermometer(ctx, cx - 190, BENCH_Y - 330, 220, tempFrac);
+  const heated = tempC > 27, cooled = tempC < 23;
+  label(ctx, cx - 190, BENCH_Y - 96, `${tempC.toFixed(0)} °C`, { anchor: 'below', bold: true, size: 12, color: heated ? '#a8201a' : cooled ? '#2f6fd0' : undefined });
+  if (heated || cooled) {
+    const warms = cocl ? heated : cooled; // which temperature direction deepens THIS system's product colour
+    label(ctx, cx - 190, BENCH_Y - 78, warms ? 'Deepens →' : 'Fades →', { anchor: 'below', size: 10.5, color: warms ? '#0d7a52' : '#8a5a00' });
+    // The short reason why — the fuller sentence lives in the Theory tab;
+    // this is just enough to read at a glance next to the thermometer.
+    if (state?.tempEffectShort) label(ctx, cx - 190, BENCH_Y - 60, state.tempEffectShort, { anchor: 'below', size: 9.5 });
+  }
+
   // Where the equilibrium currently sits, as a position on that scale.
-  const barX = cx - 130, barY = BENCH_Y - 300, barW = 260;
+  const barX = cx - 100, barY = BENCH_Y - 300, barW = 260;
   ctx.save();
   const g = ctx.createLinearGradient(barX, 0, barX + barW, 0);
   g.addColorStop(0, colourA); g.addColorStop(1, colourB);
@@ -77,9 +105,6 @@ export function equilibriumShift(ctx, w, h, state, inputs) {
   ctx.beginPath(); ctx.moveTo(mx, barY - 5); ctx.lineTo(mx - 5, barY - 13); ctx.lineTo(mx + 5, barY - 13); ctx.closePath(); ctx.fill();
   ctx.restore();
   label(ctx, barX + barW / 2, barY - 15, 'Equilibrium position', { anchor: 'above', size: 11 });
-  label(ctx, cx, BENCH_Y - 306,
-    state?.shifting ? `Shifting ${pos > 0.5 ? 'forward' : 'backward'} — ${inputs?.reagent || 'reagent'} added`
-      : 'At equilibrium', { anchor: 'above', bold: true, color: state?.shifting ? '#8a5a00' : '#0d7a52' });
 }
 
 export function electronicBalance(ctx, w, h, state, inputs) {

@@ -111,7 +111,14 @@ export function masteryBand(score) {
  */
 export function checkResult(experiment, derived) {
   const exp = experiment.expectedResult;
-  if (!exp || !derived?.ok) return null;
+  // Purely qualitative experiments (e.g. salt analysis, functional-group
+  // tests, the Le Chatelier colour-shift labs) declare expectedResult with
+  // value: null on purpose — there is no single numeric target to check
+  // against. Without this guard, the candidate search below could still
+  // pick up some OTHER finite-valued field from resultKeys (e.g. a
+  // colour-shift index) and compare it against `null`, producing the
+  // nonsensical "differs from the accepted null by Infinity%".
+  if (!exp || !derived?.ok || !Number.isFinite(exp.value)) return null;
 
   const candidates = [exp.symbol, ...(experiment.calculations?.resultKeys || [])];
   const key = candidates.find((k) => k && Number.isFinite(derived[k]));

@@ -40,11 +40,12 @@
   ],
   "theory": {
     "statement": "Fe3+(aq, pale yellow) and SCN-(aq, colourless) exist in equilibrium with the intensely blood-red complex ion [FeSCN]2+(aq): Fe3+ + SCN- ⇌ [FeSCN]2+. Because the product is so strongly coloured while the reactants are almost colourless, the depth of colour is a direct, visual proxy for how far the equilibrium lies to the right.",
-    "derivationNote": "By Le Chatelier's principle, increasing the concentration of either reactant (Fe3+ or SCN-) shifts the equilibrium to the right, deepening the red colour. Adding a reagent that removes Fe3+ from solution — such as sodium oxalate, which forms the stable, colourless [Fe(C2O4)3]3- complex — lowers the free Fe3+ concentration and shifts the equilibrium to the LEFT, fading the colour, even though nothing was added or removed from the SCN- side directly.",
+    "derivationNote": "By Le Chatelier's principle, increasing the concentration of either reactant (Fe3+ or SCN-) shifts the equilibrium to the right, deepening the red colour. Adding a reagent that removes Fe3+ from solution — such as sodium oxalate, which forms the stable, colourless [Fe(C2O4)3]3- complex — lowers the free Fe3+ concentration and shifts the equilibrium to the LEFT, fading the colour, even though nothing was added or removed from the SCN- side directly. Temperature is a second, independent stress on the same equilibrium: complex formation here is mildly EXOTHERMIC, so heating (a water bath) is itself a stress that removes heat's own 'product' role in reverse — it shifts the equilibrium back to the LEFT, fading the red, while cooling (an ice bath) shifts it further RIGHT, deepening it. This can reinforce or fight against whatever a reagent addition is doing at the same time.",
     "keyEquations": [
       "Fe3+(aq) + SCN-(aq) ⇌ [FeSCN]2+(aq)",
       "Kc = [FeSCN2+]/([Fe3+][SCN-])",
-      "Le Chatelier: a stress that increases a reactant shifts equilibrium towards products, and vice versa"
+      "Le Chatelier: a stress that increases a reactant shifts equilibrium towards products, and vice versa",
+      "Le Chatelier on heat: since the forward reaction is exothermic, heating shifts equilibrium towards reactants (fades); cooling shifts it towards products (deepens)"
     ]
   },
   "apparatus": [
@@ -111,6 +112,17 @@
       "max": 100,
       "step": 5,
       "default": 20
+    },
+    {
+      "id": "temperatureC",
+      "label": "Temperature (water/ice bath, optional)",
+      "symbol": "T",
+      "unit": "°C",
+      "type": "independent",
+      "min": 5,
+      "max": 80,
+      "step": 5,
+      "default": 25
     }
   ],
   "procedure": [
@@ -145,6 +157,12 @@
     },
     {
       "step": 6,
+      "text": "Optional cross-check: warm a fresh portion in a water bath, then cool another in an ice bath, and compare the colour with the room-temperature reference (this equilibrium is mildly exothermic, so heating should fade it and cooling should deepen it).",
+      "checkpoint": false,
+      "expects": "temperatureC"
+    },
+    {
+      "step": 7,
       "text": "Explain each colour change in terms of the equilibrium shifting left or right.",
       "checkpoint": true,
       "expects": "result"
@@ -167,6 +185,10 @@
       },
       {
         "var": "concentrationMm",
+        "widget": "slider"
+      },
+      {
+        "var": "temperatureC",
         "widget": "slider"
       }
     ],
@@ -194,6 +216,12 @@
         "key": "concentrationMm",
         "label": "Amount",
         "unit": "mM",
+        "decimals": 0
+      },
+      {
+        "key": "temperatureC",
+        "label": "Temperature",
+        "unit": "°C",
         "decimals": 0
       },
       {
@@ -324,13 +352,15 @@
       "Reaction reaches equilibrium quickly enough to observe as a steady colour",
       "The complexing side-reaction (oxalate) goes essentially to completion"
     ],
-    "validRange": "0-100 mM added reagent",
-    "unitSystem": "Millimolar; colour-shift index 0-1",
+    "validRange": "0-100 mM added reagent; 5-80 °C (ice bath to a near-boiling water bath)",
+    "unitSystem": "Millimolar for reagent; degrees Celsius for temperature; colour-shift index 0-1",
     "edgeCases": [
-      "High reagent concentration saturates the colour change"
+      "High reagent concentration saturates the colour change",
+      "Complex formation is exothermic, so heating and cooling shift the equilibrium the OPPOSITE way to what a beginner might expect from the cobalt-chloride demonstration (XI-CHE-D02), where heating deepens rather than fades the colour"
     ],
     "expectedBehaviour": [
-      "Colour deepens on adding a reactant, fades on removing one"
+      "Colour deepens on adding a reactant, fades on removing one",
+      "Heating fades the red (shifts towards reactants); cooling deepens it (shifts towards products), since complex formation is exothermic"
     ],
     "testFile": "tests/models.test.js"
   }
