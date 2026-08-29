@@ -53,7 +53,23 @@ export const SYSTEMS = {
   },
 };
 
-export const defaults = { system: 'fescn', reagent: 'fecl3', concentrationMm: 0 };
+/**
+ * NOTE on concentrationMm: 0 was the original default. At c = 0,
+ * shiftIndex() below returns exactly the same value (the bare `base`
+ * term, 0.35) for every choice of `reagent` — none of fecl3/kscn/oxalate/
+ * water changes the equilibrium at all until some non-zero amount is
+ * actually added. So a student who opened the experiment and switched
+ * between reagents without first moving the "Amount added" slider off
+ * its default saw an identical, unchanging colour and an identical row
+ * in the observation table no matter which reagent they picked — "no
+ * reaction is properly showing" and "no change in observation table".
+ * 20 mM is comfortably past the model's own reactant/product colour
+ * thresholds in measure() below (giving ~0.76 for a forward reagent and
+ * ~0.13 for a reverse one, cleanly outside the 0.35-0.65 "intermediate"
+ * band) so the very first, untouched run already shows a real,
+ * unambiguous shift.
+ */
+export const defaults = { system: 'fescn', reagent: 'fecl3', concentrationMm: 20 };
 
 export function systemOf(inputs) { return SYSTEMS[inputs.system] || SYSTEMS.fescn; }
 export function reagentOf(inputs) { const s = systemOf(inputs); return s.reagents[inputs.reagent] || Object.values(s.reagents)[0]; }
