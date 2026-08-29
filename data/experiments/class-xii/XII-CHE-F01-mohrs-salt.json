@@ -42,7 +42,7 @@
     "statement": "A double salt is a crystalline compound of two simple salts that exist together in a fixed, stoichiometric ratio in the solid but dissociate completely into their separate simple ions in solution (unlike a complex salt, whose complex ion survives dissolution). Ferrous ammonium sulphate, FeSO4·(NH4)2SO4·6H2O (Mohr's salt), is prepared by crystallising a stoichiometric (1:1 mole) mixture of ferrous sulphate and ammonium sulphate from acidified aqueous solution.",
     "derivationNote": "Fe2+ is readily oxidised to Fe3+ by air, especially in neutral or alkaline solution; a little dilute sulphuric acid keeps the solution acidic, which slows this oxidation and prevents the iron precipitating as a basic ferric salt before crystallisation. The mixture is evaporated only to the point where a crystallising film just appears on the surface — evaporating to dryness fuses the crystals into an impure mass.",
     "keyEquations": [
-      "FeSO4·7H2O + (NH4)2SO4 + H2O → FeSO4·(NH4)2SO4·6H2O (crystallises together)",
+      "FeSO4·7H2O + (NH4)2SO4 → FeSO4·(NH4)2SO4·6H2O + H2O (the double salt carries one fewer water of crystallisation than the two simple salts brought in, so one equivalent of water is released, not consumed)",
       "% yield = (mass of crystals obtained / theoretical mass) × 100"
     ]
   },

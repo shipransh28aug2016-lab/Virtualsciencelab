@@ -40,11 +40,11 @@
   ],
   "theory": {
     "statement": "Nitrogen, sulphur and halogens are covalently bound in organic compounds and give no ionic tests directly. Fusing the compound with sodium metal converts them to ionic sodium cyanide, sodium sulphide and sodium halide, all soluble in water — the 'Lassaigne's extract' — which can then be tested by ordinary inorganic qualitative methods.",
-    "derivationNote": "For nitrogen: the extract's CN- reacts with Fe2+ (from FeSO4) to give sodium hexacyanoferrate(II); on acidifying and adding FeCl3, this forms Prussian blue, Fe4[Fe(CN)6]3. If sulphur is ALSO present, CN- and S2- combine during fusion to give SCN- instead, and FeCl3 then gives blood-red FeSCN2+ rather than Prussian blue — so a red colour here is not a failed nitrogen test but positive evidence for BOTH elements together. For halogens, the extract is first boiled with dilute HNO3 (to destroy any interfering CN-/S2-) before AgNO3 is added; the colour and solubility of the silver halide precipitate then identifies which halogen is present.",
+    "derivationNote": "For nitrogen: the extract's CN- reacts with Fe2+ (from FeSO4) to give sodium hexacyanoferrate(II); on acidifying and adding FeCl3, this forms Prussian blue, Fe4[Fe(CN)6]3. If sulphur is ALSO present, CN- combines with elemental sulphur liberated during fusion to give SCN- instead (NaCN + S → NaSCN; charge is conserved because the sulphur being added is the neutral atom, not the S2- ion), and FeCl3 then gives blood-red [FeSCN]2+ rather than Prussian blue — so a red colour here is not a failed nitrogen test but positive evidence for BOTH elements together. For halogens, the extract is first boiled with dilute HNO3 (to destroy any interfering CN-/S2-) before AgNO3 is added; the colour and solubility of the silver halide precipitate then identifies which halogen is present.",
     "keyEquations": [
       "Na + C, N, S, X (in the compound) → NaCN, Na2S, NaX (fusion)",
       "6CN- + Fe2+ → [Fe(CN)6]4-; then 3[Fe(CN)6]4- + 4Fe3+ → Fe4[Fe(CN)6]3 (Prussian blue)",
-      "CN- + S2- → SCN- (when N and S are both present); Fe3+ + SCN- → [FeSCN]2+ (blood red)"
+      "CN- + S → SCN- (when N and S are both present, from sulphur liberated during fusion); Fe3+ + SCN- → [FeSCN]2+ (blood red)"
     ]
   },
   "apparatus": [
@@ -264,7 +264,7 @@
     },
     {
       "question": "A compound gives a blood-red colour, not Prussian blue, in the nitrogen test. What does this mean?",
-      "expectedConcept": "Both nitrogen AND sulphur are present. During fusion, CN- and S2- combine to form SCN-, which gives blood-red [FeSCN]2+ with FeCl3 instead of Prussian blue.",
+      "expectedConcept": "Both nitrogen AND sulphur are present. During fusion, CN- combines with the elemental sulphur liberated to form SCN- (NaCN + S → NaSCN), which gives blood-red [FeSCN]2+ with FeCl3 instead of Prussian blue.",
       "difficulty": "hard",
       "bloom": "Analyze",
       "answerLogic": "SCN- forms only when both N and S are present together.",

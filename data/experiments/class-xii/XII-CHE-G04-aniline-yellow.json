@@ -43,7 +43,7 @@
     "derivationNote": "Crude yield is always higher than the yield after recrystallisation — the gap between the two is a direct, quantitative measure of the impurity removed in one recrystallisation. The melting point of the purified solid, sharp and close to the literature value, is the check that the removed material really was impurity and not product.",
     "keyEquations": [
       "C6H5NH2 + NaNO2 + 2HCl --0-5°C--> C6H5N2+Cl- + NaCl + 2H2O (diazotisation)",
-      "C6H5N2+ + C6H5N(CH3)2 --coupling--> C6H5-N=N-C6H4-N(CH3)2 (azo dye)"
+      "C6H5N2+ + C6H5N(CH3)2 --coupling--> C6H5-N=N-C6H4-N(CH3)2 + H+ (azo dye; electrophilic substitution releases the ring proton)"
     ]
   },
   "apparatus": [

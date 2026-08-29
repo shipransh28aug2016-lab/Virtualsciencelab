@@ -14,7 +14,7 @@ export const meta = {
   unitSystem: 'Descriptive (colour of precipitate/complex)',
   assumptions: ['Fusion is complete (extract is tested only after the sodium has fully reacted, or a fresh piece is added and re-fused)', 'The extract is filtered clear before testing', 'Nitrogen and sulphur, if both present, combine to give a more sensitive test (NaSCN) that must be distinguished from nitrogen alone'],
   validRange: 'Six compounds spanning N-only, S-only, Cl-only, N+S, N+Cl and none',
-  edgeCases: ['An incompletely fused extract gives a false negative even when the element is present', 'When both N and S are present, ferric chloride gives a blood-red FeSCN³⁺ colour instead of Prussian blue — a DIFFERENT test outcome that itself proves both elements are present together'],
+  edgeCases: ['An incompletely fused extract gives a false negative even when the element is present', 'When both N and S are present, ferric chloride gives a blood-red [FeSCN]²⁺ colour instead of Prussian blue — a DIFFERENT test outcome that itself proves both elements are present together'],
   expectedBehaviour: ['Prussian blue confirms nitrogen (in the absence of sulphur)', 'A black precipitate with sodium nitroprusside confirms sulphur', 'A white precipitate, soluble in NH₄OH, confirms chlorine (after first destroying any CN⁻/S²⁻ that would interfere)'],
 };
 
@@ -47,7 +47,7 @@ export function observation(inputs) {
     case 'fusion':
       return 'Sodium fusion complete; extract filtered clear.';
     case 'nitrogen':
-      if (c.hasN && c.hasS) return 'Blood-red colouration (FeSCN³⁺) — nitrogen AND sulphur are both present.';
+      if (c.hasN && c.hasS) return 'Blood-red colouration ([FeSCN]²⁺) — nitrogen AND sulphur are both present.';
       if (c.hasN) return 'Prussian blue precipitate/colouration — nitrogen is present.';
       return 'No blue colouration — nitrogen absent.';
     case 'sulphur':
@@ -67,7 +67,7 @@ export function validate(inputs) {
   const warnings = [];
   if (!inputs.fused && inputs.test !== 'fusion') warnings.push({ field: 'test', code: 'NO_EXTRACT', message: 'No sodium fusion extract has been prepared.', why: 'Every confirmatory test in this experiment is run on the fusion extract, not on the compound directly.', fix: 'Run the sodium fusion step first.' });
   if (inputs.test === 'nitrogen' && compoundOf(inputs).hasN && compoundOf(inputs).hasS) {
-    warnings.push({ field: 'test', code: 'NS_INTERFERENCE', message: 'A blood-red colour here does not mean the nitrogen test failed.', why: 'When both N and S are present, NaSCN forms instead of NaCN, and FeCl₃ gives blood-red FeSCN³⁺ rather than Prussian blue. This is itself the diagnostic sign that BOTH elements are present.' });
+    warnings.push({ field: 'test', code: 'NS_INTERFERENCE', message: 'A blood-red colour here does not mean the nitrogen test failed.', why: 'When both N and S are present, NaSCN forms instead of NaCN, and FeCl₃ gives blood-red [FeSCN]²⁺ rather than Prussian blue. This is itself the diagnostic sign that BOTH elements are present.' });
   }
   return { ok: true, errors: [], warnings };
 }
