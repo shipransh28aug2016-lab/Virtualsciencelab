@@ -154,7 +154,7 @@
       "min": 10,
       "max": 150,
       "step": 2,
-      "default": 14
+      "default": 26
     },
     {
       "id": "crystallisationTempC",
@@ -359,8 +359,8 @@
   "expectedResult": {
     "quantity": "Percentage recovery from the minimum volume of hot solvent",
     "symbol": "",
-    "value": 60,
-    "tolerance": 15,
+    "value": 45,
+    "tolerance": 10,
     "unit": "%",
     "secondary": {
       "quantity": "Melting point of the purified product",
@@ -368,7 +368,7 @@
       "tolerance": 3,
       "unit": "°C"
     },
-    "statement": "Dissolving in the minimum volume of hot solvent and cooling slowly gives large, well formed crystals with a recovery of about 60 per cent. The product melts close to the accepted value, showing the impurity has been left behind in the mother liquor. Using more solvent raises the loss; crash-cooling raises the yield but lowers the purity."
+    "statement": "For the default 8 g of moderately impure copper sulphate, the minimum hot solvent that just dissolves it is about 25 mL (8 g ÷ 32 g per 100 mL solubility at the boil); even at that true minimum, copper sulphate's own cold-water solubility (14 g per 100 mL) is still such a large fraction of its hot solubility that a sizeable share of the compound must stay dissolved in the mother liquor, capping the achievable recovery at about 45 per cent — this is a genuine property of the compound, not a fault of technique. Alum and benzoic acid, whose cold solubility is much smaller relative to their hot solubility, recover far better (roughly 70 per cent and 80+ per cent respectively) from their own minimum volumes. The product melts close to the accepted value, showing the impurity has been left behind in the mother liquor. Using more solvent than the minimum lowers the recovery further; crash-cooling raises the yield but lowers the purity."
   },
   "safety": [
     "Hot saturated solutions scald badly and are worse than boiling water because they crystallise on the skin.",
@@ -528,9 +528,9 @@
         "id": "post1",
         "type": "numeric",
         "question": "State the percentage recovery you obtained from the minimum volume of solvent.",
-        "answer": 60,
-        "tolerance": 20,
-        "feedback": "About 60 per cent; the rest stays dissolved in the cold mother liquor."
+        "answer": 65,
+        "tolerance": 22,
+        "feedback": "The ceiling depends on the compound's own solubility profile: about 45 per cent for copper sulphate (its cold solubility is a large fraction of its hot solubility), but roughly 70-85 per cent for alum or benzoic acid, whose cold solubility is much lower. Whatever the compound, the rest stays dissolved in the cold mother liquor."
       },
       {
         "id": "post2",
@@ -583,7 +583,7 @@
       "Washing the crystals with warm rather than cold solvent, dissolving away part of the yield."
     ],
     "expectedBehaviour": [
-      "Dissolving in the minimum volume of hot solvent and cooling slowly gives large, well formed crystals with a recovery of about 60 per cent. The product melts close to the accepted value, showing the impurity has been left behind in the mother liquor. Using more solvent raises the loss; crash-cooling raises the yield but lowers the purity."
+      "Dissolving in the minimum volume of hot solvent and cooling slowly gives large, well formed crystals. The maximum achievable recovery is set by the compound's own solubility profile — about 45 per cent for copper sulphate (whose cold-water solubility is a large fraction of its hot solubility), but substantially higher (roughly 70-85 per cent) for alum or benzoic acid. The product melts close to the accepted value, showing the impurity has been left behind in the mother liquor. Using more solvent than the minimum lowers the recovery further; crash-cooling raises the yield but lowers the purity."
     ],
     "testFile": "tests/batch9.test.js"
   }

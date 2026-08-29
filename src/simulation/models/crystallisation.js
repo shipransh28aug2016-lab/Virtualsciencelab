@@ -22,7 +22,18 @@ export const COMPOUNDS = { alum: { label: 'Potash alum', solubilityHot: 35, solu
 export const CRUDE = { light: { label: 'Lightly impure', impurityPct: 4 }, moderate: { label: 'Moderately impure', impurityPct: 10 }, heavy: { label: 'Heavily impure', impurityPct: 20 } };
 export const COOLING = { slow: { label: 'Slow, undisturbed cooling', purityBonus: 1.0, sizeFactor: 1.0 }, bench: { label: 'Left to cool on the bench', purityBonus: 0.7, sizeFactor: 0.7 }, ice: { label: 'Crash-cooled in ice', purityBonus: 0.3, sizeFactor: 0.3 } };
 
-export const defaults = { compound: 'copperSulphate', crude: 'moderate', cooling: 'slow', filtration: 'hot', massG: 8, solventMl: 14, crystallisationTempC: 20 };
+/**
+ * NOTE on solventMl: 14 mL was the original default, but 8 g of copper
+ * sulphate needs at least 25 mL of hot solvent to dissolve at all
+ * (solubilityHot = 32 g/100 mL, so minimum = 8/32*100 = 25 mL) — validate()
+ * below correctly flagged 14 mL as WONT_DISSOLVE, so the experiment shipped
+ * with a default configuration that failed its own chemistry on load and
+ * produced no result until the student discovered they had to raise the
+ * solvent slider first. 26 mL is the smallest value on this slider's step-2
+ * grid at or above that true minimum — "just enough", as real minimum-volume
+ * technique gives in practice.
+ */
+export const defaults = { compound: 'copperSulphate', crude: 'moderate', cooling: 'slow', filtration: 'hot', massG: 8, solventMl: 26, crystallisationTempC: 20 };
 
 export function compoundOf(inputs) { return COMPOUNDS[inputs.compound] || COMPOUNDS.copperSulphate; }
 
