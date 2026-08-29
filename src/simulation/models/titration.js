@@ -40,7 +40,7 @@ export const meta = {
 export const SYSTEMS = {
   naoh_oxalic: { label: 'NaOH (unknown) vs standard oxalic acid', analyte: 'Sodium hydroxide', titrant: 'Standard oxalic acid', unknownSide: 'analyte', trueUnknownN: 0.0975, equivalencePH: 8.2, correctIndicator: 'phenolphthalein', selfIndicating: false, eqMassUnknown: 40, titrantIsAcid: true },
   hcl_na2co3: { label: 'HCl (unknown) vs standard sodium carbonate', analyte: 'Hydrochloric acid', titrant: 'Standard sodium carbonate', unknownSide: 'analyte', trueUnknownN: 0.104, equivalencePH: 3.9, correctIndicator: 'methylOrange', selfIndicating: false, eqMassUnknown: 36.5, titrantIsAcid: false },
-  naoh_hcl: { label: 'Strong base vs strong acid (pH curve)', analyte: 'Sodium hydroxide', titrant: 'Standard hydrochloric acid', unknownSide: 'none', trueUnknownN: 0.1, equivalencePH: 7.0, correctIndicator: 'universal', selfIndicating: false, eqMassUnknown: 40, titrantIsAcid: true },
+  naoh_hcl: { label: 'NaOH in the flask vs standard HCl in the burette (pH curve)', analyte: 'Sodium hydroxide', titrant: 'Standard hydrochloric acid', unknownSide: 'none', trueUnknownN: 0.1, equivalencePH: 7.0, correctIndicator: 'universal', selfIndicating: false, eqMassUnknown: 40, titrantIsAcid: true },
   kmno4_oxalic: { label: 'KMnO₄ (unknown) vs standard oxalic acid', analyte: 'Standard oxalic acid', titrant: 'Potassium permanganate', unknownSide: 'titrant', trueUnknownN: 0.02, equivalencePH: 7.0, correctIndicator: 'self', selfIndicating: true, eqMassUnknown: 31.6, titrantIsAcid: false },
   kmno4_mohr: { label: "KMnO₄ (unknown) vs standard Mohr's salt", analyte: "Standard Mohr's salt (Fe²⁺)", titrant: 'Potassium permanganate', unknownSide: 'titrant', trueUnknownN: 0.02, equivalencePH: 7.0, correctIndicator: 'self', selfIndicating: true, eqMassUnknown: 31.6, titrantIsAcid: false },
   /*
@@ -166,11 +166,33 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init() { return { t: 0, delivered: 0, pH: 7, colour: 'colourless', flowing: false, atEndPoint: false, overshot: false, finishedAt: null }; }
+export function init(inputs = defaults) {
+  const sys = systemOf(inputs);
+  return {
+    t: 0, delivered: 0, pH: 7, colour: 'colourless', flowing: false, atEndPoint: false, overshot: false, finishedAt: null,
+    analyteName: sys.analyte, titrantName: sys.titrant, titrantIsPermanganate: sys.titrant === 'Potassium permanganate',
+  };
+}
 
 export function step(state, inputs, dt) {
   const s = { ...state };
+  const sys = systemOf(inputs);
   const vEq = equivalenceVolume(inputs);
+  /*
+   * Renderers draw from state+inputs only (they never import a model), so
+   * the actual chemical names have to be resolved here and handed over --
+   * the burette/flask used to read inputs.titrant/inputs.analyte directly,
+   * which are real fields ONLY for XI-CHE-E05's own pickers (and even
+   * there hold bare codes like 'na2co3', not a readable name). Every
+   * other titration experiment (E03, C03, J01, J02) selects its system via
+   * `system` instead, so inputs.titrant/inputs.analyte were simply
+   * undefined and the apparatus was permanently labelled the generic
+   * placeholder text "Burette (titrant)" / "Conical flask (analyte)" no
+   * matter which acid or base was actually in play.
+   */
+  s.analyteName = sys.analyte;
+  s.titrantName = sys.titrant;
+  s.titrantIsPermanganate = sys.titrant === 'Potassium permanganate';
 
   /*
    * An open stopcock delivers titrant at a rate, and the volume delivered

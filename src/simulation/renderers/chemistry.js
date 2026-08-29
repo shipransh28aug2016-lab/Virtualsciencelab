@@ -230,7 +230,18 @@ export function titration(ctx, w, h, state, inputs) {
   };
   const key = (state?.colour || 'colourless').split(' ')[0].split('(')[0].trim().toLowerCase();
   const fill = colourMap[key] || th.liquid;
-  const titrantCol = inputs?.titrant === 'KMnO4' ? '#8b2fa8' : th.liquid;
+  /*
+   * inputs?.titrant is a real field only for XI-CHE-E05's own picker (and
+   * even there a bare code like 'na2co3', never the literal string
+   * 'KMnO4'), so this never actually matched for the two permanganate
+   * titrations (XII-CHE-J01/J02) -- the burette always showed a generic
+   * liquid colour instead of potassium permanganate's characteristic deep
+   * purple. state.titrantIsPermanganate is resolved by the model itself
+   * from whichever system is actually running.
+   */
+  const titrantCol = state?.titrantIsPermanganate ? '#8b2fa8' : th.liquid;
+  const titrantLabel = state?.titrantName || inputs?.titrant || 'titrant';
+  const analyteLabel = state?.analyteName || inputs?.analyte || 'analyte';
 
   // ── the stand that actually holds the burette ──
   const rodX = cx - 132;
@@ -260,11 +271,11 @@ export function titration(ctx, w, h, state, inputs) {
     liquidColor: titrantCol,
     flowRate: flowing ? (state?.flowRate ?? 0.5) : 0,
     targetY: surfaceY,
-    label: `Burette (${inputs?.titrant || 'titrant'})`,
+    label: `Burette (${titrantLabel})`,
   });
 
   drawConicalFlask(ctx, cx, flaskTop, 46, 150, flaskH, 0.42, fill, {
-    label: `Conical flask (${inputs?.analyte || 'analyte'})`,
+    label: `Conical flask (${analyteLabel})`,
     stirring: flowing ? 0.35 : 0,
   });
 
