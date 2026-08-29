@@ -43,7 +43,33 @@ export function validate(inputs) {
   if (!inputs.madeUpToMark) warnings.push({ field: 'madeUpToMark', code: 'OVERFILLED', message: 'The flask was not made up exactly to the graduation mark.', why: 'A volumetric flask is calibrated to hold its stated volume only up to the etched mark; overshooting it dilutes the solution below its intended concentration.', fix: 'Add water dropwise near the mark and read the meniscus at eye level.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0, dissolved: 0, level: 0, settled: false, swirl: 0 }; }
+/**
+ * Resolve the human-readable quantities the renderer needs to show on the
+ * canvas — the full solute name, the flask's actual mL capacity, and the
+ * target molarity/normality this weighing is aiming for. Renderers never
+ * import models (see chemistry-new.js), so these must be computed here and
+ * attached to `state`; without this the renderer had nothing but the raw
+ * input KEYS to display ('oxalic', 'f100'), which is exactly why the flask
+ * mark read "f100 mL mark" and the solid was labelled "oxalic weighed out"
+ * instead of "Oxalic acid (H₂C₂O₄·2H₂O)". The target M/N are well-defined
+ * the instant mass and flask are chosen — the whole point of a primary
+ * standard is that the concentration is known from mass and volume alone,
+ * before a single drop of water is added — so they are shown immediately,
+ * not only after the animation finishes.
+ */
+function liveReadout(inputs) {
+  return {
+    soluteLabel: soluteOf(inputs).label,
+    nFactor: soluteOf(inputs).nFactor,
+    flaskMlNow: flaskMl(inputs),
+    molarityNow: sigFig(molarity(inputs), 4),
+    normalityNow: sigFig(normality(inputs), 4),
+  };
+}
+
+export function init(inputs = defaults) {
+  return { t: 0, dissolved: 0, level: 0, settled: false, swirl: 0, ...liveReadout(inputs) };
+}
 /**
  * Making up a standard solution. The solid dissolves as it is swirled,
  * then the flask is made up to the graduation mark -- both take time, and
@@ -57,6 +83,7 @@ export function step(state, inputs, dt) {
   if (s.dissolved > 0.92) s.level = Math.min(1, s.level + dt * 0.5);
   s.swirl = (s.swirl + dt * (s.dissolved < 1 ? 2.2 : 0.4)) % (Math.PI * 2);
   s.settled = s.level >= 1;
+  Object.assign(s, liveReadout(inputs));
   return s;
 }
 

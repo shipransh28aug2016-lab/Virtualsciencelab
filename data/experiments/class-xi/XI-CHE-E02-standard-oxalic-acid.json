@@ -11,7 +11,7 @@
     "subjectCode": "043",
     "section": "E",
     "serial": 2,
-    "unit": "Unit 6: Equilibrium",
+    "unit": "Unit 1: Some Basic Concepts of Chemistry",
     "chapter": "Unit 1: Some Basic Concepts of Chemistry",
     "topic": "Mole concept; molarity, normality; primary standards",
     "subtopic": "Preparing a standard solution of a primary standard acid from a weighed mass",
@@ -40,7 +40,7 @@
   ],
   "theory": {
     "statement": "Oxalic acid crystals, H2C2O4·2H2O, are stable, of precisely known formula, and non-hygroscopic — the properties needed for a primary standard, a substance whose solution's concentration can be known exactly from its weighed mass alone, with no titration required.",
-    "derivationNote": "Molarity = mass / (molar mass × volume in litre). Because oxalic acid is diacidic (it can donate two protons), its normality for acid-base purposes is twice its molarity: N = M × 2. A 250 mL flask of 0.1 N oxalic acid therefore needs mass = 0.1 × 63.04(equivalent mass) × 0.250 L ≈ 1.575 g of the dihydrate.",
+    "derivationNote": "Molarity = mass / (molar mass × volume in litre). Because oxalic acid is diacidic (it can donate two protons), its normality for acid-base purposes is twice its molarity: N = M × 2, equivalently N = mass / (equivalent mass × volume in litre). A 250 mL flask of 0.1 N oxalic acid therefore needs mass = 0.1 N × 63.04 g/eq (its equivalent mass, 126.07 ÷ 2) × 0.250 L ≈ 1.575 g of the dihydrate — which is exactly why this weighing gives a molarity of only about 0.05 M even though the normality is 0.1 N.",
     "keyEquations": [
       "Molarity M = mass / (molar mass × V(L))",
       "Normality N = M × basicity (= 2 for oxalic acid)",

@@ -187,20 +187,43 @@ export function standardSolution(ctx, w, h, state, inputs) {
   ctx.restore();
 
   // The graduation mark itself — the whole point of a volumetric flask.
+  // Its number comes from state.flaskMlNow (resolved in the model from the
+  // 'f100'/'f250'/... KEY), never from the raw inputs.flask key directly —
+  // that raw key is exactly what used to print the nonsensical "f100 mL
+  // mark" instead of "100 mL mark".
+  const flaskMl = state?.flaskMlNow ?? 250;
   const markY = shoulder - 52;
   ctx.save();
   ctx.strokeStyle = '#c02626'; ctx.lineWidth = 1.6;
   ctx.beginPath(); ctx.moveTo(cx - 17, markY); ctx.lineTo(cx + 17, markY); ctx.stroke();
   ctx.restore();
-  label(ctx, cx + 19, markY, `${inputs?.flask || '250'} mL mark`, { anchor: 'right', size: 11, color: '#c02626' });
+  label(ctx, cx + 19, markY, `${flaskMl} mL mark`, { anchor: 'right', size: 11, color: '#c02626' });
 
-  label(ctx, cx, neckTop - 4, inputs?.solute ? `${inputs.solute} weighed out` : 'Weighed solid', { anchor: 'above' });
+  // Likewise, the solute's full chemical name (state.soluteLabel) is used
+  // here, not the raw 'oxalic' input key, so the flask reads "Oxalic acid
+  // (H₂C₂O₄·2H₂O) weighed out" rather than just "oxalic weighed out".
+  const soluteLabel = state?.soluteLabel || 'Weighed solid';
+  label(ctx, cx, neckTop - 4, `${soluteLabel} weighed out`, { anchor: 'above' });
   label(ctx, cx, bot + 4, 'Volumetric flask', { anchor: 'below' });
+
+  // The target concentration is known the instant a mass and flask are
+  // chosen — that is the entire point of a primary standard, no titration
+  // or trial-and-error needed — so it is shown immediately and stays on
+  // screen throughout, not only after the animation settles.
+  const M = state?.molarityNow, N = state?.normalityNow;
+  if (Number.isFinite(M) && Number.isFinite(N)) {
+    label(ctx, cx + 130, shoulder - 40, `Mass ${inputs?.massG ?? '—'} g in ${flaskMl} mL → target ${M} M, ${N} N`,
+      { anchor: 'right', size: 11.5 });
+  }
   label(ctx, cx + 130, shoulder,
     dissolved < 1 ? `Dissolving — swirl until clear (${(dissolved * 100).toFixed(0)}%)`
-      : level < 1 ? 'Dissolved — now make up to the mark'
-        : 'Made up to the mark — solution is standard',
+      : level < 1 ? 'Dissolved — now dilute with water up to the mark'
+        : `Diluted exactly to the ${flaskMl} mL mark — solution is standard`,
     { anchor: 'right', bold: true, color: level >= 1 ? '#0d7a52' : '#8a5a00' });
+  if (level >= 1 && Number.isFinite(M) && Number.isFinite(N)) {
+    label(ctx, cx + 130, shoulder + 40, `Actual: ${M} M = ${N} N (basicity ${state?.nFactor ?? '—'})`,
+      { anchor: 'right', size: 11.5, color: '#0d7a52' });
+  }
 }
 
 /** Shared: one tube in a rack whose contents develop over time. */
