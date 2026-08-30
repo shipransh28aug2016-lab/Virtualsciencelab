@@ -204,12 +204,38 @@ export function validate(inputs = defaults) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
+/**
+ * Everything the renderer needs to draw the actual two-stage construction
+ * (object -> real convex-lens image I1 -> diverging element -> final
+ * image), resolved here because renderers never import models in this
+ * codebase. Without this the scene had no way to know whether the
+ * mounted element is a mirror or a lens, where I1 falls, or how close to
+ * the null/real-image condition the current setting is — which is why it
+ * previously fell back to drawing neither correctly.
+ */
+function sceneFields(inputs) {
+  const lens = LENSES[inputs.lens] || LENSES.L20;
+  const el = ELEMENTS[inputs.element] || ELEMENTS.cm25;
+  return {
+    lensFocalCm: lens.focal,
+    lensLabel: lens.label,
+    elementKind: el.kind,
+    elementLabel: el.label,
+    elementFocalCm: el.focal,
+    elementKindLabel: el.kindLabel,
+    firstImageCm: firstImageCm(inputs),
+    nullPositionCm: el.kind === 'mirror' ? nullPositionCm(inputs) : null,
+    finalImageCm: el.kind === 'lens' ? finalImageCm(inputs) : null,
+    virtualObjectCm: el.kind === 'lens' ? virtualObjectCm(inputs) : null,
+  };
+}
+
 export function init(inputs = defaults) {
-  return { t: 0, running: true, quality: retraceQuality(inputs) };
+  return { t: 0, running: true, quality: retraceQuality(inputs), ...sceneFields(inputs) };
 }
 
 export function step(state, inputs = defaults, dt = 1 / 60) {
-  return { ...state, t: state.t + dt, quality: retraceQuality(inputs) };
+  return { ...state, t: state.t + dt, quality: retraceQuality(inputs), ...sceneFields(inputs) };
 }
 
 /**

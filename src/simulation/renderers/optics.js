@@ -102,17 +102,127 @@ export function concaveMirror(ctx, w, h, state, inputs) {
     drawImageOnScreen(ctx, sx, AXIS_Y, 120, geom, { scale: SCALE });
   }
 }
+/**
+ * Auxiliary-lens methods (XII-PHY-B02 convex mirror, XII-PHY-B04 concave
+ * lens) — the whole point of both is a TWO-STAGE construction: the convex
+ * lens alone would form a real image I1, but the diverging element
+ * (mounted between the lens and I1) intercepts that converging beam
+ * before it gets there and turns I1 into a VIRTUAL OBJECT. The previous
+ * version of this scene never drew the diverging element at all (a
+ * broken condition that could never be true) and had no ray construction
+ * whatsoever; this draws both stages explicitly, using whichever element
+ * shape state.elementKind actually says is mounted.
+ */
 export function auxiliaryLens(ctx, w, h, state, inputs) {
-  const y = benchScene(ctx, w, h);
-  drawCandle(ctx, 60, y, 40);
-  drawConvexLens(ctx, w / 2 - 60, y - 40, 50, { label: 'Auxiliary convex lens' });
-  if (inputs?.mirror !== undefined || inputs?.element === undefined) {
-    drawConvexMirror(ctx, w - 90, y - 40, 55);
-  }
-  if (inputs?.element) {
-    ctx.save(); ctx.fillStyle = '#8ea0b8'; ctx.strokeStyle = theme().stroke;
-    ctx.fillRect(w - 110, y - 60, 8, 40); ctx.restore();
-    label(ctx, w - 106, y - 60, 'Element under test', { anchor: 'above' });
+  const th = theme();
+  const lensX = 400;
+  const u = inputs?.objectDistanceCm ?? 30;
+  const posCm = inputs?.elementPositionCm ?? 10;
+  const v1 = state?.firstImageCm;
+  const mirror = state?.elementKind === 'mirror';
+  const elementX = lensX + posCm * SCALE;
+  const i1X = Number.isFinite(v1) ? lensX + v1 * SCALE : null;
+  /* This scene's frame is fitted ONCE, when the experiment first loads,
+     and then cached for the rest of the session (renderScene's fitCache
+     is keyed on canvas size, not on inputs) -- it is never recomputed
+     just because a slider moved. v1 = uf/(u−f) blows up without bound as
+     u approaches the auxiliary lens's own focal length from above, so a
+     frame sized to fit whatever v1 happened to be at load time would
+     later clip a student who slides the object distance close to that
+     focal length. Capping where the (purely illustrative, past-the-
+     element) I1 marker is DRAWN keeps the frame's own bounds fixed
+     regardless of how large the true v1 gets; the real ray-refraction
+     geometry up to the element is unaffected, since the element always
+     sits well within this range in every valid setting.
+   */
+  const I1_CAP_CM = 90;
+  const i1Vis = Number.isFinite(v1) ? Math.min(v1, I1_CAP_CM) : null;
+  const i1XVis = i1Vis !== null ? lensX + i1Vis * SCALE : null;
+  const offScale = Number.isFinite(v1) && v1 > I1_CAP_CM;
+
+  const x0 = lensX - 60 * SCALE - 30;                 // widest the object slider allows
+  const x1 = lensX + Math.max(I1_CAP_CM * SCALE + 140, elementX - lensX + 140);
+  benchScene(ctx, w, h, x0, x1);
+  noteBounds(x0, AXIS_Y - 110, x1 - x0, 220);
+
+  dashedLine(ctx, x0, AXIS_Y, x1, AXIS_Y, rgba(th.dim, 0.8));
+
+  const objX = lensX - u * SCALE;
+  const hPx = 40;
+  drawUpright(ctx, objX, BENCH_Y, BENCH_Y - AXIS_Y);
+  drawCandle(ctx, objX, AXIS_Y, hPx, {
+    label: `Illuminated object · u = ${u.toFixed(1)} cm`,
+    drag: { varId: 'objectDistanceCm', axis: 'x', unit: 'object distance u', p0: lensX, p1: lensX - 70 * SCALE, v0: 0, v1: 70 },
+  });
+
+  drawUpright(ctx, lensX, BENCH_Y, BENCH_Y - AXIS_Y);
+  drawConvexLens(ctx, lensX, AXIS_Y, 55, { label: `Auxiliary lens · f = ${state?.lensFocalCm ?? 20} cm` });
+
+  // Stage 1: the rays the convex lens alone would send converging to I1 —
+  // drawn only as far as the diverging element, since that is as far as
+  // they actually get.
+  const stopX = Math.min(elementX, i1X ?? elementX);
+  if (i1X !== null) {
+    const topAtElement = hPx * (1 - (stopX - lensX) / (i1X - lensX));
+    ctx.save();
+    ctx.strokeStyle = rgba('#f0a23d', 0.95); ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.moveTo(objX, AXIS_Y - hPx); ctx.lineTo(lensX, AXIS_Y - hPx); ctx.lineTo(stopX, AXIS_Y - topAtElement); ctx.stroke();
+    ctx.strokeStyle = rgba('#e5433d', 0.9);
+    ctx.beginPath(); ctx.moveTo(objX, AXIS_Y - hPx); ctx.lineTo(stopX, AXIS_Y - topAtElement); ctx.stroke();
+    ctx.restore();
+    dashedLine(ctx, i1XVis, AXIS_Y - 60, i1XVis, AXIS_Y + 60, rgba(th.accent2, 0.7));
+    label(ctx, i1XVis, AXIS_Y - 64,
+      offScale ? `I₁ far off to the right (v₁ = ${v1.toFixed(1)} cm) →` : `I₁ would form here (v₁ = ${v1.toFixed(1)} cm)`,
+      { anchor: 'above', size: 10.5, color: th.accent2 });
+
+    // Stage 2: the diverging element, and what happens after it.
+    drawUpright(ctx, elementX, BENCH_Y, BENCH_Y - AXIS_Y);
+    if (mirror) {
+      drawConvexMirror(ctx, elementX, AXIS_Y, 50, { label: `${state?.elementLabel ?? 'Convex mirror'} · f = ${state?.elementFocalCm ?? 25} cm` });
+      const quality = clamp(state?.quality ?? 0, 0, 1);
+      // Honest approximation, matching the model's own retraceQuality():
+      // exactly at the null the beam retraces to the object; off-null, it
+      // returns to somewhere else. Only the endpoint is blended by quality
+      // (the model itself only ever reports a proximity SCALAR for the
+      // off-null case, not an exact off-null image position, so claiming
+      // more precision here than that would be dishonest).
+      const missCm = 40;
+      const returnTop = lerp(hPx * 0.35, hPx, quality);
+      const returnX = lerp(objX + missCm * SCALE, objX, quality);
+      const col = quality > 0.85 ? '#0d7a52' : '#8a5a00';
+      ctx.save();
+      ctx.strokeStyle = rgba(col, 0.9); ctx.lineWidth = 1.8;
+      ctx.beginPath(); ctx.moveTo(stopX, AXIS_Y - topAtElement); ctx.lineTo(returnX, AXIS_Y - returnTop); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(stopX, AXIS_Y - topAtElement); ctx.lineTo(returnX, AXIS_Y + returnTop * 0.4); ctx.stroke();
+      ctx.restore();
+      label(ctx, (stopX + returnX) / 2, AXIS_Y + 90,
+        quality > 0.85 ? 'Retraces its own path — this IS the null position' : `Retrace quality ${(quality * 100).toFixed(0)}% — keep sliding the mirror`,
+        { anchor: 'below', bold: quality > 0.85, size: 12, color: col });
+    } else {
+      drawConcaveLens(ctx, elementX, AXIS_Y, 50, { label: `${state?.elementLabel ?? 'Concave lens'} · f = ${state?.elementFocalCm ?? -15} cm` });
+      const vf = state?.finalImageCm;
+      if (Number.isFinite(vf)) {
+        const finalX = elementX + vf * SCALE;
+        drawUpright(ctx, finalX, BENCH_Y, BENCH_Y - AXIS_Y - 60);
+        drawScreen(ctx, finalX, AXIS_Y + 60, 100, { label: `Real final image · v = ${vf.toFixed(1)} cm` });
+        ctx.save();
+        ctx.strokeStyle = rgba('#3fae5a', 0.95); ctx.lineWidth = 1.8;
+        ctx.beginPath(); ctx.moveTo(stopX, AXIS_Y - topAtElement); ctx.lineTo(finalX, AXIS_Y); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(stopX, AXIS_Y + topAtElement); ctx.lineTo(finalX, AXIS_Y); ctx.stroke();
+        ctx.restore();
+        label(ctx, (stopX + finalX) / 2, AXIS_Y - 90, `Virtual object u = ${(state?.virtualObjectCm ?? 0).toFixed(1)} cm → real image, f = uv/(u−v)`,
+          { anchor: 'above', size: 11, bold: true, color: '#0d7a52' });
+      } else {
+        ctx.save();
+        ctx.strokeStyle = rgba('#8a5a00', 0.7); ctx.lineWidth = 1.4; ctx.setLineDash([4, 4]);
+        ctx.beginPath(); ctx.moveTo(stopX, AXIS_Y - topAtElement); ctx.lineTo(stopX + 90, AXIS_Y - topAtElement * 1.8); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(stopX, AXIS_Y + topAtElement); ctx.lineTo(stopX + 90, AXIS_Y + topAtElement * 1.8); ctx.stroke();
+        ctx.restore();
+        label(ctx, stopX + 40, AXIS_Y - 90, 'Still no real image — slide the lens further from the convex lens', { anchor: 'above', size: 11, color: '#8a5a00' });
+      }
+    }
+  } else {
+    label(ctx, lensX, AXIS_Y - 80, 'Object inside the focus — the convex lens forms no real I₁ to work with', { anchor: 'above', color: '#c02626', bold: true });
   }
 }
 export function refractiveIndex(ctx, w, h, state, inputs) {
