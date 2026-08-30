@@ -202,11 +202,78 @@ export function metreBridge(ctx, w, h, state, inputs) {
 
 export function galvanometer(ctx, w, h, state, inputs) {
   const th = theme();
-  drawDial(ctx, w / 2, h / 2 - 10, 60, (state?.deflection ?? 0) / 30, { label: 'Galvanometer', zeroCentre: true });
-  drawCell(ctx, 60, h - 40, { label: 'Cell' });
-  drawResistor(ctx, w / 2, h - 40, 70, { label: 'Resistance box R' });
-  if (inputs?.shuntConnected) label(ctx, w - 60, h - 40, 'Shunt S', { anchor: 'above' });
+  const cx = 400, dialY = 130, benchY = 340;
+  const defl = state?.deflection ?? 0;
+  const isConversion = !!inputs?.conversion;
+
+  drawDial(ctx, cx, dialY, 54, defl / 30, { label: 'Galvanometer', zeroCentre: true });
+
+  if (!isConversion) {
+    // XII-PHY-A04: half-deflection method. Cell + high resistance R in
+    // series with the galvanometer; the shunt S, when connected, sits
+    // genuinely IN PARALLEL across the galvanometer's own two terminals —
+    // not just a text tag — because that parallel topology is the entire
+    // point of the half-deflection method.
+    drawWireRect(ctx, cx - 220, dialY + 70, cx + 220, benchY, { current: 0.8 });
+    drawCell(ctx, cx - 220, (dialY + 70 + benchY) / 2, { label: `Cell · ${cellOfLabel(inputs)}` });
+    drawResistor(ctx, cx, benchY, 90, { label: `High resistance R = ${inputs?.resistanceR ?? 3000} Ω` });
+    if (inputs?.shuntConnected) {
+      ctx.save();
+      ctx.strokeStyle = th.ink; ctx.lineWidth = 1.6;
+      ctx.beginPath(); ctx.moveTo(cx - 30, dialY + 54); ctx.lineTo(cx - 30, dialY + 100); ctx.lineTo(cx + 30, dialY + 100); ctx.lineTo(cx + 30, dialY + 54); ctx.stroke();
+      ctx.restore();
+      drawResistor(ctx, cx, dialY + 100, 50, { label: `Shunt S = ${(inputs?.shuntS ?? 0).toFixed(1)} Ω (parallel)` });
+    }
+    drawGlassCard(ctx, cx - 220, 18, 440, 46);
+    ctx.save();
+    ctx.textAlign = 'center'; ctx.font = '700 14px system-ui, -apple-system, sans-serif';
+    ctx.fillStyle = state?.settled === false ? th.warn : (inputs?.shuntConnected ? '#0d7a52' : th.ink);
+    ctx.textBaseline = 'top';
+    ctx.fillText(`Deflection ${defl.toFixed(1)} div${inputs?.shuntConnected ? ' with the shunt connected' : ' (no shunt)'}`, cx, 26);
+    ctx.font = '600 11px system-ui, -apple-system, sans-serif'; ctx.fillStyle = th.muted; ctx.textBaseline = 'bottom';
+    ctx.fillText('Find the shunt that halves the no-shunt deflection: G = SR/(R−S)', cx, 60);
+    ctx.restore();
+    noteBounds(cx - 220, 18, 440, 46);
+    return;
+  }
+
+  // XII-PHY-A05: conversion into an ammeter (shunt, parallel) or a
+  // voltmeter (series resistance) of a chosen range — each drawn with its
+  // real topology, not a floating text tag, since the whole point of the
+  // experiment is that the two conversions are wired oppositely.
+  const isAmmeter = inputs.conversion === 'ammeter';
+  const req = state?.requiredResistance;
+  const unit = isAmmeter ? 'A' : 'V';
+  if (isAmmeter) {
+    ctx.save();
+    ctx.strokeStyle = th.ink; ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.moveTo(cx - 30, dialY + 54); ctx.lineTo(cx - 30, dialY + 100); ctx.lineTo(cx + 30, dialY + 100); ctx.lineTo(cx + 30, dialY + 54); ctx.stroke();
+    ctx.restore();
+    drawResistor(ctx, cx, dialY + 100, 50, { label: `Shunt S = ${Number.isFinite(req) ? req.toFixed(3) : '—'} Ω (parallel, low-resistance)` });
+    drawWireRect(ctx, cx - 200, dialY + 130, cx + 200, benchY, { current: 1 });
+  } else {
+    drawResistor(ctx, cx, dialY + 100, 90, { label: `Series resistance R = ${Number.isFinite(req) ? req.toFixed(0) : '—'} Ω` });
+    drawWireRect(ctx, cx - 200, dialY + 150, cx + 200, benchY, { current: 0.6 });
+  }
+  drawCell(ctx, cx - 200, (dialY + 150 + benchY) / 2, { label: 'Source under test' });
+  drawDigitalReadout(ctx, cx + 130, benchY - 40, 100, 30,
+    `${((defl / 30) * (inputs?.targetRange ?? 1)).toFixed(2)} ${unit}`,
+    { label: `Converted ${isAmmeter ? 'ammeter' : 'voltmeter'} reads`, size: 16 });
+
+  drawGlassCard(ctx, cx - 220, 18, 440, 46);
+  ctx.save();
+  ctx.textAlign = 'center'; ctx.font = '700 14px system-ui, -apple-system, sans-serif';
+  ctx.fillStyle = th.ink; ctx.textBaseline = 'top';
+  ctx.fillText(`Range 0–${(inputs?.targetRange ?? 1).toFixed(1)} ${unit} · applied ${(inputs?.testValue ?? 0).toFixed(2)} ${unit}`, cx, 26);
+  ctx.font = '600 11px system-ui, -apple-system, sans-serif'; ctx.fillStyle = th.muted; ctx.textBaseline = 'bottom';
+  ctx.fillText(
+    isAmmeter ? `Meter resistance ≈ ${Number.isFinite(state?.meterResistance) ? state.meterResistance.toFixed(3) : '—'} Ω — very LOW, as an ammeter (in series) must be`
+      : `Meter resistance ≈ ${Number.isFinite(state?.meterResistance) ? state.meterResistance.toFixed(0) : '—'} Ω — very HIGH, as a voltmeter (in parallel) must be`,
+    cx, 60);
+  ctx.restore();
+  noteBounds(cx - 220, 18, 440, 46);
 }
+function cellOfLabel(inputs) { return `${{ c2: 2, c3: 3, c4: 4 }[inputs?.cell] ?? 2} V`; }
 
 export function inductorImpedance(ctx, w, h, state, inputs) {
   const th = theme();

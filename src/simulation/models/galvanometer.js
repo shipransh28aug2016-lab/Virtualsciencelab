@@ -81,8 +81,40 @@ export function validate(inputs) {
   }
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+
+/** Deflection in divisions the pointer is actually being asked to settle at, right now, for whichever of the two experiments this input set belongs to. */
+function targetDeflectionDiv(inputs) {
+  if (inputs.conversion) {
+    // A05: the converted meter reads testValue out of targetRange, full-scale
+    // at fullScaleDiv() divisions -- exactly what measure() below assumes.
+    return Math.min(fullScaleDiv(), Math.max(0, (inputs.testValue / inputs.targetRange) * fullScaleDiv()));
+  }
+  // A04: the actual half-deflection circuit.
+  return deflectionDiv(inputs);
+}
+
+export function init(inputs = defaults) {
+  return { t: 0, deflection: 0, settled: false, requiredResistance: requiredResistance(inputs), meterResistance: meterResistance(inputs) };
+}
+/**
+ * The needle was permanently frozen at zero on the live canvas -- step()
+ * was a bare pass-through, so `state.deflection` (what the renderer's dial
+ * actually reads) never existed on state at all, only inside the one-shot
+ * `measure()` snapshot taken when a reading is recorded. A moving-coil
+ * galvanometer visibly swings up and settles as R, the shunt, or the test
+ * value change; that swing is watched for by the actual procedure (find
+ * the half-deflection point BY EYE), so it has to be live, not a jump-cut.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const target = targetDeflectionDiv(inputs);
+  s.deflection += (target - s.deflection) * Math.min(1, dt * 5);
+  s.settled = Math.abs(target - s.deflection) < 0.15;
+  s.requiredResistance = requiredResistance(inputs);
+  s.meterResistance = meterResistance(inputs);
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 197);
