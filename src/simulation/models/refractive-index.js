@@ -47,20 +47,57 @@ export function apparentRadiusCm(inputs) {
   return R / liquidOf(inputs).mu;
 }
 
-export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0, focus: 0, apparent: 0 }; }
 /**
- * Focusing the travelling microscope. The apparent position of the mark
- * rises by t(1 - 1/n) when the slab is placed over it; the focus setting
- * eases towards it so the student sees the shift happen rather than being
- * told about it.
+ * Everything the renderer needs but cannot compute itself (renderers
+ * never import models here) -- resolved once per method, since the three
+ * experiments sharing this file (B06 slab, B07 liquid lens, B08 concave
+ * mirror) use completely different apparatus and different fields on
+ * `inputs`. Without this the renderer previously read `inputs.thicknessCm`
+ * (a field that does not exist anywhere in this model -- the real field
+ * is `inputs.slab`, a KEY into SLABS) and drew the glass-slab scene
+ * unconditionally regardless of `inputs.method`, so B07 and B08 showed a
+ * glass slab and travelling microscope that has nothing to do with either
+ * experiment's actual apparatus (a liquid lens on a plane mirror, or a
+ * liquid layer on a concave mirror).
+ */
+function sceneFields(inputs) {
+  const method = inputs.method || 'slab';
+  if (method === 'liquidLens') {
+    const f1 = (LENSES[inputs.lens] || LENSES.L20).f;
+    return { method, liquidLabel: liquidOf(inputs).label, lensFocalCm: f1, liquidLensFocalCm: liquidLensF2(inputs), combinationFocalCm: combinationF(inputs) };
+  }
+  if (method === 'concaveMirror') {
+    const R = (MIRRORS[inputs.mirror] || MIRRORS.m15).R;
+    return { method, liquidLabel: liquidOf(inputs).label, mirrorRadiusCm: R, apparentRadiusCm: apparentRadiusCm(inputs) };
+  }
+  const s = slabOf(inputs);
+  return { method, slabLabel: s.label, thicknessCm: s.thicknessCm, apparentThicknessCmTarget: apparentThicknessCm(inputs) };
+}
+
+export function validate() { return { ok: true, errors: [], warnings: [] }; }
+export function init(inputs = defaults) { return { t: 0, focus: 0, apparent: 0, ...sceneFields(inputs) }; }
+/**
+ * Focusing the travelling microscope (slab method) or settling onto the
+ * no-parallax setting (liquid methods). The slab's apparent position rises
+ * by t(1 - 1/n) when it is placed over the mark; the focus setting eases
+ * towards it so the student sees the shift happen rather than being told
+ * about it. The liquid methods have no analogous continuously-adjustable
+ * position to search for -- they are set up by choosing a liquid and
+ * apparatus, not by sliding a jockey -- so `focus` there just represents
+ * the brief settling time after choosing a combination, before a reading
+ * can be taken.
  */
 export function step(state, inputs, dt) {
-  const s = { ...state };
+  const s = { ...state, ...sceneFields(inputs) };
   s.t += dt;
-  const target = apparentThicknessCm(inputs);
-  s.apparent += (target - s.apparent) * Math.min(1, dt * 3);
-  s.focus = Math.abs(target - s.apparent) < 0.002 ? 1 : 0;
+  if (s.method === 'slab') {
+    const target = s.apparentThicknessCmTarget;
+    s.apparent += (target - s.apparent) * Math.min(1, dt * 3);
+    s.focus = Math.abs(target - s.apparent) < 0.002 ? 1 : 0;
+  } else {
+    s.apparent += (1 - s.apparent) * Math.min(1, dt * 3);
+    s.focus = s.apparent > 0.98 ? 1 : 0;
+  }
   return s;
 }
 
