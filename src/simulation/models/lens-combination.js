@@ -33,9 +33,28 @@ export function combinedFocalCm(inputs) {
 }
 export function combinedPowerD(inputs) { return powerD(combinedFocalCm(inputs)); }
 
+/** Everything the renderer needs but cannot compute itself (renderers never import models here). */
+function sceneFields(inputs) {
+  const a = lensOf(inputs.lensA), b = lensOf(inputs.lensB);
+  return {
+    lensAFocalCm: a.f, lensALabel: a.label, lensAConcave: a.f < 0,
+    lensBFocalCm: b.f, lensBLabel: b.label, lensBConcave: b.f < 0,
+    combinedFocalCm: combinedFocalCm(inputs), combinedPowerD: combinedPowerD(inputs),
+  };
+}
+
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init(inputs = defaults) { return { t: 0, ...sceneFields(inputs) }; }
+/**
+ * Nothing here ever changed frame to frame -- step() was a bare
+ * pass-through, so the renderer's own `state?.combinedFocalCm` (the
+ * headline number of the whole activity) was permanently undefined and
+ * printed as "—" no matter which two lenses were chosen. There is no
+ * physical settling process to animate here (choosing a lens pair takes
+ * effect immediately), so step() just keeps the resolved scene fields in
+ * sync with whatever lensA/lensB/separationCm currently are.
+ */
+export function step(state, inputs) { return { ...state, ...sceneFields(inputs) }; }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 263);

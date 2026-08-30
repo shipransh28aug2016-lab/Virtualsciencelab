@@ -572,13 +572,69 @@ export function imageFormation(ctx, w, h, state, inputs) {
     drawScreen(ctx, sx, y, 80, { label: 'Screen' });
   }
 }
+/**
+ * Two thin lenses, coaxial, separated by the model's own separationCm.
+ * Distant-object rays (parallel to the axis) are traced through EACH lens
+ * in turn with the real thin-lens bending rule (outgoing slope = incoming
+ * slope − height/f applied at every surface), so the point where they
+ * meet on screen is a genuine consequence of both lenses' focal lengths
+ * and the gap between them, not a number pasted next to two generic
+ * lens icons. Either lens can be concave (LENS_SET includes −20/−30 cm
+ * entries) — the previous version always drew drawConvexLens for both,
+ * so a concave lens in the pair was shown as if it were converging.
+ */
 export function lensCombination(ctx, w, h, state, inputs) {
-  const y = benchScene(ctx, w, h);
-  const cx = w / 2;
-  drawCandle(ctx, 50, y, 40);
-  drawConvexLens(ctx, cx - 20, y - 40, 45, { label: 'Lens A' });
-  drawConvexLens(ctx, cx + 20, y - 40, 45, { label: 'Lens B' });
-  label(ctx, cx, y - 100, `Combined F ≈ ${(state?.combinedFocalCm ?? '—')} cm`, { anchor: 'above', bg: false });
+  const th = theme();
+  const lensAX = 380;
+  const sepCm = inputs?.separationCm ?? 0;
+  const lensBX = lensAX + Math.max(sepCm, 0.01) * SCALE;
+  const F = state?.combinedFocalCm;
+  const screenX = Number.isFinite(F) ? lensBX + clamp(F, -60, 90) * SCALE : lensBX + 60 * SCALE;
+
+  const x0 = lensAX - 90, x1 = Math.max(screenX, lensBX) + 90;
+  benchScene(ctx, w, h, x0, x1);
+  noteBounds(x0, AXIS_Y - 90, x1 - x0, 180);
+
+  dashedLine(ctx, x0, AXIS_Y, x1, AXIS_Y, rgba(th.dim, 0.8));
+  label(ctx, x0 + 30, AXIS_Y - 70, 'Distant object — rays arrive parallel to the axis', { anchor: 'above', size: 10.5 });
+
+  const f1 = state?.lensAFocalCm ?? 15, f2 = state?.lensBFocalCm ?? 20;
+  const heights = [26, -26];
+  const bend = (h0, f) => -h0 / f; // thin-lens rule for a ray parallel to the axis
+  ctx.save();
+  ctx.strokeStyle = rgba('#f0a23d', 0.95); ctx.lineWidth = 1.6;
+  for (const h0 of heights) {
+    // Incident, parallel to the axis, up to lens A.
+    ctx.beginPath(); ctx.moveTo(x0, AXIS_Y - h0); ctx.lineTo(lensAX, AXIS_Y - h0); ctx.stroke();
+    const slopeA = bend(h0, f1);
+    const hB = h0 + slopeA * (lensBX - lensAX) / SCALE;
+    ctx.beginPath(); ctx.moveTo(lensAX, AXIS_Y - h0); ctx.lineTo(lensBX, AXIS_Y - hB); ctx.stroke();
+    const slopeB = slopeA - hB / f2;
+    const hScreen = hB + slopeB * (screenX - lensBX) / SCALE;
+    ctx.beginPath(); ctx.moveTo(lensBX, AXIS_Y - hB); ctx.lineTo(screenX, AXIS_Y - hScreen); ctx.stroke();
+  }
+  ctx.restore();
+
+  drawUpright(ctx, lensAX, BENCH_Y, BENCH_Y - AXIS_Y);
+  if (state?.lensAConcave) drawConcaveLens(ctx, lensAX, AXIS_Y, 48, { label: `Lens A · ${state?.lensALabel ?? '?'}` });
+  else drawConvexLens(ctx, lensAX, AXIS_Y, 48, { label: `Lens A · ${state?.lensALabel ?? '?'}` });
+
+  drawUpright(ctx, lensBX, BENCH_Y, BENCH_Y - AXIS_Y);
+  if (state?.lensBConcave) drawConcaveLens(ctx, lensBX, AXIS_Y, 48, { label: `Lens B · ${state?.lensBLabel ?? '?'}` });
+  else drawConvexLens(ctx, lensBX, AXIS_Y, 48, { label: `Lens B · ${state?.lensBLabel ?? '?'}` });
+
+  if (sepCm > 0.05) label(ctx, (lensAX + lensBX) / 2, AXIS_Y + 50, `separation ${sepCm.toFixed(1)} cm`, { anchor: 'below', size: 10.5 });
+
+  if (Number.isFinite(F) && F > 0) {
+    drawUpright(ctx, screenX, BENCH_Y, BENCH_Y - AXIS_Y - 60);
+    drawScreen(ctx, screenX, AXIS_Y + 60, 100, { label: `Screen · F = ${F.toFixed(2)} cm from lens B` });
+  } else {
+    label(ctx, lensBX + 60, AXIS_Y - 50, 'This pair diverges overall — no real image forms', { anchor: 'above', color: '#8a5a00' });
+  }
+
+  label(ctx, (lensBX + screenX) / 2, AXIS_Y - 90,
+    `1/F = 1/f₁ + 1/f₂ − d/(f₁f₂)  →  F = ${Number.isFinite(F) ? F.toFixed(2) : '—'} cm (P = ${Number.isFinite(state?.combinedPowerD) ? state.combinedPowerD.toFixed(2) : '—'} D)`,
+    { anchor: 'above', bold: true, size: 12 });
 }
 export function pnDiode(ctx, w, h, state, inputs) {
   const th = theme();
