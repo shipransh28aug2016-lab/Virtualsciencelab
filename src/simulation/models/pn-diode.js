@@ -48,8 +48,25 @@ export function diodeVoltage(inputs) {
 }
 
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0 }; }
-export function step(state) { return state; }
+export function init(inputs = defaults) { return { t: 0, currentMA: 0, diodeVoltageV: 0, conducting: false }; }
+/**
+ * The milliammeter and voltmeter needles were permanently pinned at zero
+ * on the live canvas -- step() was a bare pass-through, so state never
+ * carried a current or a diode voltage at all, only measure()'s one-shot
+ * snapshot when a reading was recorded. Settles towards the model's own
+ * currentMA()/diodeVoltage() so both meters actually respond as the
+ * supply voltage, series resistance or diode choice change.
+ */
+export function step(state, inputs, dt) {
+  const s = { ...state };
+  s.t += dt;
+  const targetI = currentMA(inputs);
+  const targetV = diodeVoltage(inputs);
+  s.currentMA += (targetI - s.currentMA) * Math.min(1, dt * 6);
+  s.diodeVoltageV += (targetV - s.diodeVoltageV) * Math.min(1, dt * 6);
+  s.conducting = s.currentMA > 0.5;
+  return s;
+}
 
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 241);

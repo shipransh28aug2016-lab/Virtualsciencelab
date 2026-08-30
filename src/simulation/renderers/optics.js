@@ -2,9 +2,9 @@
  * Apparatus renderers — ray optics.
  */
 import {
-  label, drawOpticalBench, drawUpright, drawConvexLens, drawConcaveLens, drawConcaveMirror, drawConvexMirror, drawScreen, drawCandle, drawPrism, drawSlab, drawDial, theme, drawRayDiagram, drawImageOnScreen, dashedLine, brushedMetal, chrome, contactShadow, noteBounds,
+  label, drawOpticalBench, drawUpright, drawConvexLens, drawConcaveLens, drawConcaveMirror, drawConvexMirror, drawScreen, drawCandle, drawPrism, drawSlab, drawDial, theme, drawRayDiagram, drawImageOnScreen, dashedLine, brushedMetal, chrome, contactShadow, noteBounds, drawDigitalReadout, drawResistor, drawWireRect, drawCell,
 } from './apparatus.js';
-import { clock, rgba, shade, mixColor, clamp, lerp } from './realism.js';
+import { clock, rgba, shade, mixColor, clamp, lerp, bloom } from './realism.js';
 
 /* Pixels per centimetre along the optical bench. One constant, so the
    object, the image and the printed scale can never drift apart. */
@@ -636,16 +636,66 @@ export function lensCombination(ctx, w, h, state, inputs) {
     `1/F = 1/f₁ + 1/f₂ − d/(f₁f₂)  →  F = ${Number.isFinite(F) ? F.toFixed(2) : '—'} cm (P = ${Number.isFinite(state?.combinedPowerD) ? state.combinedPowerD.toFixed(2) : '—'} D)`,
     { anchor: 'above', bold: true, size: 12 });
 }
+const DIODE_NAMES = { si: 'Silicon diode', ge: 'Germanium diode', led: 'Red LED' };
+const DIODE_KNEE_V = { si: 0.65, ge: 0.25, led: 1.75 };
+
 export function pnDiode(ctx, w, h, state, inputs) {
   const th = theme();
-  const cx = w / 2, cy = h / 2 - 20;
-  ctx.save(); ctx.strokeStyle = th.ink; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.moveTo(cx - 20, cy - 14); ctx.lineTo(cx - 20, cy + 14); ctx.lineTo(cx + 14, cy); ctx.closePath(); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(cx + 14, cy - 14); ctx.lineTo(cx + 14, cy + 14); ctx.stroke();
+  const cx = 400, cy = 220, benchY = 380;
+  const reverse = inputs?.bias === 'reverse';
+  const diodeKey = inputs?.diode || 'si';
+  const I = state?.currentMA ?? 0;
+  const Vd = state?.diodeVoltageV ?? 0;
+  const conducting = !!state?.conducting;
+
+  // The full test circuit: cell -> key-less loop -> series R -> diode,
+  // wired forward or reverse depending on `bias` (the diode symbol itself
+  // never physically rotates -- only which way the supply pushes current
+  // through it does, exactly as in the real circuit).
+  drawWireRect(ctx, cx - 160, cy - 70, cx + 160, benchY, { current: conducting ? clamp(I / 5, 0, 3) : 0.15 });
+  drawCell(ctx, cx - 160, (cy - 70 + benchY) / 2, { label: `Supply · ${(inputs?.supplyV ?? 2).toFixed(1)} V${reverse ? ' (reversed)' : ''}` });
+  drawResistor(ctx, cx, benchY, 80, { label: `Series R = ${inputs?.seriesR ?? 100} Ω` });
+
+  // The diode symbol: an LED glows red when it actually conducts forward
+  // current; silicon/germanium just show the usual conduction glow used
+  // elsewhere in this app for a live component, so a working diode reads
+  // as visibly "on" rather than only as a needle deflecting off to the side.
+  const dx = cx + 160, dy = cy;
+  const litRed = diodeKey === 'led' && conducting && !reverse;
+  if (litRed) bloom(ctx, dx, dy, 36, '#ff3b30', clamp(I / 15, 0, 1) * 0.9);
+  ctx.save();
+  ctx.strokeStyle = th.ink; ctx.lineWidth = 2.2; ctx.lineCap = 'round';
+  const tipX = reverse ? dx - 16 : dx + 16, barX = reverse ? dx + 16 : dx - 16;
+  ctx.beginPath(); ctx.moveTo(barX, dy - 16); ctx.lineTo(barX, dy + 16); ctx.lineTo(tipX, dy); ctx.closePath();
+  if (conducting && !reverse) { ctx.fillStyle = litRed ? 'rgba(255,59,48,0.35)' : rgba(th.accent, 0.25); ctx.fill(); }
+  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(tipX, dy - 16); ctx.lineTo(tipX, dy + 16); ctx.stroke();
   ctx.restore();
-  label(ctx, cx, cy + 20, `${inputs?.diode || 'si'} diode, ${inputs?.bias || 'forward'} bias`, { anchor: 'below' });
-  drawDial(ctx, cx - 110, cy, 30, (state?.currentA ?? 0), { label: 'Milliammeter' });
-  drawDial(ctx, cx + 110, cy, 30, (inputs?.supplyV ?? 0) / 6, { label: 'Voltmeter' });
+  label(ctx, dx, dy + 26, `${DIODE_NAMES[diodeKey] ?? 'Diode'} · ${reverse ? 'reverse' : 'forward'} bias`, { anchor: 'below' });
+  label(ctx, dx, dy - 26, `Knee ≈ ${DIODE_KNEE_V[diodeKey] ?? 0.65} V`, { anchor: 'above', size: 10.5 });
+
+  // Meters: the milliammeter is genuinely live, and the voltmeter reads
+  // the DIODE's own terminal voltage (supply minus the series-resistor
+  // drop), not the raw supply voltage — those are only the same thing
+  // when no current flows at all.
+  drawDial(ctx, cx - 110, cy - 130, 34, clamp(I / 25, -0.2, 1), { label: 'Milliammeter (0-25 mA)' });
+  drawDial(ctx, cx + 110, cy - 130, 34, clamp(Vd / 2, -0.2, 1), { label: 'Voltmeter (0-2 V)' });
+  // drawDigitalReadout only registers its own bounds via noteBounds when
+  // given an opts.label (its caption path) -- without one here (a nearby
+  // dial already carries the caption), these boxes were invisible to the
+  // scene's auto-fit measuring pass and got clipped off the bottom edge.
+  noteBounds(cx - 154, benchY + 36, 304, 36);
+  drawDigitalReadout(ctx, cx - 150, benchY + 40, 110, 28, `${I.toFixed(2)} mA`, { size: 15 });
+  drawDigitalReadout(ctx, cx + 40, benchY + 40, 110, 28, `${Vd.toFixed(3)} V`, { size: 15 });
+
+  if (!conducting) {
+    label(ctx, cx, cy - 175,
+      reverse ? 'Reverse biased — only a tiny, roughly constant leakage current flows' : 'Below the knee voltage — current is immeasurably small',
+      { anchor: 'above', color: '#8a5a00', bold: true });
+  } else {
+    label(ctx, cx, cy - 175, 'Past the knee — current rises steeply for a small further rise in voltage',
+      { anchor: 'above', color: '#0d7a52', bold: true });
+  }
 }
 
 export const RENDERERS = {
