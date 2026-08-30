@@ -623,17 +623,106 @@ export function componentId(ctx, w, h, state, inputs) {
   drawDial(ctx, cx, cy - 60, 30, 0, { label: 'Ohmmeter' });
 }
 
+/**
+ * A rheostat symbol that actually shows which mode it is wired in: a
+ * sliding arrow across the resistor body when only the wiper and one end
+ * are used (a true variable arm), or nothing extra when it is wired
+ * across its whole track (a fixed resistor in every way that matters,
+ * however it is labelled).
+ */
+function drawRheostat(ctx, x, y, w, variable) {
+  drawResistor(ctx, x, y, w, { label: variable ? 'Rheostat (variable arm)' : 'Rheostat (across full track — fixed!)' });
+  if (variable) {
+    ctx.save();
+    ctx.strokeStyle = theme().accent; ctx.lineWidth = 1.8; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x - w / 2 - 4, y + 14); ctx.lineTo(x + 6, y - 14); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x + 6, y - 14); ctx.lineTo(x + 1, y - 10); ctx.lineTo(x + 10, y - 8); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+}
+
+/**
+ * XII-PHY-ACT-A4 — the previous version checked `inputs.wiringCorrect`,
+ * a field that does not exist anywhere on this model (the real fields
+ * are ammeterMode/voltmeterMode/polarity/rheostatMode/keyState), so it
+ * always rendered as if the wiring were correct and never actually drew
+ * any of the five deliberate faults this activity exists to teach.
+ * Rebuilt so each fault changes the DIAGRAM, not just the meter numbers:
+ * the ammeter moves from the main loop to a bypass branch around the
+ * load when wired in parallel; the voltmeter moves from a branch across
+ * the load into the main loop when wired in series; the rheostat shows
+ * its wiper arrow only when actually used as a variable arm; and a
+ * reversed meter deflects backwards past zero, using the physically
+ * correct current/voltage the model itself computes for the fault.
+ */
 export function circuitAssembly(ctx, w, h, state, inputs) {
   const th = theme();
-  const y = h / 2;
-  ctx.save(); ctx.strokeStyle = th.ink; ctx.lineWidth = 1.6;
-  ctx.strokeRect(60, y - 50, w - 120, 100); ctx.restore();
-  drawCell(ctx, 90, y, { label: 'Cell' });
-  drawKey(ctx, 150, y - 50, inputs?.wiringCorrect !== false);
-  drawResistor(ctx, w / 2, y - 50, 60, { label: 'Resistor' });
-  drawDial(ctx, w - 90, y, 28, 0.4, { label: 'Ammeter' });
-  label(ctx, w / 2, y + 50, 'Assemble to match the circuit diagram', { anchor: 'below' });
+  const x0 = 130, x1 = 650, yTop = 160, yBot = 340;
+  const ammeterSeries = inputs?.ammeterMode !== 'parallel';
+  const voltmeterSeries = inputs?.voltmeterMode === 'series';
+  const reversed = inputs?.polarity === 'reversed';
+  const keyOpen = inputs?.keyState !== 'closed';
+
+  // Main loop: cell (bottom-left) -> up -> key -> rheostat -> across the
+  // top -> down the right side (through the ammeter, unless it has been
+  // wired in parallel instead) -> the load -> back along the bottom.
+  // The wrong-wiring dials sit further right/above the main rectangle
+  // than anything else in this scene registers on its own — reserve the
+  // room up front so the auto-fit pass never has to guess.
+  noteBounds(x0 - 20, yTop - 70, (x1 + 190) - (x0 - 20), (yBot + 30) - (yTop - 70));
+  drawWireRect(ctx, x0, yTop, x1, yBot, { current: keyOpen ? 0 : clamp((state?.currentA ?? 0) * 6, 0, 3) });
+  drawCell(ctx, x0, (yTop + yBot) / 2, { label: `Cell · ${cellAssemblyLabel(inputs)}` });
+  drawKey(ctx, x0 + 90, yTop, !keyOpen);
+  drawRheostat(ctx, (x0 + x1) / 2 - 40, yTop, 90, inputs?.rheostatMode !== 'full');
+
+  const loadY = (yTop + yBot) / 2;
+  drawResistor(ctx, x1, loadY, 70, { label: `Load · ${loadAssemblyLabel(inputs)}`, note: 'rotated in the diagram — current flows top to bottom through it here' });
+
+  // The ammeter: correctly in series along the top-right corner down to
+  // the load, or — wired wrongly — bypassing the load entirely through
+  // its own near-zero resistance.
+  if (ammeterSeries) {
+    drawDial(ctx, x1, yTop + 55, 30, reversed ? -clamp((state?.currentA ?? 0) / 1, 0, 1) : clamp((state?.currentA ?? 0) / 1, 0, 1),
+      { label: `Ammeter${reversed ? ' (reversed!)' : ''}`, zeroCentre: true });
+  } else {
+    ctx.save();
+    ctx.strokeStyle = '#c02626'; ctx.lineWidth = 1.6; ctx.setLineDash([5, 4]);
+    ctx.beginPath(); ctx.moveTo(x1 + 60, loadY - 45); ctx.lineTo(x1 + 60, loadY + 45); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1, loadY - 45); ctx.lineTo(x1 + 60, loadY - 45); ctx.moveTo(x1, loadY + 45); ctx.lineTo(x1 + 60, loadY + 45); ctx.stroke();
+    ctx.restore();
+    drawDial(ctx, x1 + 100, loadY, 30, reversed ? -clamp((state?.currentA ?? 0) / 2, 0, 1) : clamp((state?.currentA ?? 0) / 2, 0, 1),
+      { label: `Ammeter — WRONG!${reversed ? ' reversed' : ''}`, zeroCentre: true });
+  }
+
+  // The voltmeter: correctly across the load (a branch, drawing almost no
+  // current), or — wired wrongly — inserted directly into the main loop.
+  if (voltmeterSeries) {
+    drawDial(ctx, (x0 + x1) / 2 + 60, yTop + 55, 30, reversed ? -clamp((state?.voltageV ?? 0) / 6, 0, 1) : clamp((state?.voltageV ?? 0) / 6, 0, 1),
+      { label: `Voltmeter — WRONG!${reversed ? ' reversed' : ''}`, zeroCentre: true });
+  } else {
+    ctx.save();
+    ctx.strokeStyle = '#1d5fd4'; ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.moveTo(x1 - 40, loadY - 45); ctx.lineTo(x1 - 40, loadY + 45); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1 - 40, loadY - 45); ctx.lineTo(x1, loadY - 45); ctx.moveTo(x1 - 40, loadY + 45); ctx.lineTo(x1, loadY + 45); ctx.stroke();
+    ctx.restore();
+    drawDial(ctx, x1 - 110, loadY, 30, reversed ? -clamp((state?.voltageV ?? 0) / 6, 0, 1) : clamp((state?.voltageV ?? 0) / 6, 0, 1),
+      { label: `Voltmeter${reversed ? ' (reversed!)' : ''}`, zeroCentre: true });
+  }
+
+  drawGlassCard(ctx, x0 - 20, 40, (x1 + 130) - (x0 - 20), 44);
+  ctx.save();
+  ctx.textAlign = 'center'; ctx.font = '700 13.5px system-ui, -apple-system, sans-serif';
+  ctx.fillStyle = keyOpen ? th.ink : '#c02626';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(
+    keyOpen ? 'Key open — check every connection against the diagram before closing it'
+      : `Key closed — I = ${(state?.currentA ?? 0).toFixed(3)} A, V = ${(state?.voltageV ?? 0).toFixed(2)} V across the load`,
+    (x0 - 20 + x1 + 130) / 2, 62);
+  ctx.restore();
+  noteBounds(x0 - 20, 40, (x1 + 130) - (x0 - 20), 44);
 }
+function cellAssemblyLabel(inputs) { return { c15: '1.5 V', c30: '3.0 V', c60: '6.0 V' }[inputs?.cell] ?? '3.0 V'; }
+function loadAssemblyLabel(inputs) { return { r10: '10 Ω', r22: '22 Ω', r47: '47 Ω', lamp: '6 V lamp' }[inputs?.load] ?? '22 Ω'; }
 
 export function circuitFault(ctx, w, h, state, inputs) {
   const th = theme();
