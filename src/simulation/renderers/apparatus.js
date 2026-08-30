@@ -1369,6 +1369,87 @@ export function drawKey(ctx, x, y, closed = true, opts = {}) {
   label(ctx, x, y + 6, name, { anchor: 'below' });
 }
 
+/** Standard denominations of a resistance/post-office box, largest first. */
+export const RESISTANCE_BOX_DENOMINATIONS = [100, 50, 20, 10, 10, 5, 2, 2, 1];
+
+/**
+ * A plug-type resistance box: a bakelite case with a row of brass block
+ * terminals, a brass plug seated in each gap between them. Seating a plug
+ * flush in its gap SHORTS that coil out of the circuit; lifting it clear
+ * switches the coil IN — the reverse of a household plug, and the single
+ * most common wiring mistake with this apparatus, so it is worth drawing
+ * correctly rather than as a black box with a number on it.
+ *
+ * The box's fixed denominations cannot sum to every possible value the
+ * resistanceBox slider allows, so the plug pattern below is a greedy,
+ * COSMETIC approximation of `ohms` — the number actually used by the
+ * physics is always the engraved digital tag underneath, never a count of
+ * which plugs look pulled.
+ */
+export function drawResistanceBox(ctx, cx, topY, ohms, opts = {}) {
+  const denominations = RESISTANCE_BOX_DENOMINATIONS;
+  let remaining = Math.max(0, ohms);
+  const pulled = denominations.map((d) => {
+    if (remaining >= d - 1e-6) { remaining -= d; return true; }
+    return false;
+  });
+  const n = denominations.length;
+  const gapW = 26;
+  const boxW = gapW * n + 24, boxH = 46;
+  const x0 = cx - boxW / 2;
+
+  contactShadow(ctx, cx, topY + boxH + 8, boxW * 1.05, { strength: 0.55 });
+  plastic(ctx, x0, topY, boxW, boxH, '#241a12', 6);
+  // Top bevel/rim, like a real bakelite lid.
+  ctx.save();
+  ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1;
+  ctx.strokeRect(x0 + 3, topY + 3, boxW - 6, boxH - 6);
+  ctx.restore();
+
+  // Brass terminal blocks, one more than there are gaps.
+  for (let i = 0; i <= n; i++) {
+    const gx = x0 + 12 + i * gapW;
+    brushedMetal(ctx, gx - 4, topY + 7, 8, boxH - 14, { base: '#c9a24a', radius: 2 });
+  }
+  // Each socket, with its plug either seated (shorted) or lifted (in circuit).
+  for (let i = 0; i < n; i++) {
+    const gx = x0 + 12 + gapW / 2 + i * gapW;
+    const holeY = topY + boxH / 2 - 3;
+    ctx.save();
+    ctx.fillStyle = 'rgba(8,6,4,0.9)';
+    ctx.beginPath(); ctx.arc(gx, holeY, 4.6, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    if (pulled[i]) {
+      chrome(ctx, gx - 3, holeY - 22, 6, 17, 2.5);
+      ctx.save();
+      const g = ctx.createRadialGradient(gx - 1, holeY - 24, 0.5, gx, holeY - 22, 5);
+      g.addColorStop(0, '#f3d998'); g.addColorStop(1, '#a97d2e');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.ellipse(gx, holeY - 22, 5, 2.6, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+    } else {
+      ctx.save();
+      const g = ctx.createRadialGradient(gx - 1.2, holeY - 1.2, 0.4, gx, holeY, 4.6);
+      g.addColorStop(0, '#f3d998'); g.addColorStop(1, '#a97d2e');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(gx, holeY, 4.2, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+    }
+    ctx.save();
+    ctx.fillStyle = 'rgba(235,225,205,0.8)';
+    ctx.font = '600 7.5px system-ui, sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText(String(denominations[i]), gx, topY + boxH - 4);
+    ctx.restore();
+  }
+
+  const display = Number.isInteger(ohms) ? String(ohms) : ohms.toFixed(1);
+  drawDigitalReadout(ctx, cx - 34, topY + boxH + 14, 68, 24, `${display} Ω`, { size: 14 });
+  const name = opts.label || 'Resistance box';
+  I.apparatus(name, x0, topY, boxW, boxH + 48, { note: opts.note });
+  label(ctx, cx, topY - 6, name, { anchor: 'above' });
+}
+
 /**
  * Connecting wire. When a current is flowing the model can pass its
  * magnitude so charge carriers are shown drifting — slowly, because the

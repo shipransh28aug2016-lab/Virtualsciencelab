@@ -267,6 +267,53 @@ export function contactShadow(ctx, cx, groundY, width, opts = {}) {
 }
 
 /**
+ * A frosted "glassmorphism" HUD panel — translucent, soft-shadowed, with a
+ * diagonal glass highlight and a bright hairline border. Canvas has no real
+ * backdrop-blur (that would need re-sampling the pixels already drawn
+ * behind it), so this fakes the look with layered translucency instead of
+ * literal blur: a soft ambient shadow lifts it off the bench, a vertical
+ * fill fades from a brighter top to a dimmer bottom, a diagonal highlight
+ * streak stands in for the light catching a glass surface, and a crisp
+ * light border reads as the pane's edge. Used for on-scene readouts that
+ * should look like an overlay sitting ABOVE the apparatus, not another
+ * label glued to a part of it.
+ */
+export function drawGlassCard(ctx, x, y, w, h, opts = {}) {
+  const { radius = 14 } = opts;
+  const th = THEME;
+  const path = () => { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, h, radius); else ctx.rect(x, y, w, h); };
+
+  ctx.save();
+  ctx.shadowColor = rgba('#050b18', th.isDark ? 0.55 : 0.22);
+  ctx.shadowBlur = 24;
+  ctx.shadowOffsetY = 10;
+  path();
+  const g = ctx.createLinearGradient(0, y, 0, y + h);
+  if (th.isDark) { g.addColorStop(0, 'rgba(255,255,255,0.12)'); g.addColorStop(1, 'rgba(255,255,255,0.045)'); }
+  else { g.addColorStop(0, 'rgba(255,255,255,0.68)'); g.addColorStop(1, 'rgba(255,255,255,0.36)'); }
+  ctx.fillStyle = g;
+  ctx.fill();
+  ctx.restore();
+
+  ctx.save();
+  path(); ctx.clip();
+  const hi = ctx.createLinearGradient(x, y, x + w * 0.65, y + h * 0.6);
+  hi.addColorStop(0, rgba('#ffffff', th.isDark ? 0.16 : 0.55));
+  hi.addColorStop(1, rgba('#ffffff', 0));
+  ctx.fillStyle = hi;
+  ctx.fillRect(x, y, w, h * 0.6);
+  ctx.restore();
+
+  ctx.save();
+  ctx.beginPath();
+  if (ctx.roundRect) ctx.roundRect(x + 0.6, y + 0.6, w - 1.2, h - 1.2, radius); else ctx.rect(x, y, w, h);
+  ctx.strokeStyle = rgba('#ffffff', th.isDark ? 0.24 : 0.8);
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
+  ctx.restore();
+}
+
+/**
  * Caustic: light refracted by a filled vessel converges into a bright,
  * coloured pool on the bench beside its shadow. This is the cue that tells
  * the eye a vessel contains liquid and not air.

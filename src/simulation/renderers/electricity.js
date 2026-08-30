@@ -3,9 +3,9 @@
  */
 import {
   label, drawResistor, drawCell, drawKey, drawDial, drawWireRect, drawDigitalReadout,
-  theme, brushedMetal, chrome, plastic, contactShadow, incandescence, noteBounds,
+  drawResistanceBox, theme, brushedMetal, chrome, plastic, contactShadow, incandescence, noteBounds,
 } from './apparatus.js';
-import { clock, rgba, shade, mixColor, clamp, lerp, noise1 } from './realism.js';
+import { clock, rgba, shade, mixColor, clamp, lerp, noise1, drawGlassCard } from './realism.js';
 
 const BENCH_Y = 420;
 
@@ -43,51 +43,161 @@ export function resistivity(ctx, w, h, state, inputs) {
     { anchor: 'above', bold: true, color: !ok ? '#c02626' : warm > 0.4 ? '#8a5a00' : undefined });
 }
 
-export function metreBridge(ctx, w, h, state, inputs) {
-  const th = theme();
-  const railY = 300, x0 = 90, x1 = 710;
-  // The metre wire, on its board with a scale under it.
+/**
+ * A short coil of resistance wire, wound on its own bakelite bobbin — the
+ * "unknown resistance" side of the bridge. Drawn as its own small apparatus
+ * (not a schematic resistor symbol) so both gaps of the bridge read as
+ * real components a student would actually pick up and plug in.
+ */
+function drawCoil(ctx, cx, cy, ohms, opts = {}) {
+  const w = 64, h = 26;
+  contactShadow(ctx, cx, cy + h / 2 + 6, w * 1.1, { strength: 0.5 });
+  plastic(ctx, cx - w / 2, cy - h / 2, w, h, '#3a2a1a', 6);
   ctx.save();
-  ctx.fillStyle = th.wood; ctx.fillRect(x0 - 20, railY, (x1 - x0) + 40, 12);
-  ctx.strokeStyle = '#c9a24a'; ctx.lineWidth = 3;
-  ctx.beginPath(); ctx.moveTo(x0, railY - 3); ctx.lineTo(x1, railY - 3); ctx.stroke();
-  ctx.strokeStyle = rgba('#2b2415', 0.7); ctx.font = '600 8px system-ui, sans-serif';
-  ctx.fillStyle = rgba('#2b2415', 0.85); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-  for (let i = 0; i <= 100; i += 5) {
-    const tx = x0 + ((x1 - x0) * i) / 100;
-    const major = i % 25 === 0;
-    ctx.lineWidth = major ? 1.2 : 0.7;
-    ctx.beginPath(); ctx.moveTo(tx, railY + 12); ctx.lineTo(tx, railY + 12 + (major ? 8 : 4)); ctx.stroke();
-    if (major) ctx.fillText(String(i), tx, railY + 22);
+  ctx.strokeStyle = shade('#c07a3a', 0.1);
+  ctx.lineWidth = 3.2;
+  ctx.lineCap = 'round';
+  const turns = 7;
+  for (let i = 0; i < turns; i++) {
+    const tx = cx - w / 2 + 8 + (i * (w - 16)) / (turns - 1);
+    ctx.beginPath();
+    ctx.ellipse(tx, cy, 4.5, h / 2 - 2, 0, Math.PI * 0.5, Math.PI * 2.5);
+    ctx.stroke();
   }
   ctx.restore();
-  label(ctx, (x0 + x1) / 2, railY + 36, 'Uniform metre wire (1 m, constantan)', { anchor: 'below' });
+  const name = opts.label || `Unknown coil S`;
+  label(ctx, cx, cy - h / 2 - 4, name, { anchor: 'above' });
+  label(ctx, cx, cy + h / 2 + 4, Number.isFinite(ohms) ? `≈ ${ohms.toFixed(1)} Ω (to be found)` : 'to be found', { anchor: 'below', size: 10.5 });
+}
+
+export function metreBridge(ctx, w, h, state, inputs) {
+  const th = theme();
+  const cx = 400, x0 = 110, x1 = 690;
+  const wireY = 320, stripY = 195;
+  const leftGapC = cx - 120, rightGapC = cx + 120, gapHalf = 20;
 
   /* The jockey is where the model says it is, and the galvanometer reads
      the bridge's off-balance -- so the needle swings THROUGH zero at the
      balance point, which is the null the student is hunting for. */
   const l = state?.jockey ?? inputs.jockeyCm ?? 50;
   const jockeyX = x0 + ((x1 - x0) * l) / 100;
-  ctx.save();
-  brushedMetal(ctx, jockeyX - 4, railY - 62, 8, 60, { axis: 'v' });
-  ctx.fillStyle = shade(th.metal, -0.2);
-  ctx.beginPath(); ctx.moveTo(jockeyX - 7, railY - 6); ctx.lineTo(jockeyX + 7, railY - 6); ctx.lineTo(jockeyX, railY - 1); ctx.closePath(); ctx.fill();
-  ctx.restore();
-  label(ctx, jockeyX, railY - 66, `Jockey · ${l.toFixed(1)} cm`, { anchor: 'above' });
-
   const defl = state?.deflection ?? 0;
-  drawDial(ctx, (x0 + x1) / 2, railY - 150, 40, defl, { label: 'Galvanometer', zeroCentre: true });
+  const balanced = !!state?.balanced;
 
-  // The two gaps: the resistance box, and the unknown coil.
-  drawResistor(ctx, x0 + 110, railY - 110, 70, { label: `Resistance box R = ${inputs.resistanceBox ?? 5} Ω` });
-  drawResistor(ctx, x1 - 110, railY - 110, 70, { label: 'Unknown resistance S' });
-  drawCell(ctx, (x0 + x1) / 2, railY + 90, { label: 'Cell + key' });
+  // Outer circuit loop — cell, key and the two end terminals — always
+  // carries the bridge current whenever the key is closed, independent of
+  // whether the galvanometer branch happens to be balanced.
+  const cellY = 440;
+  drawWireRect(ctx, x0, wireY, x1, cellY, { current: 1.1 });
+  drawKey(ctx, x0 + 140, cellY, true);
+  drawCell(ctx, cx, cellY, { label: `Cell · ${(inputs?.emf ?? 2).toFixed(1)} V` });
 
-  label(ctx, (x0 + x1) / 2, railY - 200,
-    state?.balanced ? `Balanced at ${l.toFixed(1)} cm — S = R(100−l)/l`
-      : defl > 0 ? 'Deflection to the right — move the jockey left'
-        : 'Deflection to the left — move the jockey right',
-    { anchor: 'above', bold: true, color: state?.balanced ? '#0d7a52' : '#8a5a00' });
+  // Brass end-blocks: the thick terminal blocks the metre wire is soldered
+  // into, standing proud of the board and carrying current up to the strip.
+  ctx.save();
+  brushedMetal(ctx, x0 - 10, stripY, 24, wireY - stripY, { base: '#c9a24a', radius: 2 });
+  brushedMetal(ctx, x1 - 14, stripY, 24, wireY - stripY, { base: '#c9a24a', radius: 2 });
+  ctx.restore();
+
+  // The top strip, with two gaps for R and S and an unbroken middle span
+  // whose midpoint feeds the galvanometer — the actual Wheatstone topology,
+  // not just two boxes floating near a wire.
+  ctx.save();
+  ctx.strokeStyle = '#c9a24a'; ctx.lineWidth = 9; ctx.lineCap = 'butt';
+  ctx.beginPath(); ctx.moveTo(x0, stripY); ctx.lineTo(leftGapC - gapHalf, stripY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(leftGapC + gapHalf, stripY); ctx.lineTo(rightGapC - gapHalf, stripY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(rightGapC + gapHalf, stripY); ctx.lineTo(x1, stripY); ctx.stroke();
+  ctx.strokeStyle = rgba('#fff3c9', 0.35); ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(x0, stripY - 3); ctx.lineTo(leftGapC - gapHalf, stripY - 3); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(leftGapC + gapHalf, stripY - 3); ctx.lineTo(rightGapC - gapHalf, stripY - 3); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(rightGapC + gapHalf, stripY - 3); ctx.lineTo(x1, stripY - 3); ctx.stroke();
+  ctx.restore();
+  // Leads from the gap edges up to the resistance box / coil above.
+  ctx.save();
+  ctx.strokeStyle = th.ink; ctx.lineWidth = 1.6;
+  [[leftGapC - gapHalf, cx - 190 - 30], [leftGapC + gapHalf, cx - 190 + 30]].forEach(([gx, bx]) => {
+    ctx.beginPath(); ctx.moveTo(gx, stripY); ctx.lineTo(gx, stripY - 40); ctx.lineTo(bx, stripY - 40); ctx.lineTo(bx, 85 + 23); ctx.stroke();
+  });
+  [[rightGapC - gapHalf, cx + 190 - 32], [rightGapC + gapHalf, cx + 190 + 32]].forEach(([gx, bx]) => {
+    ctx.beginPath(); ctx.moveTo(gx, stripY); ctx.lineTo(gx, stripY - 40); ctx.lineTo(bx, stripY - 40); ctx.lineTo(bx, 110); ctx.stroke();
+  });
+  ctx.restore();
+
+  drawResistanceBox(ctx, cx - 190, 85, inputs?.resistanceBox ?? 5, { label: 'Resistance box R' });
+  // The unknown coil's own resistance is deliberately never shown — finding
+  // it IS the experiment — so drawCoil always reports "to be found".
+  drawCoil(ctx, cx + 190, 110, undefined, { label: 'Unknown coil S' });
+
+  // Galvanometer, tapped from the strip's midpoint on one side and
+  // following the jockey on the other -- a real, flexible lead, not a
+  // fixed wire, since the jockey is the thing that actually moves.
+  const gCx = cx, gCy = 108, gR = 44;
+  drawDial(ctx, gCx, gCy, gR, defl, { label: 'Galvanometer', zeroCentre: true });
+  ctx.save();
+  ctx.strokeStyle = th.ink; ctx.lineWidth = 1.6;
+  ctx.beginPath(); ctx.moveTo(gCx - 10, gCy + gR); ctx.lineTo(gCx - 10, stripY); ctx.stroke();
+  const postX = gCx + 10, postY = wireY - 90;
+  ctx.beginPath(); ctx.moveTo(gCx + 10, gCy + gR); ctx.lineTo(postX, postY); ctx.lineTo(jockeyX, postY); ctx.lineTo(jockeyX, wireY - 58); ctx.stroke();
+  ctx.restore();
+
+  // The metre wire itself, on its board with a scale under it.
+  ctx.save();
+  ctx.fillStyle = th.wood; ctx.fillRect(x0 - 20, wireY, (x1 - x0) + 40, 12);
+  ctx.strokeStyle = '#c9a24a'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(x0, wireY - 3); ctx.lineTo(x1, wireY - 3); ctx.stroke();
+  ctx.strokeStyle = rgba('#2b2415', 0.7); ctx.font = '600 8px system-ui, sans-serif';
+  ctx.fillStyle = rgba('#2b2415', 0.85); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (let i = 0; i <= 100; i += 5) {
+    const tx = x0 + ((x1 - x0) * i) / 100;
+    const major = i % 25 === 0;
+    ctx.lineWidth = major ? 1.2 : 0.7;
+    ctx.beginPath(); ctx.moveTo(tx, wireY + 12); ctx.lineTo(tx, wireY + 12 + (major ? 8 : 4)); ctx.stroke();
+    if (major) ctx.fillText(String(i), tx, wireY + 22);
+  }
+  ctx.restore();
+  label(ctx, (x0 + x1) / 2, wireY + 36, 'Uniform metre wire (1 m, constantan)', { anchor: 'below' });
+
+  // The jockey: a rod and plastic thumb-knob sliding along a guide rail,
+  // its metal tip actually touching the wire at the model's own `jockey`
+  // position, glowing green right at the null the student is hunting for.
+  ctx.save();
+  brushedMetal(ctx, jockeyX - 3, wireY - 58, 6, 52, { axis: 'v' });
+  plastic(ctx, jockeyX - 9, wireY - 76, 18, 20, balanced ? '#1f7a52' : '#7a3a1f', 6);
+  ctx.fillStyle = shade(th.metal, -0.2);
+  ctx.beginPath(); ctx.moveTo(jockeyX - 6, wireY - 6); ctx.lineTo(jockeyX + 6, wireY - 6); ctx.lineTo(jockeyX, wireY - 1); ctx.closePath(); ctx.fill();
+  ctx.restore();
+  if (balanced) incandescence(ctx, jockeyX, wireY - 2, 12, 1, { intensity: 0.5 });
+  label(ctx, jockeyX, wireY - 80, `Jockey · ${l.toFixed(1)} cm`, { anchor: 'above' });
+
+  // A frosted glassmorphism HUD, floating above the whole bench, carrying
+  // the live balance-condition readout -- the one thing a student is
+  // actually watching for, kept legible and prominent rather than another
+  // small tag glued to a part of the apparatus.
+  const hudX = x0 - 20, hudY = 16, hudW = (x1 + 20) - hudX, hudH = 54;
+  // drawGlassCard doesn't call noteBounds itself (it's a plain overlay
+  // primitive, not a piece of apparatus) -- without registering its own
+  // box here, the scene's auto-fit pass never learns this card exists,
+  // and crops/pans it half off the top of the canvas.
+  noteBounds(hudX, hudY, hudW, hudH);
+  drawGlassCard(ctx, hudX, hudY, hudW, hudH);
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.fillStyle = balanced ? '#0d7a52' : th.ink;
+  ctx.font = '700 15px system-ui, -apple-system, sans-serif';
+  ctx.textBaseline = 'top';
+  ctx.fillText(
+    balanced ? `Balanced at l = ${l.toFixed(1)} cm  →  S = R(100−l)/l`
+      : defl > 0.02 ? 'Deflection to the right — move the jockey LEFT'
+        : defl < -0.02 ? 'Deflection to the left — move the jockey RIGHT'
+          : 'Slide the jockey to find the null',
+    hudX + hudW / 2, hudY + 8);
+  ctx.font = '600 11.5px system-ui, -apple-system, sans-serif';
+  ctx.fillStyle = th.muted;
+  ctx.textBaseline = 'bottom';
+  ctx.fillText(
+    `R = ${(inputs?.resistanceBox ?? 5)} Ω · l = ${l.toFixed(1)} cm · balance condition R/S = l/(100−l)`,
+    hudX + hudW / 2, hudY + hudH - 8);
+  ctx.restore();
 }
 
 export function galvanometer(ctx, w, h, state, inputs) {
