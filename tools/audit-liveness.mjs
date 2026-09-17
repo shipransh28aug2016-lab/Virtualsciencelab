@@ -31,25 +31,49 @@ for (const id of ids) {
      experiment sitting in equilibrium -- a balanced metre rule, a block
      with no load on the pan -- is CORRECTLY still, and a real bench would
      be too. What such a scene must do is respond the instant the student
-     changes something. So before calling a lab dead, nudge a control and
-     see whether the picture follows. */
-  const moved = await page.evaluate(() => {
-    const sl = document.querySelector('#controls input[type=range]');
-    if (sl) {
-      const lo = +sl.min, hi = +sl.max;
-      sl.value = String(+sl.value > (lo + hi) / 2 ? lo : hi);
-      sl.dispatchEvent(new Event('input', { bubbles: true }));
-      return 'slider';
-    }
-    const b = document.querySelector('#controls .seg button:not([aria-pressed=true]), #controls .wiring button:not([aria-pressed=true])');
-    if (b) { b.click(); return 'segmented'; }
-    const sw = document.querySelector('#controls .sw');
-    if (sw) { sw.click(); return 'switch'; }
-    return null;
-  });
-  await page.waitForTimeout(500);
-  const a3 = await grab();
-  if (a3 === a2) dead.push(id); else responsive.push(`${id} (${moved})`);
+     changes something.
+
+     This check used to try ONE control: the first range slider, falling back
+     to a segmented button only when no slider existed. That produced false
+     death sentences. XII-PHY-B07 and B08 carry a single slider -- the scale's
+     least count -- which correctly does not move the apparatus, so the audit
+     stopped there and called both labs dead even though their liquid and lens
+     buttons visibly redraw the bench. A lab is only dead if NOTHING the
+     student can touch moves the picture, so every control is now tried in
+     turn and the first one that responds ends the search. */
+  const controlCount = await page.evaluate(() =>
+    document.querySelectorAll('#controls input[type=range], #controls .seg button, #controls .wiring button, #controls .sw, #controls select, #controls input[type=checkbox]').length);
+
+  let moved = null, a3 = a2;
+  for (let i = 0; i < controlCount && !moved; i++) {
+    const kind = await page.evaluate((idx) => {
+      const el = document.querySelectorAll('#controls input[type=range], #controls .seg button, #controls .wiring button, #controls .sw, #controls select, #controls input[type=checkbox]')[idx];
+      if (!el) return null;
+      if (el.tagName === 'BUTTON' || el.classList.contains('sw')) {
+        if (el.getAttribute('aria-pressed') === 'true') return 'skip';   // already selected: clicking is a no-op
+        el.click();
+        return el.classList.contains('sw') ? 'switch' : 'segmented';
+      }
+      if (el.tagName === 'SELECT') {
+        if (el.options.length < 2) return 'skip';
+        el.selectedIndex = (el.selectedIndex + 1) % el.options.length;
+      } else if (el.type === 'checkbox') {
+        el.checked = !el.checked;
+      } else {
+        const lo = +el.min, hi = +el.max;
+        el.value = String(+el.value > (lo + hi) / 2 ? lo : hi);
+      }
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+      return el.tagName === 'SELECT' ? 'select' : (el.type === 'checkbox' ? 'checkbox' : 'slider');
+    }, i);
+    if (!kind || kind === 'skip') continue;
+    await page.waitForTimeout(420);
+    const now = await grab();
+    if (now !== a3) { moved = `${kind} #${i}`; }
+    a3 = now;
+  }
+  if (!moved) dead.push(id); else responsive.push(`${id} (${moved})`);
 }
 console.log(`labs checked        : ${ids.length}`);
 console.log(`runtime errors      : ${errs.length}`);

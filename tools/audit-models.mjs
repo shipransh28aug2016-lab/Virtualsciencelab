@@ -20,18 +20,43 @@ for (const meta of idx.experiments.filter(e => e.contentStatus === 'published'))
   for (let i = 0; i < 180; i++) s = model.step(s, inputs, 1/60);
   const evolves = sig(s) !== t0;
 
-  // (b) does it respond to the student changing a control?
-  const ind = (exp.variables||[]).find(v => v.type === 'independent' && Number.isFinite(v.min));
-  let responds = false;
-  if (ind) {
-    const i2 = { ...inputs, [ind.id]: ind.max };
+  /* (b) does it respond to the student changing a control?
+
+     This used to vary ONE variable: the first independent one carrying a
+     numeric min. That produced false death sentences. `friction` correctly
+     returns an unchanged state while the pan load sits below limiting
+     friction -- static friction balancing the pull IS the observation -- and
+     `viscosity` waits on a release flag, so varying their first numeric
+     variable alone proved nothing. Every non-dependent variable the
+     experiment declares is now tried, numeric and categorical alike, and the
+     first that changes the state or the measurement ends the search. */
+  const cands = (exp.variables || []).filter(v => v.type !== 'dependent');
+  let responds = false, respondedTo = null;
+  for (const v of cands) {
+    let alt;
+    if (Array.isArray(v.options) && v.options.length > 1) {
+      alt = v.options.find(o => o !== inputs[v.id]);
+    } else if (Number.isFinite(v.min) && Number.isFinite(v.max)) {
+      alt = inputs[v.id] === v.max ? v.min : v.max;
+    } else if (typeof inputs[v.id] === 'boolean') {
+      alt = !inputs[v.id];
+    }
+    if (alt === undefined || alt === inputs[v.id]) continue;
+    const i2 = { ...inputs, [v.id]: alt };
     let a = model.init(inputs), b = model.init(i2);
+    const flags = { running: true, flowing: true, flowRate: 1, heating: true, started: true };
+    a = { ...a, ...flags }; b = { ...b, ...flags };
     for (let i = 0; i < 60; i++) { a = model.step(a, inputs, 1/60); b = model.step(b, i2, 1/60); }
-    responds = sig(a) !== sig(b);
-    if (!responds && model.measure) {
-      try { responds = JSON.stringify(model.measure(a, inputs, 1)) !== JSON.stringify(model.measure(b, i2, 1)); } catch {}
+    if (sig(a) !== sig(b)) { responds = true; respondedTo = v.id; break; }
+    if (model.measure) {
+      try {
+        if (JSON.stringify(model.measure(a, inputs, 1)) !== JSON.stringify(model.measure(b, i2, 1))) {
+          responds = true; respondedTo = v.id; break;
+        }
+      } catch { /* a model may reject the alternative; that is not a response */ }
     }
   }
+  const ind = { id: respondedTo };
   byModel.set(mn, { evolves, responds, ind: ind?.id });
 }
 
