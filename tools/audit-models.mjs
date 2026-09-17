@@ -14,8 +14,18 @@ for (const meta of idx.experiments.filter(e => e.contentStatus === 'published'))
     if (v.default === undefined || v.default === null || v.type === 'dependent') continue;
     inputs[v.id] = v.default;
   }
-  // (a) does it evolve in time, with the flags a button would set?
-  let s = { ...model.init(inputs), running: true, flowing: true, flowRate: 1, heating: true, started: true };
+  /* (a) does it evolve in time, with the flags a button would set?
+
+     The flag list must be the one the APPLICATION sets, or the audit tests a
+     bench the student can never reach. main.js `processFlag()` recognises
+     flying / released / rolling / heating / running and `startProcess()` sets
+     whichever the model declares; this list omitted flying, released and
+     rolling, so every launcher, every released ball and the roller were
+     stepped with their run flag still false. `rolling-friction` was reported
+     dead on that basis alone -- its step() returns immediately unless
+     `rolling` is set, which the audit never did. */
+  const RUN_FLAGS = { flying: true, released: true, rolling: true, heating: true, running: true, flowing: true, flowRate: 1, started: true };
+  let s = { ...model.init(inputs), ...RUN_FLAGS };
   const t0 = sig(s);
   for (let i = 0; i < 180; i++) s = model.step(s, inputs, 1/60);
   const evolves = sig(s) !== t0;
@@ -33,19 +43,24 @@ for (const meta of idx.experiments.filter(e => e.contentStatus === 'published'))
   const cands = (exp.variables || []).filter(v => v.type !== 'dependent');
   let responds = false, respondedTo = null;
   for (const v of cands) {
-    let alt;
+    /* Several alternatives per variable, not one. Some models respond over a
+       BAND rather than a threshold -- rolling friction is measured where the
+       pan load just matches it, a window a few tenths of a gram wide -- so
+       jumping straight to the maximum sails past the only region that
+       responds and looks like no response at all. */
+    const alts = [];
     if (Array.isArray(v.options) && v.options.length > 1) {
-      alt = v.options.find(o => o !== inputs[v.id]);
+      alts.push(...v.options.filter(o => o !== inputs[v.id]));
     } else if (Number.isFinite(v.min) && Number.isFinite(v.max)) {
-      alt = inputs[v.id] === v.max ? v.min : v.max;
+      alts.push(v.max, v.min, (v.min + v.max) / 2, v.min + (v.max - v.min) * 0.05);
     } else if (typeof inputs[v.id] === 'boolean') {
-      alt = !inputs[v.id];
+      alts.push(!inputs[v.id]);
     }
+    for (const alt of alts) {
     if (alt === undefined || alt === inputs[v.id]) continue;
     const i2 = { ...inputs, [v.id]: alt };
     let a = model.init(inputs), b = model.init(i2);
-    const flags = { running: true, flowing: true, flowRate: 1, heating: true, started: true };
-    a = { ...a, ...flags }; b = { ...b, ...flags };
+    a = { ...a, ...RUN_FLAGS }; b = { ...b, ...RUN_FLAGS };
     for (let i = 0; i < 60; i++) { a = model.step(a, inputs, 1/60); b = model.step(b, i2, 1/60); }
     if (sig(a) !== sig(b)) { responds = true; respondedTo = v.id; break; }
     if (model.measure) {
@@ -55,6 +70,8 @@ for (const meta of idx.experiments.filter(e => e.contentStatus === 'published'))
         }
       } catch { /* a model may reject the alternative; that is not a response */ }
     }
+    }
+    if (responds) break;
   }
   const ind = { id: respondedTo };
   byModel.set(mn, { evolves, responds, ind: ind?.id });
