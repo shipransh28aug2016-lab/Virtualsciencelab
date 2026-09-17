@@ -11,7 +11,9 @@
     "audit:liveness": "node tools/audit-liveness.mjs",
     "audit:models": "node tools/audit-models.mjs",
     "audit:renderers": "node tools/audit-renderers.mjs",
-    "shot": "node tools/screenshot.mjs"
+    "shot": "node tools/screenshot.mjs",
+    "audit:recovery": "node tools/audit-recovery.mjs",
+    "audit": "node tools/audit-renderers.mjs && node tools/audit-models.mjs && node tools/audit-liveness.mjs && node tools/audit-recovery.mjs"
   },
   "engines": {
     "node": ">=18"
