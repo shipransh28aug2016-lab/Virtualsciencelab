@@ -681,7 +681,7 @@ export function rollingFriction(ctx, w, h, state, inputs) {
   label(ctx, pulleyX + 13, tableY - R - 14, 'Pulley', { anchor: 'right' });
   drawWeight(ctx, pulleyX, tableY - R + 30, { label: `Fine-weight pan (${inputs.panG ?? 0} g)` });
   label(ctx, (x0 + pulleyX) / 2, 140,
-    state?.rolling ? `Rolling — v = ${(state.v ?? 0).toFixed(3)} m/s, decelerating`
+    state?.rolling ? `Rolling — v = ${(state.v ?? 0).toFixed(3)} m/s under the pan's pull`
       : 'Rolling friction is far smaller than sliding friction — a tiny load starts it',
     { anchor: 'above', bold: true });
 }

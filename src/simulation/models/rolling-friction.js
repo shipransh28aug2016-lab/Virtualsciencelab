@@ -35,20 +35,50 @@ export function validate(inputs) {
   return { ok: true, errors: [], warnings };
 }
 export function init() { return { t: 0, s: 0, v: 0, rolling: false }; }
+
+/** Total mass the pan has to accelerate: roller + its load + the pan itself. */
+export function movingMassKg(inputs) {
+  return (rollerOf(inputs).massG + inputs.loadG + inputs.panG) / 1000;
+}
+
 /**
- * A roller decelerating under rolling friction. Rolling resistance is far
- * smaller than sliding friction, which is the comparison the experiment
- * exists to make, so the roller coasts a long way before stopping.
+ * The roller under the pull of the pan, opposed by rolling friction.
+ *
+ *   a = (F_pan − μ_r·R) / (m_roller + m_load + m_pan)
+ *
+ * Two faults were fixed here, both of which made the activity impossible to
+ * perform:
+ *
+ * 1. The roller never moved. init() starts it at v = 0 and the old step()
+ *    only ever DECELERATED, so pressing "Start rolling" set the flag, the
+ *    first frame found v still 0, and the flag was cleared again. Nothing on
+ *    the bench ever shifted and no reading could be taken. The pan is what
+ *    drives this apparatus, so the net force now accelerates the roller from
+ *    rest, exactly as it does on a real bench.
+ *
+ * 2. The surface was ignored. The deceleration read `rollingCoefficient`,
+ *    an identifier that does not exist in this module, so `typeof` quietly
+ *    returned 'undefined' and it fell through to `inputs.mu ?? 0.02` —
+ *    `inputs.mu` does not exist either, leaving a hardcoded 0.02 for every
+ *    case. Glass, wood and rubber decelerated identically, defeating the one
+ *    comparison the activity exists to make, while the module's own SURFACES
+ *    table (μ = 0.0021 / 0.0048 / 0.0095) went unread. It is read now.
+ *
+ * This is what makes the pan load meaningful: below the rolling-friction
+ * value nothing moves at all; just above it the roller creeps steadily —
+ * the threshold the student is looking for; well above it the roller visibly
+ * accelerates away.
  */
 export function step(state, inputs, dt) {
   const s = { ...state };
   s.t += dt;
   if (!s.rolling) return s;
-  const mu = (typeof rollingCoefficient === 'function' ? rollingCoefficient(inputs) : (inputs.mu ?? 0.02));
-  const a = -mu * 9.792;
+  const net = panForceN(inputs) - rollingFrictionN(inputs);
+  const a = net / movingMassKg(inputs);
   s.v = Math.max(0, s.v + a * dt);
   s.s += s.v * dt;
-  if (s.v <= 0.0001) s.rolling = false;
+  // At rest with nothing left to drive it, the roller has stopped for good.
+  if (s.v <= 1e-6 && net <= 0) s.rolling = false;
   return s;
 }
 
@@ -67,4 +97,4 @@ export function derive(rows) {
   return { ok: true, muRolling: sigFig(fit.slope, 4), rollingResistanceCm: sigFig(fit.slope * 3, 4), r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts };
 }
 
-export default { meta, defaults, SURFACES, ROLLERS, G, init, step, measure, derive, validate, surfaceOf, rollerOf, normalReactionN, rollingFrictionN, panForceN, rolling };
+export default { meta, defaults, SURFACES, ROLLERS, G, init, step, measure, derive, validate, surfaceOf, rollerOf, normalReactionN, rollingFrictionN, panForceN, rolling, movingMassKg };

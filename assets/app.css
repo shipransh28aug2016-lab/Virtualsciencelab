@@ -542,3 +542,20 @@ footer a{color:var(--muted)}
   .lab{grid-template-columns:1fr}
   .panel-body{grid-template-rows:1fr!important;opacity:1!important}
 }
+
+/* ── Lab error boundary ──────────────────────────────────────────
+   A simulation that throws is contained to its own bench: the panel
+   covers the canvas only, so navigation, the observation table and
+   every other experiment stay usable. */
+.lab-error{position:absolute;inset:0;z-index:5;display:grid;place-items:center;
+  padding:18px;border-radius:inherit;backdrop-filter:blur(3px);
+  background:color-mix(in srgb,var(--bg,#eef2f8) 88%,transparent)}
+.lab-error-card{max-width:440px;text-align:center}
+.lab-error-card h3{margin:0 0 8px;font-size:17px;letter-spacing:-.01em}
+.lab-error-card p{margin:0 0 14px;font-size:13px;line-height:1.55;color:var(--muted)}
+.lab-error-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.lab-error-detail{margin-top:14px;font-size:11.5px;text-align:left}
+.lab-error-detail summary{cursor:pointer;color:var(--muted);user-select:none}
+.lab-error-detail code{display:block;margin-top:7px;padding:8px 10px;border-radius:8px;
+  background:color-mix(in srgb,var(--muted,#7080a0) 12%,transparent);
+  font-size:11px;line-height:1.5;word-break:break-word;user-select:text}

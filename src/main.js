@@ -8,6 +8,7 @@ import * as Interact from './simulation/renderers/interact.js';
 import { resetFluids } from './simulation/fluids.js';
 import { renderGraph } from './components/graph.js';
 import * as DB from './offline/db.js';
+import { showLabError, clearLabError, isLabFailed } from './core/lab-error-boundary.js';
 import {
   gradeMcq, gradeNumeric, gradeDuringLab, overallScore, masteryBand, checkResult, vivaScore,
 } from './assessment/engine.js';
@@ -289,7 +290,7 @@ function applyTheme(name) {
   const meta = document.querySelector('meta[name=theme-color]');
   if (meta) meta.setAttribute('content', name === 'dark' ? '#0c1424' : '#eef2f8');
   DB.setSetting('theme', name);
-  if (app.exp) draw();
+  if (app.exp) drawSafely('applying the theme');
 }
 
 function bindChrome() {
@@ -329,7 +330,7 @@ function bindChrome() {
     location.hash = app.teacher ? '#teacher' : '';
   };
   window.addEventListener('hashchange', route);
-  window.addEventListener('resize', () => { if (app.exp) draw(); });
+  window.addEventListener('resize', () => { if (app.exp) drawSafely('re-framing the bench'); });
   window.addEventListener('online', updateNet);
   window.addEventListener('offline', updateNet);
   updateNet();
@@ -527,10 +528,61 @@ function route() {
     const meta = app.experiments.find((e) => e.id === m[1]);
     /* The index entry is only a summary; the lab needs the full record, which
        is fetched here (and cached) rather than at boot. */
-    if (meta) return loadFullExperiment(meta.id).then((full) => full && openLab(full));
+    if (meta) {
+      /* A lab is three awaits deep — the experiment JSON, its model, its
+         renderers — and any of them can reject: a first visit made offline, a
+         truncated cache entry, a model that throws in init(). Before this
+         catch existed such a failure was an unhandled rejection and the
+         student got a blank bench with no explanation. */
+      return loadFullExperiment(meta.id)
+        .then((full) => {
+          if (!full) throw new Error('Experiment record is empty or unreadable');
+          return openLab(full);
+        })
+        .catch((err) => failLab('opening the experiment', err, meta.id));
+    }
+    /* A stale bookmark or a typed id. Silently landing on the home screen
+       looks like the app ignored the request, so say what happened. */
+    show('#viewHome');
+    app.exp = null;
+    toast(`No experiment with id "${m[1]}".`, 'bad');
+    return undefined;
   }
   show('#viewHome');
   app.exp = null;
+  return undefined;
+}
+
+/**
+ * Contain a lab failure: stop the loop, keep the rest of the app alive, and
+ * offer the student a way back. Retry re-opens the experiment from its JSON;
+ * Reset rebuilds the model state on the bench already loaded.
+ */
+function failLab(where, error, expId = app.exp?.id) {
+  console.error(`[lab:${expId || '?'}] ${where}`, error);
+  stopLoop();
+  show('#viewLab');
+  showLabError({
+    where,
+    error,
+    expId,
+    onRetry: () => { const h = location.hash; location.hash = ''; setTimeout(() => { location.hash = h; }, 0); },
+    onReset: () => {
+      try {
+        if (!app.exp || !app.model) { location.hash = ''; return; }
+        app.inputs = initialInputs(app.exp, app.model);
+        app.state = app.model.init(app.inputs);
+        app.machine = new ExperimentMachine(renderStateTrack);
+        app.machine.to(STATES.READY);
+        resetFluids();
+        resetScene();
+        buildToolbar();
+        buildControls();
+        renderStateTrack();
+        startLoop();
+      } catch (e) { failLab('resetting the apparatus', e, expId); }
+    },
+  });
 }
 
 function show(id) {
@@ -561,6 +613,7 @@ function initialInputs(exp, model) {
 
 /* ═══════════════ lab ═══════════════ */
 async function openLab(exp) {
+  clearLabError();               // a previous lab's failure never follows us here
   app.exp = exp;
   /* Model and renderers are fetched here rather than at boot. Both are cached,
      so re-entering a lab is instant. */
@@ -791,7 +844,7 @@ function resetSim() {
   app.machine.reset();
   clearFeedback();
   syncToolbar();
-  draw();
+  drawSafely('redrawing the apparatus');
 }
 
 function record() {
@@ -1342,7 +1395,7 @@ function onInputChange() {
   showFeedback(v);
   syncToolbar();
   renderLiveConfig();
-  draw();
+  drawSafely('applying a control change');
 }
 
 /**
@@ -1421,10 +1474,18 @@ function startLoop() {
     app.accumulator += elapsed;
     if (app.state) {
       let steps = 0;
-      while (app.accumulator >= FIXED_DT && steps++ < 64) {
-        app.state = app.model.step(app.state, app.inputs, FIXED_DT);
-        app.accumulator -= FIXED_DT;
-        if (app.state.finishedAt) { app.accumulator = 0; break; }
+      /* The physics runs inside the frame callback, so a throw here used to
+         escape the callback and the loop was never re-armed: the bench froze
+         and said nothing. Containing it keeps the failure to one experiment. */
+      try {
+        while (app.accumulator >= FIXED_DT && steps++ < 64) {
+          app.state = app.model.step(app.state, app.inputs, FIXED_DT);
+          app.accumulator -= FIXED_DT;
+          if (app.state.finishedAt) { app.accumulator = 0; break; }
+        }
+      } catch (err) {
+        failLab('advancing the simulation', err);
+        return;
       }
       if (app.exp?.simulation.model === 'simple-pendulum' && app.state.running) {
         app.state.trail = (app.state.trail || []).slice(-16);
@@ -1456,8 +1517,13 @@ function startLoop() {
         syncToolbar();
       }
     }
-    draw();
-    updateReadouts();
+    try {
+      draw();
+      updateReadouts();
+    } catch (err) {
+      failLab('drawing the apparatus', err);
+      return;
+    }
     app.raf = requestAnimationFrame(tick);
   };
   app.raf = requestAnimationFrame(tick);
@@ -1466,12 +1532,21 @@ function stopLoop() { app.running = false; if (app.raf) cancelAnimationFrame(app
 
 function draw() {
   const canvas = $('#cv');
-  if (!canvas || !app.exp) return;
+  if (!canvas || !app.exp || isLabFailed()) return;
   const name = app.exp.simulation.renderer;
   const fn = app.renderers ? app.renderers[name] : null;
   if (!fn) return;
   const { w, h, ctx } = renderScene(canvas, 16 / 10, name, fn, app.state, app.inputs);
   finishFrame(ctx, w, h);
+}
+
+/**
+ * draw() for the callers that are NOT the animation loop — the theme switch,
+ * the resize handler, a dragged piece of apparatus. The loop contains its own
+ * throws; these paths have no frame to lose, so they contain theirs here.
+ */
+function drawSafely(where) {
+  try { draw(); } catch (err) { failLab(where, err); }
 }
 
 /**
