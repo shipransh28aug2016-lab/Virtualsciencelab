@@ -10,12 +10,12 @@
  * liquor cools. The numbers all come from the model's own state.
  */
 import {
-  label, drawTestTube, drawBeaker, drawConicalFlask, drawSwatch, drawBurner,
+  label, title, drawTestTube, drawBeaker, drawConicalFlask, drawSwatch, drawBurner,
   drawRetortStand, drawClamp, drawDigitalReadout, drawTripod, drawGauze,
   heatingAssembly, theme, noteBounds, brushedMetal, chrome, plastic,
   contactShadow, drawThermometer,
 } from './apparatus.js';
-import { clock, rgba, shade, mixColor, clamp, lerp, noise1 } from './realism.js';
+import { clock, rgba, shade, mixColor, clamp, lerp, noise1, bloom } from './realism.js';
 
 const BENCH_Y = 430;
 
@@ -501,7 +501,266 @@ export function organicPreparation(ctx, w, h, state, inputs) {
   label(ctx, cx, BENCH_Y + 30, inputs?.preparation || 'Organic preparation', { anchor: 'below' });
 }
 
+
+/* ── Bending a glass tube — XI-CHE-A02 ───────────────────────────
+   Everything drawn here is read from the model: the glow is the band's own
+   temperature profile, the bend is state.angleDeg, and the wall is drawn
+   thick or thin according to state.wallRatio. Nothing is keyframed.
+
+   The tube is held by both ends across the flame, so the band in the middle
+   is what sags: the bend forms with its apex DOWN in the flame and the two
+   arms rising away from it. That is both what happens at the bench and what
+   keeps the arms clear of the burner they are being heated by. */
+
+/** Incandescence of soda-lime glass. Below about 525 °C it does not glow. */
+function glowColour(tempC) {
+  const stops = [
+    [525, '#3a1408'], [600, '#6b1b06'], [700, '#a52a04'], [800, '#d44a06'],
+    [900, '#ef7a12'], [1000, '#ffae33'], [1150, '#ffd98a'],
+  ];
+  if (tempC <= stops[0][0]) return null;
+  for (let i = 1; i < stops.length; i++) {
+    if (tempC <= stops[i][0]) {
+      const [t0, c0] = stops[i - 1], [t1, c1] = stops[i];
+      return mixColor(c0, c1, (tempC - t0) / (t1 - t0));
+    }
+  }
+  return stops[stops.length - 1][1];
+}
+
+/**
+ * Centreline of the tube: arm, arc, arm, symmetric about the flame.
+ * The arc carries the whole heated band (arcPx) through `angleRad`, so its
+ * radius is arcPx/angleRad — the model's R = L/θ, drawn rather than asserted.
+ */
+function tubeCentreline(apexX, apexY, armPx, arcPx, angleRad, steps = 40) {
+  if (angleRad < 2e-3 || arcPx < 0.5) {
+    const half = arcPx / 2 + armPx;
+    return [{ x: apexX - half, y: apexY }, { x: apexX, y: apexY }, { x: apexX + half, y: apexY }];
+  }
+  const R = arcPx / angleRad;
+  const cx = apexX, cy = apexY - R;                  // centre of curvature, above
+  const half = angleRad / 2;
+  const pts = [];
+  const at = (a) => ({ x: cx + R * Math.sin(a), y: cy + R * Math.cos(a) });
+  const startP = at(-half);
+  pts.push({ x: startP.x - armPx * Math.cos(half), y: startP.y - armPx * Math.sin(half) });
+  for (let i = 0; i <= steps; i++) pts.push(at(-half + (angleRad * i) / steps));
+  const endP = pts[pts.length - 1];
+  pts.push({ x: endP.x + armPx * Math.cos(half), y: endP.y - armPx * Math.sin(half) });
+  return pts;
+}
+
+/** Unit normals along a polyline, pointing to the OUTSIDE of the bend. */
+function normalsOf(pts) {
+  return pts.map((p, i) => {
+    const a = pts[Math.max(0, i - 1)], b = pts[Math.min(pts.length - 1, i + 1)];
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const len = Math.hypot(dx, dy) || 1;
+    return { x: -dy / len, y: dx / len };
+  });
+}
+
+const edgeOf = (pts, ns, off) => pts.map((p, i) => ({ x: p.x + ns[i].x * off[i], y: p.y + ns[i].y * off[i] }));
+
+function ribbon(ctx, a, b) {
+  ctx.beginPath();
+  a.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)));
+  for (let i = b.length - 1; i >= 0; i--) ctx.lineTo(b[i].x, b[i].y);
+  ctx.closePath();
+}
+
+const GB_FLAMES = {
+  wingTop: { spread: 70, droop: 70, air: 0.9, flameC: 1150, label: 'Bunsen with wing top' },
+  open: { spread: 16, droop: 260, air: 1, flameC: 1500, label: 'Bunsen, air hole open' },
+  luminous: { spread: 30, droop: 150, air: 0, flameC: 800, label: 'Bunsen, air hole closed' },
+};
+const GB_TUBES = { t6: { od: 6, wall: 1.0 }, t8: { od: 8, wall: 1.2 }, t10: { od: 10, wall: 1.5 } };
+
+export function glassBending(ctx, w, h, state, inputs) {
+  const th = theme();
+  const cx = 330;
+  const SCALE = 1.9;                               // px per mm
+  const apexY = 322;                               // the band sits just above the flame
+
+  const f = GB_FLAMES[inputs?.flame] || GB_FLAMES.wingTop;
+  const tube = GB_TUBES[inputs?.tube] || GB_TUBES.t8;
+  const bandMm = Math.min(inputs?.bandLengthMm ?? 45, f.spread);
+  const angle = ((state?.angleDeg ?? 0) * Math.PI) / 180;
+  const meanC = state?.meanC ?? 28;
+  const ratio = clamp(state?.wallRatio ?? 1, 0.15, 1);
+  const lit = !!state?.heating;
+
+  /* ── burner, with the air hole where the student set it ── */
+  drawBurner(ctx, cx, BENCH_Y, lit, {
+    air: f.air,
+    flameHeight: inputs?.flame === 'wingTop' ? 30 : BENCH_Y - 44 - apexY + 8,
+    label: f.label,
+  });
+  if (inputs?.flame === 'wingTop') {
+    // The spreader, and the flat flame that is the whole point of fitting it.
+    const barW = f.spread * SCALE, barY = BENCH_Y - 74;
+    ctx.save();
+    if (lit) {
+      // A flat flame that actually reaches the band it is supposed to heat.
+      const tipY = apexY - 4;
+      const g = ctx.createLinearGradient(0, barY, 0, tipY);
+      g.addColorStop(0, rgba('#a8c6ff', 0.62));
+      g.addColorStop(0.55, rgba('#7ea6ff', 0.34));
+      g.addColorStop(1, rgba('#6f9bff', 0.05));
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.moveTo(cx - barW / 2, barY);
+      ctx.quadraticCurveTo(cx - barW * 0.36, tipY, cx, tipY);
+      ctx.quadraticCurveTo(cx + barW * 0.36, tipY, cx + barW / 2, barY);
+      ctx.closePath(); ctx.fill();
+    }
+    ctx.restore();
+    brushedMetal(ctx, cx - barW / 2, barY, barW, 8);
+  }
+
+  /* ── the tube ── */
+  const armPx = 118;
+  const arcPx = bandMm * SCALE;
+  const pts = tubeCentreline(cx, apexY, armPx, arcPx, angle);
+  const ns = normalsOf(pts);
+  const ro = (tube.od / 2) * SCALE;
+  const t0 = tube.wall * SCALE;
+
+  /* Wall thickness along the tube. The arms are untouched; across the band
+     the outer wall thins by exactly the factor the model computed, and the
+     inner wall thickens, because the glass has to go somewhere. */
+  const bandFrom = 1, bandTo = pts.length - 2;
+  const tIn = [];
+  const outOff = [], boreOutOff = [], inOff = [], boreInOff = [];
+  pts.forEach((p, i) => {
+    const inBand = i >= bandFrom && i <= bandTo && angle > 2e-3;
+    const tOut = inBand ? t0 * ratio : t0;
+    tIn.push(inBand ? Math.min(ro * 0.92, t0 * (2 - ratio)) : t0);
+    outOff.push(ro); boreOutOff.push(ro - tOut);
+    inOff.push(-ro); boreInOff.push(-(ro - tIn[i]));
+  });
+  const outerEdge = edgeOf(pts, ns, outOff);
+  const boreOuter = edgeOf(pts, ns, boreOutOff);
+  const innerEdge = edgeOf(pts, ns, inOff);
+  const boreInner = edgeOf(pts, ns, boreInOff);
+
+  ctx.save();
+  ctx.fillStyle = rgba('#cfe3f2', 0.66);
+  ribbon(ctx, outerEdge, boreOuter); ctx.fill();
+  ribbon(ctx, innerEdge, boreInner); ctx.fill();
+  ctx.fillStyle = rgba(th.ink, 0.20);
+  ribbon(ctx, boreOuter, boreInner); ctx.fill();
+  ctx.strokeStyle = rgba('#5c8cb2', 0.95); ctx.lineWidth = 1.2;
+  for (const e of [outerEdge, innerEdge]) {
+    ctx.beginPath(); e.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y))); ctx.stroke();
+  }
+  // The bore walls, so it reads as a tube and the thinning is visible.
+  ctx.strokeStyle = rgba('#7fa8c8', 0.7); ctx.lineWidth = 0.9;
+  for (const e of [boreOuter, boreInner]) {
+    ctx.beginPath(); e.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y))); ctx.stroke();
+  }
+  ctx.restore();
+
+  /* ── the glow IS the band's temperature profile ──
+     The same parabola bendRate() integrates over, so a wing top shows a
+     broad even band and a bare blue flame a single hot spot. */
+  ctx.save();
+  ctx.lineCap = 'round';
+  for (let i = bandFrom; i < bandTo; i++) {
+    const u = ((i - bandFrom) / Math.max(1, bandTo - bandFrom)) * 2 - 1;
+    const localC = meanC - f.droop * u * u;
+    const c = glowColour(localC);
+    if (!c) continue;
+    const a = clamp((localC - 525) / 480, 0, 1);
+    /* Painted straight on, not with 'lighter'. Additive blending over the
+       bright classroom bench turns a dull red heat into a white smear, which
+       reads as far hotter than the glass actually is -- and the temperature
+       is the whole point of this experiment. */
+    ctx.strokeStyle = rgba(c, 0.45 + 0.5 * a);
+    ctx.lineWidth = ro * 2 - 1;
+    ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[i + 1].x, pts[i + 1].y); ctx.stroke();
+  }
+  // Only genuinely incandescent glass throws light around it.
+  if (meanC > 700) {
+    ctx.globalCompositeOperation = 'lighter';
+    for (let i = bandFrom; i < bandTo; i += 4) {
+      const c = glowColour(meanC - f.droop * (((i - bandFrom) / Math.max(1, bandTo - bandFrom)) * 2 - 1) ** 2);
+      if (c) bloom(ctx, pts[i].x, pts[i].y, ro * 3.4, c, clamp((meanC - 700) / 400, 0, 1) * 0.55);
+    }
+  }
+  ctx.restore();
+
+  /* Soot, from a luminous flame — a real and visible consequence. */
+  const soot = clamp(state?.soot ?? 0, 0, 1);
+  if (soot > 0.02) {
+    ctx.save();
+    ctx.strokeStyle = rgba('#141414', soot * 0.6); ctx.lineWidth = ro * 1.6; ctx.lineCap = 'round';
+    ctx.beginPath();
+    for (let i = bandFrom; i <= bandTo; i++) (i === bandFrom ? ctx.moveTo(pts[i].x, pts[i].y) : ctx.lineTo(pts[i].x, pts[i].y));
+    ctx.stroke(); ctx.restore();
+  }
+
+  /* Rotation, shown for what it does: close the gap across the wall. */
+  const rpm = inputs?.rotationRpm ?? 0;
+  const dC = state?.circDeltaC ?? 0;
+  const hand = pts[0];
+  ctx.save();
+  const spin = (clock() * rpm) / 60;
+  ctx.strokeStyle = rgba(rpm > 5 ? '#4f8cff' : '#c2410c', 0.9); ctx.lineWidth = 1.8;
+  ctx.beginPath(); ctx.arc(hand.x, hand.y, ro + 10, spin, spin + (rpm > 5 ? 4.6 : 0.8)); ctx.stroke();
+  if (rpm > 5) { ctx.beginPath(); ctx.arc(hand.x, hand.y, ro + 10, spin + 4.6, spin + 5.0); ctx.lineWidth = 4; ctx.stroke(); }
+  ctx.restore();
+
+  /* ── the glass temperature scale, with its three named fixed points ── */
+  const sx = 742, sy0 = 132, sy1 = 392;
+  const tempToY = (t) => sy1 - (clamp(t, 0, 1200) / 1200) * (sy1 - sy0);
+  ctx.save();
+  ctx.fillStyle = rgba(th.ink, 0.07); ctx.fillRect(sx - 13, sy0, 26, sy1 - sy0);
+  ctx.fillStyle = rgba('#16a34a', 0.18);
+  ctx.fillRect(sx - 13, tempToY(1018), 26, tempToY(722) - tempToY(1018));
+  for (const [t, name, col] of [[1018, 'Working 1018 °C', '#b91c1c'], [722, 'Softening 722 °C', '#c2410c'], [552, 'Annealing 552 °C', '#7c8ba1']]) {
+    const y = tempToY(t);
+    ctx.strokeStyle = rgba(col, 0.9); ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(sx - 13, y); ctx.lineTo(sx + 13, y); ctx.stroke();
+    label(ctx, sx + 18, y, name, { anchor: 'right' });
+  }
+  const hot = glowColour(meanC);
+  ctx.fillStyle = hot || rgba(th.ink, 0.55);
+  ctx.fillRect(sx - 15, tempToY(meanC) - 2.5, 30, 5);
+  ctx.restore();
+  label(ctx, sx, sy0 - 14, 'Glass temperature', { anchor: 'above', bold: true });
+  label(ctx, sx - 18, tempToY(meanC), `${meanC.toFixed(0)} °C`, { anchor: 'left' });
+  // The workable window labelled where it is, rather than in a caption.
+  label(ctx, sx - 18, (tempToY(1018) + tempToY(722)) / 2, 'Workable', { anchor: 'left' });
+
+  /* ── what the bend has actually come out as, kept clear of the bench ── */
+  const R = state?.radiusMm;
+  const headline = state?.collapsed ? 'Collapsed — the glass ran and the bore has closed'
+    : !lit ? 'Burner not lit — nothing is being heated'
+      : angle < 2e-3 ? (meanC < 700 ? `Heating — ${Math.max(0, 722 - meanC).toFixed(0)} °C below the softening point` : 'Softening — it will begin to sag')
+        : `Bent ${state.angleDeg.toFixed(0)}° · radius ${Number.isFinite(R) ? R.toFixed(0) : '—'} mm · outer wall ${(ratio * 100).toFixed(0)}% of original`;
+
+  const notes = [
+    `Heated band ${bandMm.toFixed(0)} mm${(inputs?.bandLengthMm ?? 0) > f.spread ? ` — ${inputs.bandLengthMm} mm asked for, but this flame spreads only ${f.spread} mm` : ''}`,
+    rpm > 5 ? `Rotating ${rpm} rpm · ΔT across the wall ${dC.toFixed(0)} °C`
+      : `Not rotating · ΔT across the wall ${dC.toFixed(0)} °C`,
+  ];
+  if (soot > 0.15) notes.push('Soot deposited by the luminous flame');
+  if (state?.reheats > 0) notes.push(`Reheats: ${state.reheats}`);
+
+  /* Headline and notes sit above the apparatus, inside the bounds below.
+     The scene is auto-framed from noteBounds, so anything drawn outside it
+     is pushed off the canvas -- which is what happened to this headline when
+     it was placed at a fixed screen corner. */
+  label(ctx, cx, 108, headline, { anchor: 'above', bold: true });
+  notes.forEach((t, i) => label(ctx, cx, 116 + i * 21, t, { anchor: 'below' }));
+
+  noteBounds(60, 84, 800, BENCH_Y + 46 - 84);
+}
+
 export const RENDERERS = {
+  'glass-bending': glassBending,
   'equilibrium-shift': equilibriumShift,
   'electronic-balance': electronicBalance,
   'standard-solution': standardSolution,

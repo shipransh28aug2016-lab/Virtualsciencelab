@@ -1,7 +1,26 @@
 {
  "generatedBy": "tools/build-index.mjs",
- "count": 100,
+ "count": 101,
  "experiments": [
+  {
+   "id": "XI-CHE-A02",
+   "file": "data/experiments/class-xi/XI-CHE-A02-bending-glass-tube.json",
+   "class": "XI",
+   "subject": "Chemistry",
+   "contentStatus": "published",
+   "title": "Bending a glass tube",
+   "shortTitle": "Bending glass tubing",
+   "objective0": "To bend a piece of soda-lime glass tubing through a required angle without kinking it or thinning its wall.",
+   "curriculumMapping": {
+    "section": "A",
+    "serial": 2,
+    "kind": "experiment",
+    "unit": "Basic Laboratory Techniques",
+    "chapter": "Basic Laboratory Techniques"
+   },
+   "vivaCount": 10,
+   "procedureCount": 9
+  },
   {
    "id": "XI-CHE-B01",
    "file": "data/experiments/class-xi/XI-CHE-B01-melting-point.json",
@@ -152,7 +171,7 @@
     "chapter": "Unit 6: Equilibrium — Chemical Equilibrium (Le Chatelier's Principle)"
    },
    "vivaCount": 3,
-   "procedureCount": 6
+   "procedureCount": 7
   },
   {
    "id": "XI-CHE-D02",
@@ -171,7 +190,7 @@
     "chapter": "Unit 6: Equilibrium — Chemical Equilibrium (Le Chatelier's Principle)"
    },
    "vivaCount": 3,
-   "procedureCount": 5
+   "procedureCount": 6
   },
   {
    "id": "XI-CHE-E01",
@@ -186,7 +205,7 @@
     "section": "E",
     "serial": 1,
     "kind": "experiment",
-    "unit": "Unit 6: Equilibrium",
+    "unit": "Unit 1: Some Basic Concepts of Chemistry",
     "chapter": "Unit 1: Some Basic Concepts of Chemistry"
    },
    "vivaCount": 3,
@@ -205,7 +224,7 @@
     "section": "E",
     "serial": 2,
     "kind": "experiment",
-    "unit": "Unit 6: Equilibrium",
+    "unit": "Unit 1: Some Basic Concepts of Chemistry",
     "chapter": "Unit 1: Some Basic Concepts of Chemistry"
    },
    "vivaCount": 3,
@@ -243,7 +262,7 @@
     "section": "E",
     "serial": 4,
     "kind": "experiment",
-    "unit": "Unit 6: Equilibrium",
+    "unit": "Unit 1: Some Basic Concepts of Chemistry",
     "chapter": "Unit 1: Some Basic Concepts of Chemistry"
    },
    "vivaCount": 3,

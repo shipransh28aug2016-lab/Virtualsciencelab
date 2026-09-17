@@ -1,0 +1,299 @@
+{
+ "id": "XI-CHE-A02",
+ "class": "XI",
+ "subject": "Chemistry",
+ "contentStatus": "published",
+ "curriculumMapping": {
+  "curriculumYear": "2026-27",
+  "board": "CBSE",
+  "class": "XI",
+  "subject": "Chemistry",
+  "subjectCode": "043",
+  "section": "A",
+  "categoryTitle": "Basic Laboratory Techniques",
+  "assessmentComponent": "Basic laboratory techniques (02 marks)",
+  "serial": 2,
+  "unit": "Basic Laboratory Techniques",
+  "chapter": "Basic Laboratory Techniques",
+  "topic": "Handling and working of glass tubing",
+  "subtopic": "Softening of soda-lime glass, even heating with a wing top, bending without kinking or thinning the wall",
+  "practical": "Bending a glass tube.",
+  "learningObjectives": [
+   "Be able to explain why glass softens over a range of temperature instead of melting at a point",
+   "Be able to heat a broad band of tubing evenly, rotating it so the whole wall reaches the same temperature",
+   "Be able to relate the bend radius to the length of the band heated, and to the thinning of the outer wall"
+  ],
+  "competencies": [
+   "Relating a laboratory instruction to the physical reason behind it",
+   "Recognising when apparatus has been chosen wrongly for the job",
+   "Drawing a quantitative conclusion from a small set of readings",
+   "Judging the quality of a piece of work against a stated standard"
+  ],
+  "sourceReference": "CBSE Chemistry (043) Class XI-XII Curriculum 2026-27, PRACTICALS, Basic Laboratory Techniques, item 2 — cbseacademic.nic.in",
+  "verificationStatus": "verified"
+ },
+ "title": "Bending a glass tube",
+ "shortTitle": "Bending glass tubing",
+ "objective": [
+  "To bend a piece of soda-lime glass tubing through a required angle without kinking it or thinning its wall.",
+  "To observe that glass has no melting point but softens over a range, and that the range is what makes bending possible.",
+  "To establish that the radius of the bend is set by the length of tubing heated, and that too short a band thins the outer wall."
+ ],
+ "theory": {
+  "statement": "Glass is not a crystalline solid and has no melting point. It is a supercooled liquid whose viscosity falls continuously as it is heated, so there is no temperature at which it suddenly becomes liquid — only a range over which it becomes workable. Every instruction given at the bench follows from that curve.",
+  "derivationNote": "The viscosity of soda-lime glass follows the Vogel–Fulcher–Tammann relation, log₁₀η = A + B/(T − T₀), with A = −2.585, B = 4215 and T₀ = 263 °C for η in Pa·s and T in °C. Three points on that curve are named and used industrially: the annealing point (η = 10¹² Pa·s, about 552 °C), below which the shape is fixed; the softening point (η = 10⁶·⁶ Pa·s, about 722 °C), where the glass will deform under its own weight; and the working point (η = 10³ Pa·s, about 1018 °C), where it flows so freely it cannot be controlled. Bending is done between the softening and working points. Because the tube sags under its own weight, viscous flow gives a strain rate ε̇ = σ/3η (the Trouton relation for uniaxial flow), so the rate at which the angle opens is dθ/dt = σL/3ηr₀ — that is, the bend rate is fixed by the temperature and nothing else. When the tube is bent to a centreline radius R, the outer fibre must stretch by ε = r₀/R to get round the corner, and the wall there thins to t₀/(1 + r₀/R). Since the heated band becomes the arc, R = L/θ: heat a long band and the radius is large and the wall barely thins; heat a spot and the tube kinks."
+ },
+ "apparatus": [
+  {
+   "name": "Soda-lime glass tubing",
+   "spec": "6–10 mm outside diameter, about 200 mm long",
+   "why": "Soft glass softens near 720 °C, within reach of a Bunsen flame; borosilicate needs far more heat"
+  },
+  {
+   "name": "Bunsen burner",
+   "spec": "with the air hole open",
+   "why": "A luminous flame settles near 650 °C on the glass, below the softening point, and deposits soot"
+  },
+  {
+   "name": "Wing top (flame spreader)",
+   "spec": "fitted to the burner chimney",
+   "why": "Turns the cone into a flat flame 60–70 mm wide, so a long band is heated evenly instead of a spot"
+  },
+  {
+   "name": "Protractor and bench rule",
+   "spec": "least count 1° and 1 mm",
+   "why": "The bend angle and the bend radius are the measurements this exercise produces"
+  },
+  {
+   "name": "Asbestos-free heat mat",
+   "spec": "",
+   "why": "Hot glass looks exactly like cold glass; it must be put down somewhere it cannot be picked up by mistake"
+  }
+ ],
+ "materials": [],
+ "variables": [
+  {
+   "id": "bandLengthMm",
+   "label": "Length of band heated",
+   "symbol": "L",
+   "unit": "mm",
+   "type": "independent",
+   "min": 10,
+   "max": 70,
+   "step": 5,
+   "default": 45
+  },
+  {
+   "id": "targetAngleDeg",
+   "label": "Bend through",
+   "symbol": "θ",
+   "unit": "°",
+   "type": "independent",
+   "min": 30,
+   "max": 135,
+   "step": 5,
+   "default": 90
+  },
+  {
+   "id": "rotationRpm",
+   "label": "Rotating the tube",
+   "symbol": "",
+   "unit": "rpm",
+   "type": "independent",
+   "min": 0,
+   "max": 60,
+   "step": 5,
+   "default": 30
+  },
+  {
+   "id": "flame",
+   "label": "Flame",
+   "symbol": "",
+   "unit": "",
+   "type": "control",
+   "default": "wingTop",
+   "options": ["wingTop", "open", "luminous"]
+  },
+  {
+   "id": "tube",
+   "label": "Tubing",
+   "symbol": "",
+   "unit": "",
+   "type": "control",
+   "default": "t8",
+   "options": ["t6", "t8", "t10"]
+  },
+  {
+   "id": "inFlame",
+   "label": "Hold it in the flame",
+   "symbol": "",
+   "unit": "",
+   "type": "control",
+   "default": true
+  },
+  {
+   "id": "pyrometerLC",
+   "label": "Pyrometer least count",
+   "symbol": "L.C.",
+   "unit": "°C",
+   "type": "controlled",
+   "min": 5,
+   "max": 25,
+   "step": 5,
+   "default": 10
+  },
+  {
+   "id": "bendRadius",
+   "label": "Radius of bend",
+   "symbol": "R",
+   "unit": "mm",
+   "type": "dependent"
+  }
+ ],
+ "procedure": [
+  { "step": 1, "text": "Fit the wing top and open the air hole, so the flame is hot and spread across a broad band.", "checkpoint": true, "expects": "flame" },
+  { "step": 2, "text": "Choose how long a band of tubing to heat. The band becomes the arc of the bend, so it decides the radius.", "checkpoint": true, "expects": "bandLengthMm" },
+  { "step": 3, "text": "Hold the tube in the flame and roll it steadily between finger and thumb, so the whole wall heats alike.", "checkpoint": true, "expects": "rotationRpm" },
+  { "step": 4, "text": "Watch the glass temperature. Nothing happens until it passes the softening point near 720 °C.", "checkpoint": false },
+  { "step": 5, "text": "When the band glows and begins to sag, take it OUT of the flame. In the flame it keeps heating and will run.", "checkpoint": true, "expects": "inFlame" },
+  { "step": 6, "text": "Let the weight of the arms close the bend. Put it back in the flame if it stiffens before the angle is reached.", "checkpoint": false },
+  { "step": 7, "text": "When the required angle is reached, lay the tube on the mat and let it cool below the annealing point.", "checkpoint": false },
+  { "step": 8, "text": "Record the band heated, the temperature at which it bent, the angle, the radius and the state of the outer wall.", "checkpoint": false },
+  { "step": 9, "text": "Repeat with at least three different band lengths, then plot the radius against the band length.", "checkpoint": false }
+ ],
+ "simulation": {
+  "model": "glass-bending",
+  "renderer": "glass-bending",
+  "fps": 30,
+  "controls": [
+   { "var": "bandLengthMm", "widget": "slider" },
+   { "var": "targetAngleDeg", "widget": "slider" },
+   { "var": "rotationRpm", "widget": "slider" },
+   { "var": "flame", "widget": "segmented", "options": ["wingTop", "open", "luminous"] },
+   { "var": "tube", "widget": "segmented", "options": ["t6", "t8", "t10"] },
+   { "var": "inFlame", "widget": "switch" },
+   { "var": "pyrometerLC", "widget": "slider" }
+  ],
+  "actions": [
+   { "id": "record", "label": "Record the bend", "primary": true },
+   { "id": "reset", "label": "Fresh tube" }
+  ]
+ },
+ "observationModel": {
+  "columns": [
+   { "key": "trial", "label": "Trial", "unit": "", "decimals": 0 },
+   { "key": "bandMm", "label": "Band heated", "unit": "mm", "decimals": 1 },
+   { "key": "bendTempC", "label": "Bent at", "unit": "°C", "decimals": 0 },
+   { "key": "angleDeg", "label": "Angle", "unit": "°", "decimals": 1 },
+   { "key": "radiusMm", "label": "Radius", "unit": "mm", "decimals": 1 },
+   { "key": "wallRatio", "label": "Outer wall t/t₀", "unit": "", "decimals": 3 },
+   { "key": "reheats", "label": "Reheats", "unit": "", "decimals": 0 },
+   { "key": "verdict", "label": "Result", "unit": "", "decimals": 0 }
+  ],
+  "graph": {
+   "x": "bandMm",
+   "y": "radiusMm",
+   "xLabel": "Length of band heated L (mm)",
+   "yLabel": "Radius of bend R (mm)",
+   "throughOrigin": true
+  },
+  "minRows": 3
+ },
+ "calculations": {
+  "steps": [
+   "For each trial note the band heated L and the radius of the bend R",
+   "Plot R against L; the points should lie on a straight line through the origin",
+   "The slope of that line is 1/θ with θ in radians, because the heated band becomes the arc",
+   "Recover the bend angle as θ = 1/slope, in radians, and convert to degrees",
+   "Compare it with the angle measured directly with the protractor",
+   "Check the outer wall: a sound bend keeps at least 80 per cent of the original wall thickness"
+  ],
+  "resultKeys": ["angleFromSlope", "angleMeasured", "meanWallRatio", "r2"]
+ },
+ "expectedResult": {
+  "quantity": "Bend angle recovered from the slope of R against L",
+  "symbol": "θ",
+  "value": 90,
+  "tolerance": 6,
+  "unit": "°",
+  "secondary": {
+   "quantity": "Mean outer-wall thickness as a fraction of the original",
+   "value": 0.85,
+   "tolerance": 0.15,
+   "unit": ""
+  },
+  "statement": "The radius of the bend is proportional to the length of tubing heated: R = L/θ, a straight line through the origin whose slope returns the angle bent through. Heating a broad band with a wing top gives a large radius and an outer wall that keeps most of its thickness; heating a spot with a bare blue flame gives a tight radius and a thin, kinked outer wall, and a luminous flame never reaches the softening point at all."
+ },
+ "safety": [
+  "Hot glass looks exactly like cold glass. Put it down only on the heat mat, and never test it by touch.",
+  "Let the tube cool right through before handling it — the inside of the wall stays hot after the surface has dulled.",
+  "Never bend glass that is below red heat. It will not bend; it will snap, and the broken ends are needle-sharp.",
+  "Fire-polish any cut end before use, and never push unpolished tubing through a cork or bung.",
+  "Keep the flame away from the edge of the bench, and tie back long hair before working at it."
+ ],
+ "sourcesOfError": [
+  "Heating too narrow a band, so the bend radius is small and the outer wall stretches thin.",
+  "Not rotating the tube, so the side facing the flame runs hundreds of degrees hotter and the wall bends out of true.",
+  "Bending while the tube is still in the flame: it goes on heating, the glass runs, and the bore closes.",
+  "Using a luminous flame, which never reaches the softening point and deposits soot on the glass.",
+  "Judging the softening point by eye — the glow begins near 525 °C, well below the temperature at which the glass will bend.",
+  "Letting the bend cool unevenly, which leaves strain in the glass even when the shape is right."
+ ],
+ "viva": [
+  { "q": "Why does glass have no melting point?", "a": "It is an amorphous solid — a supercooled liquid with no crystal lattice to break down at a fixed temperature. Its viscosity falls continuously with temperature, so it softens over a range instead of melting at a point." },
+  { "q": "What is the softening point of soda-lime glass, and what does it mean?", "a": "About 720 °C. It is defined as the temperature at which the viscosity is 10⁶·⁶ Pa·s — the point at which the glass will deform measurably under its own weight." },
+  { "q": "Why must a wing top be used?", "a": "It spreads the flame into a flat band 60–70 mm wide. A bare flame heats about 16 mm, and a bend made over 16 mm has a radius of only about 10 mm, which stretches and thins the outer wall until it kinks." },
+  { "q": "Why is the tube rotated continuously?", "a": "Glass conducts heat poorly, about 1 W m⁻¹ K⁻¹. Without rotation only the side facing the flame is heated and the far side stays hundreds of degrees cooler, so one side of the wall bends and the other does not." },
+  { "q": "Why should the tube be taken out of the flame before it is bent?", "a": "In the flame it keeps heating. Past about 1000 °C the viscosity has fallen so far that it sags faster than it can be arrested, and the bore closes." },
+  { "q": "What happens if you try to bend glass that is not hot enough?", "a": "Below the softening point the viscosity is too high to flow, so the applied stress is taken elastically until the glass fractures. It snaps rather than bends." },
+  { "q": "Why does the outer wall of a bend get thinner?", "a": "The outer fibre has further to travel round the corner, so it is stretched by ε = r₀/R. The glass there is conserved, so the wall thins to t₀/(1 + r₀/R)." },
+  { "q": "What is a luminous flame and why is it unsuitable here?", "a": "It is the flame with the air hole closed, burning with incomplete combustion. It is cooler — settling near 650 °C on the glass, below the softening point — and it deposits soot." },
+  { "q": "What is annealing, and why does it matter?", "a": "Holding or cooling the glass slowly through about 550 °C so internal stresses relax. A bend cooled too fast keeps that strain and may crack later, even though it looks sound." },
+  { "q": "Why should the bend radius be at least three tube diameters?", "a": "Because ε = r₀/R: at R = 3d the outer wall keeps about 86 per cent of its thickness, while at R = d it would lose a third of it and the tube would kink." }
+ ],
+ "assessment": {
+  "preLab": [
+   { "id": "pre1", "type": "mcq", "question": "Soda-lime glass softens at about:", "options": ["220 °C", "450 °C", "720 °C", "1600 °C"], "answer": 2, "feedback": "The softening point is where the viscosity reaches 10⁶·⁶ Pa·s, about 720 °C for soda-lime glass." },
+   { "id": "pre2", "type": "mcq", "question": "The wing top is fitted to the burner in order to:", "options": ["Make the flame hotter", "Spread the flame into a broad band", "Stop the glass from sooting", "Save gas"], "answer": 1, "feedback": "It converts the cone into a flat flame 60–70 mm wide, so a long band of tubing is heated evenly." },
+   { "id": "pre3", "type": "mcq", "question": "A glass tube is rotated in the flame because glass:", "options": ["Expands unevenly", "Conducts heat poorly", "Burns on one side", "Absorbs the flame gases"], "answer": 1, "feedback": "With a thermal conductivity near 1 W m⁻¹ K⁻¹, heat does not travel round the wall fast enough; only rotation heats the whole circumference." }
+  ],
+  "duringLab": [
+   { "id": "dur1", "type": "checkpoint", "expects": "flame", "question": "Fit the wing top and open the air hole before heating.", "feedback": "A luminous flame never reaches the softening point and deposits soot." },
+   { "id": "dur2", "type": "checkpoint", "expects": "rotationRpm", "question": "Roll the tube steadily while it is in the flame.", "feedback": "Rotation is what closes the temperature difference across the wall." },
+   { "id": "dur3", "type": "checkpoint", "expects": "inFlame", "question": "Take the tube out of the flame before letting it bend.", "feedback": "Left in the flame it goes on heating until the bore closes." }
+  ],
+  "postLab": [
+   { "id": "post1", "type": "mcq", "question": "Heating a longer band of tubing gives a bend with:", "options": ["A smaller radius and a thinner wall", "A larger radius and a thicker wall", "The same radius", "No change to the wall"], "answer": 1, "feedback": "R = L/θ, so a longer band gives a larger radius; the outer strain r₀/R is then smaller and the wall thins less." },
+   { "id": "post2", "type": "mcq", "question": "A graph of bend radius against length of band heated should be:", "options": ["A curve through the origin", "A straight line through the origin", "A straight line with a positive intercept", "A horizontal line"], "answer": 1, "feedback": "R = L/θ with θ fixed, so R is directly proportional to L — a straight line through the origin of slope 1/θ." },
+   { "id": "post3", "type": "numeric", "question": "A 45 mm band is bent through 90°. What is the radius of the bend, in mm?", "answer": 28.6, "tolerance": 1.5, "unit": "mm", "feedback": "R = L/θ = 45 / (π/2) = 28.6 mm." }
+  ],
+  "weights": { "preLab": 0.25, "duringLab": 0.35, "postLab": 0.4 }
+ },
+ "scientificValidation": {
+  "formula": "log₁₀η = −2.585 + 4215/(T − 263); dθ/dt = σL/(3ηr₀); R = L/θ; t/t₀ = 1/(1 + r₀/R)",
+  "assumptions": [
+   "Soda-lime (soft) glass tubing throughout",
+   "The heated band is at one temperature around its circumference once the tube is rotated, and follows a parabolic profile along its length",
+   "The tube sags under its own weight only; no force is applied by hand",
+   "The whole heated band becomes the arc of the bend, so R = L/θ",
+   "Wall thinning follows from conservation of glass in the wall, not from flow along the tube",
+   "This lab models the apparatus, not the student's hands: it does not assess manual technique and does not replace supervised bench practice"
+  ],
+  "validRange": "Band 10-70 mm; angle 30-135°; rotation 0-60 rpm; glass 28-1150 °C",
+  "unitSystem": "SI internally (K, m, Pa·s); bench units on screen (°C, mm, degrees)",
+  "edgeCases": [
+   "Below about 720 °C the viscosity is too high to bend; forcing the tube snaps it",
+   "Above about 1020 °C it sags faster than it can be arrested and the bore closes",
+   "A narrow heated band gives a small radius and a severely thinned outer wall",
+   "Without rotation the flame side runs far hotter than the far side and the wall bends unevenly",
+   "A luminous flame settles near 650 °C, below the softening point, and never bends the glass at all"
+  ],
+  "expectedBehaviour": [
+   "R against L is a straight line through the origin whose slope recovers the bend angle",
+   "A wider heated band gives a larger radius and a thicker outer wall",
+   "The wing top heats a broad band; the bare blue flame heats a spot however wide a band is asked for",
+   "Rotating the tube closes the temperature difference across the wall"
+  ],
+  "testFile": "tests/glass-bending.test.mjs"
+ }
+}

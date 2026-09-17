@@ -99,6 +99,7 @@ const MODEL_LOADERS = {
   'salt-preparation': () => import('./simulation/models/salt-preparation.js'),
   'organic-preparation': () => import('./simulation/models/organic-preparation.js'),
   'functional-group-test': () => import('./simulation/models/functional-group-test.js'),
+  'glass-bending': () => import('./simulation/models/glass-bending.js'),
   'biomolecule-test': () => import('./simulation/models/biomolecule-test.js'),
 };
 

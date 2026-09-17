@@ -3,7 +3,7 @@
  * Strategy: precache the whole shell on install; cache-first at runtime so the
  * lab NEVER waits on a network. Navigation falls back to the cached index.
  */
-const VERSION = 'vlab-2026-27-v36';
+const VERSION = 'vlab-2026-27-v37';
 const SHELL = [
   "./",
   "index.html",
@@ -58,6 +58,7 @@ const SHELL = [
   "src/simulation/models/friction.js",
   "src/simulation/models/functional-group-test.js",
   "src/simulation/models/galvanometer.js",
+  "src/simulation/models/glass-bending.js",
   "src/simulation/models/graph-plotting.js",
   "src/simulation/models/helical-spring.js",
   "src/simulation/models/household-circuit.js",

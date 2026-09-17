@@ -29,6 +29,9 @@ for (const meta of idx.experiments.filter(e=>e.contentStatus==='published')) {
     resetFluids(); ok++;
   } catch(e){ fails.push([meta.id, `${exp.simulation.renderer}: ${e.message}`]); }
 }
-console.log(`rendered cleanly: ${ok}/100   failures: ${fails.length}`);
+// The total comes from the index, not a hardcoded 100, so adding a lab does
+// not make this line read "101/100".
+const total = idx.experiments.filter((e) => e.contentStatus === 'published').length;
+console.log(`rendered cleanly: ${ok}/${total}   failures: ${fails.length}`);
 fails.slice(0,12).forEach(([i,m])=>console.log('  FAIL',i,m));
 process.exit(fails.length?1:0);
