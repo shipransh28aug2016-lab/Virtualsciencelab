@@ -15,7 +15,7 @@ export const meta = {
   id: 'XI-CHE-C01',
   formula: 'pH = −log[H⁺]; strong: [H⁺]=C; weak: [H⁺]≈√(Ka·C); pH+pOH=14',
   unitSystem: 'Molarity in mol/L; pH dimensionless',
-  assumptions: ['Ideal dilute-solution behaviour (activity ≈ concentration)', 'Kw = 1.0×10⁻¹⁴ at 25 °C', 'Common-ion suppression uses the added salt\'s concentration directly'],
+  assumptions: ['Ideal dilute-solution behaviour (activity ≈ concentration)', 'Kw = 1.0e-14 at 25 °C', 'Common-ion suppression uses the added salt\'s concentration directly'],
   validRange: 'Concentration 0.001-1 M after dilution',
   edgeCases: ['A weak acid at the same concentration as a strong acid has a distinctly higher pH', 'Adding the common ion suppresses ionisation and raises the pH of a weak acid further'],
   expectedBehaviour: ['Diluting an acid tenfold raises its pH by close to 1 unit if strong, less if weak', 'All fruit juices tested are acidic'],
@@ -41,30 +41,29 @@ export const SAMPLES = {
   water: { label: 'Distilled water', type: 'fixed', pHFixed: 7.0 },
 };
 export const METHODS = { paper: { label: 'pH paper', lc: 1.0 }, universal: { label: 'Universal indicator', lc: 0.5 }, meter: { label: 'pH meter', lc: 0.01 } };
-
 export const defaults = { sample: 'hcl', dilution: 1, method: 'universal', tempC: 25, commonIonConc: 0 };
 
 export function sampleOf(inputs) { return SAMPLES[inputs.sample] || SAMPLES.hcl; }
 
 export function hydrogenIon(inputs) {
   const s = sampleOf(inputs);
-  const C = (s.C || 0) / Math.max(1, inputs.dilution) * (s.basicity || 1);
+  const dilution = Math.max(1, Number(inputs.dilution) || 1);
+  const C = (s.C || 0) / dilution * (s.basicity || 1);
   if (s.type === 'fixed') return 10 ** -s.pHFixed;
   if (s.type === 'strongAcid') return C;
   if (s.type === 'strongBase') return KW / C;
   if (s.type === 'weakAcid') {
-    const commonIon = (inputs.commonIonConc || 0) / Math.max(1, inputs.dilution);
+    const commonIon = Math.max(0, Number(inputs.commonIonConc) || 0) / dilution;
     if (commonIon > 0) {
-      // Ka = x(commonIon + x)/C, solved as a quadratic (suppressed ionisation).
-      const a = 1, b = commonIon, c = -s.Ka * C;
-      return (-b + Math.sqrt(b * b - 4 * a * c)) / 2;
+      const b = commonIon;
+      return (-b + Math.sqrt(b * b + 4 * s.Ka * C)) / 2;
     }
     return Math.sqrt(s.Ka * C);
   }
   if (s.type === 'weakBase') {
-    const commonIon = (inputs.commonIonConc || 0) / Math.max(1, inputs.dilution);
+    const commonIon = Math.max(0, Number(inputs.commonIonConc) || 0) / dilution;
     const oh = commonIon > 0
-      ? (() => { const a = 1, b = commonIon, c = -s.Kb * C; return (-b + Math.sqrt(b * b - 4 * a * c)) / 2; })()
+      ? (-commonIon + Math.sqrt(commonIon * commonIon + 4 * s.Kb * C)) / 2
       : Math.sqrt(s.Kb * C);
     return KW / oh;
   }
@@ -73,23 +72,27 @@ export function hydrogenIon(inputs) {
   return 1e-7;
 }
 export function pHTrue(inputs) { return -Math.log10(Math.max(1e-14, hydrogenIon(inputs))); }
+
+/**
+ * Fraction of the weak electrolyte that ionises itself.  In a common-ion
+ * solution total [H+] or [OH−] includes the salt's pre-existing ion and must
+ * not be reported as dissociation of the weak solute.
+ */
 export function degreeOfDissociation(inputs) {
   const s = sampleOf(inputs);
   if (s.type !== 'weakAcid' && s.type !== 'weakBase') return null;
-  const C = s.C / Math.max(1, inputs.dilution);
+  const dilution = Math.max(1, Number(inputs.dilution) || 1);
+  const C = s.C / dilution;
+  const commonIon = Math.max(0, Number(inputs.commonIonConc) || 0) / dilution;
   const h = hydrogenIon(inputs);
-  const conc = s.type === 'weakAcid' ? h : KW / h;
-  return conc / C;
+  const ownIonisation = s.type === 'weakAcid'
+    ? Math.max(0, h - commonIon)
+    : Math.max(0, KW / h - commonIon);
+  return ownIonisation / C;
 }
 
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
 export function init() { return { t: 0, pH: 7, reading: 7, settled: false, dipped: false }; }
-/**
- * A glass electrode does not answer instantly. It drifts towards the true
- * pH over a few seconds as the gel layer equilibrates with the solution --
- * which is why a reading is taken only once the display stops moving, and
- * why the meter must be left in the buffer before it is trusted.
- */
 export function step(state, inputs, dt) {
   const s = { ...state };
   s.t += dt;
@@ -101,7 +104,6 @@ export function step(state, inputs, dt) {
   s.settled = Math.abs(target - s.reading) < 0.01;
   return s;
 }
-
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 179);
   const m = METHODS[inputs.method] || METHODS.universal;
@@ -109,30 +111,14 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const pH = toLeastCount(truePH + jitter(rng, m.lc * 0.4), m.lc);
   const s = sampleOf(inputs);
   const nature = pH < 6.5 ? 'acidic' : pH > 7.5 ? 'basic' : 'neutral';
-  return {
-    trial, sample: s.label, concentration: s.C || null, method: m.label, pH: Number(pH.toFixed(2)),
-    pOH: Number((14 - pH).toFixed(2)), hIon: sigFig(10 ** -pH, 3), nature, dilution: inputs.dilution ?? 1,
-    index: trial,
-  };
+  return { trial, sample: s.label, concentration: s.C || null, method: m.label, pH: Number(pH.toFixed(2)), pOH: Number((14 - pH).toFixed(2)), hIon: sigFig(10 ** -pH, 3), nature, dilution: inputs.dilution ?? 1, index: trial };
 }
-
 export function derive(rows) {
   if (rows.length < 2) return { ok: false, reason: 'Test at least two solutions to compare.' };
   const mostAcidic = rows.reduce((a, b) => (Number(a.pH) <= Number(b.pH) ? a : b));
   const mostBasic = rows.reduce((a, b) => (Number(a.pH) >= Number(b.pH) ? a : b));
-
-  /*
-   * dilutionCheck used to be a bare boolean, but the result panel reads
-   * dilutionCheck.sample/.deltaPH/.decades/.perDecade — a boolean has none
-   * of those, so the "check" text would have silently rendered
-   * "undefined" units all the way down the moment two dilutions of the
-   * same sample were actually recorded.
-   */
   const bySample = new Map();
-  for (const r of rows) {
-    if (!bySample.has(r.sample)) bySample.set(r.sample, []);
-    bySample.get(r.sample).push(r);
-  }
+  for (const r of rows) { if (!bySample.has(r.sample)) bySample.set(r.sample, []); bySample.get(r.sample).push(r); }
   let dilutionCheck = null;
   for (const [sample, rs] of bySample) {
     const distinct = [...new Set(rs.map((r) => Number(r.dilution)))];
@@ -145,17 +131,9 @@ export function derive(rows) {
     dilutionCheck = { sample, deltaPH: sigFig(deltaPH, 3), decades: sigFig(decades, 3), perDecade: sigFig(deltaPH / decades, 3) };
     break;
   }
-
   const acids = rows.filter((r) => r.nature === 'acidic').length;
   const bases = rows.filter((r) => r.nature === 'basic').length;
   const neutral = rows.filter((r) => r.nature === 'neutral').length;
-
-  return {
-    ok: true, mostAcidic: mostAcidic.sample, mostAcidicPH: Number(mostAcidic.pH),
-    mostBasic: mostBasic.sample, mostBasicPH: Number(mostBasic.pH),
-    acids, bases, neutral,
-    dilutionCheck, n: rows.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.pH) })),
-  };
+  return { ok: true, mostAcidic: mostAcidic.sample, mostAcidicPH: Number(mostAcidic.pH), mostBasic: mostBasic.sample, mostBasicPH: Number(mostBasic.pH), acids, bases, neutral, dilutionCheck, n: rows.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.pH) })) };
 }
-
 export default { meta, defaults, SAMPLES, METHODS, KW, init, step, measure, derive, validate, sampleOf, hydrogenIon, pHTrue, degreeOfDissociation };
