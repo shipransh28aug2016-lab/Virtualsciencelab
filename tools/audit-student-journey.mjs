@@ -500,12 +500,24 @@ async function runLane(lane, queue, reports, onDone) {
                 .map((g) => [...g.querySelectorAll('button')])
                 .filter((b) => b.length >= 2)
                 .sort((a, b) => b.length - a.length);
+              /* A switch is a two-position setting like any other — the shunt
+                 in or out, the balance tared or not — and half-deflection
+                 needs a reading in each position. */
+              for (const sw of document.querySelectorAll('#controls .sw')) {
+                const on = sw.getAttribute('aria-checked') === 'true';
+                if (on !== (idx % 2 === 1)) sw.click();
+              }
               if (!groups.length) return;
               // The tray first, then the second setting at a slower rate, so
               // the pair is actually swept: four components BOTH ways round
               // needs component and direction to advance together.
               groups[0][idx % groups[0].length].click();
-              if (groups[1]) groups[1][Math.floor(idx / groups[0].length) % groups[1].length].click();
+              /* And alternate the SMALLEST group every reading. The two-phase
+                 procedures turn on a two-position setting — DC then AC, shunt
+                 out then in — and cycling only the big trays never reaches
+                 them. */
+              const last = groups[groups.length - 1];
+              if (last && last !== groups[0]) last[idx % last.length].click();
             }, k);
             /* Then move a SLIDER — never another button, because the
                buttons are the specimen tray and pressing one of those would

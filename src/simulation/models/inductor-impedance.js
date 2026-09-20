@@ -81,10 +81,23 @@ export function derive(rows, inputs = defaults) {
   const R = dcFit.slope;
   const dcCurrentA = sigFig(mean(dc.map((r) => Number(r.currentA))), 4);
   if (ac.length < 3) {
+    /*
+     * Half the experiment is done, and that is not a result.
+     *
+     * This used to return ok:true with the impedance, the reactance and the
+     * inductance all null — so the panel announced a result and printed
+     * "Inductance = null H" in the line meant to carry the answer. The
+     * inductance cannot be separated from the winding resistance until the
+     * coil has been measured on BOTH supplies: R comes from the DC readings,
+     * Z from the AC ones, and X_L = sqrt(Z² − R²).
+     *
+     * Refusing says so, and says it where the student is looking, because a
+     * refusal carries its reason to the panel and to the "still needed" line
+     * under the table.
+     */
     return {
-      ok: true, resistance: sigFig(R, 4), impedance: null, reactance: null, inductance: null, inductanceMH: null,
-      nDc: dc.length, nAc: 0, coil: coilLabel, core: coreLabel, hasCore, dcCurrentA,
-      n: dc.length, points: dc.map((r) => ({ x: Number(r.currentA), y: Number(r.voltageV) })),
+      ok: false,
+      reason: `The winding resistance is ${sigFig(R, 3)} Ω from ${dc.length} DC readings. Now switch the supply to AC and take at least three more at the same voltages: R comes from the DC line, the impedance Z from the AC line, and the inductance from X_L = √(Z² − R²).`,
     };
   }
   const acFit = fitThroughOrigin(ac.map((r) => ({ x: Number(r.currentA), y: Number(r.voltageV) })));

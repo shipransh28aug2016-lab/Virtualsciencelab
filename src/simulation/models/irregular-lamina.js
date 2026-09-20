@@ -107,8 +107,31 @@ export function derive(rows, inputs = defaults) {
   const a = mean(rows.map((r) => Number(r.area)));
   const v = (a * t) / 10;
   const accepted = (laminaOf(inputs).areaCm2 * laminaOf(inputs).thicknessMm) / 10;
+  /*
+   * The error budget, which is the point of this experiment.
+   *
+   * V = A × t, and percentage errors ADD in a product — so the result panel
+   * has always said "% in the area + % in the thickness = % in the volume,
+   * the area dominates, so a finer grid helps more than a finer screw gauge."
+   * It had no numbers to say it with: none of the three percentages was
+   * returned, so a student read "undefined% + undefined% = undefined%" under
+   * the one conclusion this practical exists to reach.
+   *
+   * The area's share comes from the grid — all the doubt in a counted area is
+   * in the boundary squares, and a coarser grid makes each of them bigger
+   * relative to the whole. The thickness's share is the screw gauge's least
+   * count against the thickness measured.
+   */
+  const grid = GRIDS[inputs.grid] || GRIDS.g1;
+  const areaPct = grid.countError * 100;
+  const thicknessPct = t > 0 ? (leastCount(inputs) / t) * 100 : 0;
   return {
     ok: true, volume: sigFig(v, 4), meanArea: sigFig(a, 4), meanThickness: sigFig(t, 4),
+    lamina: laminaOf(inputs).label,
+    gridLabel: grid.label,
+    areaPct: sigFig(areaPct, 2),
+    thicknessPct: sigFig(thicknessPct, 2),
+    totalPct: sigFig(areaPct + thicknessPct, 2),
     accepted: sigFig(accepted, 4), percentError: sigFig(percentError(v, accepted), 3), n: rows.length,
     points: rows.map((r, i) => ({ x: i + 1, y: Number(r.volume) })),
   };

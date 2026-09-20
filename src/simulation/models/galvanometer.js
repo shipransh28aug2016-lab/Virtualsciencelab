@@ -38,7 +38,14 @@ export const CELLS = { c2: { label: '2 V cell', emf: 2 }, c3: { label: '3 V cell
  * unaffected: it declares `conversion` itself, with its own default of
  * 'ammeter', in its own JSON.
  */
-export const defaults = { resistanceR: 3000, shuntS: 0, shuntConnected: false, galvanometer: 'g1', cell: 'c2', targetRange: 1, testValue: 0.5 };
+/*
+ * The shunt is a resistance box plugged across the galvanometer, so it has a
+ * resistance the moment it is connected — you cannot plug in nought ohms.
+ * Starting it at zero meant the "shunt connected" switch did nothing at all:
+ * every reading still recorded S = 0, and the calculation asked for a shunted
+ * reading the student believed they had already taken.
+ */
+export const defaults = { resistanceR: 3000, shuntS: 50, shuntConnected: false, galvanometer: 'g1', cell: 'c2', targetRange: 1, testValue: 0.5 };
 
 export function galvOf(inputs) { return GALVANOMETERS[inputs.galvanometer] || GALVANOMETERS.g1; }
 export function cellOf(inputs) { return CELLS[inputs.cell] || CELLS.c2; }
