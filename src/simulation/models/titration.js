@@ -376,10 +376,55 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   };
 }
 
+/**
+ * How close two titres must be to count as concordant. A burette is read to
+ * its 0.1 mL graduation, so two readings that agree to within two graduations
+ * are the same measurement made twice; anything wider is a different one.
+ */
+export const CONCORDANCE_ML = 0.2;
+
+/**
+ * The concordant titres, out of everything recorded.
+ *
+ * "Mean of 2 concordant titres: 21.3 mL (readings are not concordant)" is not
+ * a sentence a laboratory can produce. The mean was being taken over every
+ * titre that had not overshot, concordant or not, and then LABELLED as a mean
+ * of concordant ones with a warning beside it saying the opposite — and the
+ * strength carried to the result panel was the mean of readings the panel
+ * itself had just rejected. The three numbers that were meant to agree, and
+ * did not, were averaged anyway.
+ *
+ * A titration is finished when readings agree. So this finds the widest run of
+ * titres that lie within one concordance window of each other, which is what a
+ * student does when they look down the column and take the three that agree.
+ */
+export function concordantSet(vols) {
+  const sorted = [...vols].sort((a, b) => a - b);
+  let best = { from: 0, to: 0 };
+  for (let i = 0; i < sorted.length; i += 1) {
+    let j = i;
+    while (j + 1 < sorted.length && sorted[j + 1] - sorted[i] <= CONCORDANCE_ML + 1e-9) j += 1;
+    const span = j - i;
+    const bestSpan = best.to - best.from;
+    if (span > bestSpan
+      || (span === bestSpan && sorted[j] - sorted[i] < sorted[best.to] - sorted[best.from])) {
+      best = { from: i, to: j };
+    }
+  }
+  return sorted.slice(best.from, best.to + 1);
+}
+
 export function derive(rows, inputs = defaults) {
   const usable = rows.filter((r) => !r._overshot);
-  if (usable.length < 2) return { ok: false, reason: 'Record at least two concordant titres (within 0.2 mL of each other).' };
-  const vols = usable.map((r) => Number(r.volumeUsed));
+  if (usable.length < 2) return { ok: false, reason: `Record at least two concordant titres (within ${CONCORDANCE_ML} mL of each other).` };
+  const allVols = usable.map((r) => Number(r.volumeUsed));
+  const vols = concordantSet(allVols);
+  if (vols.length < 2) {
+    return {
+      ok: false,
+      reason: `No two titres agree to within ${CONCORDANCE_ML} mL — the readings are ${allVols.map((v) => v.toFixed(1)).join(', ')} mL. Run the titration again until two agree, and average only those.`,
+    };
+  }
   const meanTitre = mean(vols);
   const s = systemOf(inputs);
   let normality;
@@ -397,10 +442,16 @@ export function derive(rows, inputs = defaults) {
   const molarity = s.nFactor ? normality / s.nFactor : null;
   return {
     ok: true, meanTitre: sigFig(meanTitre, 4), normality: sigFig(normality, 3),
-    strength: sigFig(normality * s.eqMassUnknown, 3), concordant: Math.max(...vols) - Math.min(...vols) <= 0.3,
+    strength: sigFig(normality * s.eqMassUnknown, 3),
+    /* Three concordant titres is what the practical asks for; two is enough
+       to calculate with, and the panel says which of the two it had. */
+    concordant: vols.length >= 3,
+    concordantCount: vols.length,
+    discarded: allVols.length - vols.length,
+    titreSpread: sigFig(Math.max(...vols) - Math.min(...vols), 2),
     molarity: molarity == null ? null : sigFig(molarity, 3),
     nFactor: s.nFactor || null,
-    n: usable.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.volumeUsed) })),
+    n: vols.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.volumeUsed) })),
   };
 }
 

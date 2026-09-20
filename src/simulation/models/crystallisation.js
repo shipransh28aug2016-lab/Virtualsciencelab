@@ -155,7 +155,10 @@ export function derive(rows, inputs = defaults) {
 
   return {
     ok: true, recovery: sigFig(recovery, 4), crystalMass: sigFig(crystalMass, 4), meltingPoint: sigFig(meltingPoint, 4),
-    accepted, acceptedMeltingPoint: accepted, n: rows.length, points: rows.map((r) => ({ x: Number(r.solventMl), y: Number(r.recoveryPct) })),
+    /* Named for what it is. Left as a bare `accepted`, the result checker
+       read this melting point as the accepted value of the percentage
+       recovery the experiment actually reports. */
+    acceptedMeltingPoint: accepted, n: rows.length, points: rows.map((r) => ({ x: Number(r.solventMl), y: Number(r.recoveryPct) })),
     compound: c.label, crystalSize, crystalHabit, purified, meltingPointDeficit,
     impurityRemovedPct, productImpurityPct, lostToMotherLiquorG, minimumSolventMl, usedSolventMl,
     coolingCheck, solventCheck,

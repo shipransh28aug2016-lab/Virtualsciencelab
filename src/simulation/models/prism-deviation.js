@@ -87,7 +87,11 @@ export function derive(rows, inputs = defaults) {
   const acceptedDeltaM = (2 * Math.asin(acceptedMu * Math.sin((A * Math.PI) / 360)) * 180) / Math.PI - A;
   return {
     ok: true, minimumDeviation: sigFig(dm, 4), refractiveIndex: sigFig(mu, 4), incidenceAtMinimum: Number(minRow.incidence),
-    accepted: acceptedMu, acceptedMu: sigFig(acceptedMu, 4), acceptedDeltaM: sigFig(acceptedDeltaM, 4), angleA: A,
+    /* `accepted` is read by the result checker as the accepted value of the
+       quantity this experiment reports, which is the minimum deviation — not
+       the refractive index it is worked out from. Both are printed, under
+       names that say which is which. */
+    accepted: sigFig(acceptedDeltaM, 4), acceptedMu: sigFig(acceptedMu, 4), acceptedDeltaM: sigFig(acceptedDeltaM, 4), angleA: A,
     n: rows.length, points: rows.map((r) => ({ x: Number(r.incidence), y: Number(r.deviation) })),
   };
 }

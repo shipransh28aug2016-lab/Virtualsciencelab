@@ -555,6 +555,29 @@ for (const entry of targets) {
       msg: `the result panel prints ${blank.map((k) => `"${k}"`).join(', ')}, which derive() does not return` });
   }
 
+  /*
+   * Does the model's OWN accepted value agree with the experiment's?
+   *
+   * Many models report `accepted` for the specimen actually on the bench —
+   * the resistor in the gap, the range the galvanometer is being converted
+   * to, the surface under the spherometer. The experiment file, by contrast,
+   * carries ONE accepted value, the one belonging to the default specimen.
+   * The two must coincide when the default specimen is in use, or the panel
+   * is quoting two different accepted values in the same breath, as the
+   * surface-tension bench did: "accepted T = 0.0667" beside "differs from the
+   * accepted 0.0727". Checking it here is also what makes the per-specimen
+   * value safe to compare against elsewhere: it proves the model's `accepted`
+   * is the same quantity, in the same unit, as the value the panel reports.
+   */
+  if (Number.isFinite(derived.accepted) && !/working through/.test(best.how || '')) {
+    const gap = Math.abs(derived.accepted - expected.value);
+    const room = Math.max(Number(expected.tolerance) || 0, Math.abs(expected.value) * 0.02);
+    if (gap > room) {
+      failures.push({ id: entry.id, kind: 'two-accepteds',
+        msg: `the model reports an accepted ${derived.accepted} for the apparatus in use while the experiment declares ${expected.value} ${expected.unit || ''}` });
+    }
+  }
+
   const value = derived[key];
   const errAbs = Math.abs(value - expected.value);
   const errPct = expected.value === 0 ? errAbs * 100 : (errAbs / Math.abs(expected.value)) * 100;

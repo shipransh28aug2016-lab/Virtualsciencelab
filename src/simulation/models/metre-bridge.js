@@ -135,6 +135,12 @@ export function derive(rows, inputs = defaults) {
     resistance: sigFig(mean, 4),
     spread: sigFig(spread, 2),
     rho: sigFig(rho, 3),
+    /* Named `accepted`, like every other model's, because that is the word
+       the result checker looks for when it asks what the answer should be for
+       the coil actually in the gap. Called `expected` it was invisible to it,
+       and a correct 4.713 Ω on the 4.7 Ω coil was marked 63.5% wrong against
+       the 12.9 Ω coil the experiment file names. */
+    accepted: sigFig(trueS(inputs), 4),
     expected: trueS(inputs),
     n: vals.length,
     points: rows.map((r) => ({ x: Number(r.resistanceBox), y: Number(r.balanceLength) })),

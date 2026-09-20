@@ -2071,8 +2071,9 @@ function renderResult(d) {
     const molarLine = d.nFactor
       ? `Normality = ${d.normality} N &nbsp;·&nbsp; <b>Molarity = ${d.molarity} M</b> &nbsp;(M = N ÷ ${d.nFactor})`
       : `Normality = ${d.normality} N &nbsp;·&nbsp; Molarity = ${d.molarity ?? '—'} M`;
-    html = `<b>Mean of ${d.concordantCount ?? d.n} concordant titres:</b> ${d.meanTitre} mL
-      ${d.concordant === false ? ' <span style="color:var(--warn)">(readings are not concordant — repeat until three agree within 0.2 mL)</span>' : ''}
+    html = `<b>Mean of ${d.concordantCount ?? d.n} concordant titres:</b> ${d.meanTitre} mL (spread ${d.titreSpread ?? '—'} mL)
+      ${d.discarded ? ` <span style="color:var(--warn)">(${d.discarded} titre${d.discarded > 1 ? 's' : ''} outside the concordant set, not averaged)</span>` : ''}
+      ${d.concordant === false ? ' <span style="color:var(--warn)">(only two agree — run a third to confirm)</span>' : ''}
       <span class="big">Strength = ${d.strength} g/L</span>
       ${molarLine}
       <div style="font-size:12px;margin-top:4px;color:var(--muted)">N₁V₁ = N₂V₂ &nbsp;→&nbsp; strength = N × equivalent mass</div>`;

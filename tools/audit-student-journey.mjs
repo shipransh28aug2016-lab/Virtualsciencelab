@@ -552,6 +552,9 @@ async function runLane(lane, queue, reports, onDone) {
            wire; both are option groups and only the refusal distinguishes
            them. */
         let mixedWhat = '';
+        /* Set when the bench says the READINGS cannot be averaged because a
+           continuously-variable setting was moved between them. */
+        let freezeSliders = false;
         let slowestWait = 0;
         let hunted = 0;
     let nulled = 0;
@@ -609,7 +612,7 @@ async function runLane(lane, queue, reports, onDone) {
                buttons are the specimen tray and pressing one of those would
                put the specimen just chosen straight back. */
             const frac = 0.15 + (0.7 * k) / want;
-            if (k > 0) await page.evaluate((f) => {
+            if (k > 0 && !freezeSliders) await page.evaluate((f) => {
               const sliders = [...document.querySelectorAll('#controls .ctl:not([data-group="setup"]) input[type=range]')];
               const el = sliders[0];
               if (!el) return;
@@ -652,9 +655,21 @@ async function runLane(lane, queue, reports, onDone) {
             budget = Math.min(16, budget + want);
             continue;
           }
-          if (!mixingRefused && /\bdifferent (objects|wires|liquids|resistances|specimens|solutions)\b|its own set|one liquid per|one wire at a time/i.test(asking)) {
+          /*
+           * The bench objects to a SET rather than to a reading. Two shapes of
+           * that objection exist and they want different things stopped:
+           * "these are three different wires" means stop changing the
+           * specimen, and "the legs were set to three different separations"
+           * means stop moving the slider. The second was not recognised at
+           * all, so the spherometer was swept across its leg separation for
+           * every reading and then told, correctly, that a sagitta measured
+           * at 30 mm and one measured at 50 mm have no mean.
+           */
+          const mixedSet = /\bdifferent (objects|wires|liquids|resistances|specimens|solutions|surfaces|prisms|lenses|mirrors|diodes|tubes|rollers|separations|settings)\b|its own set|one liquid per|one wire at a time|cannot be averaged/i.test(asking);
+          if (!mixingRefused && mixedSet) {
             mixingRefused = true;
             mixedWhat = asking;
+            if (/separations|settings|cannot be averaged|at one (separation|setting)/i.test(asking)) freezeSliders = true;
             /* Put the bench back the way it opened before starting again:
                measuring the brass cylinder and comparing it against the steel
                sphere's accepted diameter is a different wrong answer, not a

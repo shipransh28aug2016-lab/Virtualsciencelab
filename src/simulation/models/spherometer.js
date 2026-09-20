@@ -97,12 +97,29 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const disc = Math.round((Math.abs(h) - turns * pitch) / lc);
   const l = inputs.legMm;
   const R = (l * l) / (6 * Math.abs(h)) + Math.abs(h) / 2; // mm
-  return { trial, legMm: l, verticalScale: turns * pitch, discDivision: disc, sagitta: Number(h.toFixed(3)), radiusCm: sigFig(R / 10, 4) };
+  return { trial, surface: surfaceOf(inputs).label, legMm: l, verticalScale: turns * pitch, discDivision: disc, sagitta: Number(h.toFixed(3)), radiusCm: sigFig(R / 10, 4) };
 }
 
 export function derive(rows, inputs = defaults) {
   const vals = rows.map((r) => Number(r.radiusCm)).filter(Number.isFinite);
   if (vals.length < 3) return { ok: false, reason: 'Record contact at least three times.' };
+
+  /*
+   * A mean is a measurement only when every reading is of the same thing. The
+   * sagitta depends on BOTH the surface and how far apart the legs are set
+   * — h grows as l² on the same glass — so a set taken across two surfaces,
+   * or across two leg separations, has no mean sagitta and no radius. The
+   * calculation used rows[0].legMm and averaged the rest in anyway.
+   */
+  const surfaces = [...new Set(rows.map((r) => r.surface).filter(Boolean))];
+  if (surfaces.length > 1) {
+    return { ok: false, reason: `These readings are of ${surfaces.length} different surfaces (${surfaces.join(', ')}). Each surface has its own radius — clear the table and take a set on one of them.` };
+  }
+  const legs = [...new Set(rows.map((r) => Number(r.legMm)))];
+  if (legs.length > 1) {
+    return { ok: false, reason: `The legs were set to ${legs.length} different separations (${legs.join(', ')} mm). The sagitta grows as l², so these readings cannot be averaged — take a set at one separation.` };
+  }
+
   const hs = rows.map((r) => Math.abs(Number(r.sagitta)));
   const l = Number(rows[0].legMm);
   const meanH = mean(hs);
@@ -117,9 +134,20 @@ export function derive(rows, inputs = defaults) {
    */
   return {
     legSeparation: l,
-    accepted: sigFig(surfaceOf(inputs).radiusCm, 4),
+    /* The accepted radius belongs to the surface the READINGS were taken on,
+       which is not always the one now on the bench. */
+    surface: surfaces[0] || surfaceOf(inputs).label,
+    accepted: sigFig((Object.values(SURFACES).find((x) => x.label === surfaces[0]) || surfaceOf(inputs)).radiusCm, 4),
     correctionPct: sigFig((correctionTerm / (mainTerm + correctionTerm)) * 100, 2),
-    ok: true, radius: sigFig(mean(vals), 4), meanSagitta: sigFig(meanH, 4), correctionTerm: sigFig(correctionTerm, 3),
+    /*
+     * R is worked out ONCE, from the mean sagitta — which is what the
+     * procedure says and what the panel prints beside it. Averaging the
+     * per-trial radii instead is not the same number and cannot be: R goes as
+     * 1/h, so the trial that happened to read a least count low dominates the
+     * mean and drags R upwards. The panel showed "R = 25.28 + 0.0528 cm" and
+     * announced the answer as 126.1 cm on the same line.
+     */
+    ok: true, radius: sigFig(mainTerm + correctionTerm, 4), meanSagitta: sigFig(meanH, 4), correctionTerm: sigFig(correctionTerm, 3),
     mainTerm: sigFig(mainTerm, 4), correctionPercent: sigFig((correctionTerm / (mainTerm + correctionTerm)) * 100, 3),
     n: vals.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.radiusCm) })),
   };
