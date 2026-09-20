@@ -238,8 +238,8 @@
       "Normality = Molarity × 2 (two protons accepted)"
     ],
     "resultKeys": [
-      "molarity",
-      "normality"
+      "normality",
+      "molarity"
     ]
   },
   "expectedResult": {
@@ -249,7 +249,7 @@
     "tolerance": 0.005,
     "unit": "N",
     "statement": "Weighing 1.325 g of anhydrous sodium carbonate into a 250 mL volumetric flask and making up to the mark gives a solution of almost exactly 0.1 N, used to standardise hydrochloric acid in XI-CHE-E05.",
-    "key": "molarity"
+    "key": "normality"
   },
   "safety": [
     "Sodium carbonate dust is a mild irritant — avoid inhaling while weighing.",

@@ -151,13 +151,18 @@ for (const entry of targets) {
    * knows how to move sliders would report every one of them as unperformable
    * for a reason that says more about the audit than the lab.
    */
-  const optionControl = independent ? null : (exp.simulation?.controls || [])
-    .filter((c) => Array.isArray(c.options) && c.options.length >= 3)
-    .map((c) => ({ id: c.var, options: c.options }))
-    .find((c) => {
-      const v = vars.find((x) => x.id === c.var);
-      return v && v.type !== 'controlled';   // a CONTROLLED variable is held fixed by the procedure
-    });
+  /*
+   * Option controls — the solution, the tuning fork, the supply, the meter
+   * function, the shunt. Several practicals are performed by working through
+   * these rather than by moving a slider: comparing the pH of four solutions,
+   * finding f x l with four forks, reading a galvanometer with and without
+   * its shunt, separating an inductance by measuring on DC and then on AC.
+   */
+  const optionControls = (exp.simulation?.controls || [])
+    .filter((c) => Array.isArray(c.options) && c.options.length >= 2)
+    .map((c) => ({ id: c.var, options: c.options, v: vars.find((x) => x.id === c.var) }))
+    .filter((c) => c.v && c.v.type !== 'controlled');
+  const optionControl = independent ? null : optionControls[0];
   const minRows = exp.observationModel?.minRows || 0;
   const want = Math.max(minRows, 4);
 
@@ -180,18 +185,36 @@ for (const entry of targets) {
    * none of them does, the best attempt is what gets reported.
    */
   const SAMPLINGS = [
+    /*
+     * Not every practical sweeps anything. Preparing a standard solution is
+     * "weigh out the prescribed mass, make it up to the mark, and check it";
+     * a preparation is "follow the method and weigh the product"; a weighing
+     * is "repeat it three times and average". For these the procedure is the
+     * declared settings, repeated — and sweeping a control instead measures
+     * something the experiment never asked about. Sweeping the mass in
+     * XI-CHE-E02 from 1 g to 10 g does not test whether 1.575 g of oxalic
+     * acid in 250 mL is 0.1 N; it tests what 10 g would be.
+     */
+    { name: 'at the prescribed settings', at: null },
     { name: 'across the range', at: (k, n) => (n > 1 ? k / (n - 1) : 0) },
     { name: 'inside the range', at: (k, n) => (k + 0.5) / n },
     { name: 'the upper part of the range', at: (k, n) => 0.35 + (0.6 * k) / Math.max(1, n - 1) },
   ];
+  /* And the same sweeps again, this time also working through each apparatus
+     setting in turn — which for a good many practicals IS the procedure. */
+  for (const oc of optionControls.slice(0, 3)) {
+    SAMPLINGS.push({ name: `working through ${oc.id}`, at: null, cycle: oc });
+    SAMPLINGS.push({ name: `working through ${oc.id} across the range`, at: (k, n) => (n > 1 ? k / (n - 1) : 0), cycle: oc });
+  }
 
   function collect(sampling) {
     const rows = [];
     const refusals = [];
     for (let k = 0; k < want; k += 1) {
       let inputs = { ...base };
-      if (optionControl) inputs[optionControl.id] = optionControl.options[k % optionControl.options.length];
-      if (independent) {
+      if (optionControl && sampling.at) inputs[optionControl.id] = optionControl.options[k % optionControl.options.length];
+      if (sampling.cycle) inputs[sampling.cycle.id] = sampling.cycle.options[k % sampling.cycle.options.length];
+      if (independent && sampling.at) {
         const span = independent.max - independent.min;
         const raw = independent.min + span * sampling.at(k, want);
         const step = Number(independent.step) || 1;
@@ -273,6 +296,30 @@ for (const entry of targets) {
         : `${rows.length} readings still give no result — ${derived?.reason || 'derive() refused without a reason'}`,
     });
     continue;
+  }
+
+  /*
+   * A unit is a claim about what a number IS, and the field it comes from
+   * makes the same claim by its name. When the two disagree the panel is
+   * comparing the wrong quantity, however confident it looks: XI-CHE-E02
+   * declared its accepted value as 0.1 N — a normality — and read it from a
+   * field called `molarity`, which for oxalic acid is half that, so every
+   * correct student was told they were 50% out.
+   */
+  const UNIT_KEY_CONFLICTS = [
+    { unit: /^N$/, wrong: /molarit/i, want: 'normality' },
+    { unit: /^M$/, wrong: /normalit/i, want: 'molarity' },
+    { unit: /^(°C|K)$/, wrong: /yield|percent/i, want: 'a temperature' },
+    { unit: /^%$/, wrong: /point|temp|volt|resist/i, want: 'a percentage' },
+    { unit: /^(Ω·m)$/, wrong: /^resistance$/i, want: 'resistivity' },
+    { unit: /^H$/, wrong: /resist|impedance|reactance/i, want: 'inductance' },
+    { unit: /^A$/, wrong: /voltage|volt/i, want: 'a current' },
+  ];
+  for (const c of UNIT_KEY_CONFLICTS) {
+    if (expected.key && c.unit.test(String(expected.unit || '').trim()) && c.wrong.test(expected.key)) {
+      failures.push({ id: entry.id, kind: 'unit-mismatch',
+        msg: `the accepted value is in ${expected.unit} but is read from "${expected.key}" — it should come from ${c.want}` });
+    }
   }
 
   const candidates = [expected.key, expected.symbol, ...(exp.calculations?.resultKeys || [])];

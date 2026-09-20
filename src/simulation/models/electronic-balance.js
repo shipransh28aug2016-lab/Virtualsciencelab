@@ -20,19 +20,66 @@ export const meta = {
   expectedBehaviour: ['The reading settles to a stable value within a couple of seconds for an ordinary solid', 'Taring subtracts the container exactly, so net mass is independent of which container is used'],
 };
 
-export const OBJECTS = { salt5: { label: 'Weighing bottle + salt sample', trueG: 5.126 }, coin: { label: 'Coin', trueG: 6.032 }, watch: { label: 'Watch glass + solid', trueG: 12.480 }, bottle: { label: 'Empty weighing bottle (tare)', trueG: 8.240 } };
+/**
+ * What is on the pan, separated into the SAMPLE and the CONTAINER it sits in.
+ *
+ * These used to carry a single `trueG`, and `netMassG` subtracted the tare
+ * from it. But the entries are named for what stands on the pan — "Weighing
+ * bottle + salt sample" — so `trueG` was the gross mass, while 5.126 g is the
+ * mass of the salt, which is also what the experiment declares as its
+ * accepted result. Subtracting an 8.240 g bottle from 5.126 g gave a NET MASS
+ * OF −3.11 g: the balance reported a negative quantity of salt, held it to
+ * three decimal places, and the audit compared it against an accepted 5.126 g
+ * without anything anywhere objecting.
+ *
+ * Keeping the two apart makes taring mean what it means. The pan carries
+ * sample + container; an untared balance shows that sum; taring subtracts the
+ * container the student says is there, so taring with the wrong container is
+ * still a mistake a student can make — and is warned about — rather than an
+ * arithmetic accident built into the data.
+ */
+export const OBJECTS = {
+  salt5:  { label: 'Weighing bottle + salt sample',     sampleG: 5.126, containerG: 8.240, container: 'weighing bottle' },
+  coin:   { label: 'Coin, weighed directly on the pan', sampleG: 6.032, containerG: 0,     container: 'none' },
+  watch:  { label: 'Watch glass + solid',               sampleG: 2.620, containerG: 9.860, container: 'watch glass' },
+  bottle: { label: 'Empty weighing bottle (tare check)', sampleG: 0,    containerG: 8.240, container: 'weighing bottle' },
+};
 export const BALANCES = { digital2: { label: 'Digital balance, readability 0.01 g', lc: 0.01 }, digital3: { label: 'Digital balance, readability 0.001 g', lc: 0.001 }, mechanical: { label: 'Mechanical (beam) top-pan balance', lc: 0.1 } };
 
 export const defaults = { object: 'salt5', balance: 'digital2', tared: true, containerMassG: 8.240 };
 
 export function objectOf(inputs) { return OBJECTS[inputs.object] || OBJECTS.salt5; }
 export function balanceOf(inputs) { return BALANCES[inputs.balance] || BALANCES.digital2; }
-export function grossMassG(inputs) { return objectOf(inputs).trueG; }
-export function netMassG(inputs) { return inputs.tared ? grossMassG(inputs) - inputs.containerMassG : grossMassG(inputs); }
+/** Everything standing on the pan. */
+export function grossMassG(inputs) {
+  const o = objectOf(inputs);
+  return o.sampleG + o.containerG;
+}
+
+/**
+ * What the balance displays: the whole pan load, or — once tared — the pan
+ * load less the container the student tared with. Taring with a container
+ * that is not the one on the pan leaves exactly that difference behind, which
+ * is the error this practical is meant to teach.
+ */
+export function netMassG(inputs) {
+  return inputs.tared ? grossMassG(inputs) - (inputs.containerMassG || 0) : grossMassG(inputs);
+}
 
 export function validate(inputs) {
   const warnings = [];
+  const o = objectOf(inputs);
   if (!inputs.tared && inputs.object !== 'bottle') warnings.push({ field: 'tared', code: 'NOT_TARED', message: 'The balance has not been tared (zeroed) with the empty container on the pan.', why: 'Without taring, the displayed mass includes the container, not just the sample.', fix: 'Place the empty container, press tare/zero, then add the sample.' });
+  if (inputs.tared && Math.abs((inputs.containerMassG || 0) - o.containerG) > 0.005) {
+    warnings.push({
+      field: 'containerMassG', code: 'WRONG_TARE',
+      message: o.containerG === 0
+        ? `${o.label} sits directly on the pan, so there is nothing to tare out.`
+        : `The tare is set to ${(inputs.containerMassG || 0).toFixed(3)} g, but the ${o.container} on the pan weighs ${o.containerG.toFixed(3)} g.`,
+      why: 'Taring subtracts whatever mass you tell it the container has. If that is not the container actually on the pan, the difference stays in every reading.',
+      fix: o.containerG === 0 ? 'Set the tare to zero for a sample weighed directly.' : `Tare with the empty ${o.container} on the pan.`,
+    });
+  }
   return { ok: true, errors: [], warnings };
 }
 export function init() { return { t: 0, displayG: 0, settled: false }; }
