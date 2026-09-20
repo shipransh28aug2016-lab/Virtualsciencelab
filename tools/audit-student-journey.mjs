@@ -758,7 +758,13 @@ async function runLane(lane, queue, reports, onDone) {
            template reads one the model never produces, the student is shown
            the literal word "undefined" — a number that is not a number, in the
            one panel that is supposed to be the answer. */
-        const junk = rr.result.match(/\b(undefined|NaN|null|Infinity|\[object Object\])\b/);
+        /* "null" is also an English word, and the optics panels use it as one:
+           "at the null position the converging beam retraces its own path" is
+           a sentence, not a leaked field. So it counts only where a VALUE
+           belongs — after an equals sign or a bracket, or in front of a unit. */
+        const junk = rr.result.match(/\b(undefined|NaN|Infinity|\[object Object\])\b/)
+          || rr.result.match(/(?:[=(:·]\s*)(null)\b/)
+          || rr.result.match(/\b(null)\s*(?:cm|mm|µm|m|kg|g|mg|s|min|V|mV|A|mA|µA|Ω|K|J|N|Hz|%|°)\b/);
         if (junk) fail('panel', `the result panel prints "${junk[1]}" — a field the model does not return`);
         rep.resultText = rr.result.replace(/\s+/g, ' ').slice(0, 300);
 

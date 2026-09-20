@@ -7,6 +7,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, sigFig, mean, percentError } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-CHE-B01',
@@ -85,6 +86,9 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'compound', 'compounds');
+  if (mixed) return mixed;
+
   if (rows.length < 2) return { ok: false, reason: 'Determine the melting point at least twice.' };
   const mps = rows.map((r) => Number(r.lastCrystalC));
   const meltingPoint = sigFig(mean(mps), 4);

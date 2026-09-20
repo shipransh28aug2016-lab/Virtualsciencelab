@@ -215,10 +215,20 @@ for (const meta of targets) {
       }
     }
     for (const t of measured) {
-      const mine = spoken.get(t.o) || new Set();
+      /*
+       * What this setting's own row says, including as PART of a longer name.
+       * The specific-heat bench measures a lead block in a copper calorimeter,
+       * and its row says both: "Copper" is one setting's name for the solid
+       * and also sits inside "Copper calorimeter" in every other setting's
+       * row, so an exact-match test read the calorimeter's label as the bench
+       * naming the wrong solid.
+       */
+      const mine = [...(spoken.get(t.o) || new Set())];
+      const ownWords = Object.values(t.row || {}).filter((v) => typeof v === 'string');
+      const isMine = (w) => mine.includes(w) || ownWords.some((v) => v.includes(w));
       const printed = t.text.join(' ␟ ');
       const wrong = [...vocab.entries()]
-        .filter(([w, owner]) => owner && owner !== t.o && !mine.has(w) && printed.includes(w));
+        .filter(([w, owner]) => owner && owner !== t.o && !isMine(w) && printed.includes(w));
       if (wrong.length) {
         problems.push({
           id: meta.id, kind: 'contradiction',

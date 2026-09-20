@@ -7,6 +7,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { sigFig, mean } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-A06',
@@ -111,10 +112,13 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const theta = Number((trueTheta + jitter(rng, noise)).toFixed(1));
   const rad = (theta * Math.PI) / 180;
   const R = Math.sqrt(inputs.pGwt ** 2 + inputs.qGwt ** 2 + 2 * inputs.pGwt * inputs.qGwt * Math.cos(rad));
-  return { trial, pGwt: inputs.pGwt, qGwt: inputs.qGwt, thetaDeg: theta, resultantGwt: sigFig(R, 4), weightN: sigFig((R / 1000) * G, 4) };
+  return { trial, body: bodyOf(inputs).label, pGwt: inputs.pGwt, qGwt: inputs.qGwt, thetaDeg: theta, resultantGwt: sigFig(R, 4), weightN: sigFig((R / 1000) * G, 4) };
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'body', 'bodies');
+  if (mixed) return mixed;
+
   const vals = rows.map((r) => Number(r.resultantGwt)).filter(Number.isFinite);
   if (vals.length < 3) return { ok: false, reason: 'Record equilibrium for at least three different pairs of P and Q.' };
   const distinctSettings = new Set(rows.map((r) => `${r.pGwt},${r.qGwt}`)).size;

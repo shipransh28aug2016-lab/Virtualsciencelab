@@ -6,6 +6,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { sigFig, mean, percentError } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XII-PHY-B06',
@@ -109,12 +110,12 @@ export function measure(state, inputs, seed = 1, trial = 1) {
     const f2 = 1 / (1 / F - 1 / f1);
     const R = 15;
     const mu = 1 + R / Math.abs(f2);
-    return { trial, lensFocalCm: f1, combinationFocalCm: Number(F.toFixed(2)), liquidLensFocalCm: Number(f2.toFixed(2)), radiusCm: R, mu: sigFig(mu, 4) };
+    return { trial, specimen: liquidOf(inputs).label, lensFocalCm: f1, combinationFocalCm: Number(F.toFixed(2)), liquidLensFocalCm: Number(f2.toFixed(2)), radiusCm: R, mu: sigFig(mu, 4) };
   }
   if (inputs.method === 'concaveMirror') {
     const R = (MIRRORS[inputs.mirror] || MIRRORS.m15).R;
     const Rprime = apparentRadiusCm(inputs) + jitter(rng, 0.15);
-    return { trial, radiusCm: R, apparentRadiusCm: Number(Rprime.toFixed(2)), mu: sigFig(R / Rprime, 4) };
+    return { trial, specimen: liquidOf(inputs).label, radiusCm: R, apparentRadiusCm: Number(Rprime.toFixed(2)), mu: sigFig(R / Rprime, 4) };
   }
   // slab (travelling microscope, apparent-depth shift)
   const lc = inputs.microscopeLC;
@@ -125,12 +126,18 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const slabTop = markAlone + s.thicknessCm;
   const realT = s.thicknessCm;
   const apparentT = realT - (markAlone - markThroughSlab);
-  return { trial, markAlone: Number(markAlone.toFixed(4)), markThroughSlab: Number(markThroughSlab.toFixed(4)), slabTop: Number(slabTop.toFixed(3)), realThicknessCm: realT, apparentThicknessCm: Number(apparentT.toFixed(4)), mu: sigFig(realT / apparentT, 4) };
+  return { trial, specimen: s.label, markAlone: Number(markAlone.toFixed(4)), markThroughSlab: Number(markThroughSlab.toFixed(4)), slabTop: Number(slabTop.toFixed(3)), realThicknessCm: realT, apparentThicknessCm: Number(apparentT.toFixed(4)), mu: sigFig(realT / apparentT, 4) };
 }
 
 const METHOD_LABELS = { slab: 'Travelling microscope (glass slab)', liquidLens: 'Liquid-lens method', concaveMirror: 'Concave-mirror method' };
 
 export function derive(rows, inputs = defaults) {
+  /* Each method measures ONE thing — this slab, this liquid — and the row
+     names it, so a set that quietly changed it can be refused whichever
+     method is running. */
+  const mixed = mixedSetRefusal(rows, 'specimen', 'specimens');
+  if (mixed) return mixed;
+
   const mus = rows.map((r) => Number(r.mu)).filter(Number.isFinite);
   if (mus.length < 2) return { ok: false, reason: 'Take at least two readings.' };
   const m = mean(mus);

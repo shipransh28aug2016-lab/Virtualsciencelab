@@ -9,6 +9,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, mean, sigFig } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-CHE-E01',
@@ -108,14 +109,27 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 307);
   const lc = balanceOf(inputs).lc;
   const reading = toLeastCount(netMassG(inputs) + jitter(rng, lc * 0.6), lc);
-  return { trial, object: objectOf(inputs).label, balance: balanceOf(inputs).label, tared: inputs.tared, reading: Number(reading.toFixed(4)) };
+  /* In words, because this column is read by a student and compared
+     between rows: a weighing made with the container tared and one made
+     without it are not two readings of the same mass. */
+  return { trial, object: objectOf(inputs).label, balance: balanceOf(inputs).label, tared: inputs.tared ? 'tared' : 'container not tared', reading: Number(reading.toFixed(4)) };
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'object', 'objects')
+    || mixedSetRefusal(rows, 'tared', 'ways of weighing',
+      'tare the balance with the container on the pan, then weigh the sample into it, and take the whole set that way.');
+  if (mixed) return mixed;
+
   const vals = rows.map((r) => Number(r.reading)).filter(Number.isFinite);
   if (vals.length < 2) return { ok: false, reason: 'Weigh the sample at least twice to check repeatability.' };
   const m = mean(vals);
-  return { ok: true, meanMass: sigFig(m, 5), accepted: sigFig(netMassG(inputs), 5), spread: Number((Math.max(...vals) - Math.min(...vals)).toFixed(4)), n: vals.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.reading) })) };
+  return { ok: true, meanMass: sigFig(m, 5), /* The accepted mass belongs to the object WEIGHED, not to whatever is on
+       the pan when Calculate is pressed. */
+    accepted: sigFig(netMassG({
+      object: Object.keys(OBJECTS).find((k) => OBJECTS[k].label === rows[0]?.object) || inputs.object,
+      tared: rows[0]?.tared !== 'container not tared',
+    }), 5), spread: Number((Math.max(...vals) - Math.min(...vals)).toFixed(4)), n: vals.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.reading) })) };
 }
 
 export default { meta, defaults, OBJECTS, BALANCES, init, step, measure, derive, validate, objectOf, balanceOf, grossMassG, netMassG };

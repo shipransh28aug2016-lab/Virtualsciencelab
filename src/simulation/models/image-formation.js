@@ -7,6 +7,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { sigFig, percentError } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XII-PHY-ACT-B6',
@@ -22,6 +23,19 @@ export const LENSES = { f10: 10, f15: 15, f20: 20 };
 export const MIRRORS = { m12: 12, m18: 18 };
 export const OBJECT_HEIGHT_CM = 2;
 export const defaults = { element: 'lens', lens: 'f15', mirror: 'm12', scale: 's01', objectDistanceCm: 45 };
+
+/**
+ * Which optical element is on the bench, named with its focal length.
+ *
+ * Two mirrors and three lenses sit here and their focal lengths run from
+ * 10 cm to 20 cm, so a set taken across two of them averaged to a focal
+ * length belonging to neither. The row has to say which one it was.
+ */
+export function elementLabel(inputs) {
+  return inputs.element === 'mirror'
+    ? `Concave mirror f = ${MIRRORS[inputs.mirror] ?? MIRRORS.m12} cm`
+    : `Convex lens f = ${LENSES[inputs.lens] ?? LENSES.f15} cm`;
+}
 export function focalLength(inputs) { return inputs.element === 'mirror' ? (MIRRORS[inputs.mirror] || MIRRORS.m12) : (LENSES[inputs.lens] || LENSES.f15); }
 export function imageDistanceCm(inputs) {
   const f = focalLength(inputs);
@@ -71,13 +85,16 @@ export function step(state, inputs, dt = 1 / 60) {
   return s;
 }
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!realImage(inputs)) return { trial, objectDistanceCm: inputs.objectDistanceCm, imageDistanceCm: null, imageHeightCm: null, magnification: null, size: natureOf(inputs) };
+  if (!realImage(inputs)) return { trial, element: elementLabel(inputs), objectDistanceCm: inputs.objectDistanceCm, imageDistanceCm: null, imageHeightCm: null, magnification: null, size: natureOf(inputs) };
   const rng = makeRng(seed + trial * 263), v = imageDistanceCm(inputs) + jitter(rng, 0.2), m = magnification(inputs);
   const heightRng = makeRng(seed + trial * 401);
   const measuredHeight = Math.abs(m) * OBJECT_HEIGHT_CM + jitter(heightRng, 0.06);
-  return { trial, objectDistanceCm: inputs.objectDistanceCm, imageDistanceCm: Number(v.toFixed(2)), imageHeightCm: sigFig(Math.max(0, measuredHeight), 4), magnification: sigFig(m, 4), size: natureOf(inputs) };
+  return { trial, element: elementLabel(inputs), objectDistanceCm: inputs.objectDistanceCm, imageDistanceCm: Number(v.toFixed(2)), imageHeightCm: sigFig(Math.max(0, measuredHeight), 4), magnification: sigFig(m, 4), size: natureOf(inputs) };
 }
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'element', 'optical elements');
+  if (mixed) return mixed;
+
   const usable = rows.filter((r) => r.imageDistanceCm !== null && r.imageDistanceCm !== undefined);
   if (usable.length < 3) return { ok: false, reason: 'Catch a real image on the screen for at least three object distances.' };
   const fs = usable.map((r) => (Number(r.objectDistanceCm) * Number(r.imageDistanceCm)) / (Number(r.objectDistanceCm) + Number(r.imageDistanceCm)));

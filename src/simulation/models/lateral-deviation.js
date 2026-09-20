@@ -5,6 +5,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { linearFit, sigFig } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XII-PHY-ACT-B4',
@@ -56,10 +57,13 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 251);
   const lc = SCALES[inputs.scale] || 0.05;
   const shift = shiftMm(inputs) + jitter(rng, lc * 10);
-  return { trial, incidenceDeg: inputs.incidenceDeg, refractionDeg: sigFig(refractionDeg(inputs), 4), shiftMm: Number(shift.toFixed(2)), thicknessCm: thicknessCm(inputs) };
+  return { trial, slab: slabOf(inputs).label, incidenceDeg: inputs.incidenceDeg, refractionDeg: sigFig(refractionDeg(inputs), 4), shiftMm: Number(shift.toFixed(2)), thicknessCm: thicknessCm(inputs) };
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'slab', 'slabs');
+  if (mixed) return mixed;
+
   const usable = rows.filter((r) => Number(r.incidenceDeg) > 0);
   if (usable.length < 4) return { ok: false, reason: 'Record the shift for at least four non-zero angles of incidence.' };
   // Recover mu from the mean of sin(i)/sin(r) implied by each row's shift via inversion is complex;

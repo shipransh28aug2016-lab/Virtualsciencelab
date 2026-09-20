@@ -52,6 +52,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { sigFig, percentError, toLeastCount } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XII-CHE-C01',
@@ -393,6 +394,12 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 }
 
 export function derive(rows, inputs = defaults) {
+  /* The row names the SYSTEM — the salt, or the acid-base pair, or the
+     acetone fraction — which is the thing whose enthalpy is being measured
+     and the thing that must not change between readings. */
+  const mixed = mixedSetRefusal(rows, 'system', 'systems');
+  if (mixed) return mixed;
+
   if (!rows || rows.length < 3) {
     return {
       ok: false,

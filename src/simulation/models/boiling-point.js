@@ -24,6 +24,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, mean, sigFig } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-CHE-B02',
@@ -265,6 +266,9 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'liquid', 'liquids');
+  if (mixed) return mixed;
+
   const vals = rows
     .map((r) => ({ obs: Number(r.observedC), corr: Number(r.correctedC) }))
     .filter((p) => Number.isFinite(p.obs));

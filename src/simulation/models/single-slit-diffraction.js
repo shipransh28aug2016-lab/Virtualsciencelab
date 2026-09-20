@@ -5,6 +5,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { fitThroughOrigin, sigFig } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XII-PHY-ACT-B5',
@@ -51,10 +52,13 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 257);
   const lc = SCALES[inputs.scale] || 0.5;
   const w = centralWidthMm(inputs) + jitter(rng, lc * 0.6);
-  return { trial, slitMm: slitMm(inputs), screenDistanceM: inputs.screenDistanceM, centralWidthMm: Number(w.toFixed(2)), inverseSlit: sigFig(1 / slitMm(inputs), 4) };
+  return { trial, source: sourceOf(inputs).label, slitMm: slitMm(inputs), screenDistanceM: inputs.screenDistanceM, centralWidthMm: Number(w.toFixed(2)), inverseSlit: sigFig(1 / slitMm(inputs), 4) };
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'source', 'sources');
+  if (mixed) return mixed;
+
   const pts = rows.map((r) => ({ x: Number(r.inverseSlit), y: Number(r.centralWidthMm) }));
   if (pts.length < 4) return { ok: false, reason: 'Record the central maximum width for at least four different slit widths.' };
   const fit = fitThroughOrigin(pts);

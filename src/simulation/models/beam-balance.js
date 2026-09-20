@@ -21,6 +21,7 @@
 import { makeRng, jitter } from '../../utils/rng.js';
 import { mean, sigFig } from '../../utils/measure.js';
 import { nullPoint, nullRefusal } from '../null-point.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-A05',
@@ -271,6 +272,9 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 
 /** Mean mass over the trials. */
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'body', 'bodies');
+  if (mixed) return mixed;
+
   const ms = rows.map((r) => Number(r.mass)).filter(Number.isFinite);
   if (ms.length < 3) return { ok: false, reason: 'Complete at least three weighings.' };
 

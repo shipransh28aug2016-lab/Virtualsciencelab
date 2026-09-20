@@ -9,6 +9,7 @@
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, mean, sigFig, percentError } from '../../utils/measure.js';
 import { nullPoint, nullRefusal } from '../null-point.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-A03',
@@ -94,7 +95,7 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const area = squares * aSq;
   const volume = (area * thickness) / 10; // mm -> cm
   return {
-    trial, pitchScaleReading: Number((thickness - (thickness % (GAUGES[inputs.gauge] || GAUGES.sg50).pitch)).toFixed(2)),
+    trial, lamina: laminaOf(inputs).label, pitchScaleReading: Number((thickness - (thickness % (GAUGES[inputs.gauge] || GAUGES.sg50).pitch)).toFixed(2)),
     circularDivision: Math.round((thickness % (GAUGES[inputs.gauge] || GAUGES.sg50).pitch) / lc),
     thickness: Number(thickness.toFixed(3)), completeSquares: complete, boundarySquares: boundary,
     area: sigFig(area, 4), volume: sigFig(volume, 4),
@@ -102,6 +103,9 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'lamina', 'laminae');
+  if (mixed) return mixed;
+
   if (rows.length < 3) return { ok: false, reason: 'Record at least three trials.' };
   const t = mean(rows.map((r) => Number(r.thickness)));
   const a = mean(rows.map((r) => Number(r.area)));

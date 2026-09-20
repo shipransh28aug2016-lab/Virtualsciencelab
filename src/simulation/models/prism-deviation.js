@@ -6,6 +6,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { sigFig } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XII-PHY-B05',
@@ -72,10 +73,14 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   if (!tr) return null;
   const rng = makeRng(seed + trial * 233);
   const noise = () => jitter(rng, 0.3);
-  return { trial, incidence: inputs.incidenceDeg, emergence: Number((tr.e + noise()).toFixed(1)), r1: Number(tr.r1.toFixed(1)), r2: Number(tr.r2.toFixed(1)), deviation: Number((tr.delta + noise()).toFixed(1)) };
+  return { trial, prism: prismOf(inputs).label, source: (SOURCES[inputs.source] || {}).label, incidence: inputs.incidenceDeg, emergence: Number((tr.e + noise()).toFixed(1)), r1: Number(tr.r1.toFixed(1)), r2: Number(tr.r2.toFixed(1)), deviation: Number((tr.delta + noise()).toFixed(1)) };
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'prism', 'prisms')
+    || mixedSetRefusal(rows, 'source', 'sources');
+  if (mixed) return mixed;
+
   if (rows.length < 5) return { ok: false, reason: 'Record the deviation for at least five different angles of incidence, spanning the minimum.' };
   const minRow = rows.reduce((a, b) => (Number(a.deviation) <= Number(b.deviation) ? a : b));
   const A = prismOf(inputs).A;

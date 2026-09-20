@@ -578,6 +578,57 @@ for (const entry of targets) {
     }
   }
 
+  /*
+   * IS A SET TAKEN ACROSS TWO SPECIMENS REFUSED?
+   *
+   * Half the wrong answers in the student-journey sweep had the same shape.
+   * Two mirrors whose focal lengths differ by ten centimetres, three
+   * galvanometers with different resistances, three diodes with different
+   * knees, four surfaces with different radii: a set taken across them was
+   * averaged into one number belonging to none of them, and the accepted
+   * value quoted beside it was whichever specimen happened to be selected
+   * when Calculate was pressed. A mean is a measurement only when every
+   * reading is of the same thing, and the benches that knew this said so
+   * while the rest said nothing.
+   *
+   * The test is the model's own: if the accepted value DIFFERS between the
+   * settings of an apparatus group, then a set mixing them cannot have a
+   * result, and derive() must refuse it. Where the accepted value is the
+   * same for every setting — four tuning forks verifying f×l, four capillary
+   * tubes verifying r×h — the set across them IS the procedure, and nothing
+   * is flagged.
+   */
+  for (const oc of optionControls.slice(0, 3)) {
+    if (oc.options.length < 2) continue;
+    const acceptedPer = [];
+    for (const o of oc.options) {
+      const saved = base[oc.id];
+      base[oc.id] = o;
+      let per = null;
+      try {
+        const out = collect({ name: 'per-option', at: null }, want);
+        per = out.rows.length >= 2 ? model.derive(out.rows, { ...base }) : null;
+      } catch { per = null; }
+      base[oc.id] = saved;
+      if (per?.ok && Number.isFinite(per.accepted)) acceptedPer.push(per.accepted);
+    }
+    if (acceptedPer.length < 2) continue;
+    const lo = Math.min(...acceptedPer);
+    const hi = Math.max(...acceptedPer);
+    const differs = hi - lo > Math.max(Number(expected.tolerance) || 0, Math.abs(hi) * 0.02);
+    if (!differs) continue;
+
+    let mixed = null;
+    try {
+      const out = collect({ name: 'mixed', at: null, cycle: oc }, Math.max(want, oc.options.length));
+      mixed = out.rows.length >= 2 ? model.derive(out.rows, { ...base }) : null;
+    } catch { mixed = null; }
+    if (mixed?.ok) {
+      failures.push({ id: entry.id, kind: 'mixed-set',
+        msg: `a set taken across the ${oc.options.length} settings of "${oc.id}" is averaged into one result, though their accepted values run from ${lo} to ${hi}` });
+    }
+  }
+
   const value = derived[key];
   const errAbs = Math.abs(value - expected.value);
   const errPct = expected.value === 0 ? errAbs * 100 : (errAbs / Math.abs(expected.value)) * 100;

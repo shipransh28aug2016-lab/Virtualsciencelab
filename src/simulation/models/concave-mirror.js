@@ -12,6 +12,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, linearFit, mean, sigFig } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XII-PHY-B01',
@@ -192,6 +193,9 @@ export function measure(state, inputs, seed = 1, trial = 1) {
  *      intercepts on both axes are 1/f
  */
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'mirror', 'mirrors');
+  if (mixed) return mixed;
+
   const usable = rows.filter((r) => Number(r.u) > 0 && Number(r.v) > 0);
   if (usable.length < 4) return { ok: false, reason: 'Record at least four object distances.' };
 

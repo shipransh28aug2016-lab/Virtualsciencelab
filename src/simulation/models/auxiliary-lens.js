@@ -339,13 +339,40 @@ export function measure(state, inputs = defaults, seed = 1, trial = 1) {
 }
 
 export function derive(rows, inputs = defaults) {
-  const el = ELEMENTS[inputs.element] || ELEMENTS.cm25;
   const usable = rows.filter((r) => Number.isFinite(Number(r.focalCm)));
   if (usable.length < 2) return { ok: false, reason: 'Record at least two settings.' };
+
+  /*
+   * Two mirrors and two lenses sit on this bench, and their focal lengths
+   * differ by ten centimetres. A set taken across two of them averaged to
+   * something belonging to neither: 19.5 cm from a 25 cm mirror and a 15 cm
+   * one, with the accepted value quoted for whichever happened to be
+   * selected when Calculate was pressed, and a spread of 9.6 cm printed
+   * beside it as though that were the scatter of a measurement.
+   */
+  const elements = [...new Set(usable.map((r) => r.element).filter(Boolean))];
+  if (elements.length > 1) {
+    return { ok: false, reason: `These readings are of ${elements.length} different elements (${elements.join(', ')}). Each has its own focal length — clear the table and locate the null for one of them.` };
+  }
+  const el = Object.values(ELEMENTS).find((x) => x.label === elements[0])
+    || ELEMENTS[inputs.element] || ELEMENTS.cm25;
 
   const fs = usable.map((r) => Number(r.focalCm));
   const fMean = mean(fs);
   const spread = Math.max(...fs) - Math.min(...fs);
+
+  /*
+   * And a mean is only a measurement while the readings agree. The null is
+   * 1.6 cm wide, so two settings of the same element cannot honestly differ
+   * by more than a few centimetres of focal length; beyond that the set is
+   * telling the student to go back and find the null again.
+   */
+  if (spread > Math.max(3, Math.abs(el.focal) * 0.2)) {
+    return {
+      ok: false,
+      reason: `These settings give focal lengths ${spread.toFixed(1)} cm apart (${fs.map((f) => f.toFixed(1)).join(', ')} cm). They are readings of one element, so they should agree to within a centimetre or two — locate the null more carefully at each object distance and take the set again.`,
+    };
+  }
 
   if (el.kind === 'mirror') {
     const Rs = usable.map((r) => Number(r.radiusCm));

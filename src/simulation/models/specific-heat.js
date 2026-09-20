@@ -5,6 +5,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { sigFig, mean } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-B07',
@@ -84,13 +85,17 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const massForC = inputs.waterMassG + (inputs.includeWaterEquivalent ? (c.massG * c.c) / C_WATER : 0);
   const cSolid = (massForC * C_WATER * (finalC - inputs.waterTempC)) / (inputs.solidMassG * (inputs.solidTempC - finalC));
   return {
-    trial, solidMassG: inputs.solidMassG, waterMassG: inputs.waterMassG, solidTempC: inputs.solidTempC,
+    trial, solid: solidOf(inputs).label, calorimeter: calOf(inputs).label, solidMassG: inputs.solidMassG, waterMassG: inputs.waterMassG, solidTempC: inputs.solidTempC,
     waterTempC: inputs.waterTempC, finalTempC: finalC, riseC: Number((finalC - inputs.waterTempC).toFixed(1)),
     specificHeat: sigFig(cSolid, 4),
   };
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'solid', 'solids')
+    || mixedSetRefusal(rows, 'calorimeter', 'calorimeters');
+  if (mixed) return mixed;
+
   const vals = rows.map((r) => Number(r.specificHeat)).filter((v) => Number.isFinite(v) && v > 0);
   if (vals.length < 3) return { ok: false, reason: 'Record at least three trials.' };
   const c = calOf(inputs);

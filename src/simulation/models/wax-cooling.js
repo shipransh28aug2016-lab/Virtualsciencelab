@@ -7,6 +7,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, sigFig } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-ACT-B1',
@@ -74,10 +75,13 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const t = (trial - 1) * interval;
   const lc = THERMOMETERS[inputs.thermometer] || 0.5;
   const temp = toLeastCount(temperatureAt(inputs, t) + jitter(rng, lc * 0.6), lc);
-  return { trial, timeS: t, timeMin: sigFig(t / 60, 3), tempC: Number(temp.toFixed(1)), excessC: Number((temp - inputs.roomTempC).toFixed(1)), state: stateAt(inputs, t) };
+  return { trial, wax: waxOf(inputs).label, timeS: t, timeMin: sigFig(t / 60, 3), tempC: Number(temp.toFixed(1)), excessC: Number((temp - inputs.roomTempC).toFixed(1)), state: stateAt(inputs, t) };
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'wax', 'waxes');
+  if (mixed) return mixed;
+
   const plateauRows = rows.filter((r) => r.state === 'freezing');
   if (rows.length < 6) return { ok: false, reason: 'Record enough readings to see the plateau — at least six.' };
   if (!plateauRows.length) return { ok: false, reason: 'No plateau was captured. Space the readings further apart or start hotter.' };
