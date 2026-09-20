@@ -14,8 +14,9 @@
     "audit:renderers": "node tools/audit-renderers.mjs",
     "audit:scientific": "node tools/audit-scientific-integrity.mjs",
     "audit:recovery": "node tools/audit-recovery.mjs",
-    "audit": "node tools/audit-every-experiment.mjs && node tools/audit-renderers.mjs && node tools/audit-models.mjs && node tools/audit-scientific-integrity.mjs && node tools/audit-golden-results.mjs && node tools/audit-liveness.mjs && node tools/audit-recovery.mjs && node tools/audit-student-journey.mjs",
+    "audit": "node tools/audit-every-experiment.mjs && node tools/audit-renderers.mjs && node tools/audit-models.mjs && node tools/audit-scientific-integrity.mjs && node tools/audit-golden-results.mjs && node tools/audit-scene-agreement.mjs && node tools/audit-liveness.mjs && node tools/audit-recovery.mjs && node tools/audit-student-journey.mjs",
     "audit:golden": "node tools/audit-golden-results.mjs",
+    "audit:scene": "node tools/audit-scene-agreement.mjs",
     "audit:journey": "node tools/audit-student-journey.mjs"
   },
   "engines": {
