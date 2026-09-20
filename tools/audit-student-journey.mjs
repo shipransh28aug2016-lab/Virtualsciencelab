@@ -655,6 +655,13 @@ async function runLane(lane, queue, reports, onDone) {
            */
           const asking = await page.evaluate(() =>
             (document.querySelector('#stillNeeded:not([hidden])')?.textContent || ''));
+          /* And the bench may ask for a RANGE after the set has been made
+             consistent — "vary the supply so the current climbs" — which is
+             the opposite instruction to the one that froze the sliders. */
+          if (freezeSliders && /\bvary\b|across the range|spread|climbs|at several points/i.test(asking)) {
+            freezeSliders = false;
+            budget = Math.min(16, budget + 2);
+          }
           if (mixingRefused && !traySetNeeded
               && /different (tuning forks|tubes|salts|boards|components|specimens|solutions|arrangements)|work through at least|both direction/i.test(asking)) {
             // Now it wants a set after all: put the tray back into use.

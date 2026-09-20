@@ -173,7 +173,16 @@ export function checkResult(experiment, derived) {
   const expected = perApparatus ?? exp.value;
   const scale = perApparatus !== null && exp.value !== 0
     ? Math.abs(perApparatus / exp.value) : 1;
-  const tolerance = exp.tolerance * (Number.isFinite(scale) && scale > 0 ? scale : 1);
+  /*
+   * The tolerance travels with the accepted value, but only upwards. A
+   * measurement of twice the size deserves twice the slack; a measurement of
+   * half the size does not deserve half of it, because not every uncertainty
+   * is proportional. A knee voltage found by extrapolating a curve back to
+   * zero is uncertain by so many millivolts whether the diode is silicon at
+   * 0.7 V or germanium at 0.3 V — the germanium one is if anything the harder
+   * reading, since its knee is the softer.
+   */
+  const tolerance = Math.max(exp.tolerance, exp.tolerance * (Number.isFinite(scale) && scale > 0 ? scale : 1));
 
   const within = Math.abs(value - expected) <= tolerance;
   const errPct = expected === 0 ? 0 : ((value - expected) / expected) * 100;
