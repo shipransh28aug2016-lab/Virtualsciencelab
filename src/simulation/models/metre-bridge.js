@@ -96,10 +96,27 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 193);
   const l = toLeastCount(balanceLengthCm(inputs) + jitter(rng, 0.15), 0.1);
   const S = (inputs.resistanceBox * (100 - l)) / l;
-  return { trial, resistanceBox: inputs.resistanceBox, balanceLength: l, rightLength: Number((100 - l).toFixed(1)), unknownS: sigFig(S, 4) };
+  return { trial, resistanceBox: inputs.resistanceBox, balanceLength: l, rightLength: Number((100 - l).toFixed(1)), unknownS: sigFig(S, 4), unknown: inputs.unknown, combination: inputs.combination, unknownLabel: `${coilOf(inputs).label}${inputs.combination && inputs.combination !== 'single' ? ` in ${inputs.combination}` : ''}` };
 }
 
 export function derive(rows, inputs = defaults) {
+  /*
+   * ONE UNKNOWN PER SET.
+   *
+   * Every balance point in a set is of the SAME resistance, measured against
+   * several values of the box; that is why the mean is a measurement. Change
+   * the coil — or put it in series with another — and the readings are of a
+   * different resistance, and their mean is of nothing. It came back 83% away
+   * from the accepted value that way, stated to four figures.
+   */
+  const unknowns = [...new Set((rows || []).map((r) => `${r.unknown ?? ''}|${r.combination ?? ''}`).filter((k) => k !== '|'))];
+  if (unknowns.length > 1) {
+    const names = [...new Set(rows.map((r) => r.unknownLabel).filter(Boolean))];
+    return {
+      ok: false,
+      reason: `These balance points are of ${unknowns.length} different resistances${names.length ? ` (${names.join(', ')})` : ''}. Each one needs its own set — balance it against several box values, calculate, then change the coil.`,
+    };
+  }
   const vals = rows.map((r) => Number(r.unknownS)).filter(Number.isFinite);
   if (vals.length < 3) return { ok: false, reason: 'Balance the bridge for at least three different resistance-box values.' };
   const mean = vals.reduce((a, b) => a + b, 0) / vals.length;

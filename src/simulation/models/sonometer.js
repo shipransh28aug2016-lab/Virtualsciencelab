@@ -110,6 +110,7 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   return {
     trial, frequencyHz: f, resonantLengthCm: l, invLength: sigFig(1 / l, 5), product: sigFig(f * l, 4),
     loadKg: inputs.loadKg, tensionN: sigFig(T, 4), sqrtTension: sigFig(Math.sqrt(T), 4), ratio: sigFig(l / Math.sqrt(T), 4),
+    wire: inputs.wire, wireLabel: wireOf(inputs).label,
   };
 }
 
@@ -154,6 +155,17 @@ export function derive(rows, inputs = defaults) {
   if (rows.length < 3) return { ok: false, reason: 'Record the resonant length for at least three settings.' };
   const frequencies = new Set(rows.map((r) => r.frequencyHz));
   const loads = new Set(rows.map((r) => r.loadKg));
+
+  /* One wire throughout. Linear density enters every one of these laws, so
+     readings taken on a different wire belong to a different experiment. */
+  const wires = [...new Set(rows.map((r) => r.wire).filter(Boolean))];
+  if (wires.length > 1) {
+    const names = [...new Set(rows.map((r) => r.wireLabel).filter(Boolean))];
+    return {
+      ok: false,
+      reason: `These readings were taken on ${wires.length} different wires (${names.join(', ')}). The linear density enters every one of these laws, so one wire at a time — clear the table and take a full set on each.`,
+    };
+  }
 
   const declared = inputs.mode && MODE_REQUIREMENTS[inputs.mode] ? inputs.mode : null;
   if (declared && !MODE_REQUIREMENTS[declared].holds(frequencies.size, loads.size)) {
