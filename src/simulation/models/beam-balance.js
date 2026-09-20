@@ -20,6 +20,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { mean, sigFig } from '../../utils/measure.js';
+import { nullPoint, nullRefusal } from '../null-point.js';
 
 export const meta = {
   id: 'XI-PHY-A05',
@@ -141,6 +142,36 @@ export function restingFromTurningPoints(tps) {
   return (mean(odd) + mean(even)) / 2;
 }
 
+/**
+ * What the pointer is doing.
+ *
+ * The scale is +/-10 divisions and the balance turns 1.5 divisions per
+ * milligram, so the pointer is only on its scale while the pans are within
+ * about seven milligrams of each other — a window four milligrams wide inside
+ * a hundred-gram range of weights. Hunting for that with no feedback is not an
+ * experiment, it is a lottery; and it was the reason this lab could not be
+ * completed. A real balance shows you at a glance which pan is heavier, and
+ * how badly, long before the pointer comes onto the scale.
+ */
+export function nullIndicator(inputs) {
+  const bal = BALANCES[inputs.balance] || BALANCES.standard;
+  const excess = excessMg(inputs);          // > 0: body side heavier, needs more weights
+  return nullPoint({
+    label: 'Pointer',
+    current: -excess,                        // the control the student raises is the pan load
+    target: bal.zeroDiv / bal.sensitivity,   // the zero of THIS balance, in mg
+    tolerance: 10 / bal.sensitivity / 2,     // half the pointer scale, in mg
+    increase: excess > 1000
+      ? 'The body side is far heavier — add gram weights to the pan.'
+      : 'The body side is still heavier — add fractional weights.',
+    decrease: excess < -1000
+      ? 'The weights side is far heavier — take gram weights off the pan.'
+      : 'The weights side is still heavier — take fractional weights off.',
+    atNullText: 'swinging equally either side of the zero',
+    awayFrom: 'hard over',
+  });
+}
+
 export function validate(inputs) {
   const errors = [], warnings = [];
   const bal = BALANCES[inputs.balance] || BALANCES.standard;
@@ -208,7 +239,7 @@ export function step(state, inputs, dt) {
  * they give, and the mass that follows from the sensitivity.
  */
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!onScale(inputs)) return null;
+  if (!onScale(inputs)) return { v: null, reason: nullRefusal(nullIndicator(inputs)) };
 
   const bal = BALANCES[inputs.balance] || BALANCES.standard;
   const tps = turningPoints(inputs, seed + trial * 29);
@@ -272,5 +303,4 @@ export default {
   meta, defaults, BALANCES, BODIES,
   init, step, measure, derive, validate,
   effectiveMassG, excessMg, restingPoint, onScale, turningPoints,
-  restingFromTurningPoints, panLoadG,
-};
+  restingFromTurningPoints, panLoadG, nullIndicator};

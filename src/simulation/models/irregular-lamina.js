@@ -8,6 +8,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, mean, sigFig, percentError } from '../../utils/measure.js';
+import { nullPoint, nullRefusal } from '../null-point.js';
 
 export const meta = {
   id: 'XI-PHY-A03',
@@ -35,6 +36,24 @@ export function leastCount(inputs) { const g = GAUGES[inputs.gauge] || GAUGES.sg
 export function zeroErrorMm(inputs) { return inputs.zeroErrorDiv * leastCount(inputs); }
 export function gripped(inputs) { return Math.abs(inputs.thimble - laminaOf(inputs).thicknessMm) <= Math.max(0.03, leastCount(inputs) * 3); }
 
+/**
+ * Whether the screw gauge has closed on the sheet. The ratchet is the real
+ * indicator — it slips once the faces are gripping — so the student is told
+ * whether to keep closing or to back off.
+ */
+export function nullIndicator(inputs) {
+  return nullPoint({
+    label: 'Screw gauge',
+    current: inputs.thimble,
+    target: laminaOf(inputs).thicknessMm,
+    tolerance: Math.max(0.03, leastCount(inputs) * 3),
+    increase: 'The faces are still clear of the sheet — close the thimble further.',
+    decrease: 'The sheet is being compressed — open the thimble a little.',
+    atNullText: 'the ratchet just slips — the faces are gripping',
+    awayFrom: 'not gripping',
+  });
+}
+
 export function validate(inputs) {
   const errors = [], warnings = [];
   if (!gripped(inputs)) warnings.push({ field: 'thimble', code: 'NOT_GRIPPED', message: 'The screw gauge has not been closed on the lamina.', why: 'Move the thimble slider until the faces just meet the sheet.' });
@@ -61,7 +80,7 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!gripped(inputs)) return null;
+  if (!gripped(inputs)) return { v: null, reason: nullRefusal(nullIndicator(inputs)) };
   const rng = makeRng(seed + trial * 41);
   const lc = leastCount(inputs);
   const lam = laminaOf(inputs);
@@ -95,4 +114,4 @@ export function derive(rows, inputs = defaults) {
   };
 }
 
-export default { meta, defaults, LAMINAS, GAUGES, GRIDS, init, step, measure, derive, validate, laminaOf, leastCount, gripped };
+export default { meta, defaults, LAMINAS, GAUGES, GRIDS, init, step, measure, derive, validate, laminaOf, leastCount, gripped, nullIndicator};

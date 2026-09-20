@@ -5,6 +5,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { fitThroughOrigin, sigFig } from '../../utils/measure.js';
+import { nullPoint, nullRefusal } from '../null-point.js';
 
 export const meta = {
   id: 'XI-PHY-A10',
@@ -38,6 +39,24 @@ export function balanced(inputs) {
   return Math.abs(inputs.panGwt - need) <= Math.max(2, need * 0.03);
 }
 
+/**
+ * Whether the body is on the point of moving. Too little in the pan and it
+ * runs down the plane; too much and it is dragged up it. Equilibrium is the
+ * setting between the two, and that is what is being looked for.
+ */
+export function nullIndicator(inputs) {
+  return nullPoint({
+    label: 'Body on the plane',
+    current: inputs.panGwt,
+    target: requiredForceGwt(inputs),
+    tolerance: Math.max(2, requiredForceGwt(inputs) * 0.03),
+    increase: 'The body runs down the plane — add weights to the pan.',
+    decrease: 'The pan drags the body up the plane — take weights off.',
+    atNullText: 'on the point of moving either way',
+    awayFrom: 'moving',
+  });
+}
+
 export function validate(inputs) {
   const errors = [], warnings = [];
   if (!balanced(inputs)) warnings.push({ field: 'panGwt', code: 'NOT_BALANCED', message: 'The body is not yet in equilibrium on the plane.', why: 'Adjust the pan load until the roller (or block) is on the point of moving either way.' });
@@ -69,7 +88,7 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!balanced(inputs)) return null;
+  if (!balanced(inputs)) return { v: null, reason: nullRefusal(nullIndicator(inputs)) };
   const rng = makeRng(seed + trial * 71);
   const trueF = requiredForceGwt(inputs);
   const F = Number((trueF + jitter(rng, Math.max(1, trueF * 0.02))).toFixed(1));
@@ -87,4 +106,4 @@ export function derive(rows) {
   };
 }
 
-export default { meta, defaults, ROLLERS, BLOCK, G, init, step, measure, derive, validate, bodyOf, sinTheta, requiredForceGwt, balanced };
+export default { meta, defaults, ROLLERS, BLOCK, G, init, step, measure, derive, validate, bodyOf, sinTheta, requiredForceGwt, balanced, nullIndicator};

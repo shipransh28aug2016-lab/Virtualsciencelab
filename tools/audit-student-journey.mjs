@@ -66,6 +66,9 @@ const browser = await chromium.launch({
   executablePath: process.env.VLAB_CHROME || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
 });
 const LANES = Number(process.env.VLAB_LANES || 4);
+/* No single bench may hold the sweep hostage. A lab that cannot be finished
+   inside this is reported as such, which is itself the finding. */
+const LAB_BUDGET_MS = Number(process.env.VLAB_LAB_BUDGET_MS || 150000);
 
 /** One browser tab with its own error sink, so lanes never cross-report. */
 async function openLane() {
@@ -238,7 +241,7 @@ async function runLane(lane, queue, reports, onDone) {
     let hit = null;
     for (let v = range.min; v <= range.max; v += 1) {
       await setBurette(Number(v.toFixed(2)));
-      await wait(130);
+      await settle(900);            // the tap must finish pouring, whatever the load
       const f = await flag();
       if (f.flagged || /overshot/i.test(f.title)) { hit = v; break; }
     }
@@ -248,7 +251,7 @@ async function runLane(lane, queue, reports, onDone) {
     // first drop that holds the colour rather than a millilitre past it.
     for (let v = Math.max(range.min, hit - 1.5); v <= hit + 0.2; v += Math.max(range.step, 0.1)) {
       await setBurette(Number(v.toFixed(2)));
-      await wait(120);
+      await settle(900);
       const f = await flag();
       if (f.flagged && !/overshot/i.test(f.title)) break;
     }
@@ -274,12 +277,14 @@ async function runLane(lane, queue, reports, onDone) {
    * stop. If no setting anywhere on the bench yields a reading, the
    * experiment genuinely cannot be performed.
    */
-  async function huntForReading(nControls, stops = 5, phase = 0) {
+  async function huntForReading(nControls, stops = 5, phase = 0, stopAt = Infinity) {
     const limit = Math.min(nControls, 6);
+    if (Date.now() > stopAt) return { ok: false, why: 'ran out of time before a reading could be found' };
     for (let n = 0; n < limit; n += 1) {
       const i = (n + phase) % nControls;
       for (let j = 0; j <= stops; j += 1) {
         const k = (j + phase * 3) % (stops + 1);
+        if (Date.now() > stopAt) return { ok: false, why: 'ran out of time before a reading could be found' };
         const did = await page.evaluate(NUDGE_CONTROL, { idx: i, fraction: k / stops });
         if (!did || did.kind === 'already') continue;
         await settle(340);
@@ -288,6 +293,81 @@ async function runLane(lane, queue, reports, onDone) {
       }
     }
     return { ok: false, why: 'no setting anywhere on the bench allowed a reading' };
+  }
+
+  /** What the bench's null indicator currently says, if it has one. */
+  const NULL_PROBE = () => {
+    const el = document.querySelector('#nullBox');
+    if (!el || el.hidden) return null;
+    const cls = el.className || '';
+    const m = cls.match(/\bs(\d)\b/);
+    const txt = el.querySelector('.nb-reading')?.textContent || '';
+    return {
+      atNull: /\bat-null\b/.test(cls),
+      strength: m ? Number(m[1]) : 9,
+      up: txt.includes('\u25b8'),
+      down: txt.includes('\u25c2'),
+      text: txt.trim(),
+    };
+  };
+
+  /**
+   * Do what a student does with a null indicator: move the control the way it
+   * points, and keep halving in until the instrument nulls.
+   *
+   * This is the honest test of the indicator itself. If following it does not
+   * reach the balance point then the guidance does not work — a student with a
+   * jockey and a metre of wire has no better information than this probe does.
+   */
+  async function homeInOnNull(nControls, capMs = 20000) {
+    const t0 = Date.now();
+    if (!(await page.evaluate(NULL_PROBE))) return false;
+    const SEL = '#controls input[type=range], #controls .seg button, #controls .wiring button, #controls .sw, #controls select, #controls input[type=checkbox]';
+
+    for (let i = 0; i < nControls && Date.now() - t0 < capMs; i += 1) {
+      const range = await page.evaluate(({ sel, idx }) => {
+        const el = document.querySelectorAll(sel)[idx];
+        if (!el || el.type !== 'range') return null;
+        return { min: Number(el.min), max: Number(el.max), step: Number(el.step) || 1 };
+      }, { sel: SEL, idx: i });
+      if (!range) continue;
+
+      const setAt = (v) => page.evaluate(({ sel, idx, val }) => {
+        const el = document.querySelectorAll(sel)[idx];
+        if (!el) return null;
+        el.value = String(val);
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        return Number(el.value);
+      }, { sel: SEL, idx: i, val: v });
+
+      // Does this control move the indicator at all? If not, it is not the one.
+      await setAt(range.min);
+      await wait(90);
+      const low = await page.evaluate(NULL_PROBE);
+      await setAt(range.max);
+      await wait(90);
+      const high = await page.evaluate(NULL_PROBE);
+      if (!low || !high) continue;
+      if (low.atNull) { await setAt(range.min); return true; }
+      if (high.atNull) return true;
+      if (low.up === high.up) continue;             // the null is not inside this range
+
+      // Bisect on the direction the indicator points.
+      let lo = range.min;
+      let hi = range.max;
+      for (let k = 0; k < 30 && Date.now() - t0 < capMs; k += 1) {
+        const mid = Math.round(((lo + hi) / 2 - range.min) / range.step) * range.step + range.min;
+        await setAt(Number(mid.toFixed(6)));
+        await wait(70);
+        const now = await page.evaluate(NULL_PROBE);
+        if (!now) break;
+        if (now.atNull) return true;
+        if (hi - lo <= range.step * 1.01) break;
+        if (now.up) lo = mid; else hi = mid;
+      }
+      if ((await page.evaluate(NULL_PROBE))?.atNull) return true;
+    }
+    return false;
   }
 
   /** Try to take one reading; report exactly why it was refused. */
@@ -312,6 +392,8 @@ async function runLane(lane, queue, reports, onDone) {
   for (const entry of queue) {
     lane.current = entry.id;
     const before = lane.errors.length;
+    const labDeadline = Date.now() + LAB_BUDGET_MS;
+    const outOfTime = () => Date.now() > labDeadline;
       const exp = JSON.parse(await readFile(join(root, entry.file), 'utf8'));
       const rep = {
         id: entry.id,
@@ -390,9 +472,10 @@ async function runLane(lane, queue, reports, onDone) {
         let got = 0;
         let slowestWait = 0;
         let hunted = 0;
+    let nulled = 0;
         let budget = want;
         const isTitration = exp.simulation?.model === 'titration';
-        for (let k = 0; k < budget; k += 1) {
+        for (let k = 0; k < budget && !outOfTime(); k += 1) {
           // move the first responsive control across its range between readings,
           // exactly as a student varies the independent variable
           if (k > 0 && nControls) {
@@ -411,7 +494,9 @@ async function runLane(lane, queue, reports, onDone) {
           let t = await takeReading();
           if (!t.ok) {
             const firstRefusal = t.why;
-            t = await huntForReading(nControls, 5, k);
+            // First do what the instrument itself tells you to do.
+            if (await homeInOnNull(nControls)) { nulled += 1; t = await takeReading(); }
+            if (!t.ok) t = await huntForReading(nControls, 5, k, labDeadline);
             if (t.ok) hunted += 1; else refusals.push(firstRefusal);
           }
           if (t.ok) got = t.rows;
@@ -450,6 +535,13 @@ async function runLane(lane, queue, reports, onDone) {
         if (refusedResult) fail('result', `refused: ${rr.result.replace(/\s+/g, ' ').slice(0, 170)}`);
         else if (!rr.result || /Take readings, then calculate/.test(rr.result)) fail('result', 'Calculate produced nothing');
         else pass('result', rr.result.replace(/\s+/g, ' ').slice(0, 80));
+
+        /* The result panel is assembled from fields the model returns. When a
+           template reads one the model never produces, the student is shown
+           the literal word "undefined" — a number that is not a number, in the
+           one panel that is supposed to be the answer. */
+        const junk = rr.result.match(/\b(undefined|NaN|null|Infinity|\[object Object\])\b/);
+        if (junk) fail('panel', `the result panel prints "${junk[1]}" — a field the model does not return`);
         rep.resultText = rr.result.replace(/\s+/g, ' ').slice(0, 300);
 
         /* ── STAGE 8 · does the result agree with the accepted value? ──
@@ -469,6 +561,9 @@ async function runLane(lane, queue, reports, onDone) {
           }
         }
 
+        if (outOfTime()) {
+          rep.problems.push({ stage: 'budget', msg: `could not be completed within ${(LAB_BUDGET_MS / 1000).toFixed(0)} s` });
+        }
         if (shotDir) await page.screenshot({ path: join(shotDir, `${entry.id}.png`) });
       } catch (err) {
         fail('crash', String(err?.message || err).slice(0, 200));

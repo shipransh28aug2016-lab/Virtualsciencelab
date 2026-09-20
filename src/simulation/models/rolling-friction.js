@@ -5,6 +5,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { fitThroughOrigin, sigFig } from '../../utils/measure.js';
+import { nullPoint, nullRefusal } from '../null-point.js';
 
 export const meta = {
   id: 'XI-PHY-ACT-A4',
@@ -28,6 +29,25 @@ export function normalReactionN(inputs) { return ((rollerOf(inputs).massG + inpu
 export function rollingFrictionN(inputs) { return surfaceOf(inputs).mu * normalReactionN(inputs); }
 export function panForceN(inputs) { return (inputs.panG / 1000) * G; }
 export function rolling(inputs) { return panForceN(inputs) >= rollingFrictionN(inputs) * 0.9 && panForceN(inputs) <= rollingFrictionN(inputs) * 1.4; }
+
+/**
+ * Whether the roller is moving steadily. Rolling friction is small, so the
+ * window between "will not start" and "accelerating away" is narrow — which
+ * is the observation the activity is designed to produce.
+ */
+export function nullIndicator(inputs) {
+  const need = rollingFrictionN(inputs);
+  return nullPoint({
+    label: 'Roller',
+    current: panForceN(inputs),
+    target: need * 1.15,          // the middle of the steady-rolling window
+    tolerance: need * 0.25,
+    increase: 'The roller stays put — add fine weights to the pan.',
+    decrease: 'The roller accelerates away instead of rolling steadily — take weights off.',
+    atNullText: 'rolling steadily',
+    awayFrom: 'not rolling steadily',
+  });
+}
 
 export function validate(inputs) {
   const warnings = [];
@@ -83,7 +103,7 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!rolling(inputs)) return null;
+  if (!rolling(inputs)) return { v: null, reason: nullRefusal(nullIndicator(inputs)) };
   const rng = makeRng(seed + trial * 113);
   const R = normalReactionN(inputs);
   const F = Number((rollingFrictionN(inputs) + jitter(rng, rollingFrictionN(inputs) * 0.05)).toFixed(4));
@@ -97,4 +117,4 @@ export function derive(rows) {
   return { ok: true, muRolling: sigFig(fit.slope, 4), rollingResistanceCm: sigFig(fit.slope * 3, 4), r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts };
 }
 
-export default { meta, defaults, SURFACES, ROLLERS, G, init, step, measure, derive, validate, surfaceOf, rollerOf, normalReactionN, rollingFrictionN, panForceN, rolling, movingMassKg };
+export default { meta, defaults, SURFACES, ROLLERS, G, init, step, measure, derive, validate, surfaceOf, rollerOf, normalReactionN, rollingFrictionN, panForceN, rolling, movingMassKg, nullIndicator};

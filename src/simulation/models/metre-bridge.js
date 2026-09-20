@@ -5,6 +5,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, sigFig } from '../../utils/measure.js';
+import { nullPoint, nullRefusal } from '../null-point.js';
 
 export const meta = {
   id: 'XII-PHY-A02',
@@ -42,6 +43,24 @@ export function balanceLengthCm(inputs) {
 }
 export function atBalance(inputs) { return Math.abs(inputs.jockeyCm - balanceLengthCm(inputs)) <= 0.3; }
 
+/**
+ * What the galvanometer is doing. The needle kicks one way when the jockey is
+ * short of the balance point and the other way when it is past it, which is
+ * the whole technique of the experiment: hunt from both sides.
+ */
+export function nullIndicator(inputs) {
+  return nullPoint({
+    label: 'Galvanometer',
+    current: inputs.jockeyCm,
+    target: balanceLengthCm(inputs),
+    tolerance: 0.3,
+    increase: 'The needle kicks one way — slide the jockey towards the far (B) end of the wire.',
+    decrease: 'The needle kicks the other way — slide the jockey back towards the near (A) end.',
+    atNullText: 'no deflection',
+    awayFrom: 'needle kicks',
+  });
+}
+
 export function validate(inputs) {
   const errors = [], warnings = [];
   if (!atBalance(inputs)) warnings.push({ field: 'jockeyCm', code: 'NOT_BALANCED', message: 'The galvanometer is not showing a null.', why: 'Slide the jockey until there is no deflection in the galvanometer.', fix: 'Move the jockey towards the balance point.' });
@@ -73,7 +92,7 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!atBalance(inputs)) return null;
+  if (!atBalance(inputs)) return { v: null, reason: nullRefusal(nullIndicator(inputs)) };
   const rng = makeRng(seed + trial * 193);
   const l = toLeastCount(balanceLengthCm(inputs) + jitter(rng, 0.15), 0.1);
   const S = (inputs.resistanceBox * (100 - l)) / l;
@@ -86,7 +105,23 @@ export function derive(rows, inputs = defaults) {
   const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
   const area = Math.PI * (WIRE_DIAMETER_MM / 1000 / 2) ** 2;
   const rho = (mean * area) / WIRE_LENGTH_M;
-  return { ok: true, resistance: sigFig(mean, 4), rho: sigFig(rho, 3), expected: trueS(inputs), n: vals.length, points: rows.map((r) => ({ x: Number(r.resistanceBox), y: Number(r.balanceLength) })) };
+  /*
+   * The spread of the individual values is what tells a student whether three
+   * balance points agree — the same judgement concordant titres call for. The
+   * result panel has always printed it, but this model never returned it, so
+   * the line read "spread undefined Ω" on the one panel that is supposed to
+   * be the answer.
+   */
+  const spread = Math.max(...vals) - Math.min(...vals);
+  return {
+    ok: true,
+    resistance: sigFig(mean, 4),
+    spread: sigFig(spread, 2),
+    rho: sigFig(rho, 3),
+    expected: trueS(inputs),
+    n: vals.length,
+    points: rows.map((r) => ({ x: Number(r.resistanceBox), y: Number(r.balanceLength) })),
+  };
 }
 
-export default { meta, defaults, COILS, WIRE_LENGTH_M, WIRE_DIAMETER_MM, init, step, measure, derive, validate, coilOf, trueS, balanceLengthCm, atBalance };
+export default { meta, defaults, COILS, WIRE_LENGTH_M, WIRE_DIAMETER_MM, init, step, measure, derive, validate, coilOf, trueS, balanceLengthCm, atBalance, nullIndicator};

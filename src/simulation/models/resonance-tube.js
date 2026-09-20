@@ -5,6 +5,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { sigFig, mean } from '../../utils/measure.js';
+import { nullPoint, nullRefusal } from '../null-point.js';
 
 export const meta = {
   id: 'XI-PHY-B10',
@@ -39,6 +40,24 @@ export function atResonance(inputs) {
   return Math.abs(inputs.airColumnCm - target) <= 0.5;
 }
 
+/**
+ * How loud the note is. A resonance tube is found by ear: the note swells as
+ * the column approaches a resonant length and dies away past it.
+ */
+export function nullIndicator(inputs) {
+  const { n, target } = nearestResonance(inputs);
+  return nullPoint({
+    label: `Note (resonance ${n})`,
+    current: inputs.airColumnCm,
+    target,
+    tolerance: 0.5,
+    increase: 'The note is weak — lower the water level to lengthen the air column.',
+    decrease: 'The note is weak — raise the water level to shorten the air column.',
+    atNullText: 'loudest — the column is resonating',
+    awayFrom: 'faint',
+  });
+}
+
 export function validate(inputs) {
   const errors = [], warnings = [];
   if (!atResonance(inputs)) warnings.push({ field: 'airColumnCm', code: 'NOT_RESONANT', message: 'The air column is not at a resonant length.', why: 'Lower or raise the water level slowly until the sound is loudest.', fix: 'Move the slider until the tube resonates.' });
@@ -69,7 +88,7 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!atResonance(inputs)) return null;
+  if (!atResonance(inputs)) return { v: null, reason: nullRefusal(nullIndicator(inputs)) };
   const rng = makeRng(seed + trial * 103);
   const { n, target } = nearestResonance(inputs);
   const reading = Number((target + jitter(rng, 0.12)).toFixed(2));
@@ -93,4 +112,4 @@ export function derive(rows, inputs = defaults) {
   };
 }
 
-export default { meta, defaults, FORKS, TUBE_RADIUS_CM, END_CORRECTION_CM, init, step, measure, derive, validate, speedOfSoundAt, frequencyHz, wavelengthCm, firstResonanceCm, secondResonanceCm, atResonance };
+export default { meta, defaults, FORKS, TUBE_RADIUS_CM, END_CORRECTION_CM, init, step, measure, derive, validate, speedOfSoundAt, frequencyHz, wavelengthCm, firstResonanceCm, secondResonanceCm, atResonance, nullIndicator};

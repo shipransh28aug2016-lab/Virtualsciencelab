@@ -1026,7 +1026,25 @@ function record() {
      * return `reason` with its refusal, and it is shown in the feedback panel
      * (where it stays) as well as the toast (which does not).
      */
-    const why = reading?.reason || reading?.imageType || 'Nothing to measure here — no reading recorded';
+    /*
+     * Models that seek a NULL — the metre bridge's balance point, the
+     * spherometer's contact, the resonance tube's column, the beam balance's
+     * swing — correctly refuse a reading until the condition is met. Most of
+     * them refuse with a bare null, which reached the student as "Nothing to
+     * measure here": true of a mirror with no real image, and useless on a
+     * bench whose whole task is to hunt for a setting. Every one of those
+     * models already authors the right words in validate(), for the feedback
+     * panel; that is what is said here too, rather than inventing a second
+     * explanation that could drift away from the first.
+     */
+    const guidance = (() => {
+      if (reading?.reason) return reading.reason;
+      if (reading?.imageType) return reading.imageType;
+      const w = v.warnings?.[0] || v.errors?.[0];
+      if (!w) return 'Nothing to measure here — no reading recorded';
+      return [w.message, w.fix || w.why].filter(Boolean).join(' ');
+    })();
+    const why = guidance;
     const box = $('#feedback');
     if (box) {
       box.className = 'feedback warn';
@@ -1796,12 +1814,19 @@ function updateReadouts() {
       ['Wire temp', `+${(app.state.tempRise || 0).toFixed(0)}`, '°C'],
     ];
   } else if (m === 'titration') {
-    const vEq = app.model.equivalenceVolume(app.inputs);
+    /*
+     * The equivalence volume used to be printed here. It is the answer the
+     * experiment exists to find: a student could read 19.5 mL off the panel
+     * and never titrate at all. It is also, since the end point now follows
+     * the indicator, not even the volume they should stop at. What a real
+     * bench shows is the burette, the indicator and — with a pH meter on the
+     * flask — the pH, so that is what is shown.
+     */
     items = [
-      ['Delivered', (app.state.delivered || 0).toFixed(1), 'mL'],
+      ['Burette', (app.state.delivered || 0).toFixed(1), 'mL'],
       ['pH', (app.state.pH ?? 7).toFixed(2), ''],
-      ['Colour', app.state.colour || '—', ''],
-      ['Equivalence', Number.isFinite(vEq) ? vEq.toFixed(1) : '—', 'mL'],
+      ['Flask', app.state.colour || '—', ''],
+      ['End point', app.state.overshot ? 'overshot' : app.state.atEndPoint ? 'reached' : 'not yet', ''],
     ];
   } else if (m === 'reaction-kinetics') {
     items = [
@@ -1839,6 +1864,37 @@ function updateReadouts() {
   }
   $('#readouts').innerHTML = items.map(([l, v, u]) =>
     `<div class="ro"><span>${esc(l)}</span><b>${esc(v)}${u ? `<i>${esc(u)}</i>` : ''}</b></div>`).join('');
+  renderNullIndicator();
+}
+
+/**
+ * The instrument's own null indicator, shown continuously beside the bench.
+ *
+ * Roughly a dozen practicals are hunts for a null — the galvanometer's zero,
+ * the balance's equal swing, the spherometer's contact, the loudest note in a
+ * resonance tube. Their models refused a reading until the null was found,
+ * which is right, and said nothing about how to find it, which made most of
+ * them unperformable: the metre bridge's balance point is six millimetres wide
+ * in a metre of wire, and the beam balance's is four milligrams wide in a
+ * hundred grams of weights.
+ *
+ * A real instrument closes that gap by reacting: the needle kicks, the pointer
+ * swings hard over, the note swells. This shows the same thing, and no more
+ * than the same thing — direction and closeness, never the target value, which
+ * is the answer the student is there to find.
+ */
+function renderNullIndicator() {
+  const host = $('#nullBox');
+  if (!host) return;
+  const ind = typeof app.model?.nullIndicator === 'function'
+    ? (() => { try { return app.model.nullIndicator(app.inputs, app.state); } catch { return null; } })()
+    : null;
+  if (!ind) { host.hidden = true; host.innerHTML = ''; return; }
+  host.hidden = false;
+  host.className = `null-box${ind.atNull ? ' at-null' : ''} s${ind.strength}`;
+  host.innerHTML = `<span class="nb-label">${esc(ind.label)}</span>
+    <b class="nb-reading">${esc(ind.reading)}</b>
+    <span class="nb-hint">${esc(ind.hint)}</span>`;
 }
 
 /* ── observation table ── */
