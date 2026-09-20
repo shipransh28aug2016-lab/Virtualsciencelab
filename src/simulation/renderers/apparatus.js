@@ -152,6 +152,22 @@ export function fitCanvas(canvas, aspect = 16 / 10) {
  */
 const fitCache = new Map();
 
+/**
+ * The magnification the current scene is being drawn at.
+ *
+ * Labels are read by a person, so they want to be the same size on the screen
+ * whatever the apparatus is. Geometry is scaled to fill the canvas — a small
+ * bench is magnified up to 2.6x — and the captions were being magnified with
+ * it, so the capillary-rise bench arrived with type two and a half times
+ * larger than every other lab's, the plates crowding the apparatus and the
+ * topmost one cropped off the edge of the canvas.
+ *
+ * `label()` divides by this, so a caption occupies the same number of screen
+ * pixels on a magnified bench as on a full-size one.
+ */
+let sceneScale = 1;
+export function currentSceneScale() { return sceneScale; }
+
 export function renderScene(canvas, aspect, key, fn, state, inputs) {
   let g = fitCanvas(canvas, aspect);
   const { w, h } = g;
@@ -164,7 +180,12 @@ export function renderScene(canvas, aspect, key, fn, state, inputs) {
     const b = bounds;
     fit = { k: 1, dx: 0, dy: 0 };
     if (b && b.x1 > b.x0 && b.y1 > b.y0) {
-      const pad = 16;
+      /* Labels are placed AFTER the measuring pass — each plate is pushed
+         along until it clears the ones already down — so the finished layout
+         is always a little larger than the box measured here. The padding
+         leaves room for that, instead of cropping the caption that ended up
+         outermost. */
+      const pad = 34;
       const bw = b.x1 - b.x0, bh = b.y1 - b.y0;
       // Never blow a scene up past legibility, never crop one that overflows.
       const k = clamp(Math.min((w - pad * 2) / bw, (h - pad * 2) / bh), 0.45, 2.6);
@@ -175,6 +196,7 @@ export function renderScene(canvas, aspect, key, fn, state, inputs) {
   }
 
   I.setTransform(fit);
+  sceneScale = fit.k;
   const { ctx } = g;
   ctx.save();
   ctx.translate(fit.dx, fit.dy);
@@ -202,9 +224,11 @@ export function finishFrame(ctx, w, h) {
  * any bench colour, with an optional leader to the exact point it names.
  */
 export function label(ctx, x, y, text, opts = {}) {
-  const { anchor = 'below', size = 12.5, bold = false, color, bg = true, leader = false } = opts;
+  const { anchor = 'below', size: rawSize = 12.5, bold = false, color, bg = true, leader = false } = opts;
   const th = T();
   ctx.save();
+  // Counter the scene magnification so captions read the same everywhere.
+  const size = rawSize / Math.max(1, sceneScale);
   ctx.font = `${bold ? '700' : '600'} ${size}px system-ui, -apple-system, sans-serif`;
   ctx.textAlign = anchor === 'left' ? 'right' : anchor === 'right' ? 'left' : 'center';
   ctx.textBaseline = anchor === 'above' ? 'bottom' : anchor === 'below' ? 'top' : 'middle';
@@ -221,7 +245,7 @@ export function label(ctx, x, y, text, opts = {}) {
      anchor's own direction until it clears the ones already down, and a
      leader is drawn if it had to travel. */
   const tw = ctx.measureText(text).width;
-  const pad = 4.5;
+  const pad = 4.5 / Math.max(1, sceneScale);   // plate padding follows the type
   const bw = tw + pad * 2;
   const bh = size + pad * 2 - 2;
   const bx0 = tx - (ctx.textAlign === 'center' ? tw / 2 : ctx.textAlign === 'right' ? tw : 0) - pad;
@@ -891,6 +915,102 @@ export function drawDial(ctx, cx, cy, r, valueFrac, opts = {}) {
   label(ctx, cx, cy + r + 6, name, { anchor: 'below' });
 }
 
+/**
+ * A laboratory stop clock.
+ *
+ * The instrument this experiment is ABOUT, and the bench did not have one:
+ * the simple-pendulum scene drew a support, a thread and a bob, and put the
+ * elapsed time in small grey type along the bottom edge. A student timing
+ * twenty oscillations was reading a caption, not an instrument, on the one
+ * practical in Section A whose whole difficulty is the timing.
+ *
+ * Drawn the way the clock on a school bench is: a large sweep hand for
+ * seconds, a small subsidiary dial counting the minutes, the face divided to
+ * the least count the model quantises to, and the count of completed
+ * oscillations where the maker's name would be.
+ *
+ * @param {number} seconds   elapsed time shown by the hand
+ * @param {object} opts      leastCount (s), sub (small dial caption), running
+ */
+export function drawStopClock(ctx, cx, cy, r, seconds = 0, opts = {}) {
+  const { leastCount = 0.2, label: lab = 'Stop clock', sub = '', running = false } = opts;
+  const th = T();
+  contactShadow(ctx, cx, cy + r + 5, r * 2.2, { strength: 0.5 });
+
+  ctx.save();
+  // Case and bezel.
+  ctx.beginPath(); ctx.arc(cx, cy, r + 6, 0, Math.PI * 2);
+  const shell = ctx.createLinearGradient(0, cy - r, 0, cy + r);
+  shell.addColorStop(0, '#5a6579'); shell.addColorStop(1, '#262f3f');
+  ctx.fillStyle = shell; ctx.fill();
+  // Crown, so it reads as a clock and not as a meter.
+  ctx.fillStyle = '#7d879a';
+  ctx.fillRect(cx - 5, cy - r - 13, 10, 9);
+  ctx.beginPath(); ctx.arc(cx, cy - r - 13, 5, Math.PI, 0); ctx.fill();
+  ctx.restore();
+
+  dialFace(ctx, cx, cy, r);
+
+  ctx.save();
+  // A full sweep of the big hand is sixty seconds.
+  const SWEEP = 60;
+  const minor = Math.max(leastCount, SWEEP / 120);
+  for (let t = 0; t < SWEEP; t += minor) {
+    const a = -Math.PI / 2 + (t / SWEEP) * Math.PI * 2;
+    const major = Math.abs(t % 5) < 1e-9;
+    ctx.strokeStyle = major ? '#16202e' : '#5d6a80';
+    ctx.lineWidth = major ? 1.7 : 0.9;
+    ctx.beginPath();
+    ctx.moveTo(cx + (r - 4) * Math.cos(a), cy + (r - 4) * Math.sin(a));
+    ctx.lineTo(cx + (r - (major ? 13 : 8)) * Math.cos(a), cy + (r - (major ? 13 : 8)) * Math.sin(a));
+    ctx.stroke();
+    if (major && t % 10 === 0) {
+      ctx.fillStyle = '#16202e';
+      ctx.font = `700 ${Math.max(8, r * 0.16)}px system-ui, sans-serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(String(t), cx + (r - 24) * Math.cos(a), cy + (r - 24) * Math.sin(a));
+    }
+  }
+
+  // Subsidiary minutes dial, as on a real stop clock.
+  const sx = cx, sy = cy - r * 0.42, sr = r * 0.26;
+  ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(20,32,48,0.06)'; ctx.fill();
+  ctx.strokeStyle = '#7d879a'; ctx.lineWidth = 0.9; ctx.stroke();
+  const mins = Math.floor(seconds / 60);
+  const ma = -Math.PI / 2 + ((mins % 30) / 30) * Math.PI * 2;
+  ctx.strokeStyle = '#1a2333'; ctx.lineWidth = 1.4; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx + sr * 0.76 * Math.cos(ma), sy + sr * 0.76 * Math.sin(ma)); ctx.stroke();
+
+  // The reading, in figures, under the spindle — a stop clock is read to its
+  // least count and this states it rather than leaving it to the eye.
+  ctx.fillStyle = th.ink || '#16202e';
+  ctx.font = `700 ${Math.max(9, r * 0.2)}px system-ui, sans-serif`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(`${seconds.toFixed(1)} s`, cx, cy + r * 0.44);
+
+  // The sweep hand.
+  const a = -Math.PI / 2 + ((seconds % SWEEP) / SWEEP) * Math.PI * 2;
+  ctx.strokeStyle = 'rgba(30,45,70,0.2)'; ctx.lineWidth = 2.6;
+  ctx.beginPath(); ctx.moveTo(cx + 1.4, cy + 1.4); ctx.lineTo(cx + (r - 9) * Math.cos(a) + 1.4, cy + (r - 9) * Math.sin(a) + 1.4); ctx.stroke();
+  ctx.strokeStyle = running ? '#c02626' : '#7a1d1d';
+  ctx.lineWidth = 2.1; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(cx - (r * 0.16) * Math.cos(a), cy - (r * 0.16) * Math.sin(a));
+  ctx.lineTo(cx + (r - 9) * Math.cos(a), cy + (r - 9) * Math.sin(a));
+  ctx.stroke();
+  chrome(ctx, cx - 3.5, cy - 3.5, 7, 7, 3.5);
+  ctx.restore();
+
+  I.apparatus(lab, cx - r - 6, cy - r - 14, (r + 6) * 2, (r + 6) * 2 + 14,
+    { note: `Least count ${leastCount} s` });
+  label(ctx, cx, cy + r + 8, lab, { anchor: 'below' });
+  /* Anything else the clock has to say goes UNDER it, as a caption. Set
+     inside the face it ran past the bezel and printed itself through the
+     numerals and the reading. */
+  if (sub) label(ctx, cx, cy + r + 26, sub, { anchor: 'below', size: 11.5 });
+}
+
 /** A digital instrument panel — multimeter, electronic balance, pH meter. */
 export function drawDigitalReadout(ctx, x, y, w, h, text, opts = {}) {
   contactShadow(ctx, x + w / 2, y + h + 3, w, { strength: 0.45 });
@@ -1263,6 +1383,24 @@ export function drawWeight(ctx, x, y, opts = {}) {
 }
 
 export function drawRuler(ctx, x0, y, len, opts = {}) {
+  /*
+   * A metre scale stood on end.
+   *
+   * Several benches need the scale beside a vertical quantity — the length of
+   * a pendulum, the rise in a capillary, the depression of a beam — and there
+   * was no way to ask for one, so those scenes had no scale at all and the
+   * length was a caption instead of a reading. The whole ruler is drawn as
+   * usual inside a quarter-turn, so its graduations, its numbering and its
+   * pointer registration stay exactly the ones every other bench shows.
+   */
+  if (opts.vertical) {
+    ctx.save();
+    ctx.translate(x0, y);
+    ctx.rotate(Math.PI / 2);
+    drawRuler(ctx, 0, 0, len, { ...opts, vertical: false });
+    ctx.restore();
+    return;
+  }
   ctx.save();
   contactShadow(ctx, x0 + len / 2, y + 15, len, { strength: 0.35, spread: 0.4 });
   const g = ctx.createLinearGradient(0, y, 0, y + 14);
