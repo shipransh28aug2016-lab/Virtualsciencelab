@@ -16,7 +16,39 @@ export const meta = {
   expectedBehaviour: ['E falls by 0.0295 V for each tenfold rise in [Zn²⁺]/[Cu²⁺] (n=2)', 'The E vs log(ratio) graph is a straight line whose intercept is E°'],
 };
 
-export const ELECTRODES = { zn: { label: 'Zinc', ePotential: -0.76 }, fe: { label: 'Iron', ePotential: -0.44 }, cu: { label: 'Copper', ePotential: 0.34 }, ag: { label: 'Silver', ePotential: 0.80 } };
+/**
+ * The electrodes, and everything the bench needs to DRAW the half-cell the
+ * student chose.
+ *
+ * The renderer used to hold all of this itself, hardcoded to zinc and copper:
+ * the beakers were labelled ZnSO₄ and CuSO₄, and the electrodes "Zinc
+ * (anode, −)" and "Copper (cathode, +)", whichever metals were actually
+ * selected. A student who set up an iron/silver cell watched a correctly
+ * calculated 1.24 V appear above a pair of beakers labelled with two salts
+ * that were not in them.
+ *
+ * Colour is not decoration here either. Copper(II) sulphate solution is blue
+ * and iron(II) sulphate pale green, and those colours are how a chemist knows
+ * at a glance what is in the beaker; zinc sulphate and silver nitrate are
+ * colourless. They belong with the species, not with the drawing.
+ */
+export const ELECTRODES = {
+  zn: { label: 'Zinc', symbol: 'Zn', ion: 'Zn²⁺', salt: 'ZnSO₄', ePotential: -0.76,
+    solution: null, metal: '#b7bcc4' },
+  fe: { label: 'Iron', symbol: 'Fe', ion: 'Fe²⁺', salt: 'FeSO₄', ePotential: -0.44,
+    solution: '#cfe4d2', metal: '#8f939a' },
+  cu: { label: 'Copper', symbol: 'Cu', ion: 'Cu²⁺', salt: 'CuSO₄', ePotential: 0.34,
+    solution: '#7fb6e6', metal: '#c98b4a' },
+  ag: { label: 'Silver', symbol: 'Ag', ion: 'Ag⁺', salt: 'AgNO₃', ePotential: 0.80,
+    solution: null, metal: '#d8dadd' },
+};
+
+/** The colour a solution of this metal's salt actually is. */
+export function solutionColour(electrode) {
+  // A colourless solution is still visible as water in glass, so it is drawn
+  // as the faintest tint rather than as nothing at all.
+  return electrode?.solution || '#e8eef2';
+}
 export const N_ELECTRONS = 2; // for the standard Zn/Cu couple; used as the default n
 
 export const defaults = { cathodeConc: 1, anodeConc: 1, anode: 'zn', cathode: 'cu', saltBridge: true, tempC: 25 };
@@ -50,6 +82,14 @@ export function init() { return { t: 0, emf: 0, charge: 0, migration: 0 }; }
 export function step(state, inputs, dt) {
   const s = { ...state };
   s.t += dt;
+  /* Hand the renderer the two half-cells it is drawing. It cannot import this
+     module, so anything it needs to name or colour has to travel on state —
+     and if it does not, it ends up hardcoded and silently wrong the moment a
+     student changes a metal. */
+  const a = anodeOf(inputs);
+  const c = cathodeOf(inputs);
+  s.anode = { label: a.label, symbol: a.symbol, ion: a.ion, salt: a.salt, metal: a.metal, solution: solutionColour(a) };
+  s.cathode = { label: c.label, symbol: c.symbol, ion: c.ion, salt: c.salt, metal: c.metal, solution: solutionColour(c) };
   const target = emfV(inputs);
   if (target === null) {
     // No salt bridge: the circuit polarises and the reading dies away.
@@ -83,4 +123,4 @@ export function derive(rows, inputs = defaults) {
   return { ok: true, standardPotential: sigFig(fit.intercept, 4), slope: sigFig(fit.slope, 4), nFromSlope: sigFig(nFromSlope, 3), r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts };
 }
 
-export default { meta, defaults, ELECTRODES, N_ELECTRONS, init, step, measure, derive, validate, anodeOf, cathodeOf, standardEMF, emfV };
+export default { solutionColour, meta, defaults, ELECTRODES, N_ELECTRONS, init, step, measure, derive, validate, anodeOf, cathodeOf, standardEMF, emfV };

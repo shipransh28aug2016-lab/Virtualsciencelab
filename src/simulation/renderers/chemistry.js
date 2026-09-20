@@ -427,14 +427,25 @@ export function electrochemicalCell(ctx, w, h, state, inputs) {
   const bridge = inputs?.saltBridge !== false;
   const emf = state?.emf ?? 0;
 
-  const L = drawBeaker(ctx, cx - 150, topY, 170, 190, 0.66, '#dcefe8',
-    { label: `${inputs?.anode || 'Zn'} in ZnSO₄`, graduations: false });
-  const R = drawBeaker(ctx, cx + 150, topY, 170, 190, 0.66, '#bfe0f2',
-    { label: `${inputs?.cathode || 'Cu'} in CuSO₄`, graduations: false });
+  /*
+   * Renderers never import a model, so the half-cells are handed over on
+   * `state`: which metal, which salt, what colour its solution is. They used
+   * to be written into this function — ZnSO₄ on the left, CuSO₄ on the right,
+   * a grey electrode and a copper one — so an iron/silver cell drew a
+   * correctly calculated emf above two beakers labelled with salts that were
+   * not in them.
+   */
+  const anode = state?.anode || { label: 'Zinc', salt: 'ZnSO₄', metal: '#b7bcc4', solution: '#e8eef2' };
+  const cathode = state?.cathode || { label: 'Copper', salt: 'CuSO₄', metal: '#c98b4a', solution: '#7fb6e6' };
+
+  const L = drawBeaker(ctx, cx - 150, topY, 170, 190, 0.66, anode.solution,
+    { label: `${anode.label} in ${anode.salt}`, graduations: false });
+  const R = drawBeaker(ctx, cx + 150, topY, 170, 190, 0.66, cathode.solution,
+    { label: `${cathode.label} in ${cathode.salt}`, graduations: false });
 
   // Electrodes dipping into each.
-  for (const [x, base, name] of [[cx - 150, '#b7bcc4', 'Zinc electrode (anode, −)'],
-                                  [cx + 150, '#c98b4a', 'Copper electrode (cathode, +)']]) {
+  for (const [x, base, name] of [[cx - 150, anode.metal, `${anode.label} electrode (anode, −)`],
+                                  [cx + 150, cathode.metal, `${cathode.label} electrode (cathode, +)`]]) {
     ctx.save();
     const g = ctx.createLinearGradient(x - 11, 0, x + 11, 0);
     g.addColorStop(0, shade(base, -0.4)); g.addColorStop(0.35, shade(base, 0.35)); g.addColorStop(1, shade(base, -0.45));
