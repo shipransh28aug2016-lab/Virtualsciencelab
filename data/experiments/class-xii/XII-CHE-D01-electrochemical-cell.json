@@ -321,7 +321,7 @@
       "yLabel": "Cell potential E (V)",
       "throughOrigin": false
     },
-    "minRows": 3
+    "minRows": 4
   },
   "calculations": {
     "steps": [
@@ -349,7 +349,8 @@
       "tolerance": 0.005,
       "unit": "V"
     },
-    "statement": "The cell potential falls by about 0.0295 V for each tenfold increase in the ratio [Zn²⁺]/[Cu²⁺], and the graph of E against the logarithm of that ratio is a straight line of intercept 1.10 V. This confirms the Nernst equation with n = 2."
+    "statement": "The cell potential falls by about 0.0295 V for each tenfold increase in the ratio [Zn²⁺]/[Cu²⁺], and the graph of E against the logarithm of that ratio is a straight line of intercept 1.10 V. This confirms the Nernst equation with n = 2.",
+    "key": "standardPotential"
   },
   "safety": [
     "Copper sulphate is harmful if swallowed and irritates the skin; wash your hands after handling it.",

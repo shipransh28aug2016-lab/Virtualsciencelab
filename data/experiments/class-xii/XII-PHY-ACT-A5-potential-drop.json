@@ -304,7 +304,8 @@
       "tolerance": 0.03,
       "unit": "V"
     },
-    "statement": "The potential drop rises in direct proportion to the length tapped off. With the 3 V driver and 4 Ω in the rheostat the gradient is about 0.77 V per metre, the points lie on a straight line, and that line passes through the origin — which together establish the principle of the potentiometer."
+    "statement": "The potential drop rises in direct proportion to the length tapped off. With the 3 V driver and 4 Ω in the rheostat the gradient is about 0.77 V per metre, the points lie on a straight line, and that line passes through the origin — which together establish the principle of the potentiometer.",
+    "key": "gradient"
   },
   "safety": [
     "Press the jockey on the wire; never drag it along. Dragging scores the wire, makes it non-uniform, and ruins the apparatus for everyone after you.",

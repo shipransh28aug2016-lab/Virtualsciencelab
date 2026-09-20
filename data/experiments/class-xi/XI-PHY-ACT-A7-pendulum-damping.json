@@ -299,7 +299,8 @@
       "tolerance": 12,
       "unit": "s"
     },
-    "statement": "The square of the amplitude falls exponentially with time, showing that the energy of the pendulum decays exponentially. The logarithmic plot is a straight line, giving a decay constant of about 0.006 per second for the brass bob in still air, so the energy falls to half its value in roughly a minute."
+    "statement": "The square of the amplitude falls exponentially with time, showing that the energy of the pendulum decays exponentially. The logarithmic plot is a straight line, giving a decay constant of about 0.006 per second for the brass bob in still air, so the energy falls to half its value in roughly a minute.",
+    "key": "dampingConstant"
   },
   "safety": [
     "Clamp the stand firmly to the bench, or the swinging bob will topple it.",

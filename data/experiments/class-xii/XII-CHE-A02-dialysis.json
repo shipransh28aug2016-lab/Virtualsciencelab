@@ -285,10 +285,10 @@
       }
     ],
     "graph": {
-      "xKey": "timeMin",
-      "yKey": "lnC",
       "xLabel": "Time t (min)",
-      "yLabel": "ln (C / mM)"
+      "yLabel": "ln (C / mM)",
+      "x": "timeMin",
+      "y": "lnC"
     },
     "minRows": 5
   },
@@ -309,7 +309,9 @@
     "statement": "The concentration inside the bag falls exponentially and the plot of ln C against time is a straight line, confirming first-order removal. With parchment, a medium bag, stirring and a bath at room temperature the time constant is about 30 minutes, so around 95 per cent of the electrolyte is gone in an hour and a half. If the outer water is never changed the curve bends away from the line and flattens onto a plateau well above zero: the sol is left permanently impure however long it is left.",
     "value": 30,
     "unit": "min",
-    "tolerancePct": 20
+    "key": "tau",
+    "quantity": "Time constant of the dialysis",
+    "tolerance": 6.0
   },
   "safety": [
     "Do not use a naked flame to warm the bath; use a water bath or hot plate.",

@@ -371,7 +371,8 @@
       "tolerance": 0.05,
       "unit": "A"
     },
-    "statement": "With the ammeter in series, the voltmeter across the load and the rheostat wired as a variable arm, V/I returns the marked value of the resistor to within a couple of per cent, and the current falls smoothly as the rheostat resistance is increased. Any of the standard wrong connections prevents this: the ammeter across the load nearly short-circuits the supply, and the voltmeter in series reduces the current to a few hundred microampere."
+    "statement": "With the ammeter in series, the voltmeter across the load and the rheostat wired as a variable arm, V/I returns the marked value of the resistor to within a couple of per cent, and the current falls smoothly as the rheostat resistance is increased. Any of the standard wrong connections prevents this: the ammeter across the load nearly short-circuits the supply, and the voltmeter in series reduces the current to a few hundred microampere.",
+    "key": "resistance"
   },
   "safety": [
     "Keep the key open while the circuit is being assembled and checked.",

@@ -56,7 +56,7 @@ export function step(state, inputs, dt = 0.016) {
   return s;
 }
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!state?.finishedAt) return null;
+  if (!state?.finishedAt) return { v: null, reason: 'The cross is still visible. Add the acid and let the sulphur cloud build up until the cross has completely disappeared, then record the time.' };
   const rng = makeRng(seed + trial * 281);
   const time = Number((reactionTimeS(inputs) * (1 + jitter(rng, 0.03))).toFixed(1));
   return { thioVolume: inputs.thioVolume, waterVolume: inputs.waterVolume, thioConc: sigFig(thioConc(inputs), 4), tempC: inputs.tempC, time, rate: sigFig(1 / time, 6) };

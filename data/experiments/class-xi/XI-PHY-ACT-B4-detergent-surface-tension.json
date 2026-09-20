@@ -270,7 +270,7 @@
       "yLabel": "Surface tension (mN/m)",
       "throughOrigin": false
     },
-    "minRows": 3
+    "minRows": 4
   },
   "calculations": {
     "steps": [
@@ -298,7 +298,8 @@
       "tolerance": 12,
       "unit": "%"
     },
-    "statement": "Clean water gives a surface tension of about 72 mN/m. Adding detergent lowers it sharply, to around 31 mN/m, after which further detergent makes no difference because the surface is saturated. The product of radius and rise is the same for every tube, confirming the method."
+    "statement": "Clean water gives a surface tension of about 72 mN/m. Adding detergent lowers it sharply, to around 31 mN/m, after which further detergent makes no difference because the surface is saturated. The product of radius and rise is the same for every tube, confirming the method.",
+    "key": "surfaceTensionPure"
   },
   "safety": [
     "Handle capillary tubes carefully; they are thin glass and snap easily, leaving sharp points.",

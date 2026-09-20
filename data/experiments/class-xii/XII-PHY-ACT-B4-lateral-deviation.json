@@ -293,7 +293,8 @@
       "tolerance": 1.5,
       "unit": "mm"
     },
-    "statement": "The ray bends towards the normal on entering the glass and away from it on leaving, by exactly the same amount, so the emergent ray is parallel to the incident ray but displaced sideways. For crown glass μ comes out at about 1.52. The shift grows with the angle of incidence and is directly proportional to the thickness of the slab, but never exceeds that thickness however obliquely the light strikes."
+    "statement": "The ray bends towards the normal on entering the glass and away from it on leaving, by exactly the same amount, so the emergent ray is parallel to the incident ray but displaced sideways. For crown glass μ comes out at about 1.52. The shift grows with the angle of incidence and is directly proportional to the thickness of the slab, but never exceeds that thickness however obliquely the light strikes.",
+    "key": "mu"
   },
   "safety": [
     "Push the optical pins into the board vertically and never leave them lying loose on the bench.",

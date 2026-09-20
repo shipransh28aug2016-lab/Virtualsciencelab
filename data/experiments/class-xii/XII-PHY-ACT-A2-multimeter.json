@@ -289,7 +289,33 @@
         "id": "reset",
         "label": "Reset"
       }
-    ]
+    ],
+    "goldenProcedure": {
+      "note": "The point of the activity is to use the instrument on its different functions, so each reading is taken on a different function against a target suited to it.",
+      "hold": {},
+      "varyPairs": [
+        {
+          "func": "vdc",
+          "target": "battery"
+        },
+        {
+          "func": "vac",
+          "target": "supplyAc"
+        },
+        {
+          "func": "ohm",
+          "target": "resistor"
+        },
+        {
+          "func": "cont",
+          "target": "brokenWire"
+        },
+        {
+          "func": "cont",
+          "target": "goodWire"
+        }
+      ]
+    }
   },
   "observationModel": {
     "columns": [
@@ -359,7 +385,8 @@
       "tolerance": 25,
       "unit": "Ω"
     },
-    "statement": "The 470 Ω resistor reads 470 Ω on the 2 kΩ range; the dry cell reads about 1.53 V on V⎓; the 12 V AC supply reads about 12 V on V∼ but essentially zero on V⎓; the lamp circuit carries about 0.25 A measured in series on A∼; and the suspect lead shows an open circuit on continuity while the sound lead buzzes at a fraction of an ohm."
+    "statement": "The 470 Ω resistor reads 470 Ω on the 2 kΩ range; the dry cell reads about 1.53 V on V⎓; the 12 V AC supply reads about 12 V on V∼ but essentially zero on V⎓; the lamp circuit carries about 0.25 A measured in series on A∼; and the suspect lead shows an open circuit on continuity while the sound lead buzzes at a fraction of an ohm.",
+    "key": "functionsUsed"
   },
   "safety": [
     "Set the function and the range before the probes touch anything, not after.",

@@ -5,6 +5,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { mean, sigFig } from '../../utils/measure.js';
+import { nullPoint, nullRefusal } from '../null-point.js';
 
 export const meta = {
   id: 'XI-PHY-ACT-A2',
@@ -32,6 +33,25 @@ export function balancedKnownPosCm(inputs) {
   return inputs.unknownPosCm < inputs.knifeEdgeCm ? inputs.knifeEdgeCm + need : inputs.knifeEdgeCm - need;
 }
 export function balanced(inputs) { return Math.abs(inputs.knownPosCm - balancedKnownPosCm(inputs)) <= 1.0; }
+
+/**
+ * Which way the metre rule tilts on the knife edge. The rule itself is the
+ * indicator: it dips on the heavier side until the moments are equal.
+ */
+export function nullIndicator(inputs) {
+  const want = balancedKnownPosCm(inputs);
+  const outward = want > inputs.knifeEdgeCm;
+  return nullPoint({
+    label: 'Metre rule',
+    current: outward ? inputs.knownPosCm : -inputs.knownPosCm,
+    target: outward ? want : -want,
+    tolerance: 1.0,
+    increase: 'The rule dips on the unknown side — slide the known mass further from the knife edge.',
+    decrease: 'The rule dips on the known side — slide the known mass in towards the knife edge.',
+    atNullText: 'horizontal — the moments balance',
+    awayFrom: 'tilting',
+  });
+}
 
 export function validate(inputs) {
   const warnings = [];
@@ -63,7 +83,7 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!balanced(inputs)) return null;
+  if (!balanced(inputs)) return { v: null, reason: nullRefusal(nullIndicator(inputs)) };
   const rng = makeRng(seed + trial * 109);
   const D1 = d1(inputs) + jitter(rng, 0.1);
   const D2 = d2(inputs) + jitter(rng, 0.1);
@@ -71,10 +91,34 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   return { trial, knownMassG: K, d1: Number(D1.toFixed(2)), d2: Number(D2.toFixed(2)), momentUnknown: sigFig(D1, 4), momentKnown: sigFig(K * D2, 4), mass: sigFig((K * D2) / D1, 4) };
 }
 
-export function derive(rows) {
+export function derive(rows, inputs = defaults) {
   const vals = rows.map((r) => Number(r.mass)).filter(Number.isFinite);
   if (vals.length < 3) return { ok: false, reason: 'Balance the scale for at least three different settings.' };
-  return { ok: true, mass: sigFig(mean(vals), 4), meanD1: sigFig(mean(rows.map((r) => Number(r.d1))), 4), meanD2: sigFig(mean(rows.map((r) => Number(r.d2))), 4), n: vals.length, points: rows.map((r) => ({ x: Number(r.d1), y: Number(r.d2) })) };
+  /* The known mass of the body, how far the balancing came out from it, and
+     whether the known mass was varied at all — the checks that tell a student
+     whether the principle has been verified or one setting got lucky. They
+     were missing: "against undefined known masses … accepted undefined g ·
+     error undefined %". */
+  const m = mean(vals);
+  const accepted = bodyOf(inputs).trueG;
+  const knowns = [...new Set(rows.map((r) => Number(r.knownMassG)).filter(Number.isFinite))];
+  return {
+    ok: true,
+    mass: sigFig(m, 4),
+    accepted: sigFig(accepted, 4),
+    percentError: sigFig(((m - accepted) / accepted) * 100, 3),
+    body: bodyOf(inputs).label,
+    knownsUsed: knowns.length || 1,
+    variedKnown: knowns.length > 1,
+    crossCheck: knowns.length > 1 ? knowns.map((knownMassG) => {
+      const sub = rows.filter((r) => Number(r.knownMassG) === knownMassG).map((r) => Number(r.mass));
+      return { knownMassG, mass: sub.length ? sigFig(mean(sub), 4) : '—' };
+    }) : null,
+    meanD1: sigFig(mean(rows.map((r) => Number(r.d1))), 4),
+    meanD2: sigFig(mean(rows.map((r) => Number(r.d2))), 4),
+    n: vals.length,
+    points: rows.map((r) => ({ x: Number(r.d1), y: Number(r.d2) })),
+  };
 }
 
-export default { meta, defaults, BODIES, KNOWNS, init, step, measure, derive, validate, bodyOf, knownG, d1, d2, balanced };
+export default { meta, defaults, BODIES, KNOWNS, init, step, measure, derive, validate, bodyOf, knownG, d1, d2, balanced, nullIndicator};

@@ -306,7 +306,7 @@
       "yLabel": "Rolling friction F (N)",
       "throughOrigin": true
     },
-    "minRows": 3
+    "minRows": 4
   },
   "calculations": {
     "steps": [
@@ -334,7 +334,8 @@
       "tolerance": 0.004,
       "unit": "cm"
     },
-    "statement": "The graph of rolling friction against normal reaction is a straight line through the origin, giving a coefficient of rolling friction of about 0.005 for steel on wood. This is roughly seventy times smaller than the sliding coefficient of 0.35 for the same pair of surfaces, which is why wheels are used."
+    "statement": "The graph of rolling friction against normal reaction is a straight line through the origin, giving a coefficient of rolling friction of about 0.005 for steel on wood. This is roughly seventy times smaller than the sliding coefficient of 0.35 for the same pair of surfaces, which is why wheels are used.",
+    "key": "muRolling"
   },
   "safety": [
     "Clamp the pulley securely; a pulley that slips off the table sends the weights onto someone’s foot.",

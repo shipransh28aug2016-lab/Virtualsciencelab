@@ -212,7 +212,7 @@
       }
     ],
     "graph": null,
-    "minRows": 1
+    "minRows": 2
   },
   "calculations": {
     "steps": [
@@ -231,7 +231,8 @@
     "value": 55,
     "tolerance": 18,
     "unit": "%",
-    "statement": "Oxidising ferrous oxalate with hydrogen peroxide in the presence of excess potassium oxalate, then crystallising in subdued light, gives emerald-green K3[Fe(C2O4)3]·3H2O crystals; exposure to bright light during preparation measurably lowers the yield of pure product through photoreduction."
+    "statement": "Oxidising ferrous oxalate with hydrogen peroxide in the presence of excess potassium oxalate, then crystallising in subdued light, gives emerald-green K3[Fe(C2O4)3]·3H2O crystals; exposure to bright light during preparation measurably lowers the yield of pure product through photoreduction.",
+    "key": "percentYield"
   },
   "safety": [
     "Hydrogen peroxide can bleach skin — avoid contact.",

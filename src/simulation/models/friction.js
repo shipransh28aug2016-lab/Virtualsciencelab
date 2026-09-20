@@ -7,6 +7,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { fitThroughOrigin, sigFig } from '../../utils/measure.js';
+import { nullPoint, nullRefusal } from '../null-point.js';
 
 export const meta = {
   id: 'XI-PHY-A09',
@@ -28,6 +29,36 @@ export function normalReactionN(inputs) { return ((inputs.blockMassG + inputs.lo
 export function limitingFrictionN(inputs) { return surfaceOf(inputs).mu * normalReactionN(inputs); }
 export function panForceN(inputs) { return (inputs.panG / 1000) * G; }
 export function slipping(inputs) { return panForceN(inputs) >= limitingFrictionN(inputs); }
+
+/**
+ * Whether the block is on the point of sliding.
+ *
+ * Below the limiting value static friction simply matches the pull and
+ * nothing moves — which is the observation this experiment exists to make,
+ * and also the reason a student can sit at a loaded pan wondering why no
+ * reading will be taken. The block says which way it is out.
+ */
+export function nullIndicator(inputs) {
+  const limit = limitingFrictionN(inputs);
+  /*
+   * The whole window must lie PAST the limiting value, because that is where
+   * a reading can be taken: slipping(inputs) is panForce >= limit. A window
+   * centred on 1.02x with a 0.06x half-width reached down to 0.96x, so the
+   * indicator read "on the point of sliding — take the reading now" at a pan
+   * load the block still held, and the bench then refused it. An indicator
+   * that says record and a bench that says no is worse than no indicator.
+   */
+  return nullPoint({
+    label: 'Block',
+    current: panForceN(inputs),
+    target: limit * 1.05,
+    tolerance: Math.max(limit * 0.04, 0.02),
+    increase: 'Static friction is still matching the pull — add weights to the pan.',
+    decrease: 'The block is being dragged, not just released — take weights off until it only begins to slide.',
+    atNullText: 'on the point of sliding',
+    awayFrom: 'not sliding',
+  });
+}
 
 export function validate(inputs) {
   const errors = [], warnings = [];
@@ -67,7 +98,7 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!slipping(inputs)) return null;
+  if (!slipping(inputs)) return { v: null, reason: nullRefusal(nullIndicator(inputs)) };
   const rng = makeRng(seed + trial * 67);
   const R = normalReactionN(inputs);
   const trueF = limitingFrictionN(inputs);
@@ -110,4 +141,4 @@ export function derive(rows, inputs = defaults) {
   };
 }
 
-export default { meta, defaults, SURFACES, G, init, step, measure, derive, validate, surfaceOf, normalReactionN, limitingFrictionN, panForceN, slipping };
+export default { meta, defaults, SURFACES, G, init, step, measure, derive, validate, surfaceOf, normalReactionN, limitingFrictionN, panForceN, slipping, nullIndicator};

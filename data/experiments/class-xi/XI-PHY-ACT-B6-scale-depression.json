@@ -321,7 +321,7 @@
       "yLabel": "Depression (mm)",
       "throughOrigin": true
     },
-    "minRows": 3
+    "minRows": 4
   },
   "calculations": {
     "steps": [
@@ -350,7 +350,8 @@
       "tolerance": 3,
       "unit": ""
     },
-    "statement": "The depression is directly proportional to the load in both arrangements, giving a straight line through the origin. Young’s modulus for the wooden scale comes out at about eleven gigapascal. The cantilever depresses about sixteen times as much as the same beam supported at both ends and loaded centrally, which is why shelves are supported at both ends."
+    "statement": "The depression is directly proportional to the load in both arrangements, giving a straight line through the origin. Young’s modulus for the wooden scale comes out at about eleven gigapascal. The cantilever depresses about sixteen times as much as the same beam supported at both ends and loaded centrally, which is why shelves are supported at both ends.",
+    "key": "youngsModulus"
   },
   "safety": [
     "Keep feet clear of the area beneath the loads; a slotted weight dropped from the hanger is heavy.",

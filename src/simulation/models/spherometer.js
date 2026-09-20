@@ -5,6 +5,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, mean, sigFig } from '../../utils/measure.js';
+import { nullPoint, nullRefusal } from '../null-point.js';
 
 export const meta = {
   id: 'XI-PHY-A04',
@@ -43,6 +44,23 @@ export function atContact(inputs) {
   return Math.abs(inputs.screwTurns - Math.abs(trueSagittaMm(inputs))) <= Math.max(0.03, lc * 3);
 }
 
+/**
+ * Whether the screw tip has reached the surface. A real spherometer tells you
+ * by beginning to pivot on its legs the moment the tip touches.
+ */
+export function nullIndicator(inputs) {
+  return nullPoint({
+    label: 'Spherometer',
+    current: inputs.screwTurns,
+    target: Math.abs(trueSagittaMm(inputs)),
+    tolerance: Math.max(0.03, leastCount(inputs) * 3),
+    increase: 'The tip is still clear of the surface — turn the screw down.',
+    decrease: 'The instrument is riding on the screw — turn it back up.',
+    atNullText: 'just touching — the instrument begins to pivot',
+    awayFrom: 'not in contact',
+  });
+}
+
 export function validate(inputs) {
   const errors = [], warnings = [];
   if (!atContact(inputs)) warnings.push({ field: 'screwTurns', code: 'NOT_CONTACT', message: 'The screw has not been brought to the surface.', why: 'Turn the screw slider until the tip just touches — the instrument begins to pivot at contact.' });
@@ -69,7 +87,7 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!atContact(inputs)) return null;
+  if (!atContact(inputs)) return { v: null, reason: nullRefusal(nullIndicator(inputs)) };
   const rng = makeRng(seed + trial * 53);
   const lc = leastCount(inputs);
   const trueH = trueSagittaMm(inputs);
@@ -82,7 +100,7 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   return { trial, legMm: l, verticalScale: turns * pitch, discDivision: disc, sagitta: Number(h.toFixed(3)), radiusCm: sigFig(R / 10, 4) };
 }
 
-export function derive(rows) {
+export function derive(rows, inputs = defaults) {
   const vals = rows.map((r) => Number(r.radiusCm)).filter(Number.isFinite);
   if (vals.length < 3) return { ok: false, reason: 'Record contact at least three times.' };
   const hs = rows.map((r) => Math.abs(Number(r.sagitta)));
@@ -90,11 +108,21 @@ export function derive(rows) {
   const meanH = mean(hs);
   const mainTerm = (l * l) / (6 * meanH) / 10;
   const correctionTerm = meanH / 2 / 10;
+  /*
+   * The panel names the leg separation, the accepted radius for the surface
+   * in use, and what fraction of the answer the h/2 correction is — the line
+   * that makes the exact formula worth writing out. All three were missing,
+   * so it read "l = undefined mm", "accepted R ≈ undefined cm" and "the
+   * correction term is only undefined% of the result".
+   */
   return {
+    legSeparation: l,
+    accepted: sigFig(surfaceOf(inputs).radiusCm, 4),
+    correctionPct: sigFig((correctionTerm / (mainTerm + correctionTerm)) * 100, 2),
     ok: true, radius: sigFig(mean(vals), 4), meanSagitta: sigFig(meanH, 4), correctionTerm: sigFig(correctionTerm, 3),
     mainTerm: sigFig(mainTerm, 4), correctionPercent: sigFig((correctionTerm / (mainTerm + correctionTerm)) * 100, 3),
     n: vals.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.radiusCm) })),
   };
 }
 
-export default { meta, defaults, SURFACES, SPHEROMETERS, init, step, measure, derive, validate, leastCount, surfaceOf, trueSagittaMm, atContact };
+export default { meta, defaults, SURFACES, SPHEROMETERS, init, step, measure, derive, validate, leastCount, surfaceOf, trueSagittaMm, atContact, nullIndicator};

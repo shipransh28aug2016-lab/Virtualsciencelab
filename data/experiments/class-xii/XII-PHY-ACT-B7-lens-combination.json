@@ -329,7 +329,8 @@
       "tolerance": 0.8,
       "unit": "D"
     },
-    "statement": "A +15 cm and a +20 cm lens have powers of 6.67 D and 5.00 D, which add to 11.67 D — a combination of focal length 8.57 cm. Two convex lenses always give a combination stronger than either alone. To reach a LONGER focal length than any single lens in the set a concave lens must be included: +10 cm (10 D) with −20 cm (−5 D) gives 5 D, a focal length of 20 cm."
+    "statement": "A +15 cm and a +20 cm lens have powers of 6.67 D and 5.00 D, which add to 11.67 D — a combination of focal length 8.57 cm. Two convex lenses always give a combination stronger than either alone. To reach a LONGER focal length than any single lens in the set a concave lens must be included: +10 cm (10 D) with −20 cm (−5 D) gives 5 D, a focal length of 20 cm.",
+    "key": "bestFocal"
   },
   "safety": [
     "Handle the lenses by their edges and place them on a soft cloth, never face down on the bench.",

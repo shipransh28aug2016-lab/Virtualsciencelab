@@ -319,7 +319,8 @@
       "tolerance": 0.01,
       "unit": "cm²"
     },
-    "statement": "The surface tension of water at 20 °C is about 0.073 N·m⁻¹. The product r × h is constant for all the tubes, and the graph of h against 1/r is a straight line through the origin, confirming Jurin's law."
+    "statement": "The surface tension of water at 20 °C is about 0.073 N·m⁻¹. The product r × h is constant for all the tubes, and the graph of h against 1/r is a straight line through the origin, confirming Jurin's law.",
+    "key": "surfaceTension"
   },
   "safety": [
     "Capillary tubes are thin and break easily; handle them by the middle and never force them into the clamp.",

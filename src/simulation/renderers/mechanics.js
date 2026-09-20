@@ -10,7 +10,7 @@
  */
 import {
   label, bench, dashedLine, drawRuler, drawWeight, drawPendulumBob, drawSpring,
-  drawDial, drawUpright, drawRetortStand, drawClamp, theme, noteBounds, brushedMetal,
+  drawDial, drawUpright, drawRetortStand, drawClamp, drawStopClock, theme, noteBounds, brushedMetal,
   chrome, plastic, contactShadow,
 } from './apparatus.js';
 import { clock, rgba, shade, clamp, lerp, noise1 } from './realism.js';
@@ -315,9 +315,58 @@ export function parallelogramLaw(ctx, w, h, state, inputs) {
 }
 export function simplePendulum(ctx, w, h, state, inputs) {
   const th = theme();
-  const pivotX = w / 2, pivotY = 30;
-  const lenPx = 20 + ((inputs.lengthCm ?? 60) / 150) * (h - 90);
+  const pivotX = w / 2 - 70, pivotY = 34;
+  const lenPx = 20 + ((inputs.lengthCm ?? 60) / 150) * (h - 96);
   const angle = ((state?.angleDeg ?? inputs.amplitudeDeg ?? 8) * Math.PI) / 180;
+  const bobX = pivotX + Math.sin(angle) * lenPx;
+  const bobY = pivotY + Math.cos(angle) * lenPx;
+
+  /*
+   * THE INSTRUMENTS BELONG ON THE BENCH.
+   *
+   * This scene used to be a support, a thread and a bob, with the elapsed
+   * time set in small grey type along the bottom edge. On the one practical
+   * in Section A whose entire difficulty is the timing, the student was
+   * reading a caption rather than an instrument — and had nothing to measure
+   * the length with, and no mark to count the swings against.
+   *
+   * A real bench has three things this one lacked: a stop clock, a metre
+   * scale beside the thread, and a pointer at the mean position, which is
+   * where you count from because it is where the bob is moving fastest and
+   * the eye can fix the instant most precisely.
+   */
+
+  // Metre scale, alongside the thread, reading the length actually set.
+  const scaleX = pivotX - 74;
+  /* Zeroed at the point of suspension and graduated to the length actually
+     set, so the reading beside the bob IS L — which is the measurement this
+     experiment turns on, and the quantity the L–T² graph is plotted against. */
+  const scaleLen = lenPx + 34;
+  const scaleTo = Math.round((scaleLen / lenPx) * (inputs.lengthCm ?? 60));
+  drawRuler(ctx, scaleX, pivotY, scaleLen, {
+    vertical: true,
+    label: 'Metre scale',
+    divisions: 20,        // numbered every fifth, so 0, ¼, ½, ¾ and full scale are all marked
+    scaleMax: scaleTo,
+    note: 'Least count 1 mm — measured from the point of suspension to the centre of the bob',
+  });
+
+  // The mean position: a knife-edge pointer under the rest point of the bob.
+  const restY = pivotY + lenPx;
+  ctx.save();
+  ctx.strokeStyle = rgba('#c02626', 0.75);
+  ctx.lineWidth = 1.4;
+  dashedLine(ctx, pivotX, pivotY, pivotX, restY + 26, [5, 5]);
+  ctx.fillStyle = '#c02626';
+  ctx.beginPath();
+  ctx.moveTo(pivotX, restY + 30);
+  ctx.lineTo(pivotX - 8, restY + 46);
+  ctx.lineTo(pivotX + 8, restY + 46);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+  label(ctx, pivotX, restY + 48, 'Mean position — count the swings here', { anchor: 'below', size: 11 });
+
   /* The bob is draggable along the thread and bound to L in centimetres,
      not to its pixel position: releasing it re-enters the model, which
      recomputes T = 2π√(L/g) exactly as it would from the slider. */
@@ -325,14 +374,26 @@ export function simplePendulum(ctx, w, h, state, inputs) {
     label: 'Bob',
     drag: {
       varId: 'lengthCm', axis: 'y', unit: 'length L in cm',
-      p0: pivotY + 20, p1: pivotY + 20 + (h - 90), v0: 0, v1: 150,
+      p0: pivotY + 20, p1: pivotY + 20 + (h - 96), v0: 0, v1: 150,
     },
   });
   label(ctx, pivotX, pivotY, 'Support / clamp', { anchor: 'above' });
-  label(ctx, pivotX + 60, pivotY + lenPx / 2, `L = ${(inputs.lengthCm ?? 60).toFixed(0)} cm`, { anchor: 'right', bg: false });
-  ctx.save(); ctx.fillStyle = th.muted; ctx.font = '600 12px sans-serif'; ctx.textAlign = 'center';
-  ctx.fillText(`Stop-clock: ${(state?.stopwatch ?? 0).toFixed(1)} s   Oscillations: ${state?.completedOscillations ?? 0}/${inputs.oscillations ?? 20}`, w / 2, h - 14);
-  ctx.restore();
+  label(ctx, pivotX + 26, pivotY + lenPx / 2, `L = ${(inputs.lengthCm ?? 60).toFixed(0)} cm`,
+    { anchor: 'right', size: 12 });
+
+  // The stop clock, the size a real one is, on the bench beside the stand.
+  const n = state?.completedOscillations ?? 0;
+  const want = inputs.oscillations ?? 20;
+  drawStopClock(ctx, w - 150, h * 0.42, 74, state?.stopwatch ?? 0, {
+    leastCount: 0.2,
+    running: Boolean(state?.running && !state?.finishedAt),
+    sub: `${n} / ${want} oscillations`,
+  });
+  if (state?.finishedAt) {
+    label(ctx, w - 150, h * 0.42 + 100,
+      `t = ${(state.stopwatch ?? 0).toFixed(1)} s for ${want} oscillations — T = ${((state.stopwatch ?? 0) / want).toFixed(3)} s`,
+      { anchor: 'below', bold: true, size: 12 });
+  }
 }
 export function friction(ctx, w, h, state, inputs) {
   const th = theme();

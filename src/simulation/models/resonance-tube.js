@@ -5,6 +5,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { sigFig, mean } from '../../utils/measure.js';
+import { nullPoint, nullRefusal } from '../null-point.js';
 
 export const meta = {
   id: 'XI-PHY-B10',
@@ -39,6 +40,24 @@ export function atResonance(inputs) {
   return Math.abs(inputs.airColumnCm - target) <= 0.5;
 }
 
+/**
+ * How loud the note is. A resonance tube is found by ear: the note swells as
+ * the column approaches a resonant length and dies away past it.
+ */
+export function nullIndicator(inputs) {
+  const { n, target } = nearestResonance(inputs);
+  return nullPoint({
+    label: `Note (resonance ${n})`,
+    current: inputs.airColumnCm,
+    target,
+    tolerance: 0.5,
+    increase: 'The note is weak — lower the water level to lengthen the air column.',
+    decrease: 'The note is weak — raise the water level to shorten the air column.',
+    atNullText: 'loudest — the column is resonating',
+    awayFrom: 'faint',
+  });
+}
+
 export function validate(inputs) {
   const errors = [], warnings = [];
   if (!atResonance(inputs)) warnings.push({ field: 'airColumnCm', code: 'NOT_RESONANT', message: 'The air column is not at a resonant length.', why: 'Lower or raise the water level slowly until the sound is loudest.', fix: 'Move the slider until the tube resonates.' });
@@ -69,7 +88,7 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!atResonance(inputs)) return null;
+  if (!atResonance(inputs)) return { v: null, reason: nullRefusal(nullIndicator(inputs)) };
   const rng = makeRng(seed + trial * 103);
   const { n, target } = nearestResonance(inputs);
   const reading = Number((target + jitter(rng, 0.12)).toFixed(2));
@@ -80,17 +99,45 @@ export function derive(rows, inputs = defaults) {
   const first = rows.find((r) => r.resonanceNumber === 1);
   const second = rows.find((r) => r.resonanceNumber === 2);
   if (!first || !second) return { ok: false, reason: 'Record both the first and second resonance positions.' };
+  /*
+   * Both resonances must belong to the SAME fork.
+   *
+   * v = 2f(l2 - l1) assumes l1 and l2 are the quarter- and three-quarter-
+   * wave positions of one standing wave. A student who changes the fork
+   * between the two readings is measuring two different wavelengths, and the
+   * arithmetic below quietly produces a number anyway — with a 256 Hz first
+   * resonance and a 512 Hz second it comes out at exactly half the speed of
+   * sound, 174 m/s instead of 348, looking every bit as plausible as a
+   * correct result.
+   */
+  if (Number(first.frequency) !== Number(second.frequency)) {
+    return {
+      ok: false,
+      reason: `The first resonance was found with the ${first.frequency} Hz fork and the second with the ${second.frequency} Hz fork. Both positions belong to one standing wave, so they must be found with the same fork — find l₁ and l₂ for one fork before changing it.`,
+    };
+  }
   const l1 = Number(first.airColumnCm);
   const l2 = Number(second.airColumnCm);
   const f = Number(first.frequency);
   const speed = 2 * f * (l2 - l1) / 100;
   const e = (l2 - 3 * l1) / 2;
   const accepted = speedOfSoundAt(inputs.tempC);
+  /*
+   * The panel shows the working: l₁ and l₂ themselves, the fork, the
+   * temperature, and what the end correction should come to for a tube of
+   * this bore. All five were missing, so it opened with "l₁ = undefined cm,
+   * l₂ = undefined cm" above a correct speed of sound.
+   */
   return {
-    ok: true, speed: sigFig(speed, 4), endCorrection: sigFig(e, 3), wavelengthCm: sigFig(2 * (l2 - l1), 4),
+    ok: true,
+    l1: sigFig(l1, 4), l2: sigFig(l2, 4),
+    frequency: f, tempC: inputs.tempC,
+    speed: sigFig(speed, 4), endCorrection: sigFig(e, 3), wavelengthCm: sigFig(2 * (l2 - l1), 4),
+    // e ≈ 0.6 r for a cylindrical tube open at one end.
+    acceptedEndCorrection: sigFig(0.6 * TUBE_RADIUS_CM, 3),
     accepted: sigFig(accepted, 4), percentError: sigFig(((speed - accepted) / accepted) * 100, 3),
     n: rows.length, points: rows.map((r) => ({ x: Number(r.resonanceNumber), y: Number(r.airColumnCm) })),
   };
 }
 
-export default { meta, defaults, FORKS, TUBE_RADIUS_CM, END_CORRECTION_CM, init, step, measure, derive, validate, speedOfSoundAt, frequencyHz, wavelengthCm, firstResonanceCm, secondResonanceCm, atResonance };
+export default { meta, defaults, FORKS, TUBE_RADIUS_CM, END_CORRECTION_CM, init, step, measure, derive, validate, speedOfSoundAt, frequencyHz, wavelengthCm, firstResonanceCm, secondResonanceCm, atResonance, nullIndicator};

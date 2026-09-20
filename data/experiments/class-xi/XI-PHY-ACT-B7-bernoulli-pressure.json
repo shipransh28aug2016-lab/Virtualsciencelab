@@ -291,7 +291,8 @@
       "tolerance": 2.5,
       "unit": "mm of water"
     },
-    "statement": "The limb tapped into the throat stands lower than the one in the wide section, showing that the pressure falls where the velocity rises. The pressure difference is proportional to the square of the flow rate, and the slope of that line returns the density of water as about 1000 kg per cubic metre, confirming Bernoulli’s theorem."
+    "statement": "The limb tapped into the throat stands lower than the one in the wide section, showing that the pressure falls where the velocity rises. The pressure difference is proportional to the square of the flow rate, and the slope of that line returns the density of water as about 1000 kg per cubic metre, confirming Bernoulli’s theorem.",
+    "key": "densityFromSlope"
   },
   "safety": [
     "Water and electricity do not mix: keep the apparatus well away from sockets and mains equipment.",

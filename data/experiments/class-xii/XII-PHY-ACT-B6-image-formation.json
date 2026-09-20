@@ -311,7 +311,8 @@
       "tolerance": 0.15,
       "unit": ""
     },
-    "statement": "Beyond 2F the image is real, inverted and diminished; at 2F it is real, inverted and the same size; between F and 2F it is real, inverted and enlarged; at F no image forms at all; and inside F the image is virtual and erect and the screen stays blank. The focal length recovered from 1/f = 1/v + 1/u agrees with the marked value to within a per cent or two."
+    "statement": "Beyond 2F the image is real, inverted and diminished; at 2F it is real, inverted and the same size; between F and 2F it is real, inverted and enlarged; at F no image forms at all; and inside F the image is virtual and erect and the screen stays blank. The focal length recovered from 1/f = 1/v + 1/u agrees with the marked value to within a per cent or two.",
+    "key": "focalLength"
   },
   "safety": [
     "A lighted candle is a naked flame: keep paper, hair and loose sleeves well away from it.",

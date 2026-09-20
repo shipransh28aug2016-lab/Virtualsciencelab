@@ -146,6 +146,17 @@
       "symbol": "l",
       "unit": "cm",
       "type": "dependent"
+    },
+    {
+      "id": "mode",
+      "label": "Law under test",
+      "symbol": "",
+      "unit": "",
+      "type": "controlled",
+      "min": null,
+      "max": null,
+      "step": null,
+      "default": "mains-frequency"
     }
   ],
   "procedure": [
@@ -311,7 +322,8 @@
       "tolerance": 5,
       "unit": "Hz"
     },
-    "statement": "The frequency of the AC mains is about 50 Hz. With a horseshoe magnet the wire is driven at the mains frequency itself. With an electromagnet the wire is attracted on both half cycles and so vibrates at 100 Hz, and that figure must be halved to give the mains frequency."
+    "statement": "The frequency of the AC mains is about 50 Hz. With a horseshoe magnet the wire is driven at the mains frequency itself. With an electromagnet the wire is attracted on both half cycles and so vibrates at 100 Hz, and that figure must be halved to give the mains frequency.",
+    "key": "mainsFrequency"
   },
   "safety": [
     "NEVER connect the sonometer wire to the 230 V mains directly. Always use a step-down transformer to 6-8 V.",

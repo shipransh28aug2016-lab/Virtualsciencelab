@@ -312,7 +312,8 @@
       "tolerance": 0.6,
       "unit": "D"
     },
-    "statement": "The focal length of the given concave lens is about −15 cm and its power about −6.7 dioptre. The negative sign is not a bookkeeping detail: it is the signature of a diverging lens. Every position of the concave lens gives the same value."
+    "statement": "The focal length of the given concave lens is about −15 cm and its power about −6.7 dioptre. The negative sign is not a bookkeeping detail: it is the signature of a diverging lens. Every position of the concave lens gives the same value.",
+    "key": "focalLength"
   },
   "safety": [
     "Do not focus sunlight with the convex lens; it can burn paper or skin and damage the eye.",

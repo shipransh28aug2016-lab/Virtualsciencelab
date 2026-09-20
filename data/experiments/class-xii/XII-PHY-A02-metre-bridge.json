@@ -325,7 +325,8 @@
       "tolerance": 5e-08,
       "unit": "Ω·m"
     },
-    "statement": "The resistance of the given coil is about 4.7 Ω. The series combination gives the sum of the individual resistances and the parallel combination gives a value smaller than either, confirming the laws of combination."
+    "statement": "The resistance of the given coil is about 4.7 Ω. The series combination gives the sum of the individual resistances and the parallel combination gives a value smaller than either, confirming the laws of combination.",
+    "key": "resistance"
   },
   "safety": [
     "Press the jockey gently and only for an instant; dragging it along the wire scrapes the surface and destroys the uniformity on which the whole method depends.",

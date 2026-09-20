@@ -4,7 +4,8 @@
  * At equilibrium F = W sinθ (roller); for a sliding block, F = W(sinθ + μcosθ).
  */
 import { makeRng, jitter } from '../../utils/rng.js';
-import { fitThroughOrigin, sigFig } from '../../utils/measure.js';
+import { fitThroughOrigin, sigFig, linearFit} from '../../utils/measure.js';
+import { nullPoint, nullRefusal } from '../null-point.js';
 
 export const meta = {
   id: 'XI-PHY-A10',
@@ -38,6 +39,24 @@ export function balanced(inputs) {
   return Math.abs(inputs.panGwt - need) <= Math.max(2, need * 0.03);
 }
 
+/**
+ * Whether the body is on the point of moving. Too little in the pan and it
+ * runs down the plane; too much and it is dragged up it. Equilibrium is the
+ * setting between the two, and that is what is being looked for.
+ */
+export function nullIndicator(inputs) {
+  return nullPoint({
+    label: 'Body on the plane',
+    current: inputs.panGwt,
+    target: requiredForceGwt(inputs),
+    tolerance: Math.max(2, requiredForceGwt(inputs) * 0.03),
+    increase: 'The body runs down the plane — add weights to the pan.',
+    decrease: 'The pan drags the body up the plane — take weights off.',
+    atNullText: 'on the point of moving either way',
+    awayFrom: 'moving',
+  });
+}
+
 export function validate(inputs) {
   const errors = [], warnings = [];
   if (!balanced(inputs)) warnings.push({ field: 'panGwt', code: 'NOT_BALANCED', message: 'The body is not yet in equilibrium on the plane.', why: 'Adjust the pan load until the roller (or block) is on the point of moving either way.' });
@@ -69,22 +88,40 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!balanced(inputs)) return null;
+  if (!balanced(inputs)) return { v: null, reason: nullRefusal(nullIndicator(inputs)) };
   const rng = makeRng(seed + trial * 71);
   const trueF = requiredForceGwt(inputs);
   const F = Number((trueF + jitter(rng, Math.max(1, trueF * 0.02))).toFixed(1));
   return { trial, angleDeg: inputs.angleDeg, sinTheta: Number(sinTheta(inputs).toFixed(4)), panGwt: F, forceN: sigFig((F / 1000) * G, 4), body: inputs.body };
 }
 
-export function derive(rows) {
+export function derive(rows, inputs = defaults) {
   const pts = rows.map((r) => ({ x: Number(r.sinTheta), y: Number(r.panGwt) }));
   if (pts.length < 4) return { ok: false, reason: 'Record the balancing force for at least four different angles.' };
   const through = fitThroughOrigin(pts);
   const isBlock = rows[0].body === 'block';
+  /*
+   * The panel names the body, states the accepted weight and reports the
+   * intercept — which is the whole distinction between the two cases. A
+   * roller needs F = W sin θ, so its line passes through the origin; a
+   * sliding block needs F = W(sin θ + μ cos θ), so its line is lifted by
+   * μW and the intercept is that friction. None of the three was returned,
+   * so the line read "undefined · accepted undefined gwt · intercept
+   * undefined gwt" under the result.
+   */
+  const free = pts.length >= 3 ? linearFit(pts) : null;
+  const body = isBlock ? BLOCK : (ROLLERS[rows[0].roller] || ROLLERS[inputs.roller] || ROLLERS.r250);
   return {
     ok: true, weightGwt: sigFig(through.slope, 4), weightN: sigFig((through.slope / 1000) * G, 4),
-    r2: Number(through.r2.toFixed(4)), body: rows[0].body, sliding: isBlock, n: pts.length, points: pts,
+    r2: Number(through.r2.toFixed(4)), body: rows[0].body, sliding: isBlock,
+    bodyLabel: body.label || (isBlock ? 'Wooden block' : 'Roller'),
+    accepted: sigFig(body.weightGwt, 4),
+    intercept: free ? sigFig(free.intercept, 3) : 0,
+    interceptMeaning: isBlock
+      ? 'A sliding block needs F = W(sin θ + μ cos θ), so the line does not pass through the origin: the intercept is μW, the friction that has to be overcome before it moves at all.'
+      : 'A roller needs only F = W sin θ, so the line should pass through the origin — an intercept much above zero means friction is not negligible.',
+    n: pts.length, points: pts,
   };
 }
 
-export default { meta, defaults, ROLLERS, BLOCK, G, init, step, measure, derive, validate, bodyOf, sinTheta, requiredForceGwt, balanced };
+export default { meta, defaults, ROLLERS, BLOCK, G, init, step, measure, derive, validate, bodyOf, sinTheta, requiredForceGwt, balanced, nullIndicator};

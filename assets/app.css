@@ -305,6 +305,37 @@ canvas{display:block;width:100%;touch-action:none}
 /* Apparatus is grabbable, so the canvas must not select as text mid-drag. */
 #cv{user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
 .toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:12px}
+/* ── simulation clock ──
+   Present only on benches that actually move. It changes how long the student
+   waits, never what the apparatus does, so it is styled as an instrument
+   control (quiet, secondary) rather than as an experiment action. */
+.clock{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+/* ── null-point indicator ──
+   What the instrument itself is doing: which way it is off and by how much.
+   Never the target value — that is the answer the experiment is there to find. */
+/* ── what the calculation is still waiting for ──
+   The models already say it, precisely, in the reason they refuse with. It
+   used to be reachable only by pressing Calculate and being turned away. */
+.still-needed{margin-top:9px;padding:9px 13px;border-radius:11px;font-size:13.5px;
+  border:1px solid color-mix(in srgb, var(--warn) 45%, var(--stroke));background:var(--warn-bg)}
+.still-needed b{display:block;font-size:12px;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.null-box{display:flex;gap:10px;flex-wrap:wrap;align-items:baseline;margin-top:9px;
+  padding:9px 13px;border-radius:11px;border:1px solid var(--stroke);background:var(--surface-2)}
+.null-box .nb-label{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.null-box .nb-reading{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.null-box .nb-hint{font-size:13px;color:var(--muted);flex:1 1 220px}
+.null-box.s4{border-color:color-mix(in srgb, var(--bad) 55%, var(--stroke));background:var(--bad-bg)}
+.null-box.s3{border-color:color-mix(in srgb, var(--warn) 45%, var(--stroke));background:var(--warn-bg)}
+.null-box.s2,.null-box.s1{border-color:color-mix(in srgb, var(--warn) 65%, var(--stroke));background:var(--warn-bg)}
+.null-box.at-null{border-color:var(--good);background:var(--good-bg)}
+.null-box.at-null .nb-reading{color:var(--good)}
+.clock-label{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-left:2px}
+.clock-seg button{min-height:32px;padding:5px 11px;font-size:13px;font-variant-numeric:tabular-nums}
+.speed-flag{position:absolute;top:10px;right:12px;z-index:3;
+  font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;
+  color:var(--on-accent);background:var(--warn);border-radius:999px;padding:3px 11px;
+  box-shadow:var(--shadow-xs)}
 .btn{border:1px solid var(--stroke);background:var(--surface-2);color:var(--txt);padding:11px 17px;border-radius:11px;
   cursor:pointer;font-size:15px;font-weight:600;font-family:inherit;
   transition:background .2s var(--ease),border-color .2s var(--ease),transform .18s var(--ease-out),box-shadow .2s var(--ease);

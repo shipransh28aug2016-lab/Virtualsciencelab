@@ -5,6 +5,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { fitThroughOrigin, sigFig } from '../../utils/measure.js';
+import { nullPoint, nullRefusal } from '../null-point.js';
 
 export const meta = {
   id: 'XI-PHY-ACT-A4',
@@ -17,17 +18,66 @@ export const meta = {
 };
 
 export const G = 9.792;
-export const SURFACES = { glass: { label: 'Glass', mu: 0.0021 }, wood: { label: 'Wood', mu: 0.0048 }, rubber: { label: 'Rubber mat', mu: 0.0095 } };
-export const ROLLERS = { r2: { label: 'Roller (small)', massG: 80 }, r3: { label: 'Roller (medium)', massG: 140 }, r5: { label: 'Roller (large)', massG: 220 } };
+/**
+ * ROLLING RESISTANCE IS A LENGTH, NOT A RATIO.
+ *
+ * The quantity that belongs to a pair of surfaces is `a`, the coefficient of
+ * rolling resistance, measured in centimetres; the dimensionless coefficient
+ * a student calculates is mu_r = a/r, so it depends on the roller as well as
+ * the surface. That is the whole conclusion of this activity — "the
+ * resistance falls as the radius rises, so a larger roller rolls more easily",
+ * which the result panel has always stated.
+ *
+ * It could not be demonstrated. The rollers carried a mass and a size in
+ * their names and no radius at all; mu was a property of the surface alone,
+ * so changing "small" for "large" changed nothing, and the panel's
+ * comparison across radii printed undefined. The `a` values below are the
+ * previous mu figures taken at the medium 3 cm roller, so the accepted
+ * coefficient for the default pair is unchanged at 0.0048.
+ */
+export const SURFACES = {
+  glass: { label: 'Glass', aCm: 0.0063, slidingMu: 0.22 },
+  wood: { label: 'Wood', aCm: 0.0144, slidingMu: 0.42 },
+  rubber: { label: 'Rubber mat', aCm: 0.0285, slidingMu: 0.65 },
+};
+export const ROLLERS = {
+  r2: { label: 'Roller (small)', massG: 80, radiusCm: 1.5 },
+  r3: { label: 'Roller (medium)', massG: 140, radiusCm: 3 },
+  r5: { label: 'Roller (large)', massG: 220, radiusCm: 5 },
+};
+
+/** mu_r = a/r — the dimensionless coefficient for THIS roller on THIS surface. */
+export function muRollingFor(inputs) {
+  return surfaceOf(inputs).aCm / rollerOf(inputs).radiusCm;
+}
 
 export const defaults = { panG: 0, loadG: 0, surface: 'wood', roller: 'r3', weights: 'fine' };
 
 export function surfaceOf(inputs) { return SURFACES[inputs.surface] || SURFACES.wood; }
 export function rollerOf(inputs) { return ROLLERS[inputs.roller] || ROLLERS.r3; }
 export function normalReactionN(inputs) { return ((rollerOf(inputs).massG + inputs.loadG) / 1000) * G; }
-export function rollingFrictionN(inputs) { return surfaceOf(inputs).mu * normalReactionN(inputs); }
+export function rollingFrictionN(inputs) { return muRollingFor(inputs) * normalReactionN(inputs); }
 export function panForceN(inputs) { return (inputs.panG / 1000) * G; }
 export function rolling(inputs) { return panForceN(inputs) >= rollingFrictionN(inputs) * 0.9 && panForceN(inputs) <= rollingFrictionN(inputs) * 1.4; }
+
+/**
+ * Whether the roller is moving steadily. Rolling friction is small, so the
+ * window between "will not start" and "accelerating away" is narrow — which
+ * is the observation the activity is designed to produce.
+ */
+export function nullIndicator(inputs) {
+  const need = rollingFrictionN(inputs);
+  return nullPoint({
+    label: 'Roller',
+    current: panForceN(inputs),
+    target: need * 1.15,          // the middle of the steady-rolling window
+    tolerance: need * 0.25,
+    increase: 'The roller stays put — add fine weights to the pan.',
+    decrease: 'The roller accelerates away instead of rolling steadily — take weights off.',
+    atNullText: 'rolling steadily',
+    awayFrom: 'not rolling steadily',
+  });
+}
 
 export function validate(inputs) {
   const warnings = [];
@@ -83,18 +133,46 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!rolling(inputs)) return null;
+  if (!rolling(inputs)) return { v: null, reason: nullRefusal(nullIndicator(inputs)) };
   const rng = makeRng(seed + trial * 113);
   const R = normalReactionN(inputs);
   const F = Number((rollingFrictionN(inputs) + jitter(rng, rollingFrictionN(inputs) * 0.05)).toFixed(4));
-  return { trial, loadG: inputs.loadG, totalMassG: rollerOf(inputs).massG + inputs.loadG, normalReaction: sigFig(R, 4), panG: inputs.panG, rollingFriction: F, ratio: sigFig(F / R, 5) };
+  const roller = rollerOf(inputs);
+  return { trial, loadG: inputs.loadG, totalMassG: roller.massG + inputs.loadG, normalReaction: sigFig(R, 4), panG: inputs.panG, rollingFriction: F, ratio: sigFig(F / R, 5), roller: inputs.roller, radiusCm: roller.radiusCm, surface: inputs.surface };
 }
 
-export function derive(rows) {
+export function derive(rows, inputs = defaults) {
   const pts = rows.map((r) => ({ x: Number(r.normalReaction), y: Number(r.rollingFriction) }));
   if (pts.length < 4) return { ok: false, reason: 'Record at least four different loads.' };
   const fit = fitThroughOrigin(pts);
-  return { ok: true, muRolling: sigFig(fit.slope, 4), rollingResistanceCm: sigFig(fit.slope * 3, 4), r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts };
+
+  const surface = surfaceOf(inputs);
+  const radii = [...new Set(rows.map((r) => Number(r.radiusCm)).filter(Number.isFinite))].sort((a, b) => a - b);
+  /* Group the readings by roller, so the panel can show mu_r falling as the
+     radius rises — which is what this activity concludes and could not
+     previously show, because the rollers had no radius. */
+  const radiusCheck = radii.length > 1 ? radii.map((radiusCm) => {
+    const sub = rows.filter((r) => Number(r.radiusCm) === radiusCm)
+      .map((r) => ({ x: Number(r.normalReaction), y: Number(r.rollingFriction) }));
+    const f = sub.length >= 2 ? fitThroughOrigin(sub) : null;
+    return { radiusCm, mu: f ? sigFig(f.slope, 3) : '—' };
+  }) : null;
+
+  const muR = fit.slope;
+  const slidingMu = surface.slidingMu;
+  return {
+    ok: true,
+    muRolling: sigFig(muR, 4),
+    rollingResistanceCm: sigFig(muR * (rollerOf(inputs).radiusCm), 4),
+    accepted: sigFig(muRollingFor(inputs), 3),
+    surface: surface.label,
+    radiusCm: rollerOf(inputs).radiusCm,
+    slidingComparison: sigFig(slidingMu, 3),
+    timesSmaller: muR > 0 ? Math.round(slidingMu / muR) : '—',
+    radiusCheck,
+    radiiCompared: radii.length,
+    r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts,
+  };
 }
 
-export default { meta, defaults, SURFACES, ROLLERS, G, init, step, measure, derive, validate, surfaceOf, rollerOf, normalReactionN, rollingFrictionN, panForceN, rolling, movingMassKg };
+export default { meta, defaults, SURFACES, ROLLERS, G, muRollingFor, init, step, measure, derive, validate, surfaceOf, rollerOf, normalReactionN, rollingFrictionN, panForceN, rolling, movingMassKg, nullIndicator};

@@ -52,61 +52,265 @@
     ]
   },
   "apparatus": [
-    { "name": "Physical beam balance", "spec": "with pointer, scale and beam-raising lever", "why": "Compares the moments of the unknown body and the known weights" },
-    { "name": "Weight box", "spec": "gram weights with fractional weights down to 10 mg, with forceps", "why": "Provides the known masses that balance the body" },
-    { "name": "Forceps", "spec": "supplied with the weight box", "why": "Weights must never be handled with fingers, which add grease and moisture" },
-    { "name": "Bodies to be weighed", "spec": "two different objects", "why": "The unknown masses; the practical requires two" },
-    { "name": "Spirit level", "spec": "small", "why": "The balance must be levelled or the beam will not be horizontal at balance" }
+    {
+      "name": "Physical beam balance",
+      "spec": "with pointer, scale and beam-raising lever",
+      "why": "Compares the moments of the unknown body and the known weights"
+    },
+    {
+      "name": "Weight box",
+      "spec": "gram weights with fractional weights down to 10 mg, with forceps",
+      "why": "Provides the known masses that balance the body"
+    },
+    {
+      "name": "Forceps",
+      "spec": "supplied with the weight box",
+      "why": "Weights must never be handled with fingers, which add grease and moisture"
+    },
+    {
+      "name": "Bodies to be weighed",
+      "spec": "two different objects",
+      "why": "The unknown masses; the practical requires two"
+    },
+    {
+      "name": "Spirit level",
+      "spec": "small",
+      "why": "The balance must be levelled or the beam will not be horizontal at balance"
+    }
   ],
   "materials": [],
   "variables": [
-    { "id": "body", "label": "Body on the left pan", "symbol": "", "unit": "", "type": "control", "default": "bodyA", "options": ["bodyA", "bodyB", "bodyC"] },
-    { "id": "balance", "label": "Balance", "symbol": "", "unit": "", "type": "control", "default": "standard", "options": ["standard", "sensitive", "offset", "unequal"] },
-    { "id": "weightsG", "label": "Gram weights", "symbol": "M", "unit": "g", "type": "independent", "min": 0, "max": 100, "step": 0.1, "default": 24.3 },
-    { "id": "fractionalMg", "label": "Fractional weights", "symbol": "", "unit": "mg", "type": "independent", "min": 0, "max": 990, "step": 10, "default": 90 },
-    { "id": "bodyOnPan", "label": "Body on the pan", "symbol": "", "unit": "", "type": "control", "default": true },
-    { "id": "mass", "label": "Mass", "symbol": "m", "unit": "g", "type": "dependent" }
+    {
+      "id": "body",
+      "label": "Body on the left pan",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "bodyA",
+      "options": [
+        "bodyA",
+        "bodyB",
+        "bodyC"
+      ]
+    },
+    {
+      "id": "balance",
+      "label": "Balance",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": "standard",
+      "options": [
+        "standard",
+        "sensitive",
+        "offset",
+        "unequal"
+      ]
+    },
+    {
+      "id": "weightsG",
+      "label": "Gram weights",
+      "symbol": "M",
+      "unit": "g",
+      "type": "independent",
+      "min": 0,
+      "max": 100,
+      "step": 0.1,
+      "default": 24.3
+    },
+    {
+      "id": "fractionalMg",
+      "label": "Fractional weights",
+      "symbol": "",
+      "unit": "mg",
+      "type": "independent",
+      "min": 0,
+      "max": 990,
+      "step": 10,
+      "default": 90
+    },
+    {
+      "id": "bodyOnPan",
+      "label": "Body on the pan",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": true
+    },
+    {
+      "id": "mass",
+      "label": "Mass",
+      "symbol": "m",
+      "unit": "g",
+      "type": "dependent"
+    }
   ],
   "procedure": [
-    { "step": 1, "text": "Level the balance with its screws until the pointer swings equally on both sides of the centre of the scale.", "checkpoint": false },
-    { "step": 2, "text": "With both pans empty, raise the beam and note five turning points of the pointer. Calculate the resting point; this is the zero of the balance.", "checkpoint": true, "expects": "bodyOnPan" },
-    { "step": 3, "text": "Lower the beam. Place the first body on the left pan and add gram weights to the right pan with forceps, starting with a weight you know is too large and halving.", "checkpoint": true, "expects": "weightsG" },
-    { "step": 4, "text": "Add fractional weights until the pointer swings about the centre of the scale.", "checkpoint": true, "expects": "fractionalMg" },
-    { "step": 5, "text": "Raise the beam gently and note five turning points, three on one side and two on the other.", "checkpoint": false },
-    { "step": 6, "text": "Calculate the resting point and hence the mass, using the sensitivity of the balance for the fraction still unaccounted for.", "checkpoint": true, "expects": "record" },
-    { "step": 7, "text": "Repeat the whole weighing at least three times.", "checkpoint": true, "expects": "rows>=3" },
-    { "step": 8, "text": "Remove the first body and repeat the entire procedure for the second body.", "checkpoint": false },
-    { "step": 9, "text": "Report both masses, corrected for the zero of the balance.", "checkpoint": true, "expects": "result" }
+    {
+      "step": 1,
+      "text": "Level the balance with its screws until the pointer swings equally on both sides of the centre of the scale.",
+      "checkpoint": false
+    },
+    {
+      "step": 2,
+      "text": "With both pans empty, raise the beam and note five turning points of the pointer. Calculate the resting point; this is the zero of the balance.",
+      "checkpoint": true,
+      "expects": "bodyOnPan"
+    },
+    {
+      "step": 3,
+      "text": "Lower the beam. Place the first body on the left pan and add gram weights to the right pan with forceps, starting with a weight you know is too large and halving.",
+      "checkpoint": true,
+      "expects": "weightsG"
+    },
+    {
+      "step": 4,
+      "text": "Add fractional weights until the pointer swings about the centre of the scale.",
+      "checkpoint": true,
+      "expects": "fractionalMg"
+    },
+    {
+      "step": 5,
+      "text": "Raise the beam gently and note five turning points, three on one side and two on the other.",
+      "checkpoint": false
+    },
+    {
+      "step": 6,
+      "text": "Calculate the resting point and hence the mass, using the sensitivity of the balance for the fraction still unaccounted for.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 7,
+      "text": "Repeat the whole weighing at least three times.",
+      "checkpoint": true,
+      "expects": "rows>=3"
+    },
+    {
+      "step": 8,
+      "text": "Remove the first body and repeat the entire procedure for the second body.",
+      "checkpoint": false
+    },
+    {
+      "step": 9,
+      "text": "Report both masses, corrected for the zero of the balance.",
+      "checkpoint": true,
+      "expects": "result"
+    }
   ],
   "simulation": {
     "model": "beam-balance",
     "renderer": "beam-balance",
     "fps": 60,
     "controls": [
-      { "var": "weightsG", "widget": "slider" },
-      { "var": "fractionalMg", "widget": "slider" },
-      { "var": "body", "widget": "segmented", "options": ["bodyA", "bodyB", "bodyC"] },
-      { "var": "balance", "widget": "segmented", "options": ["standard", "sensitive", "offset", "unequal"] },
-      { "var": "bodyOnPan", "widget": "switch" }
+      {
+        "var": "weightsG",
+        "widget": "slider"
+      },
+      {
+        "var": "fractionalMg",
+        "widget": "slider"
+      },
+      {
+        "var": "body",
+        "widget": "segmented",
+        "options": [
+          "bodyA",
+          "bodyB",
+          "bodyC"
+        ]
+      },
+      {
+        "var": "balance",
+        "widget": "segmented",
+        "options": [
+          "standard",
+          "sensitive",
+          "offset",
+          "unequal"
+        ]
+      },
+      {
+        "var": "bodyOnPan",
+        "widget": "switch"
+      }
     ],
     "actions": [
-      { "id": "record", "label": "Record weighing", "primary": true },
-      { "id": "reset", "label": "Reset" }
+      {
+        "id": "record",
+        "label": "Record weighing",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
     ]
   },
   "observationModel": {
     "columns": [
-      { "key": "trial", "label": "Trial", "unit": "", "decimals": 0 },
-      { "key": "weightsG", "label": "Weights", "unit": "g", "decimals": 3 },
-      { "key": "tp1", "label": "T.P. 1", "unit": "div", "decimals": 1 },
-      { "key": "tp2", "label": "T.P. 2", "unit": "div", "decimals": 1 },
-      { "key": "tp3", "label": "T.P. 3", "unit": "div", "decimals": 1 },
-      { "key": "tp4", "label": "T.P. 4", "unit": "div", "decimals": 1 },
-      { "key": "tp5", "label": "T.P. 5", "unit": "div", "decimals": 1 },
-      { "key": "restingPoint", "label": "Resting pt.", "unit": "div", "decimals": 2 },
-      { "key": "mass", "label": "Mass m", "unit": "g", "decimals": 4 }
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "weightsG",
+        "label": "Weights",
+        "unit": "g",
+        "decimals": 3
+      },
+      {
+        "key": "tp1",
+        "label": "T.P. 1",
+        "unit": "div",
+        "decimals": 1
+      },
+      {
+        "key": "tp2",
+        "label": "T.P. 2",
+        "unit": "div",
+        "decimals": 1
+      },
+      {
+        "key": "tp3",
+        "label": "T.P. 3",
+        "unit": "div",
+        "decimals": 1
+      },
+      {
+        "key": "tp4",
+        "label": "T.P. 4",
+        "unit": "div",
+        "decimals": 1
+      },
+      {
+        "key": "tp5",
+        "label": "T.P. 5",
+        "unit": "div",
+        "decimals": 1
+      },
+      {
+        "key": "restingPoint",
+        "label": "Resting pt.",
+        "unit": "div",
+        "decimals": 2
+      },
+      {
+        "key": "mass",
+        "label": "Mass m",
+        "unit": "g",
+        "decimals": 4
+      }
     ],
-    "graph": { "x": "trial", "y": "mass", "xLabel": "Trial number", "yLabel": "Mass m (g)", "throughOrigin": false },
+    "graph": {
+      "x": "trial",
+      "y": "mass",
+      "xLabel": "Trial number",
+      "yLabel": "Mass m (g)",
+      "throughOrigin": false
+    },
     "minRows": 3
   },
   "calculations": {
@@ -117,7 +321,11 @@
       "Mass = gram weights + fractional weights + excess",
       "Mean of the trials gives the mass of the body"
     ],
-    "resultKeys": ["meanMass", "meanRestingPoint", "sensitivity"]
+    "resultKeys": [
+      "meanMass",
+      "meanRestingPoint",
+      "sensitivity"
+    ]
   },
   "expectedResult": {
     "quantity": "Mass of body A",
@@ -125,8 +333,14 @@
     "value": 24.386,
     "tolerance": 0.02,
     "unit": "g",
-    "secondary": { "quantity": "Mass of body B", "value": 57.142, "tolerance": 0.02, "unit": "g" },
-    "statement": "Body A has a mass of about 24.386 g and body B about 57.142 g. The balance resolves better than the smallest weight in the box because the residual offset of the pointer is converted into milligrams through the sensitivity of the instrument."
+    "secondary": {
+      "quantity": "Mass of body B",
+      "value": 57.142,
+      "tolerance": 0.02,
+      "unit": "g"
+    },
+    "statement": "Body A has a mass of about 24.386 g and body B about 57.142 g. The balance resolves better than the smallest weight in the box because the residual offset of the pointer is converted into milligrams through the sensitivity of the instrument.",
+    "key": "meanMass"
   },
   "safety": [
     "Always lower the beam before adding or removing anything from a pan; loading a swinging beam damages the knife edges.",
@@ -144,33 +358,180 @@
     "Friction or dust at the knife edges makes the beam sluggish, so it does not come to its true resting point."
   ],
   "viva": [
-    { "question": "Why is a beam balance called a null instrument?", "expectedConcept": "Because it does not display a value. It only indicates whether the moments on the two sides are equal, that is whether the difference is null. The number comes from the known weights the observer chose, not from the instrument.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "It detects equality, not magnitude.", "commonMisconception": "Thinking the pointer scale reads the mass directly." },
-    { "question": "Would a beam balance give the same reading on the Moon?", "expectedConcept": "Yes. Taking moments, m·g·a = M·g·a, and g cancels from both sides. A beam balance compares masses, so it is unaffected by the value of g. A spring balance, which measures weight, would read differently.", "difficulty": "medium", "bloom": "Analyze", "answerLogic": "g cancels in the moment equation.", "commonMisconception": "Assuming every weighing instrument depends on gravity in the same way." },
-    { "question": "What is the resting point, and why is it not simply where the pointer stops?", "expectedConcept": "It is the position about which the pointer would finally settle, found from the centre of its swing. Waiting for a real beam to stop takes a very long time because the damping is small, so the resting point is calculated from the turning points instead.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Centre of a decaying oscillation.", "commonMisconception": "Trying to stop the pointer by hand, which introduces a force." },
-    { "question": "Why are three turning points taken on one side and two on the other?", "expectedConcept": "The amplitude decreases steadily as the swing dies away. Taking an odd number on one side and an even number on the other, and averaging the two means, makes this steady decay cancel out. Averaging all five equally would not.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "The asymmetric count cancels the damping.", "commonMisconception": "Thinking the numbers three and two are arbitrary convention." },
-    { "question": "What is the sensitivity of a balance?", "expectedConcept": "The number of scale divisions the resting point shifts for each milligram of excess load in one pan. A higher sensitivity means a larger shift for the same excess, so smaller mass differences can be detected.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Divisions per milligram.", "commonMisconception": "Confusing sensitivity with the capacity of the balance." },
-    { "question": "How can a balance give a mass finer than the smallest weight in the box?", "expectedConcept": "The pointer will not sit exactly at the zero when the finest available weight has been added. The residual offset, divided by the sensitivity, gives the extra mass in milligrams, and this is added to the weights in the pan.", "difficulty": "hard", "bloom": "Apply", "answerLogic": "Convert the pointer offset into mass through the sensitivity.", "commonMisconception": "Believing the resolution can never be better than the smallest weight." },
-    { "question": "The arms of a balance are slightly unequal. How would you still obtain the correct mass?", "expectedConcept": "By double weighing. Weigh the body in the left pan to get M₁, then interchange the body and the weights and weigh again to get M₂. The true mass is the geometric mean, √(M₁M₂). The two arm-length errors then cancel.", "difficulty": "hard", "bloom": "Create", "answerLogic": "Method of double weighing, geometric mean.", "commonMisconception": "Taking the arithmetic mean, which is only approximately right." },
-    { "question": "Why must weights be handled with forceps?", "expectedConcept": "Fingers deposit grease, moisture and salt on the weights. These add a small but real mass, and over time they corrode the surface, so the weights no longer have their marked values. The error is systematic and affects everyone who later uses that box.", "difficulty": "easy", "bloom": "Understand", "answerLogic": "Contamination changes the standard.", "commonMisconception": "Thinking it is only about keeping the weights looking clean." },
-    { "question": "Why should the beam be lowered before changing the load on a pan?", "expectedConcept": "The whole beam rests on sharp knife edges, which are what make the balance sensitive. Placing a load on a raised beam gives them a sudden jolt that blunts them, and a blunted knife edge permanently reduces the sensitivity of the instrument.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Protects the knife edges.", "commonMisconception": "Thinking it is only to stop the pans swinging about." },
-    { "question": "Two bodies of the same mass but very different densities are weighed in air. Are the readings identical?", "expectedConcept": "Not exactly. Each body is buoyed up by the weight of the air it displaces, and the larger, less dense body displaces more air, so it appears slightly lighter. For ordinary laboratory work the difference is negligible, but it matters in precision metrology.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "Archimedes' principle applies in air too.", "commonMisconception": "Assuming buoyancy only applies to liquids." }
+    {
+      "question": "Why is a beam balance called a null instrument?",
+      "expectedConcept": "Because it does not display a value. It only indicates whether the moments on the two sides are equal, that is whether the difference is null. The number comes from the known weights the observer chose, not from the instrument.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "It detects equality, not magnitude.",
+      "commonMisconception": "Thinking the pointer scale reads the mass directly."
+    },
+    {
+      "question": "Would a beam balance give the same reading on the Moon?",
+      "expectedConcept": "Yes. Taking moments, m·g·a = M·g·a, and g cancels from both sides. A beam balance compares masses, so it is unaffected by the value of g. A spring balance, which measures weight, would read differently.",
+      "difficulty": "medium",
+      "bloom": "Analyze",
+      "answerLogic": "g cancels in the moment equation.",
+      "commonMisconception": "Assuming every weighing instrument depends on gravity in the same way."
+    },
+    {
+      "question": "What is the resting point, and why is it not simply where the pointer stops?",
+      "expectedConcept": "It is the position about which the pointer would finally settle, found from the centre of its swing. Waiting for a real beam to stop takes a very long time because the damping is small, so the resting point is calculated from the turning points instead.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Centre of a decaying oscillation.",
+      "commonMisconception": "Trying to stop the pointer by hand, which introduces a force."
+    },
+    {
+      "question": "Why are three turning points taken on one side and two on the other?",
+      "expectedConcept": "The amplitude decreases steadily as the swing dies away. Taking an odd number on one side and an even number on the other, and averaging the two means, makes this steady decay cancel out. Averaging all five equally would not.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "The asymmetric count cancels the damping.",
+      "commonMisconception": "Thinking the numbers three and two are arbitrary convention."
+    },
+    {
+      "question": "What is the sensitivity of a balance?",
+      "expectedConcept": "The number of scale divisions the resting point shifts for each milligram of excess load in one pan. A higher sensitivity means a larger shift for the same excess, so smaller mass differences can be detected.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Divisions per milligram.",
+      "commonMisconception": "Confusing sensitivity with the capacity of the balance."
+    },
+    {
+      "question": "How can a balance give a mass finer than the smallest weight in the box?",
+      "expectedConcept": "The pointer will not sit exactly at the zero when the finest available weight has been added. The residual offset, divided by the sensitivity, gives the extra mass in milligrams, and this is added to the weights in the pan.",
+      "difficulty": "hard",
+      "bloom": "Apply",
+      "answerLogic": "Convert the pointer offset into mass through the sensitivity.",
+      "commonMisconception": "Believing the resolution can never be better than the smallest weight."
+    },
+    {
+      "question": "The arms of a balance are slightly unequal. How would you still obtain the correct mass?",
+      "expectedConcept": "By double weighing. Weigh the body in the left pan to get M₁, then interchange the body and the weights and weigh again to get M₂. The true mass is the geometric mean, √(M₁M₂). The two arm-length errors then cancel.",
+      "difficulty": "hard",
+      "bloom": "Create",
+      "answerLogic": "Method of double weighing, geometric mean.",
+      "commonMisconception": "Taking the arithmetic mean, which is only approximately right."
+    },
+    {
+      "question": "Why must weights be handled with forceps?",
+      "expectedConcept": "Fingers deposit grease, moisture and salt on the weights. These add a small but real mass, and over time they corrode the surface, so the weights no longer have their marked values. The error is systematic and affects everyone who later uses that box.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Contamination changes the standard.",
+      "commonMisconception": "Thinking it is only about keeping the weights looking clean."
+    },
+    {
+      "question": "Why should the beam be lowered before changing the load on a pan?",
+      "expectedConcept": "The whole beam rests on sharp knife edges, which are what make the balance sensitive. Placing a load on a raised beam gives them a sudden jolt that blunts them, and a blunted knife edge permanently reduces the sensitivity of the instrument.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Protects the knife edges.",
+      "commonMisconception": "Thinking it is only to stop the pans swinging about."
+    },
+    {
+      "question": "Two bodies of the same mass but very different densities are weighed in air. Are the readings identical?",
+      "expectedConcept": "Not exactly. Each body is buoyed up by the weight of the air it displaces, and the larger, less dense body displaces more air, so it appears slightly lighter. For ordinary laboratory work the difference is negligible, but it matters in precision metrology.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Archimedes' principle applies in air too.",
+      "commonMisconception": "Assuming buoyancy only applies to liquids."
+    }
   ],
   "assessment": {
     "preLab": [
-      { "id": "pre1", "type": "mcq", "question": "A beam balance compares:", "options": ["Weights, so it depends on g", "Masses, because g cancels from both sides", "Densities", "Volumes"], "answer": 1, "feedback": "m·g·a = M·g·a. The g cancels, so a beam balance compares masses and works the same anywhere." },
-      { "id": "pre2", "type": "mcq", "question": "The resting point of a beam balance is found by:", "options": ["Waiting until the pointer stops", "Holding the pointer at the centre", "Averaging the turning points of the swing", "Reading the pointer once at random"], "answer": 2, "feedback": "The swing decays slowly, so the resting point is calculated from the turning points instead of waiting." },
-      { "id": "pre3", "type": "mcq", "question": "Weights must be handled with forceps because:", "options": ["They are too hot to touch", "Fingers add grease and moisture, changing their mass", "They are magnetic", "It is faster"], "answer": 1, "feedback": "Contamination from fingers changes the value of the standard weights permanently." }
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "A beam balance compares:",
+        "options": [
+          "Weights, so it depends on g",
+          "Masses, because g cancels from both sides",
+          "Densities",
+          "Volumes"
+        ],
+        "answer": 1,
+        "feedback": "m·g·a = M·g·a. The g cancels, so a beam balance compares masses and works the same anywhere."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "The resting point of a beam balance is found by:",
+        "options": [
+          "Waiting until the pointer stops",
+          "Holding the pointer at the centre",
+          "Averaging the turning points of the swing",
+          "Reading the pointer once at random"
+        ],
+        "answer": 2,
+        "feedback": "The swing decays slowly, so the resting point is calculated from the turning points instead of waiting."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "Weights must be handled with forceps because:",
+        "options": [
+          "They are too hot to touch",
+          "Fingers add grease and moisture, changing their mass",
+          "They are magnetic",
+          "It is faster"
+        ],
+        "answer": 1,
+        "feedback": "Contamination from fingers changes the value of the standard weights permanently."
+      }
     ],
     "duringLab": [
-      { "id": "dur1", "type": "task", "question": "Complete at least three full weighings.", "check": "rows>=3" },
-      { "id": "dur2", "type": "task", "question": "Weigh two different bodies, as the practical requires.", "check": "twoBodies" }
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Complete at least three full weighings.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Weigh two different bodies, as the practical requires.",
+        "check": "twoBodies"
+      }
     ],
     "postLab": [
-      { "id": "post1", "type": "numeric", "question": "State the mass of body A in gram.", "answer": 24.386, "tolerance": 0.03, "feedback": "About 24.386 g, using the sensitivity to resolve the last few milligrams." },
-      { "id": "post2", "type": "numeric", "question": "State the mass of body B in gram.", "answer": 57.142, "tolerance": 0.03, "feedback": "About 57.142 g." },
-      { "id": "post3", "type": "mcq", "question": "Repeating a weighing many times on a balance with unequal arms will:", "options": ["Remove the error completely", "Reduce it by averaging", "Not remove it, because the error is systematic", "Make it worse each time"], "answer": 2, "feedback": "Unequal arms shift every reading the same way. Only a change of method — double weighing — removes a systematic error." }
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the mass of body A in gram.",
+        "answer": 24.386,
+        "tolerance": 0.03,
+        "feedback": "About 24.386 g, using the sensitivity to resolve the last few milligrams."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "State the mass of body B in gram.",
+        "answer": 57.142,
+        "tolerance": 0.03,
+        "feedback": "About 57.142 g."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "Repeating a weighing many times on a balance with unequal arms will:",
+        "options": [
+          "Remove the error completely",
+          "Reduce it by averaging",
+          "Not remove it, because the error is systematic",
+          "Make it worse each time"
+        ],
+        "answer": 2,
+        "feedback": "Unequal arms shift every reading the same way. Only a change of method — double weighing — removes a systematic error."
+      }
     ],
-    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
   },
   "scientificValidation": {
     "formula": "m·g·a₁ = M·g·a₂; R = ½[mean(odd T.P.) + mean(even T.P.)]; mass = M + (R − R₀)/S",

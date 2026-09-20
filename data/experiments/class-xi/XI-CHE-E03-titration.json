@@ -18,35 +18,293 @@
     "subtopic": "Determination of the strength of an alkali by titration against standard oxalic acid",
     "practical": "Determination of strength of a given solution of sodium hydroxide by titrating it against standard oxalic acid solution.",
     "assessmentComponent": "Volumetric Analysis (08 marks)",
-    "learningObjectives": ["Prepare and use a standard solution of oxalic acid", "Perform a titration using a pipette, burette and conical flask", "Select phenolphthalein for a weak-acid/strong-base endpoint", "Obtain concordant titres", "Apply N₁V₁ = N₂V₂ and calculate strength in g/L"],
-    "competencies": ["Accurate volumetric measurement", "Recognising equivalence and endpoint", "Indicator selection", "Concordant-reading analysis", "Stoichiometric calculation"],
+    "learningObjectives": [
+      "Prepare and use a standard solution of oxalic acid",
+      "Perform a titration using a pipette, burette and conical flask",
+      "Select phenolphthalein for a weak-acid/strong-base endpoint",
+      "Obtain concordant titres",
+      "Apply N₁V₁ = N₂V₂ and calculate strength in g/L"
+    ],
+    "competencies": [
+      "Accurate volumetric measurement",
+      "Recognising equivalence and endpoint",
+      "Indicator selection",
+      "Concordant-reading analysis",
+      "Stoichiometric calculation"
+    ],
     "sourceReference": "CBSE Chemistry (043) Classes XI-XII Curriculum 2026-27, PRACTICAL SYLLABUS, E. Quantitative Estimation",
     "verificationStatus": "verified"
   },
   "title": "Volumetric analysis: strength of NaOH by titration with oxalic acid",
   "shortTitle": "Acid-Base Titration",
-  "objective": ["Prepare a standard oxalic acid solution.", "Determine the strength of sodium hydroxide by titration.", "Express the result in normality, molarity and grams per litre."],
+  "objective": [
+    "Prepare a standard oxalic acid solution.",
+    "Determine the strength of sodium hydroxide by titration.",
+    "Express the result in normality, molarity and grams per litre."
+  ],
   "theory": {
     "statement": "At equivalence, acid and base react in chemically equivalent amounts.",
     "derivationNote": "Oxalic acid dihydrate, H₂C₂O₄·2H₂O, is a primary standard. The equivalence pH is slightly basic because oxalate hydrolysis occurs.",
-    "keyEquations": ["H₂C₂O₄ + 2NaOH → Na₂C₂O₄ + 2H₂O", "N₁V₁ = N₂V₂", "Strength (g/L) = Normality × 40", "Equivalent mass of H₂C₂O₄·2H₂O = 126/2 = 63"],
+    "keyEquations": [
+      "H₂C₂O₄ + 2NaOH → Na₂C₂O₄ + 2H₂O",
+      "N₁V₁ = N₂V₂",
+      "Strength (g/L) = Normality × 40",
+      "Equivalent mass of H₂C₂O₄·2H₂O = 126/2 = 63"
+    ],
     "chemicalFormula": "H₂C₂O₄·2H₂O"
   },
   "variables": [
-    {"id":"titrantConc","label":"Oxalic acid normality","symbol":"N₁","unit":"N","type":"control","min":0.02,"max":0.2,"step":0.01,"default":0.1},
-    {"id":"analyteVolume","label":"NaOH pipetted","symbol":"V₂","unit":"mL","type":"control","min":5,"max":25,"step":5,"default":20},
-    {"id":"indicator","label":"Indicator","unit":"","type":"control","options":["phenolphthalein","methylOrange"],"default":"phenolphthalein"},
-    {"id":"buretteVolume","label":"Volume delivered","symbol":"V₁","unit":"mL","type":"independent","min":0,"max":50,"step":0.1,"default":0},
-    {"id":"pH","label":"pH of mixture","symbol":"pH","unit":"","type":"dependent"}
+    {
+      "id": "titrantConc",
+      "label": "Oxalic acid normality",
+      "symbol": "N₁",
+      "unit": "N",
+      "type": "control",
+      "min": 0.02,
+      "max": 0.2,
+      "step": 0.01,
+      "default": 0.1
+    },
+    {
+      "id": "analyteVolume",
+      "label": "NaOH pipetted",
+      "symbol": "V₂",
+      "unit": "mL",
+      "type": "control",
+      "min": 5,
+      "max": 25,
+      "step": 5,
+      "default": 20
+    },
+    {
+      "id": "indicator",
+      "label": "Indicator",
+      "unit": "",
+      "type": "control",
+      "options": [
+        "phenolphthalein",
+        "methylOrange"
+      ],
+      "default": "phenolphthalein"
+    },
+    {
+      "id": "buretteVolume",
+      "label": "Volume delivered",
+      "symbol": "V₁",
+      "unit": "mL",
+      "type": "independent",
+      "min": 0,
+      "max": 50,
+      "step": 0.1,
+      "default": 0
+    },
+    {
+      "id": "pH",
+      "label": "pH of mixture",
+      "symbol": "pH",
+      "unit": "",
+      "type": "dependent"
+    }
   ],
-  "procedure": [{"step":1,"text":"Dissolve the accurately weighed oxalic acid dihydrate in distilled water and make up to volume.","checkpoint":false},{"step":2,"text":"Rinse and fill the burette with standard oxalic acid; remove air bubbles.","checkpoint":false},{"step":3,"text":"Pipette the measured NaOH into the conical flask and add phenolphthalein.","checkpoint":true},{"step":4,"text":"Run acid rapidly at first, then dropwise near the first permanent loss of pink colour.","checkpoint":true},{"step":5,"text":"Repeat until concordant titres are obtained and calculate using N₁V₁ = N₂V₂.","checkpoint":true}],
-  "simulation": {"model":"titration","renderer":"titration","fps":45,"controls":[{"var":"buretteVolume","widget":"slider"},{"var":"indicator","widget":"segmented","options":["phenolphthalein","methylOrange"]},{"var":"titrantConc","widget":"slider"},{"var":"analyteVolume","widget":"slider"}],"actions":[{"id":"record","label":"Record end point","primary":true},{"id":"reset","label":"Refill burette"}]},
-  "observationModel": {"columns":[{"key":"trial","label":"Trial","unit":"","decimals":0},{"key":"initialReading","label":"Initial","unit":"mL","decimals":1},{"key":"finalReading","label":"Final","unit":"mL","decimals":1},{"key":"volumeUsed","label":"Volume used","unit":"mL","decimals":1},{"key":"pHAtStop","label":"pH at end point","unit":"","decimals":2}],"graph":{"x":"trial","y":"volumeUsed","xLabel":"Trial number","yLabel":"Volume of acid used (mL)","throughOrigin":false},"minRows":3},
-  "calculations": {"steps":["Mean concordant titre = V₁","N(NaOH) = (N(acid) × V(acid)) / V(NaOH)","Strength = Normality × 40"],"resultKeys":["normality","strength","meanTitre"]},
-  "expectedResult": {"quantity":"Strength of sodium hydroxide","symbol":"strength","value":3.92,"tolerance":0.3,"unit":"g/L","secondary":{"quantity":"Normality of NaOH","value":0.098,"tolerance":0.006,"unit":"N"}},
-  "safety":["Sodium hydroxide is corrosive; wear eye protection.","Never pipette by mouth; use a pipette filler.","Oxalic acid is harmful if swallowed.","Clamp the burette securely.","Phenolphthalein in ethanol is flammable; keep away from flames."],
-  "sourcesOfError":["Parallax in burette reading","Air bubble in the nozzle","Incorrect rinsing","Overshooting the endpoint","Failure to wash flask walls","Incorrect indicator"],
-  "viva":[],
-  "assessment":{"preLab":[],"duringLab":[{"id":"dur1","type":"task","question":"Perform at least three titrations.","check":"rows>=3"},{"id":"dur2","type":"task","question":"Obtain concordant readings within 0.2 mL.","check":"concordant"},{"id":"dur3","type":"task","question":"Use phenolphthalein for this weak-acid/strong-base titration.","check":"correctIndicator"}],"postLab":[],"weights":{"preLab":20,"duringLab":30,"postLab":30,"viva":20}},
-  "scientificValidation": {"formula":"H₂C₂O₄ + 2NaOH → Na₂C₂O₄ + 2H₂O; N₁V₁ = N₂V₂","assumptions":["NaOH is treated as fully dissociated","Oxalic acid is diprotic","Volumes are additive","Temperature is approximately 298 K"],"validRange":"Burette 0–50 mL; pipette 5–25 mL; concentration 0.02–0.5 N","unitSystem":"Volumes in mL; normality in eq/L; strength in g/L","edgeCases":["At equivalence pH is basic, not exactly 7","Overshooting produces an invalid titre","Zero titrant concentration is blocked"],"expectedBehaviour":["pH decreases as acid is delivered","Phenolphthalein gives the suitable endpoint","Concordant titres give a stable mean"],"testFile":"tools/audit-scientific-integrity.mjs"}
+  "procedure": [
+    {
+      "step": 1,
+      "text": "Dissolve the accurately weighed oxalic acid dihydrate in distilled water and make up to volume.",
+      "checkpoint": false
+    },
+    {
+      "step": 2,
+      "text": "Rinse and fill the burette with standard oxalic acid; remove air bubbles.",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Pipette the measured NaOH into the conical flask and add phenolphthalein.",
+      "checkpoint": true
+    },
+    {
+      "step": 4,
+      "text": "Run acid rapidly at first, then dropwise near the first permanent loss of pink colour.",
+      "checkpoint": true
+    },
+    {
+      "step": 5,
+      "text": "Repeat until concordant titres are obtained and calculate using N₁V₁ = N₂V₂.",
+      "checkpoint": true
+    }
+  ],
+  "simulation": {
+    "model": "titration",
+    "renderer": "titration",
+    "fps": 45,
+    "controls": [
+      {
+        "var": "buretteVolume",
+        "widget": "slider"
+      },
+      {
+        "var": "indicator",
+        "widget": "segmented",
+        "options": [
+          "phenolphthalein",
+          "methylOrange"
+        ]
+      },
+      {
+        "var": "titrantConc",
+        "widget": "slider"
+      },
+      {
+        "var": "analyteVolume",
+        "widget": "slider"
+      }
+    ],
+    "actions": [
+      {
+        "id": "record",
+        "label": "Record end point",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Refill burette"
+      }
+    ]
+  },
+  "observationModel": {
+    "columns": [
+      {
+        "key": "trial",
+        "label": "Trial",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "initialReading",
+        "label": "Initial",
+        "unit": "mL",
+        "decimals": 1
+      },
+      {
+        "key": "finalReading",
+        "label": "Final",
+        "unit": "mL",
+        "decimals": 1
+      },
+      {
+        "key": "volumeUsed",
+        "label": "Volume used",
+        "unit": "mL",
+        "decimals": 1
+      },
+      {
+        "key": "pHAtStop",
+        "label": "pH at end point",
+        "unit": "",
+        "decimals": 2
+      }
+    ],
+    "graph": {
+      "x": "trial",
+      "y": "volumeUsed",
+      "xLabel": "Trial number",
+      "yLabel": "Volume of acid used (mL)",
+      "throughOrigin": false
+    },
+    "minRows": 3
+  },
+  "calculations": {
+    "steps": [
+      "Mean concordant titre = V₁",
+      "N(NaOH) = (N(acid) × V(acid)) / V(NaOH)",
+      "Strength = Normality × 40"
+    ],
+    "resultKeys": [
+      "normality",
+      "strength",
+      "meanTitre"
+    ]
+  },
+  "expectedResult": {
+    "quantity": "Strength of sodium hydroxide",
+    "symbol": "strength",
+    "value": 3.92,
+    "tolerance": 0.3,
+    "unit": "g/L",
+    "secondary": {
+      "quantity": "Normality of NaOH",
+      "value": 0.098,
+      "tolerance": 0.006,
+      "unit": "N"
+    },
+    "key": "strength"
+  },
+  "safety": [
+    "Sodium hydroxide is corrosive; wear eye protection.",
+    "Never pipette by mouth; use a pipette filler.",
+    "Oxalic acid is harmful if swallowed.",
+    "Clamp the burette securely.",
+    "Phenolphthalein in ethanol is flammable; keep away from flames."
+  ],
+  "sourcesOfError": [
+    "Parallax in burette reading",
+    "Air bubble in the nozzle",
+    "Incorrect rinsing",
+    "Overshooting the endpoint",
+    "Failure to wash flask walls",
+    "Incorrect indicator"
+  ],
+  "viva": [],
+  "assessment": {
+    "preLab": [],
+    "duringLab": [
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Perform at least three titrations.",
+        "check": "rows>=3"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Obtain concordant readings within 0.2 mL.",
+        "check": "concordant"
+      },
+      {
+        "id": "dur3",
+        "type": "task",
+        "question": "Use phenolphthalein for this weak-acid/strong-base titration.",
+        "check": "correctIndicator"
+      }
+    ],
+    "postLab": [],
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
+  },
+  "scientificValidation": {
+    "formula": "H₂C₂O₄ + 2NaOH → Na₂C₂O₄ + 2H₂O; N₁V₁ = N₂V₂",
+    "assumptions": [
+      "NaOH is treated as fully dissociated",
+      "Oxalic acid is diprotic",
+      "Volumes are additive",
+      "Temperature is approximately 298 K"
+    ],
+    "validRange": "Burette 0–50 mL; pipette 5–25 mL; concentration 0.02–0.5 N",
+    "unitSystem": "Volumes in mL; normality in eq/L; strength in g/L",
+    "edgeCases": [
+      "At equivalence pH is basic, not exactly 7",
+      "Overshooting produces an invalid titre",
+      "Zero titrant concentration is blocked"
+    ],
+    "expectedBehaviour": [
+      "pH decreases as acid is delivered",
+      "Phenolphthalein gives the suitable endpoint",
+      "Concordant titres give a stable mean"
+    ],
+    "testFile": "tools/audit-scientific-integrity.mjs"
+  }
 }

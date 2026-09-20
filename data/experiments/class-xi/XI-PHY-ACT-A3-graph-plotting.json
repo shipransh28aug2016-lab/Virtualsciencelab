@@ -305,7 +305,8 @@
       "tolerance": 2,
       "unit": ""
     },
-    "statement": "With a scale chosen to fill the paper, the six points lie close to a straight line through the origin of slope about 0.0182 cm per gram, and the line passes within the error bar of every point. Taking the slope from two data points instead of the line gives a slightly different answer that carries the full uncertainty of just those two readings."
+    "statement": "With a scale chosen to fill the paper, the six points lie close to a straight line through the origin of slope about 0.0182 cm per gram, and the line passes within the error bar of every point. Taking the slope from two data points instead of the line gives a slightly different answer that carries the full uncertainty of just those two readings.",
+    "key": "slope"
   },
   "safety": [
     "This activity uses no apparatus that can cause harm; the only care needed is with the sharpened pencil.",

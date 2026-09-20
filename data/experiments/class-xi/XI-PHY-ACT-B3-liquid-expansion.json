@@ -300,7 +300,7 @@
       "yLabel": "Rise in level (mm)",
       "throughOrigin": true
     },
-    "minRows": 3
+    "minRows": 4
   },
   "calculations": {
     "steps": [
@@ -320,7 +320,7 @@
     "quantity": "Real cubical expansivity of water",
     "symbol": "γ",
     "value": 0.000207,
-    "tolerance": 0.00003,
+    "tolerance": 3e-05,
     "unit": "per K",
     "secondary": {
       "quantity": "Share of the result due to the vessel",
@@ -328,7 +328,8 @@
       "tolerance": 4,
       "unit": "%"
     },
-    "statement": "The level dips briefly as the flask expands before the water does, then rises steadily. The apparent expansivity found from the rise is about 1.8 parts in ten thousand per kelvin; adding the expansivity of the glass gives a real value of about 2.07 parts in ten thousand, which matches the accepted figure for water."
+    "statement": "The level dips briefly as the flask expands before the water does, then rises steadily. The apparent expansivity found from the rise is about 1.8 parts in ten thousand per kelvin; adding the expansivity of the glass gives a real value of about 2.07 parts in ten thousand, which matches the accepted figure for water.",
+    "key": "gammaReported"
   },
   "safety": [
     "Heat the flask in a water bath, never with a naked flame directly on the glass, which may crack it.",

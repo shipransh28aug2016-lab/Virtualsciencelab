@@ -321,7 +321,8 @@
       "tolerance": 5,
       "unit": "%"
     },
-    "statement": "On the polished track the ball returns to about 89 percent of its release height, so roughly a ninth of the mechanical energy has been dissipated against friction. The ratio is much the same from any release height, and falls markedly on a rough track. The ball never rises above its starting height, which would require energy to be created."
+    "statement": "On the polished track the ball returns to about 89 percent of its release height, so roughly a ninth of the mechanical energy has been dissipated against friction. The ratio is much the same from any release height, and falls markedly on a rough track. The ball never rises above its starting height, which would require energy to be created.",
+    "key": "ratio"
   },
   "safety": [
     "Clamp the inclined planes so they cannot slip or topple while the ball is running.",

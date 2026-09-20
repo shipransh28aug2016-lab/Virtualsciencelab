@@ -5,6 +5,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, sigFig } from '../../utils/measure.js';
+import { nullPoint, nullRefusal } from '../null-point.js';
 
 export const meta = {
   id: 'XI-PHY-A02',
@@ -48,6 +49,24 @@ export function gripped(inputs) {
   return Math.abs(inputs.thimble - specimenOf(inputs).trueMm) <= Math.max(0.02, lc * 3);
 }
 
+/**
+ * Whether the faces have closed on the specimen. The ratchet is the real
+ * signal — it slips once the faces grip — and it is what keeps a student from
+ * crushing a wire by over-tightening.
+ */
+export function nullIndicator(inputs) {
+  return nullPoint({
+    label: 'Screw gauge',
+    current: inputs.thimble,
+    target: specimenOf(inputs).trueMm,
+    tolerance: Math.max(0.03, leastCount(inputs) * 3),
+    increase: 'The faces are still clear of the specimen — close the thimble further.',
+    decrease: 'The specimen is being compressed — open the thimble a little.',
+    atNullText: 'the ratchet just slips — the faces are gripping',
+    awayFrom: 'not gripping',
+  });
+}
+
 export function validate(inputs) {
   const errors = [], warnings = [];
   if (!gripped(inputs)) {
@@ -88,7 +107,7 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!gripped(inputs)) return null;
+  if (!gripped(inputs)) return { v: null, reason: nullRefusal(nullIndicator(inputs)) };
   const lc = leastCount(inputs);
   const rng = makeRng(seed + trial * 37);
   const trueMm = specimenOf(inputs).trueMm - compressionMm(inputs);
@@ -98,19 +117,41 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const hsr = Math.round((observed % g.pitch < 0 ? observed % g.pitch + g.pitch : observed % g.pitch) / lc);
   const psr = Number((observed - hsr * lc).toFixed(3));
   const corrected = toLeastCount(observed - zeroErrorMm(inputs), lc);
-  return { trial, pitchScaleReading: psr, circularDivision: hsr, leastCount: lc, observed, zeroError: Number(zeroErrorMm(inputs).toFixed(3)), corrected };
+  return { trial, pitchScaleReading: psr, circularDivision: hsr, leastCount: lc, observed, zeroError: Number(zeroErrorMm(inputs).toFixed(3)), corrected, specimen: inputs.specimen, specimenLabel: specimenOf(inputs).label };
 }
 
 export function derive(rows) {
+  /*
+   * ONE SPECIMEN PER SET.
+   *
+   * A mean is only a measurement when every reading is of the same thing.
+   * Readings taken after the specimen was changed belong to a different
+   * object, and averaging them produced a confident number that describes
+   * nothing. Averaging a wire with a glass plate gives the mean of two different objects, which is not a measurement of either.
+   *
+   * Measuring several objects is the right thing to do — it is how the
+   * instrument is learnt — but each one is its own set of readings.
+   */
+  const specimens = [...new Set((rows || []).map((r) => r.specimen).filter(Boolean))];
+  if (specimens.length > 1) {
+    const names = [...new Set(rows.map((r) => r.specimenLabel).filter(Boolean))];
+    return {
+      ok: false,
+      reason: `These readings are of ${specimens.length} different objects${names.length ? ` (${names.join(', ')})` : ''}. A mean is a measurement only when every reading is of the same one — clear the table and take a full set on each.`,
+    };
+  }
   const vals = rows.map((r) => Number(r.corrected)).filter(Number.isFinite);
   if (vals.length < 3) return { ok: false, reason: 'Record at least three readings at different places on the specimen.' };
   const m = vals.reduce((a, b) => a + b, 0) / vals.length;
   const area = Math.PI * (m / 2) ** 2;
   return {
     ok: true, meanValue: sigFig(m, 4), radius: sigFig(m / 2, 4), area: sigFig(area, 4),
+    // The panel states which formula produced the area; without it the line
+    // read "Radius = 0.21 mm · undefined = 0.132 mm²".
+    areaFormula: 'πr²',
     n: vals.length, spread: Number((Math.max(...vals) - Math.min(...vals)).toFixed(3)),
     points: rows.map((r, i) => ({ x: i + 1, y: Number(r.corrected) })),
   };
 }
 
-export default { meta, defaults, GAUGES, SPECIMENS, init, step, measure, derive, validate, leastCount, zeroErrorMm, specimenOf, gripped, compressionMm };
+export default { meta, defaults, GAUGES, SPECIMENS, init, step, measure, derive, validate, leastCount, zeroErrorMm, specimenOf, gripped, compressionMm, nullIndicator};

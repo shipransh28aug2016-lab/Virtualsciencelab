@@ -82,8 +82,10 @@
       <div class="lab">
         <div>
           <div class="stage glass">
-            <div class="canvas-wrap"><canvas id="cv" width="900" height="560" role="img" aria-label="Experiment apparatus"></canvas></div>
+            <div class="canvas-wrap"><canvas id="cv" width="900" height="560" role="img" aria-label="Experiment apparatus"></canvas><div class="speed-flag" id="speedFlag" hidden aria-live="polite"></div></div>
             <div class="toolbar" id="toolbar"></div>
+            <div class="clock" id="clock" hidden aria-label="Simulation clock"></div>
+            <div class="null-box" id="nullBox" hidden role="status" aria-live="polite"></div>
             <div class="readouts" id="readouts"></div>
             <div class="live-config" id="liveConfig" aria-live="polite"></div>
             <div class="feedback" id="feedback" role="alert" aria-live="polite"></div>
@@ -111,6 +113,7 @@
             </button>
             <div class="panel-body" id="tableBody"><div>
               <div class="tblwrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+              <div class="still-needed" id="stillNeeded" hidden role="status" aria-live="polite"></div>
               <div class="toolbar" style="margin-top:9px">
                 <button class="btn sm" id="csvBtn">Export CSV</button>
                 <button class="btn sm ghost" id="clearBtn">Clear table</button>

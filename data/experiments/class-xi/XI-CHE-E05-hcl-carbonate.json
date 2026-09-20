@@ -364,7 +364,8 @@
       "tolerance": 0.008,
       "unit": "N"
     },
-    "statement": "Three concordant titres give a mean volume of standard sodium carbonate. Applying N₁V₁ = N₂V₂ gives a normality of about 0.104 N for the hydrochloric acid, and multiplying by the equivalent mass 36.5 gives a strength of about 3.8 g/L. Methyl orange gives a sharp end point; phenolphthalein would end the titration far too early."
+    "statement": "Three concordant titres give a mean volume of standard sodium carbonate. Applying N₁V₁ = N₂V₂ gives a normality of about 0.104 N for the hydrochloric acid, and multiplying by the equivalent mass 36.5 gives a strength of about 3.8 g/L. Methyl orange gives a sharp end point; phenolphthalein would end the titration far too early.",
+    "key": "strength"
   },
   "safety": [
     "Sodium hydroxide is corrosive and causes severe burns. Wear eye protection and wash any splash immediately with plenty of water.",

@@ -308,8 +308,8 @@
   "expectedResult": {
     "quantity": "Difference in coefficient of linear expansion, invar and brass",
     "symbol": "Δα",
-    "value": 0.0000178,
-    "tolerance": 0.0000025,
+    "value": 1.78e-05,
+    "tolerance": 2.5e-06,
     "unit": "per K",
     "secondary": {
       "quantity": "Deflection at 80 °C on a 100 mm strip",
@@ -317,7 +317,8 @@
       "tolerance": 4,
       "unit": "mm"
     },
-    "statement": "The strip bends with the brass on the outside, because brass expands far more than invar. The deflection is proportional to the temperature rise, and the slope gives a difference in expansivity of about 17.8 millionths per kelvin, which matches the accepted values for the pair."
+    "statement": "The strip bends with the brass on the outside, because brass expands far more than invar. The deflection is proportional to the temperature rise, and the slope gives a difference in expansivity of about 17.8 millionths per kelvin, which matches the accepted values for the pair.",
+    "key": "alphaDifference"
   },
   "safety": [
     "The strip and the clamp become very hot: handle only with tongs and allow to cool before touching.",

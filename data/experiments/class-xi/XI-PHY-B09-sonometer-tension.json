@@ -147,6 +147,17 @@
       "symbol": "l",
       "unit": "cm",
       "type": "dependent"
+    },
+    {
+      "id": "mode",
+      "label": "Law under test",
+      "symbol": "",
+      "unit": "",
+      "type": "controlled",
+      "min": null,
+      "max": null,
+      "step": null,
+      "default": "law-of-tension"
     }
   ],
   "procedure": [
@@ -323,7 +334,8 @@
       "tolerance": 8e-05,
       "unit": "kg·m⁻¹"
     },
-    "statement": "The ratio of resonant length to the square root of the tension is constant within experimental error, and the graph of l against √T is a straight line passing through the origin. The law of tension is verified. The slope gives a mass per unit length of about 9.8 × 10⁻⁴ kg/m, agreeing with πr²ρ for the wire supplied."
+    "statement": "The ratio of resonant length to the square root of the tension is constant within experimental error, and the graph of l against √T is a straight line passing through the origin. The law of tension is verified. The slope gives a mass per unit length of about 9.8 × 10⁻⁴ kg/m, agreeing with πr²ρ for the wire supplied.",
+    "key": "meanRatio"
   },
   "safety": [
     "Strike a tuning fork only on a rubber pad. Striking it on the bench chips the prongs, changes its frequency and can injure your hand.",

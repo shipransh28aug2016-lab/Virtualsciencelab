@@ -64,10 +64,18 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 83);
   const r = tubeOf(inputs).radiusCm;
   const h = riseCm(inputs) + jitter(rng, 0.015);
-  return { trial, tube: tubeOf(inputs).label, radiusCm: r, invRadius: sigFig(1 / r, 4), riseCm: Number(h.toFixed(3)), product: sigFig(r * h, 4), tempC: inputs.tempC };
+  return { trial, tube: tubeOf(inputs).label, radiusCm: r, invRadius: sigFig(1 / r, 4), riseCm: Number(h.toFixed(3)), product: sigFig(r * h, 4), tempC: inputs.tempC, liquid: inputs.liquid };
 }
 
 export function derive(rows, inputs = defaults) {
+  /* The tubes are MEANT to differ — that is the whole point of plotting the
+     rise against 1/r. The liquid and its temperature are not: surface tension
+     is a property of the liquid, and mixing two of them fits one line through
+     two different constants. */
+  const liquids = [...new Set((rows || []).map((r) => r.liquid).filter(Boolean))];
+  if (liquids.length > 1) {
+    return { ok: false, reason: `These readings are of ${liquids.length} different liquids. Surface tension is a property of the liquid, so one liquid per set of tubes.` };
+  }
   const pts = rows.map((r) => ({ x: Number(r.invRadius), y: Number(r.riseCm) }));
   if (pts.length < 3) return { ok: false, reason: 'Record the rise in at least three different tubes.' };
   const fit = fitThroughOrigin(pts);

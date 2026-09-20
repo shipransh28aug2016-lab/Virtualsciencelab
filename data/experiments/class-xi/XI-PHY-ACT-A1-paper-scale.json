@@ -275,7 +275,8 @@
       "tolerance": 0.01,
       "unit": "cm"
     },
-    "statement": "The pencil measures about 11.3 cm. With a least count of 0.2 cm the maximum error in a single reading is 0.1 cm, which is under one percent of this length but nearly three percent of the paper clip. The finer the least count, the smaller the error — but the marks must be drawn accurately for that finer figure to mean anything."
+    "statement": "The pencil measures about 11.3 cm. With a least count of 0.2 cm the maximum error in a single reading is 0.1 cm, which is under one percent of this length but nearly three percent of the paper clip. The finer the least count, the smaller the error — but the marks must be drawn accurately for that finer figure to mean anything.",
+    "key": "meanReading"
   },
   "safety": [
     "Cut the paper strip with care; scissors and craft knives are the only real hazard in this activity.",

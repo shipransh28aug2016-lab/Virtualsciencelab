@@ -1321,7 +1321,7 @@
    "contentStatus": "published",
    "title": "Molarity of KMnO4 vs Standard Oxalic Acid",
    "shortTitle": "KMnO₄ vs Oxalic Acid",
-   "objective0": "Titrate KMnO4 against standard standard oxalic acid in acidic medium",
+   "objective0": "Titrate KMnO4 against standard oxalic acid in acidic medium",
    "curriculumMapping": {
     "section": "J",
     "serial": 1,
@@ -1340,7 +1340,7 @@
    "contentStatus": "published",
    "title": "Molarity of KMnO4 vs Standard Mohr's Salt",
    "shortTitle": "KMnO₄ vs Mohr's Salt",
-   "objective0": "Titrate KMnO4 against standard standard Mohr's salt (Fe²⁺) in acidic medium",
+   "objective0": "Titrate KMnO4 against standard Mohr's salt (Fe²⁺) in acidic medium",
    "curriculumMapping": {
     "section": "J",
     "serial": 2,

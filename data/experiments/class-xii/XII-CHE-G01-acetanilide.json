@@ -204,7 +204,7 @@
       }
     ],
     "graph": null,
-    "minRows": 1
+    "minRows": 2
   },
   "calculations": {
     "steps": [
@@ -223,7 +223,8 @@
     "value": 114.3,
     "tolerance": 2,
     "unit": "°C",
-    "statement": "The crude product is obtained in good yield; recrystallisation lowers the yield but sharpens the melting point towards the literature value of about 114.3 °C, confirming the gain in purity."
+    "statement": "The crude product is obtained in good yield; recrystallisation lowers the yield but sharpens the melting point towards the literature value of about 114.3 °C, confirming the gain in purity.",
+    "key": "meltingPoint"
   },
   "safety": [
     "Aniline is toxic and absorbed through skin — wear gloves and avoid inhalation.",

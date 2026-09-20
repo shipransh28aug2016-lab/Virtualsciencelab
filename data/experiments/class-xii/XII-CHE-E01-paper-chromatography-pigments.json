@@ -278,6 +278,7 @@
       "Check that the Rf of the same pigment agrees between runs of different length."
     ],
     "resultKeys": [
+      "highestRf",
       "componentCount",
       "worstErrorPct"
     ]
@@ -286,7 +287,9 @@
     "statement": "Spinach extract separates into as many as five bands. Carotene runs almost with the solvent front at Rf about 0.95, followed by pheophytin 0.83, xanthophyll 0.71, chlorophyll a 0.65 and chlorophyll b 0.45. The same pigment gives the same Rf in a short run and a long one, since Rf is a ratio of two distances that grow together.",
     "value": 0.95,
     "unit": "",
-    "tolerancePct": 10
+    "key": "highestRf",
+    "quantity": "Rf of the fastest-running pigment (carotene)",
+    "tolerance": 0.095
   },
   "safety": [
     "Acetone and petroleum ether are highly flammable: keep them away from any flame or hotplate.",

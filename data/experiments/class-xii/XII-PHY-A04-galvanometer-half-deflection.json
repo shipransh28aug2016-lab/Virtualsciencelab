@@ -53,58 +53,271 @@
     ]
   },
   "apparatus": [
-    { "name": "Moving-coil galvanometer", "spec": "centre-zero or edge-zero, 30 divisions", "why": "The instrument whose resistance and sensitivity are being measured" },
-    { "name": "High resistance box", "spec": "0 to 10000 Ω", "why": "Limits the current to a safe value and provides the large R the method requires" },
-    { "name": "Low resistance box", "spec": "0 to 500 Ω, used as the shunt", "why": "Placed across the galvanometer and reduced until the deflection halves" },
-    { "name": "Battery or accumulator", "spec": "2 V, steady", "why": "Supplies a constant emf; a fading cell would change the deflection between readings" },
-    { "name": "One-way keys", "spec": "two", "why": "Allow the circuit and the shunt to be closed independently" },
-    { "name": "Connecting wires", "spec": "thick copper, ends cleaned", "why": "Keep lead resistance negligible compared with R" }
+    {
+      "name": "Moving-coil galvanometer",
+      "spec": "centre-zero or edge-zero, 30 divisions",
+      "why": "The instrument whose resistance and sensitivity are being measured"
+    },
+    {
+      "name": "High resistance box",
+      "spec": "0 to 10000 Ω",
+      "why": "Limits the current to a safe value and provides the large R the method requires"
+    },
+    {
+      "name": "Low resistance box",
+      "spec": "0 to 500 Ω, used as the shunt",
+      "why": "Placed across the galvanometer and reduced until the deflection halves"
+    },
+    {
+      "name": "Battery or accumulator",
+      "spec": "2 V, steady",
+      "why": "Supplies a constant emf; a fading cell would change the deflection between readings"
+    },
+    {
+      "name": "One-way keys",
+      "spec": "two",
+      "why": "Allow the circuit and the shunt to be closed independently"
+    },
+    {
+      "name": "Connecting wires",
+      "spec": "thick copper, ends cleaned",
+      "why": "Keep lead resistance negligible compared with R"
+    }
   ],
   "materials": [],
   "variables": [
-    { "id": "resistanceR", "label": "High resistance R", "symbol": "R", "unit": "Ω", "type": "independent", "min": 500, "max": 10000, "step": 100, "default": 3000 },
-    { "id": "shuntS", "label": "Shunt resistance S", "symbol": "S", "unit": "Ω", "type": "independent", "min": 0, "max": 300, "step": 0.1, "default": 0 },
-    { "id": "shuntConnected", "label": "Connect the shunt", "symbol": "", "unit": "", "type": "control", "default": false },
-    { "id": "galvanometer", "label": "Galvanometer", "symbol": "G", "unit": "", "type": "control", "default": "g1", "options": ["g1", "g2", "g3"] },
-    { "id": "cell", "label": "Cell", "symbol": "E", "unit": "", "type": "control", "default": "c2", "options": ["c2", "c3", "c4"] },
-    { "id": "deflection", "label": "Deflection", "symbol": "θ", "unit": "div", "type": "dependent" }
+    {
+      "id": "resistanceR",
+      "label": "High resistance R",
+      "symbol": "R",
+      "unit": "Ω",
+      "type": "independent",
+      "min": 500,
+      "max": 10000,
+      "step": 100,
+      "default": 3000
+    },
+    {
+      "id": "shuntS",
+      "label": "Shunt resistance S",
+      "symbol": "S",
+      "unit": "Ω",
+      "type": "independent",
+      "min": 10,
+      "max": 300,
+      "step": 0.1,
+      "default": 50,
+      "note": "A resistance box is plugged in as the shunt; it cannot be set to zero, which would short the galvanometer out."
+    },
+    {
+      "id": "shuntConnected",
+      "label": "Connect the shunt",
+      "symbol": "",
+      "unit": "",
+      "type": "control",
+      "default": false
+    },
+    {
+      "id": "galvanometer",
+      "label": "Galvanometer",
+      "symbol": "G",
+      "unit": "",
+      "type": "control",
+      "default": "g1",
+      "options": [
+        "g1",
+        "g2",
+        "g3"
+      ]
+    },
+    {
+      "id": "cell",
+      "label": "Cell",
+      "symbol": "E",
+      "unit": "",
+      "type": "control",
+      "default": "c2",
+      "options": [
+        "c2",
+        "c3",
+        "c4"
+      ]
+    },
+    {
+      "id": "deflection",
+      "label": "Deflection",
+      "symbol": "θ",
+      "unit": "div",
+      "type": "dependent"
+    }
   ],
   "procedure": [
-    { "step": 1, "text": "Before connecting anything to the cell, set the high resistance box to a few thousand ohms. A galvanometer must never be connected straight across a cell.", "checkpoint": true, "expects": "resistanceR" },
-    { "step": 2, "text": "Connect the cell, the key, the high resistance box and the galvanometer in series.", "checkpoint": false },
-    { "step": 3, "text": "Close the key and adjust R until the deflection is large but still on the scale, about 20 to 25 divisions.", "checkpoint": true, "expects": "record" },
-    { "step": 4, "text": "Note this deflection θ with the shunt still disconnected.", "checkpoint": false },
-    { "step": 5, "text": "Connect the low resistance box across the galvanometer as a shunt.", "checkpoint": true, "expects": "shuntConnected" },
-    { "step": 6, "text": "Reduce the shunt until the deflection falls to exactly half its previous value.", "checkpoint": true, "expects": "shuntS" },
-    { "step": 7, "text": "Record the shunt resistance at half deflection.", "checkpoint": true, "expects": "rows>=2" },
-    { "step": 8, "text": "Repeat the whole procedure for two or three different values of R.", "checkpoint": false },
-    { "step": 9, "text": "Calculate G from G = SR/(R − S), and the figure of merit from k = E/((R + G)θ).", "checkpoint": true, "expects": "result" }
+    {
+      "step": 1,
+      "text": "Before connecting anything to the cell, set the high resistance box to a few thousand ohms. A galvanometer must never be connected straight across a cell.",
+      "checkpoint": true,
+      "expects": "resistanceR"
+    },
+    {
+      "step": 2,
+      "text": "Connect the cell, the key, the high resistance box and the galvanometer in series.",
+      "checkpoint": false
+    },
+    {
+      "step": 3,
+      "text": "Close the key and adjust R until the deflection is large but still on the scale, about 20 to 25 divisions.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 4,
+      "text": "Note this deflection θ with the shunt still disconnected.",
+      "checkpoint": false
+    },
+    {
+      "step": 5,
+      "text": "Connect the low resistance box across the galvanometer as a shunt.",
+      "checkpoint": true,
+      "expects": "shuntConnected"
+    },
+    {
+      "step": 6,
+      "text": "Reduce the shunt until the deflection falls to exactly half its previous value.",
+      "checkpoint": true,
+      "expects": "shuntS"
+    },
+    {
+      "step": 7,
+      "text": "Record the shunt resistance at half deflection.",
+      "checkpoint": true,
+      "expects": "rows>=2"
+    },
+    {
+      "step": 8,
+      "text": "Repeat the whole procedure for two or three different values of R.",
+      "checkpoint": false
+    },
+    {
+      "step": 9,
+      "text": "Calculate G from G = SR/(R − S), and the figure of merit from k = E/((R + G)θ).",
+      "checkpoint": true,
+      "expects": "result"
+    }
   ],
   "simulation": {
     "model": "galvanometer",
     "renderer": "galvanometer",
     "fps": 60,
     "controls": [
-      { "var": "resistanceR", "widget": "slider" },
-      { "var": "shuntConnected", "widget": "switch" },
-      { "var": "shuntS", "widget": "slider" },
-      { "var": "galvanometer", "widget": "segmented", "options": ["g1", "g2", "g3"] },
-      { "var": "cell", "widget": "segmented", "options": ["c2", "c3", "c4"] }
+      {
+        "var": "resistanceR",
+        "widget": "slider"
+      },
+      {
+        "var": "shuntConnected",
+        "widget": "switch"
+      },
+      {
+        "var": "shuntS",
+        "widget": "slider"
+      },
+      {
+        "var": "galvanometer",
+        "widget": "segmented",
+        "options": [
+          "g1",
+          "g2",
+          "g3"
+        ]
+      },
+      {
+        "var": "cell",
+        "widget": "segmented",
+        "options": [
+          "c2",
+          "c3",
+          "c4"
+        ]
+      }
     ],
     "actions": [
-      { "id": "record", "label": "Record deflection", "primary": true },
-      { "id": "reset", "label": "Reset" }
-    ]
+      {
+        "id": "record",
+        "label": "Record deflection",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
+    ],
+    "goldenProcedure": {
+      "note": "Half deflection: read θ with the shunt out, then shunt the galvanometer and raise S until the deflection is about θ/2. G = SR/(R−S).",
+      "hold": {
+        "galvanometer": "g1",
+        "cell": "c2",
+        "resistanceR": 3000
+      },
+      "varyPairs": [
+        {
+          "shuntConnected": false,
+          "shuntS": 0
+        },
+        {
+          "shuntConnected": true,
+          "shuntS": 48
+        },
+        {
+          "shuntConnected": true,
+          "shuntS": 60
+        },
+        {
+          "shuntConnected": true,
+          "shuntS": 72
+        }
+      ]
+    }
   },
   "observationModel": {
     "columns": [
-      { "key": "trial", "label": "No.", "unit": "", "decimals": 0 },
-      { "key": "resistanceR", "label": "R", "unit": "Ω", "decimals": 0 },
-      { "key": "shuntS", "label": "S", "unit": "Ω", "decimals": 1 },
-      { "key": "deflection", "label": "θ", "unit": "div", "decimals": 1 },
-      { "key": "currentMicroA", "label": "I", "unit": "µA", "decimals": 2 }
+      {
+        "key": "trial",
+        "label": "No.",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "resistanceR",
+        "label": "R",
+        "unit": "Ω",
+        "decimals": 0
+      },
+      {
+        "key": "shuntS",
+        "label": "S",
+        "unit": "Ω",
+        "decimals": 1
+      },
+      {
+        "key": "deflection",
+        "label": "θ",
+        "unit": "div",
+        "decimals": 1
+      },
+      {
+        "key": "currentMicroA",
+        "label": "I",
+        "unit": "µA",
+        "decimals": 2
+      }
     ],
-    "graph": { "x": "resistanceR", "y": "deflection", "xLabel": "Series resistance R (Ω)", "yLabel": "Deflection θ (div)", "throughOrigin": false },
+    "graph": {
+      "x": "resistanceR",
+      "y": "deflection",
+      "xLabel": "Series resistance R (Ω)",
+      "yLabel": "Deflection θ (div)",
+      "throughOrigin": false
+    },
     "minRows": 2
   },
   "calculations": {
@@ -116,7 +329,11 @@
       "k = E/((R + G)·θ) in ampere per division",
       "Full-scale current Ig = n·k where n is the number of divisions"
     ],
-    "resultKeys": ["resistance", "figureOfMeritMicro", "fullScaleCurrentMicroA"]
+    "resultKeys": [
+      "resistance",
+      "figureOfMeritMicro",
+      "fullScaleCurrentMicroA"
+    ]
   },
   "expectedResult": {
     "quantity": "Resistance of the galvanometer",
@@ -124,8 +341,14 @@
     "value": 60,
     "tolerance": 4,
     "unit": "Ω",
-    "secondary": { "quantity": "Figure of merit", "value": 26, "tolerance": 3, "unit": "µA/div" },
-    "statement": "The resistance of the given galvanometer is about 60 Ω by the half-deflection method, and its figure of merit is about 26 µA per division, so a current of roughly 780 µA gives full-scale deflection. The crude reading G ≈ S underestimates the resistance by about two per cent, and that error grows if the series resistance is reduced."
+    "secondary": {
+      "quantity": "Figure of merit",
+      "value": 26,
+      "tolerance": 3,
+      "unit": "µA/div"
+    },
+    "statement": "The resistance of the given galvanometer is about 60 Ω by the half-deflection method, and its figure of merit is about 26 µA per division, so a current of roughly 780 µA gives full-scale deflection. The crude reading G ≈ S underestimates the resistance by about two per cent, and that error grows if the series resistance is reduced.",
+    "key": "resistance"
   },
   "safety": [
     "Never connect a galvanometer directly across a cell. Its coil takes only microamps at full scale and would burn out instantly.",
@@ -143,33 +366,180 @@
     "Parallax while reading the pointer against the scale."
   ],
   "viva": [
-    { "question": "Why is the method called the half-deflection method?", "expectedConcept": "Because the shunt is adjusted until the deflection falls to exactly half its original value. At that point half the current goes through the galvanometer and half through the shunt, which is what makes the two resistances comparable.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Names the defining condition.", "commonMisconception": "Thinking it refers to using half the scale." },
-    { "question": "Why does halving the deflection mean the currents are equal?", "expectedConcept": "The deflection of a moving-coil galvanometer is proportional to the current through its coil. If the total current is essentially unchanged and the deflection halves, then the coil is carrying half of what it was, so the other half must be flowing through the shunt. Equal currents through parallel branches means equal resistances.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Deflection ∝ current, plus the current-divider argument.", "commonMisconception": "Assuming the total current also halves." },
-    { "question": "Why must R be much larger than G?", "expectedConcept": "The method assumes that connecting the shunt does not change the current drawn from the cell. That current is E/(R + parallel combination), so it only stays constant if R dominates. If R is comparable with G, the total current rises noticeably when the shunt is connected and the value of G obtained is wrong.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Identifies the assumption and what breaks it.", "commonMisconception": "Believing R is there only to protect the galvanometer." },
-    { "question": "Is G = S exact?", "expectedConcept": "No. The exact condition is S = GR/(R + G), which rearranges to G = SR/(R − S). Since S is always a little less than G, taking G = S always underestimates the resistance, by about two per cent when R is a few thousand ohms.", "difficulty": "hard", "bloom": "Evaluate", "answerLogic": "Knows both forms and the direction of the error.", "commonMisconception": "Treating G = S as the true result rather than an approximation." },
-    { "question": "What is the figure of merit of a galvanometer?", "expectedConcept": "The current needed to produce a deflection of one division, k = E/((R + G)θ), measured in ampere per division.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Definition with units.", "commonMisconception": "Confusing it with the resistance or with the full-scale current." },
-    { "question": "Does a large figure of merit mean a good galvanometer?", "expectedConcept": "No, the opposite. A large figure of merit means a large current is needed for each division, so the instrument is insensitive. A SMALL figure of merit means a tiny current produces a big deflection, which is what makes a galvanometer useful. The name is misleading.", "difficulty": "medium", "bloom": "Evaluate", "answerLogic": "Inverse relation between k and sensitivity.", "commonMisconception": "Assuming 'merit' means bigger is better." },
-    { "question": "How is the current for full-scale deflection found?", "expectedConcept": "Multiply the figure of merit by the number of divisions on the scale: Ig = nk. For a 30 division scale with k of 26 µA per division, that is about 780 µA.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Ig = nk.", "commonMisconception": "Thinking the full-scale current is the same as the figure of merit." },
-    { "question": "Why should the key be opened between readings?", "expectedConcept": "To stop current being drawn continuously. That would run the cell down so its emf falls between readings, and it would heat the galvanometer coil and raise its resistance. Both effects make the readings inconsistent.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Protects the cell and the coil.", "commonMisconception": "Thinking it is only to save the battery." },
-    { "question": "What would happen if you connected the galvanometer straight to the cell?", "expectedConcept": "With only its own tens of ohms in the circuit, a 2 V cell would drive tens of milliamps through a coil rated for a few hundred microamps. The pointer would slam against the stop and the fine coil would burn out at once.", "difficulty": "easy", "bloom": "Understand", "answerLogic": "Quantifies why the series resistance is essential.", "commonMisconception": "Thinking the pointer would simply go off scale harmlessly." },
-    { "question": "Why is a moving-coil galvanometer's deflection proportional to the current?", "expectedConcept": "The coil hangs in a radial magnetic field produced by shaped pole pieces and a soft-iron core, so the field is always parallel to the plane of the coil. The torque is then NBIA regardless of the coil's position, and it is balanced by the spring's restoring torque, which is proportional to the twist. So the deflection is proportional to the current.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Radial field gives a position-independent torque.", "commonMisconception": "Assuming proportionality holds for any field shape." }
+    {
+      "question": "Why is the method called the half-deflection method?",
+      "expectedConcept": "Because the shunt is adjusted until the deflection falls to exactly half its original value. At that point half the current goes through the galvanometer and half through the shunt, which is what makes the two resistances comparable.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Names the defining condition.",
+      "commonMisconception": "Thinking it refers to using half the scale."
+    },
+    {
+      "question": "Why does halving the deflection mean the currents are equal?",
+      "expectedConcept": "The deflection of a moving-coil galvanometer is proportional to the current through its coil. If the total current is essentially unchanged and the deflection halves, then the coil is carrying half of what it was, so the other half must be flowing through the shunt. Equal currents through parallel branches means equal resistances.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Deflection ∝ current, plus the current-divider argument.",
+      "commonMisconception": "Assuming the total current also halves."
+    },
+    {
+      "question": "Why must R be much larger than G?",
+      "expectedConcept": "The method assumes that connecting the shunt does not change the current drawn from the cell. That current is E/(R + parallel combination), so it only stays constant if R dominates. If R is comparable with G, the total current rises noticeably when the shunt is connected and the value of G obtained is wrong.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Identifies the assumption and what breaks it.",
+      "commonMisconception": "Believing R is there only to protect the galvanometer."
+    },
+    {
+      "question": "Is G = S exact?",
+      "expectedConcept": "No. The exact condition is S = GR/(R + G), which rearranges to G = SR/(R − S). Since S is always a little less than G, taking G = S always underestimates the resistance, by about two per cent when R is a few thousand ohms.",
+      "difficulty": "hard",
+      "bloom": "Evaluate",
+      "answerLogic": "Knows both forms and the direction of the error.",
+      "commonMisconception": "Treating G = S as the true result rather than an approximation."
+    },
+    {
+      "question": "What is the figure of merit of a galvanometer?",
+      "expectedConcept": "The current needed to produce a deflection of one division, k = E/((R + G)θ), measured in ampere per division.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Definition with units.",
+      "commonMisconception": "Confusing it with the resistance or with the full-scale current."
+    },
+    {
+      "question": "Does a large figure of merit mean a good galvanometer?",
+      "expectedConcept": "No, the opposite. A large figure of merit means a large current is needed for each division, so the instrument is insensitive. A SMALL figure of merit means a tiny current produces a big deflection, which is what makes a galvanometer useful. The name is misleading.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Inverse relation between k and sensitivity.",
+      "commonMisconception": "Assuming 'merit' means bigger is better."
+    },
+    {
+      "question": "How is the current for full-scale deflection found?",
+      "expectedConcept": "Multiply the figure of merit by the number of divisions on the scale: Ig = nk. For a 30 division scale with k of 26 µA per division, that is about 780 µA.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Ig = nk.",
+      "commonMisconception": "Thinking the full-scale current is the same as the figure of merit."
+    },
+    {
+      "question": "Why should the key be opened between readings?",
+      "expectedConcept": "To stop current being drawn continuously. That would run the cell down so its emf falls between readings, and it would heat the galvanometer coil and raise its resistance. Both effects make the readings inconsistent.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Protects the cell and the coil.",
+      "commonMisconception": "Thinking it is only to save the battery."
+    },
+    {
+      "question": "What would happen if you connected the galvanometer straight to the cell?",
+      "expectedConcept": "With only its own tens of ohms in the circuit, a 2 V cell would drive tens of milliamps through a coil rated for a few hundred microamps. The pointer would slam against the stop and the fine coil would burn out at once.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Quantifies why the series resistance is essential.",
+      "commonMisconception": "Thinking the pointer would simply go off scale harmlessly."
+    },
+    {
+      "question": "Why is a moving-coil galvanometer's deflection proportional to the current?",
+      "expectedConcept": "The coil hangs in a radial magnetic field produced by shaped pole pieces and a soft-iron core, so the field is always parallel to the plane of the coil. The torque is then NBIA regardless of the coil's position, and it is balanced by the spring's restoring torque, which is proportional to the twist. So the deflection is proportional to the current.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Radial field gives a position-independent torque.",
+      "commonMisconception": "Assuming proportionality holds for any field shape."
+    }
   ],
   "assessment": {
     "preLab": [
-      { "id": "pre1", "type": "mcq", "question": "In the half-deflection method, when the deflection is halved the shunt resistance is approximately equal to:", "options": ["The series resistance R", "The galvanometer resistance G", "Twice G", "Half of G"], "answer": 1, "feedback": "Equal currents in the two parallel branches means equal resistances, so S ≈ G." },
-      { "id": "pre2", "type": "mcq", "question": "A galvanometer with a SMALL figure of merit is:", "options": ["Insensitive", "Sensitive", "Damaged", "High resistance"], "answer": 1, "feedback": "A small k means very little current is needed per division, so the instrument is sensitive." },
-      { "id": "pre3", "type": "mcq", "question": "The high resistance R is placed in the circuit mainly to:", "options": ["Increase the deflection", "Limit the current and satisfy R ≫ G", "Measure the emf", "Act as a shunt"], "answer": 1, "feedback": "It protects the coil and makes the total current insensitive to connecting the shunt." }
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "In the half-deflection method, when the deflection is halved the shunt resistance is approximately equal to:",
+        "options": [
+          "The series resistance R",
+          "The galvanometer resistance G",
+          "Twice G",
+          "Half of G"
+        ],
+        "answer": 1,
+        "feedback": "Equal currents in the two parallel branches means equal resistances, so S ≈ G."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "A galvanometer with a SMALL figure of merit is:",
+        "options": [
+          "Insensitive",
+          "Sensitive",
+          "Damaged",
+          "High resistance"
+        ],
+        "answer": 1,
+        "feedback": "A small k means very little current is needed per division, so the instrument is sensitive."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "The high resistance R is placed in the circuit mainly to:",
+        "options": [
+          "Increase the deflection",
+          "Limit the current and satisfy R ≫ G",
+          "Measure the emf",
+          "Act as a shunt"
+        ],
+        "answer": 1,
+        "feedback": "It protects the coil and makes the total current insensitive to connecting the shunt."
+      }
     ],
     "duringLab": [
-      { "id": "dur1", "type": "task", "question": "Record a deflection with the shunt open and another with it connected.", "check": "rows>=2" },
-      { "id": "dur2", "type": "task", "question": "Change the series resistance between sets of readings.", "check": "tempVaried" }
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record a deflection with the shunt open and another with it connected.",
+        "check": "rows>=2"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Change the series resistance between sets of readings.",
+        "check": "tempVaried"
+      }
     ],
     "postLab": [
-      { "id": "post1", "type": "numeric", "question": "State the resistance of the galvanometer you obtained (Ω).", "answer": 60, "tolerance": 6, "feedback": "Galvanometer I has a resistance of about 60 Ω." },
-      { "id": "post2", "type": "numeric", "question": "State the figure of merit (µA per division).", "answer": 26, "tolerance": 4, "feedback": "About 26 µA per division, so full-scale deflection needs roughly 780 µA." },
-      { "id": "post3", "type": "mcq", "question": "You find S is slightly less than the G you calculate from G = SR/(R−S). This is because:", "options": ["The shunt box is faulty", "G ≈ S is an approximation that always underestimates G", "The cell is running down", "The galvanometer is damaged"], "answer": 1, "feedback": "The exact condition is S = GR/(R+G), which is always a little below G. The gap shrinks as R is increased." }
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the resistance of the galvanometer you obtained (Ω).",
+        "answer": 60,
+        "tolerance": 6,
+        "feedback": "Galvanometer I has a resistance of about 60 Ω."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "State the figure of merit (µA per division).",
+        "answer": 26,
+        "tolerance": 4,
+        "feedback": "About 26 µA per division, so full-scale deflection needs roughly 780 µA."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "You find S is slightly less than the G you calculate from G = SR/(R−S). This is because:",
+        "options": [
+          "The shunt box is faulty",
+          "G ≈ S is an approximation that always underestimates G",
+          "The cell is running down",
+          "The galvanometer is damaged"
+        ],
+        "answer": 1,
+        "feedback": "The exact condition is S = GR/(R+G), which is always a little below G. The gap shrinks as R is increased."
+      }
     ],
-    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
   },
   "scientificValidation": {
     "formula": "S = GR/(R + G) at half deflection; G = SR/(R − S); k = E/((R + G)·θ); Ig = n·k",

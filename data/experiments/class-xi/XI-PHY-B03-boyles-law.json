@@ -301,7 +301,8 @@
       "tolerance": 4,
       "unit": "%"
     },
-    "statement": "The product of pressure and volume is the same for every reading within experimental error. The P against V graph is a hyperbola, while the P against 1/V graph is a straight line passing through the origin whose slope equals the constant PV. Boyle's law is verified."
+    "statement": "The product of pressure and volume is the same for every reading within experimental error. The P against V graph is a hyperbola, while the P against 1/V graph is a straight line passing through the origin whose slope equals the constant PV. Boyle's law is verified.",
+    "key": "meanProduct"
   },
   "safety": [
     "Mercury and its vapour are toxic. Never touch mercury with bare hands and never leave the apparatus open.",

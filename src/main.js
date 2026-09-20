@@ -207,6 +207,9 @@ const $$ = (s) => [...document.querySelectorAll(s)];
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 const app = {
+  speed: 1,
+  paused: false,
+  stepOnce: false,
   curriculum: null,
   experiments: [],
   cls: DB.getSetting('class', 'XI'),
@@ -646,7 +649,13 @@ async function openLab(exp) {
   resetFluids();                 // a new bench starts with a still surface
   resetScene();                  // and is re-framed for its own apparatus
   Interact.attach($('#cv'), onCanvasDrag);
+  app.speed = 1;
+  app.paused = false;
+  app.stepOnce = false;
+  app.gateSig = null;
+  app.clockUseful = modelEvolves(app.model, app.inputs);
   buildToolbar();
+  buildClock();
   buildControls();
   renderLiveConfig();
   buildTabs();
@@ -654,6 +663,102 @@ async function openLab(exp) {
   renderStateTrack();
   startLoop();
   DB.saveProgress(exp.id, { opened: true, title: exp.title, class: exp.class });
+}
+
+/**
+ * Does this bench move on its own?
+ *
+ * Asked of the model rather than answered from a hardcoded list, because a
+ * list goes stale the moment a model is added — the same failure mode that
+ * left thirty control buttons reading "sg50" to students. A copy of the
+ * opening state is stepped forward and compared; anything that changes on its
+ * own means the clock is meaningful here. A vernier callipers does not need a
+ * speed control, and a cooling curve cannot do without one.
+ */
+function modelEvolves(model, inputs) {
+  try {
+    let b = primeProcess(model, inputs, model.init({ ...inputs })).state;
+    /*
+     * Compare two moments that are both well past the opening frame, rather
+     * than the opening frame against a moment shortly after it. Nearly every
+     * bench has a settling transient — a vernier jaw sliding to its set
+     * position, a needle swinging to its reading — and comparing against t=0
+     * counts that transient as motion, which would put a speed control on a
+     * pair of callipers. What earns a clock is a bench still changing at six
+     * seconds: a bob still swinging, a bath still cooling, a reaction still
+     * running.
+     */
+    for (let i = 0; i < 30; i += 1) b = model.step(b, inputs, FIXED_DT);    // t = 0.25 s
+    const early = b;
+    for (let i = 0; i < 210; i += 1) b = model.step(b, inputs, FIXED_DT);   // t = 2 s
+    const a = b;
+    for (let i = 0; i < 480; i += 1) b = model.step(b, inputs, FIXED_DT);   // t = 6 s
+    /*
+     * A bare clock counter does not make a bench move. Almost every model
+     * carries `t` and advances it every step, so comparing it would answer
+     * "yes" for a vernier callipers sitting perfectly still — and put a speed
+     * control on an instrument where time means nothing. What counts is
+     * whether a PHYSICAL quantity evolves.
+     */
+    const CLOCK_KEYS = new Set(['t', 'time', 'simTime', 'elapsed', 'clock', 'frame']);
+    const num = (o) => Object.entries(o || {})
+      .filter(([k, v]) => !CLOCK_KEYS.has(k) && typeof v === 'number' && Number.isFinite(v))
+      .map(([k, v]) => `${k}:${v.toFixed(6)}`).join(',');
+    /*
+     * Two windows, because processes run on two very different scales. A
+     * projectile is in the air for about a second and is over well before the
+     * six-second mark; a cooling curve has barely begun by then. Sampling only
+     * the late window would deny a clock to exactly the experiment the
+     * governing skill uses as its worked example of motion.
+     */
+    return num(early) !== num(a) || num(a) !== num(b);
+  } catch {
+    return false;   // a model that cannot be probed simply gets no clock
+  }
+}
+
+/**
+ * Say so, on the apparatus itself, whenever the clock is not real time.
+ * A pendulum running at 10x looks like a pendulum with a very short period,
+ * and a student reading the bench must never be able to confuse the two.
+ */
+function syncSpeedFlag() {
+  const el = $('#speedFlag');
+  if (!el) return;
+  const off = app.paused || app.speed !== 1;
+  el.hidden = !off;
+  el.textContent = app.paused ? 'Paused' : `Clock ×${app.speed}`;
+}
+
+/**
+ * PLAY / PAUSE / STEP / SPEED for the simulated clock.
+ *
+ * Speed is labelled on the bench while it is not 1x, so a student can never
+ * mistake a compressed pendulum for a fast one: the apparatus is honest about
+ * the fact that the clock, not the physics, has been changed.
+ */
+function buildClock() {
+  const host = $('#clock');
+  if (!host) return;
+  if (!app.clockUseful) { host.hidden = true; host.innerHTML = ''; return; }
+  host.hidden = false;
+  host.innerHTML = `
+    <button class="btn sm" id="kPause" aria-pressed="${String(app.paused)}" title="Pause or resume the simulated clock">${app.paused ? '▶ Play' : '⏸ Pause'}</button>
+    <button class="btn sm" id="kStep" title="Advance the simulation by one small step">⏭ Step</button>
+    <span class="clock-label" id="kLabel">Clock</span>
+    <div class="seg clock-seg" role="group" aria-label="Simulation speed">
+      ${SPEEDS.map((v) => `<button type="button" data-s="${v}" aria-pressed="${String(app.speed === v)}" title="${v === 1 ? 'Real time' : `${v}× real time — the clock is compressed, the physics is not`}">${v}×</button>`).join('')}
+    </div>`;
+  syncSpeedFlag();
+  $('#kPause').onclick = () => { app.paused = !app.paused; buildClock(); };
+  $('#kStep').onclick = () => { app.stepOnce = true; };
+  host.querySelectorAll('.clock-seg button').forEach((b) => {
+    b.onclick = () => {
+      app.speed = Number(b.dataset.s);
+      host.querySelectorAll('.clock-seg button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      syncSpeedFlag();
+    };
+  });
 }
 
 function buildToolbar() {
@@ -779,12 +884,45 @@ const RUN_LABELS = {
 };
 
 /** Which run flag, if any, this experiment's model understands. */
-function processFlag() {
-  if (!app.state) return null;
-  for (const k of ['flying', 'released', 'rolling', 'heating', 'running']) {
-    if (k in app.state) return k;
+const PROCESS_FLAGS = ['flying', 'released', 'rolling', 'heating', 'running', 'flowing', 'started'];
+
+function processFlag(state = app.state) {
+  if (!state) return null;
+  for (const k of PROCESS_FLAGS) {
+    if (k in state) return k;
   }
   return null;
+}
+
+/**
+ * Put a freshly initialised state into the condition the Start button puts it
+ * in: the run flag raised, and — for a launcher — the initial velocity
+ * components its flight needs.
+ *
+ * This exists as one function because two callers must never disagree about
+ * what "started" means. startProcess() and the clock probe each had their own
+ * idea of it, and the probe's was wrong: it raised `flying` without giving the
+ * projectile any velocity, so the shot "flew" at 0 m/s, the probe concluded
+ * the bench never moves, and the one experiment the skill file uses as its
+ * worked example of motion was classified as a still life.
+ */
+function primeProcess(model, inputs, state) {
+  const flag = processFlag(state);
+  if (!flag) return { state, flag: null };
+  const primed = { ...state, [flag]: true };
+  if (flag === 'flying') {
+    /* The projectile-range model exposes its own speed lookup (soft/medium/
+       strong spring settings); reading a plain `speedMs` input here always
+       fell back to 6 m/s, so every shot animated at the medium setting's
+       speed no matter which spring the student actually chose. */
+    const launcher = model.launcherOf ? model.launcherOf(inputs) : null;
+    const u = launcher ? launcher.speed : (inputs.speedMs ?? 6);
+    const a = ((inputs.angleDeg ?? 45) * Math.PI) / 180;
+    primed.vx = u * Math.cos(a);
+    primed.vy = u * Math.sin(a);
+  }
+  if (flag === 'flowing' && !(primed.flowRate > 0)) primed.flowRate = 1;
+  return { state: primed, flag };
 }
 
 /**
@@ -796,22 +934,9 @@ function startProcess() {
   const v = app.model.validate(app.inputs);
   showFeedback(v);
   if (!v.ok) { toast(v.errors[0].message, 'bad'); return; }
-  const flag = processFlag();
-  if (!flag) return;
-  app.state = app.model.init(app.inputs);
-  app.state[flag] = true;
-  // A launcher needs its initial velocity components as well as the flag.
-  if (flag === 'flying') {
-    // The projectile-range model exposes its own speed lookup (soft/medium/
-    // strong spring settings); reading a plain `speedMs` input here always
-    // fell back to 6 m/s, so every shot animated at the medium setting's
-    // speed no matter which spring the student actually chose.
-    const launcher = app.model.launcherOf ? app.model.launcherOf(app.inputs) : null;
-    const u = launcher ? launcher.speed : (app.inputs.speedMs ?? 6);
-    const a = ((app.inputs.angleDeg ?? 45) * Math.PI) / 180;
-    app.state.vx = u * Math.cos(a);
-    app.state.vy = u * Math.sin(a);
-  }
+  if (!processFlag()) return;
+  const primed = primeProcess(app.model, app.inputs, app.model.init(app.inputs));
+  app.state = primed.state;
   app.machine.to(STATES.RUNNING);
   syncToolbar();
   renderLiveConfig();
@@ -893,7 +1018,39 @@ function record() {
   const refused = reading == null                       // model returned nothing at all
     || ('v' in reading && reading.v == null);           // model returned a row with no measurement
   if (refused) {
-    toast(reading?.imageType || 'Nothing to measure here — no reading recorded', 'bad');
+    /*
+     * A refusal has to explain itself. "Nothing to measure here" is true of a
+     * mirror with the object inside the focus, but on a titration that has not
+     * yet changed colour it is actively misleading — there is plenty to
+     * measure, the end point simply has not arrived. Any model may therefore
+     * return `reason` with its refusal, and it is shown in the feedback panel
+     * (where it stays) as well as the toast (which does not).
+     */
+    /*
+     * Models that seek a NULL — the metre bridge's balance point, the
+     * spherometer's contact, the resonance tube's column, the beam balance's
+     * swing — correctly refuse a reading until the condition is met. Most of
+     * them refuse with a bare null, which reached the student as "Nothing to
+     * measure here": true of a mirror with no real image, and useless on a
+     * bench whose whole task is to hunt for a setting. Every one of those
+     * models already authors the right words in validate(), for the feedback
+     * panel; that is what is said here too, rather than inventing a second
+     * explanation that could drift away from the first.
+     */
+    const guidance = (() => {
+      if (reading?.reason) return reading.reason;
+      if (reading?.imageType) return reading.imageType;
+      const w = v.warnings?.[0] || v.errors?.[0];
+      if (!w) return 'Nothing to measure here — no reading recorded';
+      return [w.message, w.fix || w.why].filter(Boolean).join(' ');
+    })();
+    const why = guidance;
+    const box = $('#feedback');
+    if (box) {
+      box.className = 'feedback warn';
+      box.innerHTML = `<b>No reading taken</b><div style="margin-top:4px">${esc(why)}</div>`;
+    }
+    toast(why.length > 90 ? `${why.slice(0, 88)}…` : why, 'bad');
     return;
   }
   app.rows.push({ ...reading, ...extraRowMeta() });
@@ -916,7 +1073,20 @@ function extraRowMeta() {
 }
 
 function calculate() {
-  if (app.rows.length < 2) { toast('Record at least two readings first', 'bad'); return; }
+  if (app.rows.length < 2) {
+    /* A toast is gone in three seconds and the panel keeps its opening
+       placeholder, so pressing Calculate too early looked like the button had
+       simply been ignored. The panel says what is missing, and stays saying
+       it. */
+    const need = app.exp.observationModel?.minRows || 2;
+    const box = $('#resultBox');
+    box.className = 'result-box warn';
+    box.innerHTML = `<b>Not enough readings yet</b>
+      <div style="margin-top:6px">${app.rows.length === 0 ? 'No readings have been taken.' : 'One reading has been taken.'}
+      This experiment needs ${need} before a result can be calculated.</div>`;
+    toast(`Record at least ${need} readings first`, 'bad');
+    return;
+  }
   app.machine.to(STATES.CALCULATION);
   /*
    * Always hand `inputs` to derive(). Maintaining a hardcoded list of which
@@ -1394,6 +1564,15 @@ function onInputChange() {
   const v = app.model.validate(app.inputs);
   showFeedback(v);
   syncToolbar();
+  /*
+   * Whether the clock is useful depends on the SETTINGS, not just the model.
+   * A friction bench with an empty pan is correctly motionless — static
+   * friction is matching the pull — and starts to slide the moment enough
+   * weight is added. Deciding once, at open, on the default settings would
+   * have denied that bench a clock for the whole of the part where it moves.
+   */
+  const useful = modelEvolves(app.model, app.inputs);
+  if (useful !== app.clockUseful) { app.clockUseful = useful; buildClock(); }
   renderLiveConfig();
   drawSafely('applying a control change');
 }
@@ -1460,6 +1639,24 @@ function clearFeedback() { $('#feedback').className = 'feedback'; $('#feedback')
  * wall-clock time that passed regardless of frame rate. The spiral-of-death
  * guard caps how much we try to catch up in one frame (tab was backgrounded).
  */
+/*
+ * ── THE SIMULATION CLOCK ──
+ *
+ * Physics is always integrated at FIXED_DT, whatever the frame rate and
+ * whatever the clock is set to: only how much simulated time a frame is
+ * allowed to consume changes. A reading is therefore identical at 1x and at
+ * 10x, which is the whole point — the clock changes how long the STUDENT
+ * waits, never what the apparatus does.
+ *
+ * It exists because several practicals are genuinely slow. Timing twenty
+ * oscillations of a 1.4 m pendulum takes fifty seconds of real time, and a
+ * student needs six such readings: five minutes of watching a bob swing,
+ * per experiment, with no way to skip it. A cooling curve and a rate-of-
+ * reaction run are worse. A real bench makes you wait because the physics
+ * does; a virtual bench that makes you wait as well has copied the one
+ * property of the real apparatus that teaches nothing.
+ */
+const SPEEDS = [0.5, 1, 2, 5, 10];
 const FIXED_DT = 1 / 120;
 const MAX_CATCHUP = 0.25; // seconds of simulation per frame, worst case
 
@@ -1469,8 +1666,12 @@ function startLoop() {
   app.accumulator = 0;
   const tick = (now) => {
     if (!app.running) return;
-    const elapsed = Math.min(MAX_CATCHUP, (now - app.last) / 1000);
+    const wall = (now - app.last) / 1000;
     app.last = now;
+    /* Paused: the bench still redraws (so a drag or a control change is seen)
+       but simulated time does not advance, except for a single requested step. */
+    let elapsed = app.paused ? 0 : Math.min(MAX_CATCHUP, wall) * (app.speed || 1);
+    if (app.stepOnce) { elapsed = 1 / 30; app.stepOnce = false; }
     app.accumulator += elapsed;
     if (app.state) {
       let steps = 0;
@@ -1514,8 +1715,21 @@ function startLoop() {
       if (app.state.finishedAt && app.machine.state === STATES.RUNNING) {
         app.machine.to(STATES.MEASURING);
         toast('Timing complete — press Take reading', 'good');
-        syncToolbar();
       }
+
+      /*
+       * Keep the toolbar telling the truth about the model.
+       *
+       * It used to be re-synced only when the student touched a control, so it
+       * showed the state of the bench BEFORE that change had been integrated —
+       * one frame stale, which on a titration is one millilitre. The "Record
+       * end point" button lit up only after the student had already run past
+       * the end point, making the highlight worse than no highlight at all.
+       * These are the flags that decide what the toolbar may offer, so the
+       * toolbar follows them directly, at whatever moment they change.
+       */
+      const gate = `${!!app.state.atEndPoint}|${!!app.state.overshot}|${!!app.state.finishedAt}|${!!app.state.finished}|${!!app.state.sharp && app.state.sharp >= 0.85}|${app.rows.length}`;
+      if (gate !== app.gateSig) { app.gateSig = gate; syncToolbar(); }
     }
     try {
       draw();
@@ -1613,12 +1827,19 @@ function updateReadouts() {
       ['Wire temp', `+${(app.state.tempRise || 0).toFixed(0)}`, '°C'],
     ];
   } else if (m === 'titration') {
-    const vEq = app.model.equivalenceVolume(app.inputs);
+    /*
+     * The equivalence volume used to be printed here. It is the answer the
+     * experiment exists to find: a student could read 19.5 mL off the panel
+     * and never titrate at all. It is also, since the end point now follows
+     * the indicator, not even the volume they should stop at. What a real
+     * bench shows is the burette, the indicator and — with a pH meter on the
+     * flask — the pH, so that is what is shown.
+     */
     items = [
-      ['Delivered', (app.state.delivered || 0).toFixed(1), 'mL'],
+      ['Burette', (app.state.delivered || 0).toFixed(1), 'mL'],
       ['pH', (app.state.pH ?? 7).toFixed(2), ''],
-      ['Colour', app.state.colour || '—', ''],
-      ['Equivalence', Number.isFinite(vEq) ? vEq.toFixed(1) : '—', 'mL'],
+      ['Flask', app.state.colour || '—', ''],
+      ['End point', app.state.overshot ? 'overshot' : app.state.atEndPoint ? 'reached' : 'not yet', ''],
     ];
   } else if (m === 'reaction-kinetics') {
     items = [
@@ -1656,6 +1877,37 @@ function updateReadouts() {
   }
   $('#readouts').innerHTML = items.map(([l, v, u]) =>
     `<div class="ro"><span>${esc(l)}</span><b>${esc(v)}${u ? `<i>${esc(u)}</i>` : ''}</b></div>`).join('');
+  renderNullIndicator();
+}
+
+/**
+ * The instrument's own null indicator, shown continuously beside the bench.
+ *
+ * Roughly a dozen practicals are hunts for a null — the galvanometer's zero,
+ * the balance's equal swing, the spherometer's contact, the loudest note in a
+ * resonance tube. Their models refused a reading until the null was found,
+ * which is right, and said nothing about how to find it, which made most of
+ * them unperformable: the metre bridge's balance point is six millimetres wide
+ * in a metre of wire, and the beam balance's is four milligrams wide in a
+ * hundred grams of weights.
+ *
+ * A real instrument closes that gap by reacting: the needle kicks, the pointer
+ * swings hard over, the note swells. This shows the same thing, and no more
+ * than the same thing — direction and closeness, never the target value, which
+ * is the answer the student is there to find.
+ */
+function renderNullIndicator() {
+  const host = $('#nullBox');
+  if (!host) return;
+  const ind = typeof app.model?.nullIndicator === 'function'
+    ? (() => { try { return app.model.nullIndicator(app.inputs, app.state); } catch { return null; } })()
+    : null;
+  if (!ind) { host.hidden = true; host.innerHTML = ''; return; }
+  host.hidden = false;
+  host.className = `null-box${ind.atNull ? ' at-null' : ''} s${ind.strength}`;
+  host.innerHTML = `<span class="nb-label">${esc(ind.label)}</span>
+    <b class="nb-reading">${esc(ind.reading)}</b>
+    <span class="nb-hint">${esc(ind.hint)}</span>`;
 }
 
 /* ── observation table ── */
@@ -1683,6 +1935,7 @@ function renderTable() {
     });
   }
   renderGraphPanel();
+  renderStillNeeded();
   syncToolbar();
   $('#csvBtn').onclick = exportCSV;
   $('#clearBtn').onclick = () => {
@@ -1692,6 +1945,45 @@ function renderTable() {
     $('#resultBox').className = 'result-box';
     $('#resultBox').textContent = 'Take readings, then calculate the result.';
   };
+}
+
+/**
+ * What the calculation is still waiting for, shown while there is still time
+ * to do something about it.
+ *
+ * Several practicals are procedures in more than one part, and the second
+ * part is not guessable from the bench. The inductor activity needs readings
+ * on DC and then on AC before the inductance can be separated from the
+ * resistance; the resonance tube needs the first AND the second resonance;
+ * converting a galvanometer needs the deflection with and without the shunt;
+ * the law of length needs three different tuning forks at one tension.
+ *
+ * Every one of those models already says so, exactly, in the reason it
+ * refuses with — and that reason was reachable only by filling the table,
+ * pressing "Calculate result", and being turned away with no indication of
+ * how long the student had been collecting the wrong half of the data. It is
+ * the same sentence; it is simply said while it is still useful.
+ */
+function renderStillNeeded() {
+  const host = $('#stillNeeded');
+  if (!host) return;
+  /*
+   * Shown from the start, not once readings exist. Several practicals are
+   * "work through four different salts", "test four components both ways",
+   * "three different tuning forks" — and a student who takes four readings of
+   * ONE salt has done four readings' work before anything tells them the set
+   * had to be varied. What they need is to know that before they begin.
+   */
+  let refusal = null;
+  try {
+    const d = app.model.derive(app.rows, app.inputs);
+    if (d && d.ok === false && d.reason) refusal = d.reason;
+  } catch {
+    refusal = null;   // a model that cannot be asked yet simply says nothing
+  }
+  if (!refusal) { host.hidden = true; host.innerHTML = ''; return; }
+  host.hidden = false;
+  host.innerHTML = `<b>Still needed</b>${esc(refusal)}`;
 }
 
 function renderGraphPanel() {
@@ -1741,11 +2033,17 @@ function renderResult(d) {
       <span class="big">ρ = ${d.rhoText}</span>
       Standard value for ${esc(app.rows[0].wire)}: ${d.acceptedText || '—'}`;
   } else if (m === 'titration') {
-    html = `<b>Mean of ${d.concordantCount} concordant titres:</b> ${d.meanTitre} mL
-      ${d.allConcordant ? '' : ' <span style="color:var(--warn)">(discordant readings excluded)</span>'}
+    /* A redox titration is asked in molarity and answered in normality, so
+       both are shown with the factor that connects them stated, rather than
+       leaving a student to wonder why 0.1 N permanganate is labelled 0.02 M. */
+    const molarLine = d.nFactor
+      ? `Normality = ${d.normality} N &nbsp;·&nbsp; <b>Molarity = ${d.molarity} M</b> &nbsp;(M = N ÷ ${d.nFactor})`
+      : `Normality = ${d.normality} N &nbsp;·&nbsp; Molarity = ${d.molarity ?? '—'} M`;
+    html = `<b>Mean of ${d.concordantCount ?? d.n} concordant titres:</b> ${d.meanTitre} mL
+      ${d.concordant === false ? ' <span style="color:var(--warn)">(readings are not concordant — repeat until three agree within 0.2 mL)</span>' : ''}
       <span class="big">Strength = ${d.strength} g/L</span>
-      Normality = ${d.normality} N &nbsp;·&nbsp; Molarity = ${d.molarity} M
-      <div style="font-size:12px;margin-top:4px;color:var(--muted)">N₁V₁ = N₂V₂ &nbsp;→&nbsp; strength = N × ${d.eqMass}</div>`;
+      ${molarLine}
+      <div style="font-size:12px;margin-top:4px;color:var(--muted)">N₁V₁ = N₂V₂ &nbsp;→&nbsp; strength = N × equivalent mass</div>`;
   } else if (m === 'reaction-kinetics') {
     if (d.mode === 'arrhenius') {
       html = `<b>Arrhenius plot</b> ln(1/t) vs 1/T &nbsp;(r² = ${d.r2})
