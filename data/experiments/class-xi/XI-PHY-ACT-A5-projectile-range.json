@@ -288,7 +288,8 @@
       "tolerance": 0.4,
       "unit": "m/s"
     },
-    "statement": "The range rises to a maximum at a projection angle of 45 degrees and falls away symmetrically on either side. Complementary angles such as 30 and 60 degrees give equal ranges. The launch speed recovered from the data is about 6 m/s and is the same for every shot, confirming that the spring setting was unchanged."
+    "statement": "The range rises to a maximum at a projection angle of 45 degrees and falls away symmetrically on either side. Complementary angles such as 30 and 60 degrees give equal ranges. The launch speed recovered from the data is about 6 m/s and is the same for every shot, confirming that the spring setting was unchanged.",
+    "key": "bestAngle"
   },
   "safety": [
     "Never look into the muzzle of the launcher, and never point it at anyone.",

@@ -272,7 +272,7 @@ export function step(state, inputs, dt) {
 export function measure(state, inputs, seed = 1, trial = 1) {
   if (!validate(inputs).ok) return null;
   if (!state || !state.settled) return null;
-  if (inputs.diagnosis === 'none') return null;
+  if (inputs.diagnosis === 'none') return { v: null, reason: 'Read the meters, decide what is wrong with this board, and select that diagnosis before recording it.' };
 
   const fault = activeFault(inputs);
   const r = meterReadings(inputs);

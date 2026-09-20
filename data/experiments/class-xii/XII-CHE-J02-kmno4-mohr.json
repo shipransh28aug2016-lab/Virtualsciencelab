@@ -244,7 +244,8 @@
     "value": 0.1,
     "tolerance": 0.012,
     "unit": "N",
-    "statement": "Three concordant titrations against standard Mohr's salt (Fe²⁺) give the normality of the KMnO₄ solution as about 0.1 N — that is 0.02 M, since n = 5 for MnO₄⁻ in acidic medium — to within a few per cent, using the self-indicating permanent-pink end point — no external indicator is needed."
+    "statement": "Three concordant titrations against standard Mohr's salt (Fe²⁺) give the normality of the KMnO₄ solution as about 0.1 N — that is 0.02 M, since n = 5 for MnO₄⁻ in acidic medium — to within a few per cent, using the self-indicating permanent-pink end point — no external indicator is needed.",
+    "key": "normality"
   },
   "safety": [
     "Concentrated/dilute sulphuric acid is corrosive — handle carefully.",

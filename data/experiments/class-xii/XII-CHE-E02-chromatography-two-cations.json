@@ -284,6 +284,7 @@
       "Check that the two spots are far enough apart to be counted as separated."
     ],
     "resultKeys": [
+      "highestRf",
       "componentCount",
       "worstErrorPct"
     ]
@@ -292,7 +293,9 @@
     "statement": "In acetone with concentrated hydrochloric acid, Fe³⁺ travels near Rf 0.86 and Cu²⁺ near 0.30, so the two are widely separated and each can be identified from its Rf and the colour its reagent produces. A pair such as Co²⁺ and Ni²⁺, whose Rf values are 0.54 and 0.47, does not separate: the spots overlap, which is exactly why the syllabus requires a mixture whose components differ appreciably in Rf.",
     "value": 0.86,
     "unit": "",
-    "tolerancePct": 10
+    "key": "highestRf",
+    "quantity": "Rf of the faster-running cation (Fe³⁺)",
+    "tolerance": 0.086
   },
   "safety": [
     "Concentrated hydrochloric acid is corrosive and its vapour is irritating: measure it in a fume cupboard.",

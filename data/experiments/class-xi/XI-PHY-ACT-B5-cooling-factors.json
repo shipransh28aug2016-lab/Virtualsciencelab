@@ -353,7 +353,8 @@
       "tolerance": 4,
       "unit": "min"
     },
-    "statement": "The logarithm of the excess temperature falls linearly with time, verifying Newton’s law. The cooling constant is about nine parts in ten thousand per second, so the excess halves in roughly thirteen minutes. A dull black vessel cools about three times as fast as a polished one, and doubling the volume slows the cooling appreciably."
+    "statement": "The logarithm of the excess temperature falls linearly with time, verifying Newton’s law. The cooling constant is about nine parts in ten thousand per second, so the excess halves in roughly thirteen minutes. A dull black vessel cools about three times as fast as a polished one, and doubling the volume slows the cooling appreciably.",
+    "key": "coolingConstant"
   },
   "safety": [
     "Hot liquids scald. Pour carefully and use a cloth or tongs to handle the calorimeter.",

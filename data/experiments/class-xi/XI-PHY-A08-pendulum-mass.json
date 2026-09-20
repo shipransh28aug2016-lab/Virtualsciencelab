@@ -302,7 +302,8 @@
       "tolerance": 0.03,
       "unit": "s"
     },
-    "statement": "The time period is the same for every bob within experimental error. The graph of T against mass is a horizontal line. This confirms that T = 2π√(L/g) contains no mass term: the restoring force and the inertia both scale with the mass and cancel."
+    "statement": "The time period is the same for every bob within experimental error. The graph of T against mass is a horizontal line. This confirms that T = 2π√(L/g) contains no mass term: the restoring force and the inertia both scale with the mass and cancel.",
+    "key": "g"
   },
   "safety": [
     "Clamp the stand firmly to the table so it cannot topple while the bob swings.",

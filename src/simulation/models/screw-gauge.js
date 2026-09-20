@@ -5,6 +5,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, sigFig } from '../../utils/measure.js';
+import { nullPoint, nullRefusal } from '../null-point.js';
 
 export const meta = {
   id: 'XI-PHY-A02',
@@ -48,6 +49,24 @@ export function gripped(inputs) {
   return Math.abs(inputs.thimble - specimenOf(inputs).trueMm) <= Math.max(0.02, lc * 3);
 }
 
+/**
+ * Whether the faces have closed on the specimen. The ratchet is the real
+ * signal — it slips once the faces grip — and it is what keeps a student from
+ * crushing a wire by over-tightening.
+ */
+export function nullIndicator(inputs) {
+  return nullPoint({
+    label: 'Screw gauge',
+    current: inputs.thimble,
+    target: specimenOf(inputs).trueMm,
+    tolerance: Math.max(0.03, leastCount(inputs) * 3),
+    increase: 'The faces are still clear of the specimen — close the thimble further.',
+    decrease: 'The specimen is being compressed — open the thimble a little.',
+    atNullText: 'the ratchet just slips — the faces are gripping',
+    awayFrom: 'not gripping',
+  });
+}
+
 export function validate(inputs) {
   const errors = [], warnings = [];
   if (!gripped(inputs)) {
@@ -88,7 +107,7 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!gripped(inputs)) return null;
+  if (!gripped(inputs)) return { v: null, reason: nullRefusal(nullIndicator(inputs)) };
   const lc = leastCount(inputs);
   const rng = makeRng(seed + trial * 37);
   const trueMm = specimenOf(inputs).trueMm - compressionMm(inputs);
@@ -113,4 +132,4 @@ export function derive(rows) {
   };
 }
 
-export default { meta, defaults, GAUGES, SPECIMENS, init, step, measure, derive, validate, leastCount, zeroErrorMm, specimenOf, gripped, compressionMm };
+export default { meta, defaults, GAUGES, SPECIMENS, init, step, measure, derive, validate, leastCount, zeroErrorMm, specimenOf, gripped, compressionMm, nullIndicator};

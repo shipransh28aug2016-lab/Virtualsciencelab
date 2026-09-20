@@ -340,7 +340,8 @@
       "tolerance": 1.2,
       "unit": "°C"
     },
-    "statement": "A rapid stream of bubbles marks the boiling point, and the sharper reading is taken as it ceases on cooling. Ethanol boils at about 78.4 °C at 760 mm Hg. At 700 mm Hg it boils some 2.4 °C lower, and a non-volatile impurity raises the boiling point rather than lowering it."
+    "statement": "A rapid stream of bubbles marks the boiling point, and the sharper reading is taken as it ceases on cooling. Ethanol boils at about 78.4 °C at 760 mm Hg. At 700 mm Hg it boils some 2.4 °C lower, and a non-volatile impurity raises the boiling point rather than lowering it.",
+    "key": "boilingPoint"
   },
   "safety": [
     "Most organic liquids are highly flammable. Heat them only in a bath, never over a naked flame.",

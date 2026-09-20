@@ -343,7 +343,8 @@
       "tolerance": 1,
       "unit": "V"
     },
-    "statement": "In parallel each 60 W lamp has the full 220 V across it and draws 0.27 A, so the three together draw about 0.82 A and a 3 A fuse is appropriate. In series each lamp receives only 73 V and dissipates about 6.7 W — a ninth of its rating — so all three glow dimly, and one failure extinguishes them all. A switch placed in the neutral still turns the lamps off but leaves the holders live: the circuit works and is unsafe."
+    "statement": "In parallel each 60 W lamp has the full 220 V across it and draws 0.27 A, so the three together draw about 0.82 A and a 3 A fuse is appropriate. In series each lamp receives only 73 V and dissipates about 6.7 W — a ninth of its rating — so all three glow dimly, and one failure extinguishes them all. A switch placed in the neutral still turns the lamps off but leaves the holders live: the circuit works and is unsafe.",
+    "key": "totalCurrent"
   },
   "safety": [
     "This is a 220 V circuit. On a real bench it must be assembled with the supply isolated and checked by the teacher before it is energised.",

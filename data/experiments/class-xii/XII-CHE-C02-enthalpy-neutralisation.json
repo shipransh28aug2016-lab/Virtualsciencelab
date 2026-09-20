@@ -316,7 +316,9 @@
     "statement": "Hydrochloric acid with sodium hydroxide gives about −57.1 kJ per mole of water formed, and so does every other strong acid with every other strong base, because in each case the only reaction is H⁺ + OH⁻ → H₂O. Ethanoic acid gives about −50.6 kJ mol⁻¹; the shortfall of roughly 6.5 kJ mol⁻¹ is the energy spent ionising the weak acid.",
     "value": -57.1,
     "unit": "kJ mol⁻¹",
-    "tolerancePct": 12
+    "key": "meanKJ",
+    "tolerance": 6.852,
+    "quantity": "Enthalpy of neutralisation of a strong acid and a strong base"
   },
   "safety": [
     "Both 1 M acid and 1 M alkali are corrosive: wear eye protection and wash splashes at once.",

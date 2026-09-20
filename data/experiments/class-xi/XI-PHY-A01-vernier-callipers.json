@@ -327,7 +327,8 @@
       "tolerance": 0.25,
       "unit": "cm³"
     },
-    "statement": "The diameter of the given sphere is about 2.14 cm and its volume about 5.13 cm³, each measured to the least count of 0.01 cm."
+    "statement": "The diameter of the given sphere is about 2.14 cm and its volume about 5.13 cm³, each measured to the least count of 0.01 cm.",
+    "key": "meanValue"
   },
   "safety": [
     "Tighten the jaws only until the body is just held; over-tightening damages both the instrument and a soft specimen.",

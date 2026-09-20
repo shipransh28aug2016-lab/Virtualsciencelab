@@ -232,7 +232,8 @@
     "value": 62,
     "tolerance": 15,
     "unit": "%",
-    "statement": "Combining stoichiometric FeSO4·7H2O and (NH4)2SO4 in acidified solution, evaporating to a crystallising film and cooling slowly gives pale green Mohr's-salt crystals in about 55-70% yield, with the acid preventing the iron from oxidising and precipitating before it can crystallise."
+    "statement": "Combining stoichiometric FeSO4·7H2O and (NH4)2SO4 in acidified solution, evaporating to a crystallising film and cooling slowly gives pale green Mohr's-salt crystals in about 55-70% yield, with the acid preventing the iron from oxidising and precipitating before it can crystallise.",
+    "key": "percentYield"
   },
   "safety": [
     "Dilute sulphuric acid is corrosive — avoid skin/eye contact.",

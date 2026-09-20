@@ -307,7 +307,8 @@
       "tolerance": 1.5,
       "unit": "cm"
     },
-    "statement": "The refractive index of water by this method is about 1.33, in agreement with the value obtained by the liquid-lens method. The apparent centre of curvature is always closer than the true one, because the liquid is optically denser than air."
+    "statement": "The refractive index of water by this method is about 1.33, in agreement with the value obtained by the liquid-lens method. The apparent centre of curvature is always closer than the true one, because the liquid is optically denser than air.",
+    "key": "refractiveIndex"
   },
   "safety": [
     "Do not use the concave mirror to focus sunlight; it concentrates enough heat to burn paper, skin or the retina.",

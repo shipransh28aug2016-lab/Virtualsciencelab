@@ -274,7 +274,9 @@
     "statement": "Mixing acetone and chloroform is exothermic and the temperature rises. The heat evolved is greatest when the two are present in roughly equal numbers of molecules, around −1.9 kJ per mole of mixture at equimolar composition, and falls away towards zero at either pure liquid. This is direct evidence for a hydrogen bond formed between unlike molecules, and it explains the negative deviation from Raoult’s law that this pair shows.",
     "value": -1.9,
     "unit": "kJ mol⁻¹",
-    "tolerancePct": 25
+    "key": "meanKJ",
+    "quantity": "Enthalpy of mixing",
+    "tolerance": 0.475
   },
   "safety": [
     "Chloroform is toxic and a suspected carcinogen: work only in a fume cupboard.",

@@ -9,6 +9,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, mean, sigFig } from '../../utils/measure.js';
+import { nullPoint, nullRefusal } from '../null-point.js';
 
 export const meta = {
   id: 'XI-PHY-A01',
@@ -60,6 +61,23 @@ export function gripped(inputs) {
   return Math.abs(inputs.jawOpening - trueDimension(inputs)) <= Math.max(0.02, leastCount(inputs) * 3);
 }
 
+/**
+ * Whether the jaws are closed on the object. A student feels the jaws touch;
+ * on screen there is nothing to feel, so the instrument says so.
+ */
+export function nullIndicator(inputs) {
+  return nullPoint({
+    label: 'Vernier jaws',
+    current: inputs.jawCm,
+    target: trueDimension(inputs),
+    tolerance: Math.max(0.02, leastCount(inputs) * 3),
+    increase: 'The jaws are still clear of the object — close them further.',
+    decrease: 'The jaws are pressing into the object — open them a little.',
+    atNullText: 'just gripping the object',
+    awayFrom: 'not gripping',
+  });
+}
+
 export function validate(inputs) {
   const errors = [], warnings = [];
   if (!gripped(inputs)) {
@@ -97,7 +115,7 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!gripped(inputs)) return null;
+  if (!gripped(inputs)) return { v: null, reason: nullRefusal(nullIndicator(inputs)) };
   const lc = leastCount(inputs);
   const rng = makeRng(seed + trial * 31);
   const trueVal = trueDimension(inputs);
@@ -137,4 +155,4 @@ export function derive(rows, inputs = defaults) {
   };
 }
 
-export default { meta, defaults, CALLIPERS, SPECIMENS, init, step, measure, derive, validate, leastCount, trueDimension, zeroErrorCm, gripped };
+export default { meta, defaults, CALLIPERS, SPECIMENS, init, step, measure, derive, validate, leastCount, trueDimension, zeroErrorCm, gripped, nullIndicator};

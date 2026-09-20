@@ -294,7 +294,8 @@
       "tolerance": 2,
       "unit": "mm"
     },
-    "statement": "The pattern is a broad central band with fainter bands either side, and the central band is twice the width of the others. Narrowing the slit widens the pattern: a plot of w against 1/a is a straight line through the origin. With a 0.10 mm slit at 1.5 m the red laser gives a central maximum about 19.5 mm wide, from which λ comes out at about 650 nm."
+    "statement": "The pattern is a broad central band with fainter bands either side, and the central band is twice the width of the others. Narrowing the slit widens the pattern: a plot of w against 1/a is a straight line through the origin. With a 0.10 mm slit at 1.5 m the red laser gives a central maximum about 19.5 mm wide, from which λ comes out at about 650 nm.",
+    "key": "wavelength"
   },
   "safety": [
     "NEVER look directly into the laser beam or at its specular reflection. A laser can damage the retina before the blink reflex operates.",

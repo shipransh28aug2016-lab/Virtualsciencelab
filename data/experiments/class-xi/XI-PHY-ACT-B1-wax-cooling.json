@@ -337,7 +337,8 @@
       "tolerance": 150,
       "unit": "s"
     },
-    "statement": "The cooling curve falls steeply at first, then flattens into a plateau at about 58 °C while the wax solidifies, and falls again more steeply once it is solid. The plateau temperature is the melting point, and it is the same whatever temperature the wax started from."
+    "statement": "The cooling curve falls steeply at first, then flattens into a plateau at about 58 °C while the wax solidifies, and falls again more steeply once it is solid. The plateau temperature is the melting point, and it is the same whatever temperature the wax started from.",
+    "key": "meltingPoint"
   },
   "safety": [
     "Melt the wax in a water bath, never directly over a flame: hot wax is flammable and can catch fire.",

@@ -120,7 +120,29 @@ export function checkResult(experiment, derived) {
   // nonsensical "differs from the accepted null by Infinity%".
   if (!exp || !derived?.ok || !Number.isFinite(exp.value)) return null;
 
-  const candidates = [exp.symbol, ...(experiment.calculations?.resultKeys || [])];
+  /*
+   * The experiment NAMES the field its accepted value refers to.
+   *
+   * This used to search [symbol, ...resultKeys] for the first finite field.
+   * Most symbols are typeset for a student to read — 'μ', 'Y', 'ρ', 'f × l' —
+   * and are not field names at all, so the search almost always landed on
+   * whatever happened to be listed first in resultKeys. Where that was the
+   * right quantity it worked by luck, and where it was not the app compared
+   * two different physical quantities in two different units and reported the
+   * difference as the student's error:
+   *
+   *   XII-PHY-A01      resistance (3.9 Ω) against a resistivity of 4.9e-7 Ω·m
+   *                    — "your value differs by 798571328.6%"
+   *   XII-PHY-ACT-A1   a resistance against an inductance in henry
+   *   XII-PHY-ACT-A3   a voltage against a current in ampere
+   *   XII-CHE-G01..G04 a percentage yield against a melting point in °C
+   *
+   * A correct student was told they were wrong, by a number so large it could
+   * only be a defect — but the panel stated it with the same confidence it
+   * states everything else.
+   */
+  const declared = exp.key;
+  const candidates = [declared, exp.symbol, ...(experiment.calculations?.resultKeys || [])];
   const key = candidates.find((k) => k && Number.isFinite(derived[k]));
   if (!key) return null;
 

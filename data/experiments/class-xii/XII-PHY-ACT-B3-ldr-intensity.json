@@ -275,7 +275,9 @@
     "statement": "The resistance rises steadily as the lamp is moved away, and a log-log plot is a straight line. Its slope is 2γ, giving γ between about 0.7 and 0.9 for a cadmium-sulphide cell. In a blacked-out room the fit is excellent. With the room lights on, the ambient illuminance adds to that from the lamp, the far end of the graph flattens, and the slope — and hence γ — comes out substantially too small even though the procedure was followed correctly.",
     "value": 0.72,
     "unit": "",
-    "tolerancePct": 25
+    "key": "gamma",
+    "tolerance": 0.18,
+    "quantity": "Effect of the intensity of light on an LDR"
   },
   "safety": [
     "The lamp becomes hot: allow it to cool before moving it, and do not touch the envelope.",

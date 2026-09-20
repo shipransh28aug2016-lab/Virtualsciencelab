@@ -394,7 +394,8 @@
       "tolerance": 0.008,
       "unit": "cal/g/°C"
     },
-    "statement": "Copper heated to about 95 °C and mixed with 150 g of water at 25 °C raises the mixture to about 29 °C, giving a specific heat capacity of about 385 J/kg/K, or 0.092 cal/g/°C. The value is unchanged when the mass of the solid is varied, confirming that specific heat capacity is a property of the material rather than of the sample."
+    "statement": "Copper heated to about 95 °C and mixed with 150 g of water at 25 °C raises the mixture to about 29 °C, giving a specific heat capacity of about 385 J/kg/K, or 0.092 cal/g/°C. The value is unchanged when the mass of the solid is varied, confirming that specific heat capacity is a property of the material rather than of the sample.",
+    "key": "specificHeat"
   },
   "safety": [
     "The solid comes out of the steam heater at nearly 100 °C — always lift it by its thread, never with bare fingers.",

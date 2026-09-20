@@ -306,7 +306,8 @@
       "tolerance": 3,
       "unit": "Ω"
     },
-    "statement": "The forward characteristic is non-linear, with negligible current until a knee at about 0.7 V for silicon, after which the current rises steeply. In reverse bias only a few microamps flow, almost independent of voltage. The diode therefore conducts in one direction only."
+    "statement": "The forward characteristic is non-linear, with negligible current until a knee at about 0.7 V for silicon, after which the current rises steeply. In reverse bias only a few microamps flow, almost independent of voltage. The diode therefore conducts in one direction only.",
+    "key": "kneeVoltage"
   },
   "safety": [
     "Always include the protective series resistor in the forward-bias circuit; without it the current rises exponentially past the knee and the diode is destroyed within seconds.",

@@ -52,56 +52,221 @@
     ]
   },
   "apparatus": [
-    { "name": "Concave mirror", "spec": "focal length about 15 cm, small aperture", "why": "The converging mirror under test; a small aperture keeps spherical aberration negligible" },
-    { "name": "Optical bench", "spec": "with three uprights, least count 0.1 cm", "why": "Holds the object, mirror and screen in line and measures their positions" },
-    { "name": "Illuminated object", "spec": "wire gauze with a cross-wire, lit from behind", "why": "Provides a bright object with a sharp detail on which to focus" },
-    { "name": "Screen", "spec": "white card on an upright", "why": "Receives the real image; a real image must be caught on a screen" },
-    { "name": "Metre scale", "spec": "least count 0.1 cm", "why": "Checks the index correction between the upright marks and the actual pole" },
-    { "name": "Knitting needle", "spec": "", "why": "Used to find the index correction for the mirror and the screen holders" }
+    {
+      "name": "Concave mirror",
+      "spec": "focal length about 15 cm, small aperture",
+      "why": "The converging mirror under test; a small aperture keeps spherical aberration negligible"
+    },
+    {
+      "name": "Optical bench",
+      "spec": "with three uprights, least count 0.1 cm",
+      "why": "Holds the object, mirror and screen in line and measures their positions"
+    },
+    {
+      "name": "Illuminated object",
+      "spec": "wire gauze with a cross-wire, lit from behind",
+      "why": "Provides a bright object with a sharp detail on which to focus"
+    },
+    {
+      "name": "Screen",
+      "spec": "white card on an upright",
+      "why": "Receives the real image; a real image must be caught on a screen"
+    },
+    {
+      "name": "Metre scale",
+      "spec": "least count 0.1 cm",
+      "why": "Checks the index correction between the upright marks and the actual pole"
+    },
+    {
+      "name": "Knitting needle",
+      "spec": "",
+      "why": "Used to find the index correction for the mirror and the screen holders"
+    }
   ],
   "materials": [],
   "variables": [
-    { "id": "objectDistanceCm", "label": "Object distance", "symbol": "u", "unit": "cm", "type": "independent", "min": 8, "max": 70, "step": 0.5, "default": 30 },
-    { "id": "mirror", "label": "Mirror", "symbol": "f", "unit": "", "type": "control", "default": "m15", "options": ["m10", "m15", "m20"] },
-    { "id": "objectHeightCm", "label": "Height of object", "symbol": "h", "unit": "cm", "type": "controlled", "min": 1, "max": 4, "step": 0.5, "default": 2 },
-    { "id": "imageDistance", "label": "Image distance", "symbol": "v", "unit": "cm", "type": "dependent" }
+    {
+      "id": "objectDistanceCm",
+      "label": "Object distance",
+      "symbol": "u",
+      "unit": "cm",
+      "type": "independent",
+      "min": 8,
+      "max": 70,
+      "step": 0.5,
+      "default": 30
+    },
+    {
+      "id": "mirror",
+      "label": "Mirror",
+      "symbol": "f",
+      "unit": "",
+      "type": "control",
+      "default": "m15",
+      "options": [
+        "m10",
+        "m15",
+        "m20"
+      ]
+    },
+    {
+      "id": "objectHeightCm",
+      "label": "Height of object",
+      "symbol": "h",
+      "unit": "cm",
+      "type": "controlled",
+      "min": 1,
+      "max": 4,
+      "step": 0.5,
+      "default": 2
+    },
+    {
+      "id": "imageDistance",
+      "label": "Image distance",
+      "symbol": "v",
+      "unit": "cm",
+      "type": "dependent"
+    }
   ],
   "procedure": [
-    { "step": 1, "text": "Find the approximate focal length by forming an image of a distant object on a screen; that distance is roughly f.", "checkpoint": false },
-    { "step": 2, "text": "Mount the illuminated object, the mirror and the screen on the optical bench so that all three are at the same height and in line.", "checkpoint": true, "expects": "mirror" },
-    { "step": 3, "text": "Determine the index correction for the mirror and screen uprights using a knitting needle.", "checkpoint": false },
-    { "step": 4, "text": "Place the object at a distance of about 1.5 times the focal length from the mirror and note the position.", "checkpoint": true, "expects": "objectDistanceCm" },
-    { "step": 5, "text": "Move the screen until a sharp, inverted image of the cross-wire is formed on it, judging sharpness by removing parallax.", "checkpoint": false },
-    { "step": 6, "text": "Note the positions of the object, mirror and screen, and calculate u and v after applying the index correction.", "checkpoint": true, "expects": "record" },
-    { "step": 7, "text": "Repeat for at least five more object distances, keeping u between about 1.5f and 4f.", "checkpoint": true, "expects": "rows>=4" },
-    { "step": 8, "text": "Try placing the object inside the focus and observe that no image can be formed on the screen. Explain why.", "checkpoint": false },
-    { "step": 9, "text": "Calculate f = uv/(u + v) for each row and take the mean. Also plot 1/u against 1/v and find f from the intercepts.", "checkpoint": true, "expects": "result" }
+    {
+      "step": 1,
+      "text": "Find the approximate focal length by forming an image of a distant object on a screen; that distance is roughly f.",
+      "checkpoint": false
+    },
+    {
+      "step": 2,
+      "text": "Mount the illuminated object, the mirror and the screen on the optical bench so that all three are at the same height and in line.",
+      "checkpoint": true,
+      "expects": "mirror"
+    },
+    {
+      "step": 3,
+      "text": "Determine the index correction for the mirror and screen uprights using a knitting needle.",
+      "checkpoint": false
+    },
+    {
+      "step": 4,
+      "text": "Place the object at a distance of about 1.5 times the focal length from the mirror and note the position.",
+      "checkpoint": true,
+      "expects": "objectDistanceCm"
+    },
+    {
+      "step": 5,
+      "text": "Move the screen until a sharp, inverted image of the cross-wire is formed on it, judging sharpness by removing parallax.",
+      "checkpoint": false
+    },
+    {
+      "step": 6,
+      "text": "Note the positions of the object, mirror and screen, and calculate u and v after applying the index correction.",
+      "checkpoint": true,
+      "expects": "record"
+    },
+    {
+      "step": 7,
+      "text": "Repeat for at least five more object distances, keeping u between about 1.5f and 4f.",
+      "checkpoint": true,
+      "expects": "rows>=4"
+    },
+    {
+      "step": 8,
+      "text": "Try placing the object inside the focus and observe that no image can be formed on the screen. Explain why.",
+      "checkpoint": false
+    },
+    {
+      "step": 9,
+      "text": "Calculate f = uv/(u + v) for each row and take the mean. Also plot 1/u against 1/v and find f from the intercepts.",
+      "checkpoint": true,
+      "expects": "result"
+    }
   ],
   "simulation": {
     "model": "concave-mirror",
     "renderer": "concave-mirror",
     "fps": 60,
     "controls": [
-      { "var": "objectDistanceCm", "widget": "slider" },
-      { "var": "mirror", "widget": "segmented", "options": ["m10", "m15", "m20"] },
-      { "var": "objectHeightCm", "widget": "slider" }
+      {
+        "var": "objectDistanceCm",
+        "widget": "slider"
+      },
+      {
+        "var": "mirror",
+        "widget": "segmented",
+        "options": [
+          "m10",
+          "m15",
+          "m20"
+        ]
+      },
+      {
+        "var": "objectHeightCm",
+        "widget": "slider"
+      }
     ],
     "actions": [
-      { "id": "record", "label": "Record u and v", "primary": true },
-      { "id": "reset", "label": "Reset" }
+      {
+        "id": "record",
+        "label": "Record u and v",
+        "primary": true
+      },
+      {
+        "id": "reset",
+        "label": "Reset"
+      }
     ]
   },
   "observationModel": {
     "columns": [
-      { "key": "trial", "label": "No.", "unit": "", "decimals": 0 },
-      { "key": "u", "label": "u", "unit": "cm", "decimals": 1 },
-      { "key": "v", "label": "v", "unit": "cm", "decimals": 1 },
-      { "key": "invU", "label": "1/u", "unit": "cm⁻¹", "decimals": 5 },
-      { "key": "invV", "label": "1/v", "unit": "cm⁻¹", "decimals": 5 },
-      { "key": "focalLength", "label": "f = uv/(u+v)", "unit": "cm", "decimals": 2 },
-      { "key": "magnification", "label": "m = −v/u", "unit": "", "decimals": 3 }
+      {
+        "key": "trial",
+        "label": "No.",
+        "unit": "",
+        "decimals": 0
+      },
+      {
+        "key": "u",
+        "label": "u",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "v",
+        "label": "v",
+        "unit": "cm",
+        "decimals": 1
+      },
+      {
+        "key": "invU",
+        "label": "1/u",
+        "unit": "cm⁻¹",
+        "decimals": 5
+      },
+      {
+        "key": "invV",
+        "label": "1/v",
+        "unit": "cm⁻¹",
+        "decimals": 5
+      },
+      {
+        "key": "focalLength",
+        "label": "f = uv/(u+v)",
+        "unit": "cm",
+        "decimals": 2
+      },
+      {
+        "key": "magnification",
+        "label": "m = −v/u",
+        "unit": "",
+        "decimals": 3
+      }
     ],
-    "graph": { "x": "invU", "y": "invV", "xLabel": "1/u (cm⁻¹)", "yLabel": "1/v (cm⁻¹)", "throughOrigin": false },
+    "graph": {
+      "x": "invU",
+      "y": "invV",
+      "xLabel": "1/u (cm⁻¹)",
+      "yLabel": "1/v (cm⁻¹)",
+      "throughOrigin": false
+    },
     "minRows": 4
   },
   "calculations": {
@@ -112,7 +277,11 @@
       "The intercept on either axis is 1/f, giving a second value of f",
       "Radius of curvature R = 2f"
     ],
-    "resultKeys": ["fMean", "fFromGraph", "radiusOfCurvature"]
+    "resultKeys": [
+      "fMean",
+      "fFromGraph",
+      "radiusOfCurvature"
+    ]
   },
   "expectedResult": {
     "quantity": "Focal length of the concave mirror",
@@ -120,8 +289,14 @@
     "value": 15,
     "tolerance": 0.8,
     "unit": "cm",
-    "secondary": { "quantity": "Radius of curvature", "value": 30, "tolerance": 2, "unit": "cm" },
-    "statement": "The focal length of the given concave mirror is about 15 cm, obtained both as the mean of f = uv/(u + v) and from the intercepts of the 1/u against 1/v graph, whose slope is −1. The radius of curvature is twice this, about 30 cm."
+    "secondary": {
+      "quantity": "Radius of curvature",
+      "value": 30,
+      "tolerance": 2,
+      "unit": "cm"
+    },
+    "statement": "The focal length of the given concave mirror is about 15 cm, obtained both as the mean of f = uv/(u + v) and from the intercepts of the 1/u against 1/v graph, whose slope is −1. The radius of curvature is twice this, about 30 cm.",
+    "key": "fMean"
   },
   "safety": [
     "Do not use the concave mirror to focus sunlight; it concentrates enough heat to burn paper, skin or the retina.",
@@ -137,33 +312,180 @@
     "Working too close to the focus, where a small change in u produces a very large change in v."
   ],
   "viva": [
-    { "question": "Write the mirror formula and identify each symbol.", "expectedConcept": "1/v + 1/u = 1/f, where u is the object distance from the pole, v the image distance and f the focal length of the mirror.", "difficulty": "easy", "bloom": "Remember", "answerLogic": "Correct formula with symbols identified.", "commonMisconception": "Writing the lens formula 1/v − 1/u = 1/f instead." },
-    { "question": "Why can no image be obtained on the screen when the object is inside the focus?", "expectedConcept": "When the object lies between the pole and the focus, the reflected rays diverge instead of converging. They only appear to come from a point behind the mirror, so the image is virtual, erect and magnified. A virtual image is not formed by the actual meeting of rays and therefore cannot be caught on a screen.", "difficulty": "medium", "bloom": "Understand", "answerLogic": "Diverging rays produce a virtual image.", "commonMisconception": "Thinking the image is simply too faint to see." },
-    { "question": "What happens when the object is placed exactly at the principal focus?", "expectedConcept": "The rays are reflected parallel to the principal axis and never meet, so the image is formed at infinity. In practice no image can be found however far the screen is moved.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "Parallel reflected rays.", "commonMisconception": "Expecting the image to form at the focus itself." },
-    { "question": "Where should the object be placed to obtain an image the same size as itself?", "expectedConcept": "At the centre of curvature, that is at a distance 2f from the pole. The image is then also at 2f, real, inverted and of the same size, so the magnification is −1.", "difficulty": "medium", "bloom": "Apply", "answerLogic": "u = v = 2f gives m = −1.", "commonMisconception": "Saying at the focus." },
-    { "question": "Why is a graph of 1/u against 1/v plotted?", "expectedConcept": "The mirror formula rearranges to 1/v = 1/f − 1/u, so a graph of 1/v against 1/u is a straight line of slope −1 whose intercept on either axis is 1/f. A straight line uses all the readings at once, exposes any stray point, and gives f without relying on a single measurement.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Linearisation and the meaning of the intercept.", "commonMisconception": "Treating the graph as decoration rather than as the analysis." },
-    { "question": "What is index correction and why is it needed?", "expectedConcept": "The position read on the optical bench refers to the upright, not to the pole of the mirror or the plane of the screen. The difference between the two is the index correction, found with a knitting needle, and it must be applied to every reading of u and v.", "difficulty": "hard", "bloom": "Apply", "answerLogic": "A systematic offset between the marked and the actual positions.", "commonMisconception": "Confusing it with zero error of the scale." },
-    { "question": "Why must the object distance be kept well away from the focal length?", "expectedConcept": "Close to the focus a very small change in u produces an enormous change in v, so the image is far down the bench, faint and hard to locate, and the percentage error is large. Working between about 1.5f and 4f keeps the image at a convenient distance and a reasonable brightness.", "difficulty": "medium", "bloom": "Evaluate", "answerLogic": "Sensitivity of v to u near the focus.", "commonMisconception": "Assuming any object distance is equally good." },
-    { "question": "How is a real image distinguished from a virtual image?", "expectedConcept": "A real image is formed by the actual intersection of reflected rays, is always inverted for a single mirror, and can be received on a screen. A virtual image is formed where the rays only appear to meet, is erect, and cannot be caught on a screen.", "difficulty": "easy", "bloom": "Understand", "answerLogic": "Three distinguishing features.", "commonMisconception": "Believing a virtual image cannot be seen at all; it can be seen by the eye, just not projected." },
-    { "question": "What is the relation between focal length and radius of curvature, and why?", "expectedConcept": "R = 2f. A ray parallel to the axis and close to it is reflected so that it crosses the axis halfway between the pole and the centre of curvature, which follows from the law of reflection applied at the mirror surface for small apertures.", "difficulty": "medium", "bloom": "Remember", "answerLogic": "Geometry of reflection for a paraxial ray.", "commonMisconception": "Writing f = 2R." },
-    { "question": "Why should the mirror have a small aperture?", "expectedConcept": "A mirror with a large aperture suffers from spherical aberration: rays striking the outer parts are brought to a focus nearer the pole than paraxial rays, so no single sharp image is formed. The mirror formula assumes paraxial rays and only holds for a small aperture.", "difficulty": "hard", "bloom": "Analyze", "answerLogic": "Spherical aberration violates the paraxial assumption.", "commonMisconception": "Thinking a bigger mirror is simply brighter and therefore better." }
+    {
+      "question": "Write the mirror formula and identify each symbol.",
+      "expectedConcept": "1/v + 1/u = 1/f, where u is the object distance from the pole, v the image distance and f the focal length of the mirror.",
+      "difficulty": "easy",
+      "bloom": "Remember",
+      "answerLogic": "Correct formula with symbols identified.",
+      "commonMisconception": "Writing the lens formula 1/v − 1/u = 1/f instead."
+    },
+    {
+      "question": "Why can no image be obtained on the screen when the object is inside the focus?",
+      "expectedConcept": "When the object lies between the pole and the focus, the reflected rays diverge instead of converging. They only appear to come from a point behind the mirror, so the image is virtual, erect and magnified. A virtual image is not formed by the actual meeting of rays and therefore cannot be caught on a screen.",
+      "difficulty": "medium",
+      "bloom": "Understand",
+      "answerLogic": "Diverging rays produce a virtual image.",
+      "commonMisconception": "Thinking the image is simply too faint to see."
+    },
+    {
+      "question": "What happens when the object is placed exactly at the principal focus?",
+      "expectedConcept": "The rays are reflected parallel to the principal axis and never meet, so the image is formed at infinity. In practice no image can be found however far the screen is moved.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "Parallel reflected rays.",
+      "commonMisconception": "Expecting the image to form at the focus itself."
+    },
+    {
+      "question": "Where should the object be placed to obtain an image the same size as itself?",
+      "expectedConcept": "At the centre of curvature, that is at a distance 2f from the pole. The image is then also at 2f, real, inverted and of the same size, so the magnification is −1.",
+      "difficulty": "medium",
+      "bloom": "Apply",
+      "answerLogic": "u = v = 2f gives m = −1.",
+      "commonMisconception": "Saying at the focus."
+    },
+    {
+      "question": "Why is a graph of 1/u against 1/v plotted?",
+      "expectedConcept": "The mirror formula rearranges to 1/v = 1/f − 1/u, so a graph of 1/v against 1/u is a straight line of slope −1 whose intercept on either axis is 1/f. A straight line uses all the readings at once, exposes any stray point, and gives f without relying on a single measurement.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Linearisation and the meaning of the intercept.",
+      "commonMisconception": "Treating the graph as decoration rather than as the analysis."
+    },
+    {
+      "question": "What is index correction and why is it needed?",
+      "expectedConcept": "The position read on the optical bench refers to the upright, not to the pole of the mirror or the plane of the screen. The difference between the two is the index correction, found with a knitting needle, and it must be applied to every reading of u and v.",
+      "difficulty": "hard",
+      "bloom": "Apply",
+      "answerLogic": "A systematic offset between the marked and the actual positions.",
+      "commonMisconception": "Confusing it with zero error of the scale."
+    },
+    {
+      "question": "Why must the object distance be kept well away from the focal length?",
+      "expectedConcept": "Close to the focus a very small change in u produces an enormous change in v, so the image is far down the bench, faint and hard to locate, and the percentage error is large. Working between about 1.5f and 4f keeps the image at a convenient distance and a reasonable brightness.",
+      "difficulty": "medium",
+      "bloom": "Evaluate",
+      "answerLogic": "Sensitivity of v to u near the focus.",
+      "commonMisconception": "Assuming any object distance is equally good."
+    },
+    {
+      "question": "How is a real image distinguished from a virtual image?",
+      "expectedConcept": "A real image is formed by the actual intersection of reflected rays, is always inverted for a single mirror, and can be received on a screen. A virtual image is formed where the rays only appear to meet, is erect, and cannot be caught on a screen.",
+      "difficulty": "easy",
+      "bloom": "Understand",
+      "answerLogic": "Three distinguishing features.",
+      "commonMisconception": "Believing a virtual image cannot be seen at all; it can be seen by the eye, just not projected."
+    },
+    {
+      "question": "What is the relation between focal length and radius of curvature, and why?",
+      "expectedConcept": "R = 2f. A ray parallel to the axis and close to it is reflected so that it crosses the axis halfway between the pole and the centre of curvature, which follows from the law of reflection applied at the mirror surface for small apertures.",
+      "difficulty": "medium",
+      "bloom": "Remember",
+      "answerLogic": "Geometry of reflection for a paraxial ray.",
+      "commonMisconception": "Writing f = 2R."
+    },
+    {
+      "question": "Why should the mirror have a small aperture?",
+      "expectedConcept": "A mirror with a large aperture suffers from spherical aberration: rays striking the outer parts are brought to a focus nearer the pole than paraxial rays, so no single sharp image is formed. The mirror formula assumes paraxial rays and only holds for a small aperture.",
+      "difficulty": "hard",
+      "bloom": "Analyze",
+      "answerLogic": "Spherical aberration violates the paraxial assumption.",
+      "commonMisconception": "Thinking a bigger mirror is simply brighter and therefore better."
+    }
   ],
   "assessment": {
     "preLab": [
-      { "id": "pre1", "type": "mcq", "question": "The mirror formula is:", "options": ["1/v − 1/u = 1/f", "1/v + 1/u = 1/f", "v + u = f", "1/f = 1/u − 1/v"], "answer": 1, "feedback": "For mirrors it is 1/v + 1/u = 1/f. The lens formula has a minus sign; do not confuse them." },
-      { "id": "pre2", "type": "mcq", "question": "An object placed at the centre of curvature of a concave mirror gives an image that is:", "options": ["Virtual and magnified", "Real, inverted and the same size", "Real and diminished at the focus", "At infinity"], "answer": 1, "feedback": "At u = 2f the image also forms at 2f, real, inverted and of the same size, so m = −1." },
-      { "id": "pre3", "type": "mcq", "question": "A real image formed by a single concave mirror is always:", "options": ["Erect", "Inverted", "Magnified", "Virtual"], "answer": 1, "feedback": "The magnification m = −v/u is negative for a real image, which means it is inverted." }
+      {
+        "id": "pre1",
+        "type": "mcq",
+        "question": "The mirror formula is:",
+        "options": [
+          "1/v − 1/u = 1/f",
+          "1/v + 1/u = 1/f",
+          "v + u = f",
+          "1/f = 1/u − 1/v"
+        ],
+        "answer": 1,
+        "feedback": "For mirrors it is 1/v + 1/u = 1/f. The lens formula has a minus sign; do not confuse them."
+      },
+      {
+        "id": "pre2",
+        "type": "mcq",
+        "question": "An object placed at the centre of curvature of a concave mirror gives an image that is:",
+        "options": [
+          "Virtual and magnified",
+          "Real, inverted and the same size",
+          "Real and diminished at the focus",
+          "At infinity"
+        ],
+        "answer": 1,
+        "feedback": "At u = 2f the image also forms at 2f, real, inverted and of the same size, so m = −1."
+      },
+      {
+        "id": "pre3",
+        "type": "mcq",
+        "question": "A real image formed by a single concave mirror is always:",
+        "options": [
+          "Erect",
+          "Inverted",
+          "Magnified",
+          "Virtual"
+        ],
+        "answer": 1,
+        "feedback": "The magnification m = −v/u is negative for a real image, which means it is inverted."
+      }
     ],
     "duringLab": [
-      { "id": "dur1", "type": "task", "question": "Record at least four pairs of u and v.", "check": "rows>=4" },
-      { "id": "dur2", "type": "task", "question": "Change the object distance between readings.", "check": "tempVaried" }
+      {
+        "id": "dur1",
+        "type": "task",
+        "question": "Record at least four pairs of u and v.",
+        "check": "rows>=4"
+      },
+      {
+        "id": "dur2",
+        "type": "task",
+        "question": "Change the object distance between readings.",
+        "check": "tempVaried"
+      }
     ],
     "postLab": [
-      { "id": "post1", "type": "numeric", "question": "State the mean focal length you obtained (cm).", "answer": 15, "tolerance": 1.2, "feedback": "The mirror supplied has a focal length of about 15 cm." },
-      { "id": "post2", "type": "numeric", "question": "State the radius of curvature of the mirror (cm).", "answer": 30, "tolerance": 2.5, "feedback": "R = 2f = 2 × 15 = 30 cm." },
-      { "id": "post3", "type": "mcq", "question": "The slope of your 1/u against 1/v graph should be:", "options": ["+1", "−1", "1/f", "f"], "answer": 1, "feedback": "From 1/v = 1/f − 1/u the slope is −1 and the intercept on either axis is 1/f." }
+      {
+        "id": "post1",
+        "type": "numeric",
+        "question": "State the mean focal length you obtained (cm).",
+        "answer": 15,
+        "tolerance": 1.2,
+        "feedback": "The mirror supplied has a focal length of about 15 cm."
+      },
+      {
+        "id": "post2",
+        "type": "numeric",
+        "question": "State the radius of curvature of the mirror (cm).",
+        "answer": 30,
+        "tolerance": 2.5,
+        "feedback": "R = 2f = 2 × 15 = 30 cm."
+      },
+      {
+        "id": "post3",
+        "type": "mcq",
+        "question": "The slope of your 1/u against 1/v graph should be:",
+        "options": [
+          "+1",
+          "−1",
+          "1/f",
+          "f"
+        ],
+        "answer": 1,
+        "feedback": "From 1/v = 1/f − 1/u the slope is −1 and the intercept on either axis is 1/f."
+      }
     ],
-    "weights": { "preLab": 20, "duringLab": 30, "postLab": 30, "viva": 20 }
+    "weights": {
+      "preLab": 20,
+      "duringLab": 30,
+      "postLab": 30,
+      "viva": 20
+    }
   },
   "scientificValidation": {
     "formula": "1/v + 1/u = 1/f; f = uv/(u+v); m = −v/u; R = 2f",

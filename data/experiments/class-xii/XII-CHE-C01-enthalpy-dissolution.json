@@ -300,7 +300,9 @@
     "statement": "Potassium nitrate cools the water, giving ΔH of about +35 kJ mol⁻¹, while anhydrous copper sulphate warms it strongly, giving about −66.5 kJ mol⁻¹. The pentahydrate is mildly endothermic at about +11.7 kJ mol⁻¹. Subtracting the two copper sulphate values gives the enthalpy of hydration of the anhydrous salt, close to −78 kJ mol⁻¹, by Hess’s law.",
     "value": 34.9,
     "unit": "kJ mol⁻¹",
-    "tolerancePct": 15
+    "key": "meanKJ",
+    "tolerance": 5.235,
+    "quantity": "Enthalpy of dissolution of copper sulphate or potassium nitrate"
   },
   "safety": [
     "Copper sulphate is harmful if swallowed and irritates the skin; wash hands after use.",

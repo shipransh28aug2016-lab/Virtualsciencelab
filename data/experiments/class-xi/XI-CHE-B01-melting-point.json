@@ -334,7 +334,8 @@
       "tolerance": 0.6,
       "unit": "°C"
     },
-    "statement": "The recrystallised sample melts sharply at about 80.5 °C, within half a degree. The crude sample melts several degrees lower and over a range of two to three degrees, because a dissolved impurity depresses the freezing point in proportion to the number of particles present."
+    "statement": "The recrystallised sample melts sharply at about 80.5 °C, within half a degree. The crude sample melts several degrees lower and over a range of two to three degrees, because a dissolved impurity depresses the freezing point in proportion to the number of particles present.",
+    "key": "meltingPoint"
   },
   "safety": [
     "Liquid paraffin at 200 °C causes severe burns; never touch the bath or the thermometer until both have cooled.",

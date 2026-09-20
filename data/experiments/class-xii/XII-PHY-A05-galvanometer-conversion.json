@@ -319,7 +319,8 @@
       "tolerance": 250,
       "unit": "Ω"
     },
-    "statement": "Converting the galvanometer into a 1 A ammeter needs a shunt of about 0.047 Ω in parallel, and the finished ammeter has almost no resistance of its own. Converting it into a 3 V voltmeter needs about 3790 Ω in series, and the finished voltmeter has a resistance of some 3850 Ω. The converted instruments agree with the standard meters across the range."
+    "statement": "Converting the galvanometer into a 1 A ammeter needs a shunt of about 0.047 Ω in parallel, and the finished ammeter has almost no resistance of its own. Converting it into a 3 V voltmeter needs about 3790 Ω in series, and the finished voltmeter has a resistance of some 3850 Ω. The converted instruments agree with the standard meters across the range.",
+    "key": "requiredResistance"
   },
   "safety": [
     "A galvanometer being converted is still a galvanometer. Never connect it to a source without the calculated shunt or series resistance already in place.",

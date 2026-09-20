@@ -242,7 +242,8 @@
     "value": 5.126,
     "tolerance": 0.05,
     "unit": "g",
-    "statement": "Correctly tared and read, the electronic balance gives a net mass of about 5.126 g, repeatable to well within its stated readability."
+    "statement": "Correctly tared and read, the electronic balance gives a net mass of about 5.126 g, repeatable to well within its stated readability.",
+    "key": "meanMass"
   },
   "safety": [
     "Never weigh a chemical directly on the pan — use a container.",

@@ -315,7 +315,8 @@
       "tolerance": 4,
       "unit": "%"
     },
-    "statement": "Body P has a mass of about 74.5 g. The same value is obtained with different known masses and at different distances, which is what confirms the principle of moments rather than merely applying it once."
+    "statement": "Body P has a mass of about 74.5 g. The same value is obtained with different known masses and at different distances, which is what confirms the principle of moments rather than merely applying it once.",
+    "key": "mass"
   },
   "safety": [
     "Clamp the knife-edge stand firmly so that it cannot topple when the masses are hung.",

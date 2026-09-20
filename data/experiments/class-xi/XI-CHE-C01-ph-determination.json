@@ -377,7 +377,8 @@
       "tolerance": 0.6,
       "unit": ""
     },
-    "statement": "Solutions of strong acids have a low pH and strong bases a high pH. A weak acid of the same concentration as a strong acid shows a distinctly higher pH because it is only partly ionised. Salts of a weak acid with a strong base are basic, salts of a strong acid with a weak base are acidic, and salts of a strong acid with a strong base are neutral. All the fruit juices tested are acidic."
+    "statement": "Solutions of strong acids have a low pH and strong bases a high pH. A weak acid of the same concentration as a strong acid shows a distinctly higher pH because it is only partly ionised. Salts of a weak acid with a strong base are basic, salts of a strong acid with a weak base are acidic, and salts of a strong acid with a strong base are neutral. All the fruit juices tested are acidic.",
+    "key": "mostAcidic"
   },
   "safety": [
     "Acids and alkalis of 0.1 M concentration still irritate the skin and eyes; wear eye protection and wash any splash immediately with plenty of water.",

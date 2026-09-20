@@ -259,7 +259,8 @@
       "tolerance": 8,
       "unit": "kJ/mol"
     },
-    "statement": "The graph of 1/t against [I-] is a straight line through the origin, showing the reaction is first order in iodide. The Arrhenius plot from clock times at different temperatures gives an activation energy of about 42 kJ/mol."
+    "statement": "The graph of 1/t against [I-] is a straight line through the origin, showing the reaction is first order in iodide. The Arrhenius plot from clock times at different temperatures gives an activation energy of about 42 kJ/mol.",
+    "key": "order"
   },
   "safety": [
     "Hydrogen peroxide can bleach skin and clothing; handle with care.",

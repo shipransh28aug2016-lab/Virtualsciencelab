@@ -252,7 +252,8 @@
       "tolerance": 0.5,
       "unit": ""
     },
-    "statement": "Adding sodium acetate to acetic acid raises the pH sharply — from about 2.9 to about 4.7 with 0.1 M added acetate — because the common acetate ion suppresses the acid's own ionisation, exactly as Le Chatelier's principle predicts."
+    "statement": "Adding sodium acetate to acetic acid raises the pH sharply — from about 2.9 to about 4.7 with 0.1 M added acetate — because the common acetate ion suppresses the acid's own ionisation, exactly as Le Chatelier's principle predicts.",
+    "key": "mostAcidicPH"
   },
   "safety": [
     "Dilute acetic acid and ammonia solutions are of low hazard; ammonia vapour is irritating — work in a ventilated space.",

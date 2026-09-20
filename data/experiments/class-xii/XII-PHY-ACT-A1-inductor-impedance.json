@@ -342,7 +342,8 @@
       "tolerance": 1,
       "unit": "Ω"
     },
-    "statement": "The DC reading gives the resistance of the winding, about 8.6 Ω for the 800-turn coil. On AC at 50 Hz the same coil shows an impedance of about 28 Ω, and subtracting in quadrature leaves a reactance of about 26.5 Ω, so L is about 0.085 H. Inserting the laminated core raises the impedance roughly nine-fold while the DC resistance stays exactly where it was."
+    "statement": "The DC reading gives the resistance of the winding, about 8.6 Ω for the 800-turn coil. On AC at 50 Hz the same coil shows an impedance of about 28 Ω, and subtracting in quadrature leaves a reactance of about 26.5 Ω, so L is about 0.085 H. Inserting the laminated core raises the impedance roughly nine-fold while the DC resistance stays exactly where it was.",
+    "key": "inductance"
   },
   "safety": [
     "Switch off and discharge the circuit before changing any connection.",
