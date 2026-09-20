@@ -20,7 +20,21 @@ export const meta = {
 export const STOCK_THIO_M = 0.15;
 export const R_GAS = 8.314;
 export const EA_JMOL = 48000;
-export const A_FACTOR = 7.5e6;
+/**
+ * Arrhenius pre-exponential factor, in M⁻¹s⁻¹.
+ *
+ * With Ea = 48 kJ/mol this fixes how long the cross takes to disappear, and
+ * it was six times too small: the standard preparation — 50 mL of 0.15 M
+ * sodium thiosulphate with 5 mL of acid at 25 °C — came out at 252 s, and
+ * the most dilute setting the bench allows at 2512 s. Forty-two minutes for
+ * one reading, on an experiment that needs five of them.
+ *
+ * A school clock reaction at these concentrations takes about forty seconds,
+ * and that is what this now gives. The dilute end takes ten times longer
+ * because the concentration is ten times smaller, which is the proportionality
+ * the experiment exists to measure; the simulation clock covers the wait.
+ */
+export const A_FACTOR = 4.5e7;
 export const TURBIDITY_ENDPOINT = 0.78;
 export const defaults = { thioVolume: 50, waterVolume: 0, hclVolume: 5, tempC: 25 };
 

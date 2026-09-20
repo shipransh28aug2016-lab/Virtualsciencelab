@@ -2,7 +2,7 @@
  * Apparatus renderers — chemistry (Classes XI and XII).
  */
 import {
-  label, drawBeaker, drawConicalFlask, drawBurette, drawTestTube, drawThermometer, drawRetortStand, drawBurner, drawSwatch, theme, heatingAssembly, drawClamp, drawTripod, drawGauze, heatAt, noteBounds, drawDigitalReadout, brushedMetal, chrome, plastic, contactShadow, incandescence,
+  label, drawBeaker, drawConicalFlask, drawBurette, drawTestTube, drawThermometer, drawRetortStand, drawBurner, drawSwatch, drawStopClock, theme, heatingAssembly, drawClamp, drawTripod, drawGauze, heatAt, noteBounds, drawDigitalReadout, brushedMetal, chrome, plastic, contactShadow, incandescence,
 } from './apparatus.js';
 import { clock, rgba, shade, mixColor, clamp, lerp, noise1 } from './realism.js';
 
@@ -405,15 +405,80 @@ export function emulsion(ctx, w, h, state, inputs) {
   ctx.fillRect(cx - 15, topY + 20, 30, 20 * sep);
   ctx.globalAlpha = 1; ctx.restore();
 }
+/**
+ * The thiosulphate clock reaction.
+ *
+ * What the bench showed was a flask, and a TRIANGLE where the cross should
+ * be, and nothing else. On an experiment whose measurement is a time it had
+ * no clock; on an experiment whose variable is a concentration it looked the
+ * same at every concentration; and its temperature, the other thing the rate
+ * depends on, was a number in a panel rather than a thermometer in the
+ * liquid.
+ *
+ * Everything drawn here comes from the model: the turbidity is the sulphur
+ * the reaction has actually produced, the tint is the thiosulphate actually
+ * in the flask, and the clock reads the model's own elapsed time.
+ */
 export function reactionKinetics(ctx, w, h, state, inputs) {
   const th = theme();
-  const cx = w / 2;
-  const { topY, bot } = drawConicalFlask(ctx, cx, 30, 40, 130, 120, 0.5, th.liquid, { label: 'Na₂S₂O₃ + HCl' });
+  const cx = w / 2 - 90;
   const turbidity = Math.min(1, state?.turbidity ?? 0);
-  ctx.save(); ctx.fillStyle = '#222'; ctx.globalAlpha = 1 - turbidity;
-  ctx.beginPath(); ctx.moveTo(cx - 8, bot - 6); ctx.lineTo(cx + 8, bot - 6); ctx.lineTo(cx, bot - 20); ctx.closePath(); ctx.fill();
+
+  /* Concentration is visible, because it is the independent variable. The
+     tint comes from how much of the 50 mL is thiosulphate rather than water,
+     so a dilute flask looks dilute before the reaction begins. */
+  const thio = Number(inputs?.thioVolume ?? 50);
+  const water = Number(inputs?.waterVolume ?? 0);
+  const frac = thio + water > 0 ? thio / (thio + water) : 1;
+  const liquid = mixColor('#eef4f8', '#dfe9d8', frac);
+
+  const { bot } = drawConicalFlask(ctx, cx, 30, 40, 130, 120, 0.5, liquid,
+    { label: `${thio.toFixed(0)} mL Na₂S₂O₃ + ${water.toFixed(0)} mL water + ${Number(inputs?.hclVolume ?? 5).toFixed(0)} mL HCl` });
+
+  /* The sulphur, as it forms: a pale suspension that thickens across the
+     whole liquid rather than a shade drawn over the cross. */
+  if (turbidity > 0.01) {
+    ctx.save();
+    ctx.globalAlpha = 0.85 * turbidity;
+    ctx.fillStyle = '#f2f3ec';
+    ctx.beginPath();
+    ctx.moveTo(cx - 58, bot - 4);
+    ctx.lineTo(cx + 58, bot - 4);
+    ctx.lineTo(cx + 19, bot - 62);
+    ctx.lineTo(cx - 19, bot - 62);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  /* An actual cross, on the tile under the flask, seen through the liquid. */
+  ctx.save();
+  ctx.globalAlpha = Math.max(0, 1 - turbidity / 0.78);
+  ctx.strokeStyle = '#1a2333';
+  ctx.lineWidth = 3.4;
+  ctx.lineCap = 'round';
+  const r = 11;
+  ctx.beginPath();
+  ctx.moveTo(cx - r, bot - 20 - r); ctx.lineTo(cx + r, bot - 20 + r);
+  ctx.moveTo(cx + r, bot - 20 - r); ctx.lineTo(cx - r, bot - 20 + r);
+  ctx.stroke();
   ctx.restore();
-  label(ctx, cx, bot + 6, turbidity > 0.9 ? 'Cross has disappeared' : 'Cross mark under the flask', { anchor: 'below' });
+
+  drawThermometer(ctx, cx + 92, 44, 130, clamp(((Number(inputs?.tempC ?? 25)) - 10) / 60, 0, 1),
+    { label: `${Number(inputs?.tempC ?? 25).toFixed(0)} °C` });
+
+  // The instrument this experiment measures with.
+  drawStopClock(ctx, w - 150, h * 0.42, 70, state?.elapsed ?? 0, {
+    leastCount: 0.2,
+    running: Boolean(state?.running && !state?.finishedAt),
+    sub: state?.finishedAt ? 'cross gone — record the time' : 'watching the cross',
+  });
+
+  label(ctx, cx, bot + 8,
+    turbidity >= 0.78 ? 'The cross has disappeared — stop the clock'
+      : state?.running ? 'Cross still visible through the liquid'
+        : 'Cross mark on the tile under the flask',
+    { anchor: 'below' });
 }
 export function calorimetry(ctx, w, h, state, inputs) {
   const th = theme();
