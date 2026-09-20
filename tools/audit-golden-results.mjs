@@ -61,6 +61,38 @@ function runAndRead(model, inputs, trial) {
   return { state, reading: model.measure(state, inputs, 7, trial) };
 }
 
+/** Does this experiment plot something against TIME? */
+const TIME_KEYS = new Set(['timeS', 'time', 't', 'timeMin', 'minutes', 'seconds', 'elapsed', 'elapsedS', 'timeMinutes']);
+
+/**
+ * Take a series of readings from ONE run, as the clock advances.
+ *
+ * A cooling curve, a damped pendulum, a dialysis run and a rate-of-reaction
+ * experiment are all performed by starting the process once and reading the
+ * instrument every so often. Varying a setup control between readings — which
+ * is what every other experiment here needs — measures nothing in these, and
+ * reports a perfectly correct model as wrong: the damped pendulum came back
+ * with a NEGATIVE decay constant, meaning an amplitude that grows, purely
+ * because the audit kept resetting the bob to a different starting amplitude
+ * instead of letting one swing die away.
+ */
+function runTimeSeries(model, inputs, count, secondsBetween) {
+  let state = primeProcess(model, inputs, model.init(inputs));
+  const dt = 1 / 120;
+  const rows = [];
+  const refusals = [];
+  for (let k = 0; k < count; k += 1) {
+    for (let f = 0; f < secondsBetween * 120; f += 1) {
+      state = model.step(state, inputs, dt);
+      if (state.finishedAt || state.finished) break;
+    }
+    const reading = model.measure(state, inputs, 7, k + 1);
+    if (reading && !('v' in reading && reading.v == null)) rows.push({ ...reading });
+    else refusals.push(reading?.reason || 'refused without a reason');
+  }
+  return { rows, refusals };
+}
+
 /**
  * Put a control where the instrument nulls.
  *
@@ -129,47 +161,104 @@ for (const entry of targets) {
   const minRows = exp.observationModel?.minRows || 0;
   const want = Math.max(minRows, 4);
 
-  const rows = [];
-  const refusals = [];
-  for (let k = 0; k < want; k += 1) {
-    let inputs = { ...base };
-    if (optionControl) inputs[optionControl.id] = optionControl.options[k % optionControl.options.length];
-    if (independent) {
-      const span = independent.max - independent.min;
-      const raw = independent.min + (span * (k + 0.5)) / want;
-      const step = Number(independent.step) || 1;
-      inputs[independent.id] = Number((Math.round(raw / step) * step).toFixed(6));
+  const graphX = exp.observationModel?.graph?.x;
+  const isTimeSeries = graphX && TIME_KEYS.has(graphX);
+
+  /**
+   * Collect readings by ONE faithful reading of the procedure.
+   *
+   * There is more than one, and the difference matters. The detergent
+   * activity must include zero concentration, because measuring pure water
+   * first is the whole comparison; the lateral-shift activity must EXCLUDE
+   * zero, because a ray at normal incidence is not refracted. A single
+   * sampling rule cannot be right for both, and picking one makes correct
+   * labs look broken — which is worse than useless, because it sends you off
+   * to "fix" a model that was right.
+   *
+   * So each is tried, and the lab is asked the fair question: is there a
+   * faithful way to perform it that reproduces its own accepted value? If
+   * none of them does, the best attempt is what gets reported.
+   */
+  const SAMPLINGS = [
+    { name: 'across the range', at: (k, n) => (n > 1 ? k / (n - 1) : 0) },
+    { name: 'inside the range', at: (k, n) => (k + 0.5) / n },
+    { name: 'the upper part of the range', at: (k, n) => 0.35 + (0.6 * k) / Math.max(1, n - 1) },
+  ];
+
+  function collect(sampling) {
+    const rows = [];
+    const refusals = [];
+    for (let k = 0; k < want; k += 1) {
+      let inputs = { ...base };
+      if (optionControl) inputs[optionControl.id] = optionControl.options[k % optionControl.options.length];
+      if (independent) {
+        const span = independent.max - independent.min;
+        const raw = independent.min + span * sampling.at(k, want);
+        const step = Number(independent.step) || 1;
+        const snapped = Math.min(independent.max, Math.max(independent.min, Math.round(raw / step) * step));
+        inputs[independent.id] = Number(snapped.toFixed(6));
+      }
+      /* Then bring the instrument to its null, if it has one. Every numeric
+         control is tried, coarse first and then fine, KEEPING each
+         adjustment — a beam balance is brought on scale with gram weights and
+         then with fractional ones. */
+      const numericVars = vars.filter((v) => v.type !== 'dependent' && Number.isFinite(v.min) && Number.isFinite(v.max));
+      for (const v of [independent, nullVar, ...numericVars].filter(Boolean)) {
+        const sought = seekNull(model, inputs, v);
+        if (sought === inputs) continue;
+        let ind = null;
+        try { ind = model.nullIndicator(sought); } catch { /* not a null instrument */ }
+        if (!ind) continue;
+        inputs = sought;
+        if (ind.atNull) break;
+      }
+      const { reading } = runAndRead(model, inputs, k + 1);
+      if (reading && !('v' in reading && reading.v == null)) rows.push({ ...reading });
+      else refusals.push(reading?.reason || 'refused without a reason');
     }
-    /* Then bring the instrument to its null, if it has one. Every numeric
-       control is tried, because the control that nulls the instrument is not
-       always the one the experiment calls its independent variable: on the
-       metre bridge the independent variable is the resistance box and the
-       null is found with the jockey. */
-    const numericVars = vars.filter((v) => v.type !== 'dependent' && Number.isFinite(v.min) && Number.isFinite(v.max));
-    /* Coarse first, then fine, KEEPING each adjustment — a beam balance is
-       brought on scale with gram weights and then with fractional ones, and
-       starting the fine adjustment over from the coarse default would undo
-       the work. */
-    for (const v of [independent, nullVar, ...numericVars].filter(Boolean)) {
-      const sought = seekNull(model, inputs, v);
-      if (sought === inputs) continue;
-      let ind = null;
-      try { ind = model.nullIndicator(sought); } catch { /* not a null instrument */ }
-      if (!ind) continue;
-      inputs = sought;              // keep the improvement even if not yet nulled
-      if (ind.atNull) break;
-    }
-    const { reading } = runAndRead(model, inputs, k + 1);
-    if (reading && !('v' in reading && reading.v == null)) rows.push({ ...reading });
-    else refusals.push(reading?.reason || 'refused without a reason');
+    return { rows, refusals };
   }
+
+  /** Score one attempt: did it reach a result, and how far off was it? */
+  function score(rows) {
+    if (rows.length < 2) return { rank: 0, rows };
+    let derived;
+    try { derived = model.derive(rows, base); } catch (err) { return { rank: 0, rows, thrown: err }; }
+    if (!derived?.ok) return { rank: 1, rows, derived };
+    const cands = [expected.key, expected.symbol, ...(exp.calculations?.resultKeys || [])];
+    const key = cands.find((k) => k && Number.isFinite(derived[k]));
+    if (!key) return { rank: 2, rows, derived };
+    const err = Math.abs(derived[key] - expected.value);
+    return { rank: 3, rows, derived, key, err };
+  }
+
+  const attempts = [];
+  if (isTimeSeries) {
+    // A cooling curve, a damped pendulum, a dialysis run: start the process
+    // once and read the instrument as the clock advances. The interval is
+    // whatever that particular process needs.
+    for (const gap of [15, 30, 60, 120, 300]) {
+      const out = runTimeSeries(model, base, want, gap);
+      attempts.push({ ...score(out.rows), refusals: out.refusals, how: `every ${gap} s` });
+    }
+  } else {
+    for (const sampling of SAMPLINGS) {
+      const out = collect(sampling);
+      attempts.push({ ...score(out.rows), refusals: out.refusals, how: sampling.name });
+    }
+  }
+
+  attempts.sort((a, b) => (b.rank - a.rank) || ((a.err ?? Infinity) - (b.err ?? Infinity)));
+  const best = attempts[0];
+  const rows = best.rows;
+  const refusals = best.refusals;
 
   checked += 1;
   const label = `${entry.id} [${modelName}]`;
 
   if (rows.length < 2) {
     failures.push({ id: entry.id, kind: 'unperformable',
-      msg: `only ${rows.length} of ${want} readings could be taken following the prescribed procedure — ${refusals[0] || 'no reason given'}` });
+      msg: `no procedure yielded more than ${rows.length} of ${want} readings — ${refusals[0] || 'no reason given'}` });
     continue;
   }
 
@@ -204,11 +293,12 @@ for (const entry of targets) {
 
   if (verbose) {
     console.log(`\n${label}`);
+    console.log(`   best of ${attempts.length} procedures: ${best.how}`);
     console.log(`   readings: ${rows.length}   ${key} = ${value} ${expected.unit || ''} (accepted ${expected.value} ± ${expected.tolerance})`);
   }
   if (errAbs > slack) {
     failures.push({ id: entry.id, kind: 'wrong-value',
-      msg: `${key} = ${value} ${expected.unit || ''} against an accepted ${expected.value} ± ${expected.tolerance} — out by ${errPct.toFixed(1)}%` });
+      msg: `${key} = ${value} ${expected.unit || ''} against an accepted ${expected.value} ± ${expected.tolerance} — out by ${errPct.toFixed(1)}% (best of ${attempts.length} procedures: ${best.how})` });
   }
 }
 

@@ -313,6 +313,13 @@ canvas{display:block;width:100%;touch-action:none}
 /* ── null-point indicator ──
    What the instrument itself is doing: which way it is off and by how much.
    Never the target value — that is the answer the experiment is there to find. */
+/* ── what the calculation is still waiting for ──
+   The models already say it, precisely, in the reason they refuse with. It
+   used to be reachable only by pressing Calculate and being turned away. */
+.still-needed{margin-top:9px;padding:9px 13px;border-radius:11px;font-size:13.5px;
+  border:1px solid color-mix(in srgb, var(--warn) 45%, var(--stroke));background:var(--warn-bg)}
+.still-needed b{display:block;font-size:12px;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:3px}
 .null-box{display:flex;gap:10px;flex-wrap:wrap;align-items:baseline;margin-top:9px;
   padding:9px 13px;border-radius:11px;border:1px solid var(--stroke);background:var(--surface-2)}
 .null-box .nb-label{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}

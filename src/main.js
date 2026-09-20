@@ -1922,6 +1922,7 @@ function renderTable() {
     });
   }
   renderGraphPanel();
+  renderStillNeeded();
   syncToolbar();
   $('#csvBtn').onclick = exportCSV;
   $('#clearBtn').onclick = () => {
@@ -1931,6 +1932,39 @@ function renderTable() {
     $('#resultBox').className = 'result-box';
     $('#resultBox').textContent = 'Take readings, then calculate the result.';
   };
+}
+
+/**
+ * What the calculation is still waiting for, shown while there is still time
+ * to do something about it.
+ *
+ * Several practicals are procedures in more than one part, and the second
+ * part is not guessable from the bench. The inductor activity needs readings
+ * on DC and then on AC before the inductance can be separated from the
+ * resistance; the resonance tube needs the first AND the second resonance;
+ * converting a galvanometer needs the deflection with and without the shunt;
+ * the law of length needs three different tuning forks at one tension.
+ *
+ * Every one of those models already says so, exactly, in the reason it
+ * refuses with — and that reason was reachable only by filling the table,
+ * pressing "Calculate result", and being turned away with no indication of
+ * how long the student had been collecting the wrong half of the data. It is
+ * the same sentence; it is simply said while it is still useful.
+ */
+function renderStillNeeded() {
+  const host = $('#stillNeeded');
+  if (!host) return;
+  if (!app.rows.length) { host.hidden = true; host.innerHTML = ''; return; }
+  let refusal = null;
+  try {
+    const d = app.model.derive(app.rows, app.inputs);
+    if (d && d.ok === false && d.reason) refusal = d.reason;
+  } catch {
+    refusal = null;   // a model that cannot be asked yet simply says nothing
+  }
+  if (!refusal) { host.hidden = true; host.innerHTML = ''; return; }
+  host.hidden = false;
+  host.innerHTML = `<b>Still needed</b>${esc(refusal)}`;
 }
 
 function renderGraphPanel() {

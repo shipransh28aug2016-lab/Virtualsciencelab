@@ -486,7 +486,7 @@ async function runLane(lane, queue, reports, onDone) {
             }
             await wait(200);
           }
-          const run = isTitration ? await titrateToEndPoint() : await runProcessAndWait();
+          const run = isTitration ? await titrateToEndPoint() : await runProcessAndWait(Math.max(2000, Math.min(34000, labDeadline - Date.now())));
           slowestWait = Math.max(slowestWait, run.waitedMs || 0);
           // A process that costs the student half a minute per reading is not
           // repeated six times here; the point is already made by three.
@@ -495,7 +495,7 @@ async function runLane(lane, queue, reports, onDone) {
           if (!t.ok) {
             const firstRefusal = t.why;
             // First do what the instrument itself tells you to do.
-            if (await homeInOnNull(nControls)) { nulled += 1; t = await takeReading(); }
+            if (await homeInOnNull(nControls, Math.max(1000, Math.min(20000, labDeadline - Date.now())))) { nulled += 1; t = await takeReading(); }
             if (!t.ok) t = await huntForReading(nControls, 5, k, labDeadline);
             if (t.ok) hunted += 1; else refusals.push(firstRefusal);
           }
