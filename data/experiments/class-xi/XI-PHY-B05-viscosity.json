@@ -348,7 +348,7 @@
       "yLabel": "Terminal velocity v (cm/s)",
       "throughOrigin": true
     },
-    "minRows": 3
+    "minRows": 4
   },
   "calculations": {
     "steps": [

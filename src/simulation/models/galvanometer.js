@@ -75,6 +75,23 @@ export function meterResistance(inputs) {
 }
 
 export function validate(inputs) {
+  /* A connected shunt of zero ohms is a short circuit, and the commonest way
+     to get stuck on this activity: the switch is on, so the student believes
+     the shunt is in, and every reading still records S = 0. */
+  if (inputs.shuntConnected && !(inputs.shuntS > 0)) {
+    const v = validateRest(inputs);
+    v.warnings.unshift({
+      field: 'shuntS', code: 'SHUNT_ZERO',
+      message: 'The shunt is switched in but its resistance is still zero.',
+      why: 'Zero ohms across the galvanometer is a short circuit, not a shunt: all the current bypasses the coil and the reading is the same as with no shunt at all.',
+      fix: 'Raise S until the deflection falls to about half its unshunted value.',
+    });
+    return v;
+  }
+  return validateRest(inputs);
+}
+
+function validateRest(inputs) {
   const warnings = [];
   if (!inputs.shuntConnected && inputs.conversion !== 'voltmeter' && inputs.resistanceR < galvOf(inputs).G * 5) {
     warnings.push({ field: 'resistanceR', code: 'R_TOO_SMALL', message: 'R is not much larger than G.', why: 'The half-deflection method\'s simple check G≈S is only a fair approximation when R≫G; for a small R the exact formula G=SR/(R−S) must be used and differs noticeably.' });
@@ -144,9 +161,23 @@ export function derive(rows, inputs = defaults) {
       n: rows.length, points: rows.map((r) => ({ x: Number(r.trial), y: Number(r.deflection) })),
     };
   }
+  /*
+   * Half deflection needs a reading with the shunt OUT and one with it IN.
+   * "In" means a shunt with resistance: the switch on its own, with S still
+   * at zero, puts a short circuit across the galvanometer rather than a
+   * shunt, and records the same zero as an open key. A student who flips the
+   * switch and takes a reading has done what the switch says and is then
+   * refused with "record both without and with the shunt connected", which
+   * they believe they have. So the two cases are told apart.
+   */
   const noShunt = rows.find((r) => Number(r.shuntS) === 0);
   const withShunt = rows.filter((r) => Number(r.shuntS) > 0);
-  if (!noShunt || !withShunt.length) return { ok: false, reason: 'Record the deflection both without and with the shunt connected.' };
+  if (!noShunt) {
+    return { ok: false, reason: 'Record the deflection θ with the shunt disconnected first — that is the deflection the shunt has to halve.' };
+  }
+  if (!withShunt.length) {
+    return { ok: false, reason: 'Now connect the shunt AND give it a resistance: with S at zero the switch puts a short circuit across the galvanometer, not a shunt. Raise S until the deflection falls to about half of θ, then record it.' };
+  }
   const theta = Number(noShunt.deflection);
   const half = withShunt.reduce((a, b) => (Math.abs(Number(a.deflection) - theta / 2) <= Math.abs(Number(b.deflection) - theta / 2) ? a : b));
   const R = Number(half.resistanceR);

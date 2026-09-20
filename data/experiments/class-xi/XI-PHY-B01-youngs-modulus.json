@@ -290,7 +290,7 @@
       "yLabel": "Load (N)",
       "throughOrigin": true
     },
-    "minRows": 3
+    "minRows": 4
   },
   "calculations": {
     "steps": [

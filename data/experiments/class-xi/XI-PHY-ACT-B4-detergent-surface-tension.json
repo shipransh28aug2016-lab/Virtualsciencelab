@@ -270,7 +270,7 @@
       "yLabel": "Surface tension (mN/m)",
       "throughOrigin": false
     },
-    "minRows": 3
+    "minRows": 4
   },
   "calculations": {
     "steps": [

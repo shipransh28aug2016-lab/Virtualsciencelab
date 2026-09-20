@@ -40,11 +40,19 @@ export function slipping(inputs) { return panForceN(inputs) >= limitingFrictionN
  */
 export function nullIndicator(inputs) {
   const limit = limitingFrictionN(inputs);
+  /*
+   * The whole window must lie PAST the limiting value, because that is where
+   * a reading can be taken: slipping(inputs) is panForce >= limit. A window
+   * centred on 1.02x with a 0.06x half-width reached down to 0.96x, so the
+   * indicator read "on the point of sliding — take the reading now" at a pan
+   * load the block still held, and the bench then refused it. An indicator
+   * that says record and a bench that says no is worse than no indicator.
+   */
   return nullPoint({
     label: 'Block',
     current: panForceN(inputs),
-    target: limit * 1.02,          // just past the limiting value
-    tolerance: Math.max(limit * 0.06, 0.02),
+    target: limit * 1.05,
+    tolerance: Math.max(limit * 0.04, 0.02),
     increase: 'Static friction is still matching the pull — add weights to the pan.',
     decrease: 'The block is being dragged, not just released — take weights off until it only begins to slide.',
     atNullText: 'on the point of sliding',

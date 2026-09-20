@@ -252,7 +252,27 @@
         "id": "reset",
         "label": "Reset"
       }
-    ]
+    ],
+    "goldenProcedure": {
+      "note": "One surface throughout, and a fresh load on the block each time. The pan is weighted until the block is just on the point of slipping, which is where the limiting friction is read.",
+      "hold": {
+        "surface": "woodWood",
+        "face": "broad"
+      },
+      "vary": {
+        "id": "loadG",
+        "values": [
+          0,
+          50,
+          100,
+          150,
+          200,
+          250,
+          300,
+          350
+        ]
+      }
+    }
   },
   "observationModel": {
     "columns": [
@@ -312,7 +332,7 @@
       "yLabel": "Limiting friction F (N)",
       "throughOrigin": true
     },
-    "minRows": 3
+    "minRows": 8
   },
   "calculations": {
     "steps": [

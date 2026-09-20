@@ -257,7 +257,23 @@
         "id": "reset",
         "label": "Reset"
       }
-    ]
+    ],
+    "goldenProcedure": {
+      "note": "The accepted 12.9 Ω is the SERIES combination. Each coil is balanced against several resistance-box values with the combination unchanged; comparing the three combinations is the conclusion, not the measurement.",
+      "hold": {
+        "combination": "series",
+        "unknown": "coilA"
+      },
+      "vary": {
+        "id": "resistanceBox",
+        "values": [
+          5,
+          8,
+          12,
+          16
+        ]
+      }
+    }
   },
   "observationModel": {
     "columns": [

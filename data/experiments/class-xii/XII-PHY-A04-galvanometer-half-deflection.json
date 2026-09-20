@@ -249,7 +249,33 @@
         "id": "reset",
         "label": "Reset"
       }
-    ]
+    ],
+    "goldenProcedure": {
+      "note": "Half deflection: read θ with the shunt out, then shunt the galvanometer and raise S until the deflection is about θ/2. G = SR/(R−S).",
+      "hold": {
+        "galvanometer": "g1",
+        "cell": "c2",
+        "resistanceR": 3000
+      },
+      "varyPairs": [
+        {
+          "shuntConnected": false,
+          "shuntS": 0
+        },
+        {
+          "shuntConnected": true,
+          "shuntS": 48
+        },
+        {
+          "shuntConnected": true,
+          "shuntS": 60
+        },
+        {
+          "shuntConnected": true,
+          "shuntS": 72
+        }
+      ]
+    }
   },
   "observationModel": {
     "columns": [

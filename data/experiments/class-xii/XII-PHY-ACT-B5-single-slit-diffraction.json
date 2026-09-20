@@ -266,7 +266,7 @@
       "yLabel": "Central maximum width w (mm)",
       "throughOrigin": true
     },
-    "minRows": 3
+    "minRows": 4
   },
   "calculations": {
     "steps": [

@@ -281,7 +281,7 @@
       "yLabel": "Force along the plane F (gwt)",
       "throughOrigin": true
     },
-    "minRows": 3
+    "minRows": 4
   },
   "calculations": {
     "steps": [

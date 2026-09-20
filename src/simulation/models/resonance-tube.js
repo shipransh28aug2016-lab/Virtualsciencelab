@@ -99,6 +99,23 @@ export function derive(rows, inputs = defaults) {
   const first = rows.find((r) => r.resonanceNumber === 1);
   const second = rows.find((r) => r.resonanceNumber === 2);
   if (!first || !second) return { ok: false, reason: 'Record both the first and second resonance positions.' };
+  /*
+   * Both resonances must belong to the SAME fork.
+   *
+   * v = 2f(l2 - l1) assumes l1 and l2 are the quarter- and three-quarter-
+   * wave positions of one standing wave. A student who changes the fork
+   * between the two readings is measuring two different wavelengths, and the
+   * arithmetic below quietly produces a number anyway — with a 256 Hz first
+   * resonance and a 512 Hz second it comes out at exactly half the speed of
+   * sound, 174 m/s instead of 348, looking every bit as plausible as a
+   * correct result.
+   */
+  if (Number(first.frequency) !== Number(second.frequency)) {
+    return {
+      ok: false,
+      reason: `The first resonance was found with the ${first.frequency} Hz fork and the second with the ${second.frequency} Hz fork. Both positions belong to one standing wave, so they must be found with the same fork — find l₁ and l₂ for one fork before changing it.`,
+    };
+  }
   const l1 = Number(first.airColumnCm);
   const l2 = Number(second.airColumnCm);
   const f = Number(first.frequency);

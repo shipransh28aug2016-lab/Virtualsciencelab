@@ -309,7 +309,7 @@
       "yLabel": "Temperature (°C)",
       "throughOrigin": false
     },
-    "minRows": 6
+    "minRows": 8
   },
   "calculations": {
     "steps": [

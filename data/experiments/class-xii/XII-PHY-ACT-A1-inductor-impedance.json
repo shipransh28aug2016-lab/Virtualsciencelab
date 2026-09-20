@@ -265,7 +265,41 @@
         "id": "reset",
         "label": "Reset"
       }
-    ]
+    ],
+    "goldenProcedure": {
+      "note": "The coil is measured on DC to find its winding resistance, then on AC at the same voltages to find its impedance. L follows from Z² = R² + (2πfL)². Three readings on each supply.",
+      "hold": {
+        "coil": "medium",
+        "core": "air",
+        "frequencyHz": 50
+      },
+      "varyPairs": [
+        {
+          "supply": "dc",
+          "voltageV": 2
+        },
+        {
+          "supply": "dc",
+          "voltageV": 4
+        },
+        {
+          "supply": "dc",
+          "voltageV": 6
+        },
+        {
+          "supply": "ac",
+          "voltageV": 2
+        },
+        {
+          "supply": "ac",
+          "voltageV": 4
+        },
+        {
+          "supply": "ac",
+          "voltageV": 6
+        }
+      ]
+    }
   },
   "observationModel": {
     "columns": [
@@ -313,7 +347,7 @@
       "yLabel": "Voltage V (V)",
       "throughOrigin": true
     },
-    "minRows": 2
+    "minRows": 3
   },
   "calculations": {
     "steps": [

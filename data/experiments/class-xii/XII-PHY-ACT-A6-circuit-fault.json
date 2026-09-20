@@ -251,7 +251,31 @@
         "id": "reset",
         "label": "Reset"
       }
-    ]
+    ],
+    "goldenProcedure": {
+      "note": "Each board carries a different fault. The activity is to read the meters on one board, name its fault, and move on — at least three boards, so a correct answer cannot be a guess.",
+      "hold": {
+        "keyPosition": "closed"
+      },
+      "varyPairs": [
+        {
+          "board": "board1",
+          "diagnosis": "ammeterParallel"
+        },
+        {
+          "board": "board2",
+          "diagnosis": "voltmeterSeries"
+        },
+        {
+          "board": "board3",
+          "diagnosis": "cellReversed"
+        },
+        {
+          "board": "board4",
+          "diagnosis": "keyShorted"
+        }
+      ]
+    }
   },
   "observationModel": {
     "columns": [

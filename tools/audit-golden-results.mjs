@@ -54,7 +54,10 @@ function primeProcess(model, inputs, state) {
 function runAndRead(model, inputs, trial) {
   let state = primeProcess(model, inputs, model.init(inputs));
   const dt = 1 / 120;
-  for (let f = 0; f < 9000; f += 1) {
+  /* Long enough for the slowest bench. The clock reaction at its default
+     concentration takes 251 s, and stopping at 75 reported it as a lab in
+     which no reading could ever be taken. */
+  for (let f = 0; f < 120 * 420; f += 1) {
     state = model.step(state, inputs, dt);
     if (state.finishedAt || state.finished) break;
   }
@@ -104,21 +107,47 @@ function runTimeSeries(model, inputs, count, secondsBetween) {
 function seekNull(model, inputs, variable) {
   if (typeof model.nullIndicator !== 'function') return inputs;
   const step = Number(variable.step) || 0.1;
-  let lo = Number(variable.min);
-  let hi = Number(variable.max);
-  let best = { ...inputs };
-  for (let k = 0; k < 40; k += 1) {
-    const mid = Math.round(((lo + hi) / 2 - lo) / step) * step + lo;
-    const probe = { ...inputs, [variable.id]: Number(mid.toFixed(6)) };
-    let ind;
-    try { ind = model.nullIndicator(probe); } catch { return inputs; }
-    if (!ind) return inputs;
-    best = probe;
-    if (ind.atNull) return probe;
-    if (hi - lo <= step * 1.01) break;
-    if (ind.direction === 'up') lo = mid; else hi = mid;
+  const min = Number(variable.min);
+  const max = Number(variable.max);
+  const at = (v) => {
+    const probe = { ...inputs, [variable.id]: Number(Math.min(max, Math.max(min, v)).toFixed(6)) };
+    try { return { probe, ind: model.nullIndicator(probe) }; } catch { return null; }
+  };
+
+  const here = at(Number(inputs[variable.id] ?? min));
+  if (!here?.ind) return inputs;
+  if (here.ind.atNull) return here.probe;
+
+  /*
+   * Search OUTWARD FROM WHERE THE CONTROL ALREADY IS, not across the whole
+   * range, because the nearest null is the one a student finds.
+   *
+   * It also matters when there is more than one. A resonance tube has a null
+   * at a quarter of a wavelength and another at three quarters, and the
+   * experiment needs BOTH from the same fork. Bisecting the whole range
+   * always converged on the same one, so l2 could only be reached by changing
+   * the fork — which measures two different standing waves and gives exactly
+   * half the speed of sound.
+   */
+  let v = Number(inputs[variable.id] ?? min);
+  let stride = Math.max(step, (max - min) / 64);
+  let dir = here.ind.direction === 'up' ? 1 : -1;
+  for (let k = 0; k < 400; k += 1) {
+    const next = at(v + dir * stride);
+    if (!next?.ind) break;
+    if (next.ind.atNull) return next.probe;
+    if (next.ind.direction !== (dir > 0 ? 'up' : 'down')) {
+      // stepped past it: turn round and close in
+      dir = -dir;
+      stride = Math.max(step, stride / 2);
+    }
+    v = Number(next.probe[variable.id]);
+    if (v <= min && dir < 0) { dir = 1; stride = Math.max(step, stride / 2); }
+    if (v >= max && dir > 0) { dir = -1; stride = Math.max(step, stride / 2); }
+    if (stride <= step && k > 80) break;
   }
-  return best;
+  const final = at(v);
+  return final?.ind?.atNull ? final.probe : inputs;
 }
 
 const failures = [];
@@ -159,9 +188,16 @@ for (const entry of targets) {
    * its shunt, separating an inductance by measuring on DC and then on AC.
    */
   const optionControls = (exp.simulation?.controls || [])
-    .filter((c) => Array.isArray(c.options) && c.options.length >= 2)
-    .map((c) => ({ id: c.var, options: c.options, v: vars.find((x) => x.id === c.var) }))
-    .filter((c) => c.v && c.v.type !== 'controlled');
+    .map((c) => ({
+      id: c.var,
+      // A switch is an apparatus setting with two positions: the shunt in or
+      // out, the balance tared or not. Half-deflection needs a reading in
+      // each position, and a driver that only knew about option lists could
+      // never take one.
+      options: Array.isArray(c.options) ? c.options : (c.widget === 'switch' ? [false, true] : null),
+      v: vars.find((x) => x.id === c.var),
+    }))
+    .filter((c) => c.options && c.options.length >= 2 && c.v && c.v.type !== 'controlled');
   const optionControl = independent ? null : optionControls[0];
   const minRows = exp.observationModel?.minRows || 0;
   const want = Math.max(minRows, 4);
@@ -207,16 +243,16 @@ for (const entry of targets) {
     SAMPLINGS.push({ name: `working through ${oc.id} across the range`, at: (k, n) => (n > 1 ? k / (n - 1) : 0), cycle: oc });
   }
 
-  function collect(sampling) {
+  function collect(sampling, count = want) {
     const rows = [];
     const refusals = [];
-    for (let k = 0; k < want; k += 1) {
+    for (let k = 0; k < count; k += 1) {
       let inputs = { ...base };
       if (optionControl && sampling.at) inputs[optionControl.id] = optionControl.options[k % optionControl.options.length];
       if (sampling.cycle) inputs[sampling.cycle.id] = sampling.cycle.options[k % sampling.cycle.options.length];
       if (independent && sampling.at) {
         const span = independent.max - independent.min;
-        const raw = independent.min + span * sampling.at(k, want);
+        const raw = independent.min + span * sampling.at(k, count);
         const step = Number(independent.step) || 1;
         const snapped = Math.min(independent.max, Math.max(independent.min, Math.round(raw / step) * step));
         inputs[independent.id] = Number(snapped.toFixed(6));
@@ -225,8 +261,23 @@ for (const entry of targets) {
          control is tried, coarse first and then fine, KEEPING each
          adjustment — a beam balance is brought on scale with gram weights and
          then with fractional ones. */
+      /*
+       * You do not null an instrument by moving the quantity you are varying.
+       * The metre bridge's independent variable is the resistance box and the
+       * balance is found with the jockey; the friction bench varies the load
+       * on the block and finds the limit by weighting the pan. Nulling with
+       * the independent variable "succeeds" — there is usually some value of
+       * it at which the present setting happens to balance — and then the
+       * experiment has measured one point four times over. The friction
+       * coefficient came back as 0.20 against an accepted 0.42 that way.
+       *
+       * So everything else is tried first, and the independent variable only
+       * if nothing else nulls (a resonance tube really is adjusted by the
+       * column length it plots against).
+       */
       const numericVars = vars.filter((v) => v.type !== 'dependent' && Number.isFinite(v.min) && Number.isFinite(v.max));
-      for (const v of [independent, nullVar, ...numericVars].filter(Boolean)) {
+      const others = numericVars.filter((v) => !independent || v.id !== independent.id);
+      for (const v of [nullVar, ...others, independent].filter(Boolean)) {
         const sought = seekNull(model, inputs, v);
         if (sought === inputs) continue;
         let ind = null;
@@ -255,24 +306,114 @@ for (const entry of targets) {
     return { rank: 3, rows, derived, key, err };
   }
 
-  const attempts = [];
-  if (isTimeSeries) {
-    // A cooling curve, a damped pendulum, a dialysis run: start the process
-    // once and read the instrument as the clock advances. The interval is
-    // whatever that particular process needs.
-    for (const gap of [15, 30, 60, 120, 300]) {
-      const out = runTimeSeries(model, base, want, gap);
-      attempts.push({ ...score(out.rows), refusals: out.refusals, how: `every ${gap} s` });
+  /*
+   * How many readings does the calculation ACTUALLY need?
+   *
+   * observationModel.minRows is what the bench advertises — "2 of 2
+   * recommended readings plotted" — and several experiments need far more
+   * than they advertise. The inductor activity says two and needs six: three
+   * on DC to find the winding resistance and three on AC to find the
+   * impedance. A student who takes the advertised number and presses
+   * Calculate is refused, with no way to know whether they have done the
+   * wrong thing or too little of the right thing.
+   */
+  const attemptsAt = (n) => {
+    const list = [];
+    if (isTimeSeries) {
+      for (const gap of [15, 30, 60, 120, 300]) {
+        const out = runTimeSeries(model, base, n, gap);
+        list.push({ ...score(out.rows), refusals: out.refusals, how: `every ${gap} s` });
+      }
+    } else {
+      for (const sampling of SAMPLINGS) {
+        const out = collect(sampling, n);
+        list.push({ ...score(out.rows), refusals: out.refusals, how: sampling.name });
+      }
     }
-  } else {
-    for (const sampling of SAMPLINGS) {
-      const out = collect(sampling);
-      attempts.push({ ...score(out.rows), refusals: out.refusals, how: sampling.name });
+    list.sort((a, b) => (b.rank - a.rank) || ((a.err ?? Infinity) - (b.err ?? Infinity)));
+    return list;
+  };
+
+  /* Start at the count the bench advertises and go up only as far as needed,
+     so "needs more than it says" means exactly that. */
+  const ladder = [];
+  for (let n = Math.max(2, minRows || 2); n <= 12; n += (n < 6 ? 1 : 2)) ladder.push(n);
+  if (!ladder.includes(want)) ladder.push(want);
+  ladder.sort((a, b) => a - b);
+
+  /*
+   * An experiment may STATE how it is performed.
+   *
+   * Most procedures can be inferred — sweep the independent variable, null the
+   * instrument, repeat. A few cannot, and inferring them wrongly is worse than
+   * not trying: cycling the four surfaces of the friction bench averages four
+   * different coefficients into one meaningless 0.20, and reports a model that
+   * gives 0.423 on one surface as broken. Where the procedure is not
+   * inferable, the experiment declares it in simulation.goldenProcedure —
+   * next to everything else it declares — and this follows it exactly.
+   */
+  const golden = exp.simulation?.goldenProcedure;
+  if (golden) {
+    const settings = golden.varyPairs
+      || (golden.vary?.values || []).map((v) => ({ [golden.vary.id]: v }));
+    const rowsG = [];
+    const refusalsG = [];
+    for (const [k, overrides] of settings.entries()) {
+      let inputs = { ...base, ...(golden.hold || {}), ...overrides };
+      const numericVars = vars.filter((v) => v.type !== 'dependent' && Number.isFinite(v.min) && Number.isFinite(v.max));
+      const fixed = new Set([...Object.keys(golden.hold || {}), ...Object.keys(overrides)]);
+      for (const v of numericVars.filter((v) => !fixed.has(v.id))) {
+        const sought = seekNull(model, inputs, v);
+        if (sought === inputs) continue;
+        let ind = null;
+        try { ind = model.nullIndicator(sought); } catch { /* not a null instrument */ }
+        if (!ind) continue;
+        inputs = sought;
+        if (ind.atNull) break;
+      }
+      const { reading } = runAndRead(model, inputs, k + 1);
+      if (reading && !('v' in reading && reading.v == null)) rowsG.push({ ...reading });
+      else refusalsG.push(reading?.reason || 'refused without a reason');
     }
+    const scored = { ...score(rowsG), refusals: refusalsG, how: 'the procedure the experiment declares' };
+    if (scored.rank >= 3) {
+      const value = scored.derived[scored.key];
+      const errAbs = Math.abs(value - expected.value);
+      const slack = Math.max(Number(expected.tolerance) || 0, Math.abs(expected.value) * 0.02) * 2;
+      if (verbose) {
+        console.log(`\n${entry.id} [${modelName}]`);
+        console.log(`   ${golden.note}`);
+        console.log(`   readings: ${rowsG.length}   ${scored.key} = ${value} ${expected.unit || ''} (accepted ${expected.value} ± ${expected.tolerance})`);
+      }
+      checked += 1;
+      if (errAbs > slack) {
+        failures.push({ id: entry.id, kind: 'wrong-value',
+          msg: `${scored.key} = ${value} ${expected.unit || ''} against an accepted ${expected.value} ± ${expected.tolerance}, following the procedure the experiment declares` });
+      }
+      continue;
+    }
+    failures.push({ id: entry.id, kind: 'declared-procedure-fails',
+      msg: `the procedure this experiment declares yields ${rowsG.length} readings and no usable result — ${scored.derived?.reason || refusalsG[0] || 'no reason given'}` });
+    checked += 1;
+    continue;
   }
 
-  attempts.sort((a, b) => (b.rank - a.rank) || ((a.err ?? Infinity) - (b.err ?? Infinity)));
+  let attempts = [];
+  let neededRows = null;      // smallest count that yields a USABLE result
+  let derivableAt = null;     // smallest count the calculation accepts at all
+  for (const n of ladder) {
+    const tried = attemptsAt(n);
+    const rank = tried[0]?.rank ?? 0;
+    if (!attempts.length || rank > (attempts[0]?.rank ?? 0)) attempts = tried;
+    if (rank >= 2 && derivableAt === null) derivableAt = n;
+    if (rank >= 3) { neededRows = n; attempts = tried; break; }
+  }
+  if (neededRows === null) neededRows = derivableAt;
   const best = attempts[0];
+  if (minRows && neededRows && neededRows > minRows) {
+    failures.push({ id: entry.id, kind: 'minrows-understated',
+      msg: `the table advertises ${minRows} readings as enough; the calculation needs ${neededRows}` });
+  }
   const rows = best.rows;
   const refusals = best.refusals;
 

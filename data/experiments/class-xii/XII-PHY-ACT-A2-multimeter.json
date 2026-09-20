@@ -289,7 +289,33 @@
         "id": "reset",
         "label": "Reset"
       }
-    ]
+    ],
+    "goldenProcedure": {
+      "note": "The point of the activity is to use the instrument on its different functions, so each reading is taken on a different function against a target suited to it.",
+      "hold": {},
+      "varyPairs": [
+        {
+          "func": "vdc",
+          "target": "battery"
+        },
+        {
+          "func": "vac",
+          "target": "supplyAc"
+        },
+        {
+          "func": "ohm",
+          "target": "resistor"
+        },
+        {
+          "func": "cont",
+          "target": "brokenWire"
+        },
+        {
+          "func": "cont",
+          "target": "goodWire"
+        }
+      ]
+    }
   },
   "observationModel": {
     "columns": [

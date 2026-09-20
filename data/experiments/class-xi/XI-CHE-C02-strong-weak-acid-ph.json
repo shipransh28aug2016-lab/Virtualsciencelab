@@ -316,8 +316,8 @@
       "Compare the change in pH per tenfold dilution for the two acids"
     ],
     "resultKeys": [
-      "mostAcidic",
       "mostAcidicPH",
+      "mostAcidic",
       "dilutionCheck"
     ]
   },
@@ -334,7 +334,7 @@
       "unit": ""
     },
     "statement": "Although both acids are 0.1 M, hydrochloric acid gives a pH of about 1 while acetic acid gives about 2.9. The strong acid is completely ionised, so its hydrogen ion concentration equals its molar concentration, whereas acetic acid is only about 1.3 per cent ionised. The difference is one of strength, not of concentration.",
-    "key": "mostAcidic"
+    "key": "mostAcidicPH"
   },
   "safety": [
     "Even 0.1 M acids irritate the skin and eyes; wear eye protection and rinse any splash at once with plenty of water.",

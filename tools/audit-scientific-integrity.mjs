@@ -101,4 +101,66 @@ const moEnd = titration.endPointVolume({ ...titration.defaults, indicator: 'meth
 assert.ok(Math.abs(phEnd - moEnd) > 0.5,
   'the same titre is obtained with the right and the wrong indicator — the end point is not coming from the chemistry');
 
-console.log('Scientific integrity checks passed.');
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * NULL INDICATORS: "take the reading now" must mean a reading can be taken
+ *
+ * Roughly a dozen models guide the student to a null and only then allow a
+ * reading. If the window the indicator calls the null reaches outside the
+ * region where measure() will actually record, the bench tells the student to
+ * record and then refuses them — which is worse than saying nothing, because
+ * they have no way to tell whether they misread the instrument or the
+ * instrument is lying. The friction bench did exactly that for pan loads
+ * between 0.96 and 1.00 of the limiting value.
+ * ────────────────────────────────────────────────────────────────────────── */
+const { pathToFileURL } = await import('node:url');
+let indicatorsChecked = 0;
+const indicatorModels = new Set();
+
+for (const entry of tindex.experiments.filter((e) => e.contentStatus === 'published')) {
+  const exp = JSON.parse(await readFile(join(troot, entry.file), 'utf8'));
+  const modelName = exp.simulation?.model;
+  const model = await import(pathToFileURL(join(troot, 'src/simulation/models', `${modelName}.js`)));
+  if (typeof model.nullIndicator !== 'function') continue;
+
+  const base = { ...(model.defaults || {}) };
+  for (const v of exp.variables || []) {
+    if (v.type !== 'dependent' && v.default != null) base[v.id] = v.default;
+  }
+
+  /* Walk each control across the range the EXPERIMENT declares — not a range
+     invented from the defaults, which produces settings the bench never
+     offers (a block of zero mass) and reports them as defects. */
+  const controls = (exp.variables || []).filter((v) =>
+    v.type !== 'dependent' && Number.isFinite(v.min) && Number.isFinite(v.max) && v.max > v.min);
+
+  const offenders = [];
+  for (const v of controls) {
+    const step = Number(v.step) || (v.max - v.min) / 200;
+    for (let x = v.min; x <= v.max + 1e-9; x += step) {
+      const probe = { ...base, [v.id]: Number(x.toFixed(6)) };
+      let ind;
+      try { ind = model.nullIndicator(probe); } catch { break; }
+      if (!ind?.atNull) continue;
+      let state = model.init(probe);
+      for (const flag of ['running', 'heating', 'released', 'rolling', 'flowing', 'started', 'settled', 'gripped']) {
+        if (flag in state) state[flag] = true;
+      }
+      for (let f = 0; f < 600; f += 1) state = model.step(state, probe, 1 / 120);
+      const reading = model.measure(state, probe, 7, 1);
+      if (reading == null || ('v' in reading && reading.v == null)) {
+        offenders.push(`${v.id}=${probe[v.id]}`);
+      }
+      if (offenders.length > 3) break;
+    }
+    if (offenders.length > 3) break;
+  }
+  indicatorsChecked += 1;
+  indicatorModels.add(modelName);
+  assert.equal(offenders.length, 0,
+    `${entry.id} [${modelName}]: the null indicator says "take the reading now" at ${offenders.slice(0, 3).join(', ')}, where measure() refuses to record`);
+}
+assert.ok(indicatorModels.size >= 8,
+  `only ${indicatorModels.size} models carry a null indicator — expected the whole family`);
+
+console.log(`Scientific integrity checks passed (${indicatorModels.size} null-indicator models verified across ${indicatorsChecked} experiments).`);
