@@ -285,10 +285,10 @@
       }
     ],
     "graph": {
-      "xKey": "timeMin",
-      "yKey": "lnC",
       "xLabel": "Time t (min)",
-      "yLabel": "ln (C / mM)"
+      "yLabel": "ln (C / mM)",
+      "x": "timeMin",
+      "y": "lnC"
     },
     "minRows": 5
   },

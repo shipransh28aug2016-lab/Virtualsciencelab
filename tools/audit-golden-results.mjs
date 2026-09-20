@@ -417,6 +417,33 @@ for (const entry of targets) {
   const rows = best.rows;
   const refusals = best.refusals;
 
+  /*
+   * The graph must plot fields the readings actually carry.
+   *
+   * XII-CHE-A02 and XII-PHY-ACT-B3 declared their axes as `xKey`/`yKey`
+   * where the app reads `x`/`y`, so `row[undefined]` came back undefined for
+   * every point and both graphs plotted NOTHING — however many readings were
+   * taken, however correct they were. Nothing else noticed: the models
+   * stepped, the readings recorded, the results calculated, and the panel
+   * beside the empty graph stated the right answer.
+   */
+  const graph = exp.observationModel?.graph;
+  if (graph && rows.length) {
+    const carried = new Set(Object.keys(rows[0]));
+    // main.js attaches a little extra per-row context for two models.
+    for (const k of (modelName === 'simple-pendulum' ? ['massG', 'amplitudeDeg', 'lengthM']
+      : modelName === 'resistivity' ? ['lengthCm', 'diameterMm'] : [])) carried.add(k);
+    const missing = ['x', 'y'].map((ax) => graph[ax]).filter((k) => k && !carried.has(k));
+    const legacy = ['xKey', 'yKey'].filter((k) => k in graph);
+    if (legacy.length) {
+      failures.push({ id: entry.id, kind: 'graph-axes',
+        msg: `the graph declares ${legacy.join(' and ')}; the app reads x and y, so it plots nothing` });
+    } else if (missing.length) {
+      failures.push({ id: entry.id, kind: 'graph-axes',
+        msg: `the graph plots "${missing.join('", "')}", which the readings do not carry` });
+    }
+  }
+
   checked += 1;
   const label = `${entry.id} [${modelName}]`;
 

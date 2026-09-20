@@ -250,10 +250,10 @@
       }
     ],
     "graph": {
-      "xKey": "logD",
-      "yKey": "logR",
       "xLabel": "log (d / cm)",
-      "yLabel": "log (R / Ω)"
+      "yLabel": "log (R / Ω)",
+      "x": "logD",
+      "y": "logR"
     },
     "minRows": 5
   },
