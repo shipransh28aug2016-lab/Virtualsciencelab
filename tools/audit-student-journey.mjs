@@ -499,6 +499,13 @@ async function runLane(lane, queue, reports, onDone) {
         const openingChoice = await page.evaluate(() =>
           [...document.querySelectorAll('#controls .seg, #controls .wiring')].map((g) =>
             [...g.querySelectorAll('button')].findIndex((b) => b.getAttribute('aria-pressed') === 'true')));
+        /* And where every slider stood. "Put the bench back the way it
+           opened" has to include these: the standard-solution bench was
+           restored to its own solute and flask and left with 8.65 g on the
+           balance, so the set taken afterwards was a consistent preparation
+           of the wrong concentration. */
+        const openingSliders = await page.evaluate(() =>
+          [...document.querySelectorAll('#controls input[type=range]')].map((el) => el.value));
         const nControls = await page.evaluate((sel) => document.querySelectorAll(sel).length, VARIABLE_WIDGETS);
         if (!nControls) fail('controls', 'the student can change nothing');
         else pass('controls', `${nControls} widgets`);
@@ -673,19 +680,30 @@ async function runLane(lane, queue, reports, onDone) {
           if (!mixingRefused && mixedSet) {
             mixingRefused = true;
             mixedWhat = asking;
-            if (/separations|settings|cannot be averaged|at one (separation|setting)/i.test(asking)) freezeSliders = true;
+            /* When the bench says the set is mixed, a student stops changing
+               things — all of them, not just the tray. The set that follows
+               is of ONE specimen at ONE setting, which is what "clear the
+               table and take a set" asks for. Where a set of different
+               specimens turns out to be wanted after all, the tray comes back
+               into use below; the sliders stay where they are. */
+            freezeSliders = true;
             /* Put the bench back the way it opened before starting again:
                measuring the brass cylinder and comparing it against the steel
                sphere's accepted diameter is a different wrong answer, not a
                right one. */
-            await page.evaluate((choice) => {
+            await page.evaluate(({ choice, sliders }) => {
               [...document.querySelectorAll('#controls .seg, #controls .wiring')].forEach((g, i) => {
                 const btns = [...g.querySelectorAll('button')];
                 const want = choice[i];
                 if (want >= 0 && btns[want]) btns[want].click();
               });
+              [...document.querySelectorAll('#controls input[type=range]')].forEach((el, i) => {
+                if (sliders[i] === undefined) return;
+                el.value = sliders[i];
+                el.dispatchEvent(new Event('input', { bubbles: true }));
+              });
               document.querySelector('#clearBtn')?.click();
-            }, openingChoice);
+            }, { choice: openingChoice, sliders: openingSliders });
             await wait(200);
             got = 0;
             budget = Math.min(14, budget + want);

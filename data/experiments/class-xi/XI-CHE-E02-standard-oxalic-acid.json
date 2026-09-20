@@ -72,6 +72,14 @@
   "materials": [],
   "variables": [
     {
+      "id": "targetNormality",
+      "label": "Target normality",
+      "symbol": "N",
+      "unit": "N",
+      "type": "control",
+      "default": 0.1
+    },
+    {
       "id": "solute",
       "label": "Solute",
       "symbol": "",

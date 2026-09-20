@@ -37,6 +37,24 @@ export function effectiveVolumeMl(inputs) { return inputs.madeUpToMark ? flaskMl
 export function molarity(inputs) { return effectiveMassG(inputs) / (soluteOf(inputs).molarMass * (effectiveVolumeMl(inputs) / 1000)); }
 export function normality(inputs) { return molarity(inputs) * soluteOf(inputs).nFactor; }
 
+/**
+ * What the preparation is AIMING at, and what must be weighed to hit it.
+ *
+ * "Prepare 250 mL of M/20 oxalic acid" is the whole instruction, and the
+ * first thing a student does is work out the mass. The bench offered a mass
+ * slider from 1 g to 10 g, said nothing about what the solution was supposed
+ * to be, accepted 3 g without a murmur — and the result panel then reported
+ * a perfectly correctly-calculated 0.197 N as differing from the accepted
+ * value by 97%. The target was known to the experiment file and to nothing
+ * the student could see.
+ */
+export function targetNormality(inputs) { return Number(inputs.targetNormality) || 0.1; }
+export function requiredMassG(inputs) {
+  const sol = soluteOf(inputs);
+  const eqMass = sol.molarMass / sol.nFactor;
+  return (targetNormality(inputs) * (flaskMl(inputs) / 1000)) * eqMass;
+}
+
 export function validate(inputs) {
   const warnings = [];
   if (!inputs.completeTransfer) warnings.push({ field: 'completeTransfer', code: 'INCOMPLETE_TRANSFER', message: 'Some solid may have been left behind in the weighing bottle or funnel.', why: 'Any solid not rinsed into the flask is solid that never dissolved, so the true concentration is lower than the mass weighed out implies.', fix: 'Rinse the weighing bottle and funnel with several small portions of distilled water into the flask.' });
@@ -93,10 +111,40 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   return { trial, solute: soluteOf(inputs).label, massG: inputs.massG, volumeMl: flaskMl(inputs), molarity: sigFig(M, 4), normality: sigFig(M * soluteOf(inputs).nFactor, 4) };
 }
 
-export function derive(rows) {
+export function derive(rows, inputs = defaults) {
   if (rows.length < 1) return { ok: false, reason: 'Prepare and record at least one standard solution.' };
+
+  /*
+   * One flask, one solution. Three rows meant three preparations, and the
+   * calculation quietly reported the last of them as if the others had not
+   * happened — so a student who weighed out 1.5 g, then 3 g, then 5 g was
+   * shown a single confident concentration with no hint that it belonged to
+   * only one of the three.
+   */
+  const preparations = [...new Set(rows.map((r) => `${r.solute} · ${r.massG} g in ${r.volumeMl} mL`))];
+  if (preparations.length > 1) {
+    return {
+      ok: false,
+      reason: `These are ${preparations.length} different preparations (${preparations.join('; ')}). A standard solution is one flask — clear the table and record the one you are actually using.`,
+    };
+  }
+
   const last = rows[rows.length - 1];
-  return { ok: true, molarity: Number(last.molarity), normality: Number(last.normality), massG: Number(last.massG), n: rows.length, points: [] };
+  const target = targetNormality(inputs);
+  const need = requiredMassG(inputs);
+  const got = Number(last.normality);
+  return {
+    ok: true,
+    molarity: Number(last.molarity), normality: got, massG: Number(last.massG),
+    /* The accepted value here is the concentration the practical set out to
+       make, and the mass that would have made it. */
+    accepted: sigFig(target, 3),
+    targetNormality: sigFig(target, 3),
+    requiredMassG: sigFig(need, 4),
+    massErrorG: sigFig(Number(last.massG) - need, 3),
+    errorPct: sigFig(((got - target) / target) * 100, 3),
+    n: rows.length, points: [],
+  };
 }
 
-export default { meta, defaults, SOLUTES, FLASKS, BALANCES, init, step, measure, derive, validate, soluteOf, flaskMl, effectiveMassG, effectiveVolumeMl, molarity, normality };
+export default { meta, defaults, SOLUTES, FLASKS, BALANCES, init, step, measure, derive, validate, soluteOf, flaskMl, effectiveMassG, effectiveVolumeMl, molarity, normality, targetNormality, requiredMassG };

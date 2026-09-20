@@ -2064,6 +2064,17 @@ function renderResult(d) {
     html = `<b>Resistance from V–I slope:</b> ${d.resistance} Ω &nbsp;(r² = ${d.r2})
       <span class="big">ρ = ${d.rhoText}</span>
       Standard value for ${esc(app.rows[0].wire)}: ${d.acceptedText || '—'}`;
+  } else if (m === 'standard-solution') {
+    /* The practical is "prepare 250 mL of M/20": the mass to weigh is the
+       first calculation a student does, and the bench never named either the
+       target or the mass it needs. */
+    const off = Math.abs(d.errorPct ?? 0);
+    html = `<b>Standard solution prepared</b>
+      <span class="big">${d.normality} N &nbsp;(${d.molarity} M)</span>
+      Target ${d.targetNormality} N &nbsp;·&nbsp; needs ${d.requiredMassG} g in the flask &nbsp;·&nbsp; ${d.massG} g was weighed
+      <div style="font-size:12px;margin-top:4px;color:var(--muted)">${off <= 2
+        ? `Within ${off.toFixed(1)}% of the target — a usable standard solution.`
+        : `${off.toFixed(1)}% from the target: the mass weighed out is ${Math.abs(d.massErrorG)} g ${d.massErrorG > 0 ? 'more' : 'less'} than the calculation asks for. A standard solution is only standard if the mass is right.`}</div>`;
   } else if (m === 'titration') {
     /* A redox titration is asked in molarity and answered in normality, so
        both are shown with the factor that connects them stated, rather than
