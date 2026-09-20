@@ -136,12 +136,14 @@ for (const entry of tindex.experiments.filter((e) => e.contentStatus === 'publis
 
   const offenders = [];
   let everNulled = false;
+  let everOffered = false;    // did the indicator apply to this experiment at all?
   for (const v of controls) {
     const step = Number(v.step) || (v.max - v.min) / 200;
     for (let x = v.min; x <= v.max + 1e-9; x += step) {
       const probe = { ...base, [v.id]: Number(x.toFixed(6)) };
       let ind;
       try { ind = model.nullIndicator(probe); } catch { break; }
+      if (ind) everOffered = true;
       if (!ind?.atNull) continue;
       everNulled = true;
       let state = model.init(probe);
@@ -169,7 +171,12 @@ for (const entry of tindex.experiments.filter((e) => e.contentStatus === 'publis
    * comparison was NaN, and it said "the jaws are pressing into the object —
    * open them a little" at every setting including fully open.
    */
-  assert.ok(everNulled,
+  /* A model shared by several experiments may have no null in one of them —
+     the auxiliary-lens model guides a retrace for the convex mirror and a
+     screen position for the concave lens, and returns nothing where neither
+     applies. That is an answer, not a broken indicator. What is broken is an
+     indicator that is OFFERED and can never be satisfied. */
+  assert.ok(!everOffered || everNulled,
     `${entry.id} [${modelName}]: the null indicator never reports a null anywhere in the ranges this experiment declares — check that it is reading a control that exists`);
 }
 assert.ok(indicatorModels.size >= 8,

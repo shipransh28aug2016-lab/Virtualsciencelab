@@ -113,9 +113,37 @@ export function derive(rows) {
   const spread = Math.max(...periods) - Math.min(...periods);
   const L = Number(rows[0].lengthM);
   const g = (4 * Math.PI * Math.PI * L) / (meanT * meanT);
+  /*
+   * THIS RESULT HAS TO SAY WHICH EXPERIMENT IT IS.
+   *
+   * The panel chooses its wording on `d.mode === 'mass-independence'`, and
+   * this branch never set one — so XI-PHY-A08, whose whole question is
+   * whether the period depends on the mass, was rendered with the L–T²
+   * panel from XI-PHY-A07: a slope, an r², and a second's pendulum length,
+   * none of which it had computed. The fields it did compute were named
+   * differently again, so the line that should read "T = 1.55 s for every
+   * mass" read "undefined".
+   *
+   * The timing uncertainty is what decides the answer: a spread no larger
+   * than the stop clock's own resolution over the oscillations timed is not
+   * evidence of dependence on mass.
+   */
+  const masses = rows.map((r) => Number(r.massG)).filter(Number.isFinite);
+  const oscillations = Number(rows[0].oscillations) || 20;
+  const timingUncertainty = Number((0.2 / oscillations).toFixed(4));   // stop clock least count per oscillation
   return {
-    ok: true, g: sigFig(g, 4), slope: 0, spreadOfT: Number(spread.toFixed(4)),
-    massIndependent: spread < 0.05, meanPeriod: sigFig(meanT, 4),
+    ok: true,
+    mode: 'mass-independence',
+    g: sigFig(g, 4),
+    slope: 0,
+    lengthCm: sigFig(L * 100, 4),
+    meanPeriod: sigFig(meanT, 4),
+    spread: Number(spread.toFixed(4)),
+    spreadOfT: Number(spread.toFixed(4)),
+    timingUncertainty,
+    independent: spread <= timingUncertainty,
+    massIndependent: spread <= timingUncertainty,
+    massRange: masses.length ? `${Math.min(...masses)}–${Math.max(...masses)} g` : '—',
     secondsPendulumCm: sigFig((g / (Math.PI * Math.PI)) * 100, 4),
     n: rows.length, points: rows.map((r) => ({ x: Number(r.massG), y: Number(r.period) })),
   };

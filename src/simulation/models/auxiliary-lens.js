@@ -43,6 +43,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, mean, sigFig } from '../../utils/measure.js';
+import { nullPoint, nullRefusal } from '../null-point.js';
 
 export const meta = {
   id: 'auxiliary-lens',
@@ -150,6 +151,59 @@ export function focalFromReadings(u, v) {
   return (u * v) / (u - v);
 }
 
+/**
+ * Whether the element is at its null position.
+ *
+ * Both auxiliary-lens methods are null hunts and neither said so. The convex
+ * mirror has to stand exactly one radius short of I₁ so the converging beam
+ * strikes it normally and retraces its own path; the concave lens has to
+ * intercept that beam where a real final image can still be caught. Off that
+ * position the model correctly refused a reading and gave no hint which way
+ * to slide the element, on a bench where the window is a couple of
+ * centimetres in a metre of optical bench.
+ */
+export function nullIndicator(inputs = defaults) {
+  const el = ELEMENTS[inputs.element] || ELEMENTS.cl15;
+
+  if (el.kind === 'lens') {
+    /*
+     * Concave lens: the element has to intercept the converging beam BEFORE
+     * it reaches I₁ — that is what makes I₁ a virtual object — and it must
+     * not be so close that the beam is still diverging when it leaves, or no
+     * real final image can be caught. The window between those two is what
+     * the student is hunting for, and it moves with the object distance.
+     */
+    const v1 = firstImageCm(inputs);
+    if (v1 === null) return null;
+    const usable = v1 - Math.abs(el.focal);     // nearest position giving a real image
+    const mid = (usable + v1) / 2;              // middle of the usable window
+    const half = Math.max(0.8, (v1 - usable) / 2);
+    return nullPoint({
+      label: 'Screen',
+      current: Number(inputs.elementPositionCm),
+      target: mid,
+      tolerance: half,
+      increase: 'No image can be caught — slide the concave lens further from the convex one, towards where I₁ would form.',
+      decrease: 'The lens is past I₁, so there is no virtual object — slide it back towards the convex lens.',
+      atNullText: 'a real image forms on the screen',
+      awayFrom: 'no image on the screen',
+    });
+  }
+
+  const target = nullPositionCm(inputs);
+  if (target === null) return null;
+  return nullPoint({
+    label: 'Retrace',
+    current: Number(inputs.elementPositionCm),
+    target,
+    tolerance: 1.6,
+    increase: 'The reflected image does not retrace — slide the element further from the lens.',
+    decrease: 'The reflected image does not retrace — slide the element back towards the lens.',
+    atNullText: 'the image retraces its own path onto the object',
+    awayFrom: 'not retracing',
+  });
+}
+
 export function validate(inputs = defaults) {
   const errors = [];
   const warnings = [];
@@ -251,7 +305,7 @@ export function measure(state, inputs = defaults, seed = 1, trial = 1) {
   const lc = inputs.benchLC ?? 0.1;
 
   if (el.kind === 'mirror') {
-    if (retraceQuality(inputs) < 0.5) return null;      // not at the null position
+    if (retraceQuality(inputs) < 0.5) return { v: null, reason: nullRefusal(nullIndicator(inputs)) };
     const pos = toLeastCount(Number(inputs.elementPositionCm) + jitter(rng, lc * 0.9), lc);
     const i1 = toLeastCount(v1 + jitter(rng, lc * 0.9), lc);
     const R = i1 - pos;
@@ -326,5 +380,4 @@ export function derive(rows, inputs = defaults) {
 export default {
   meta, defaults, LENSES, ELEMENTS,
   init, step, measure, derive, validate,
-  firstImageCm, nullPositionCm, retraceQuality, finalImageCm, virtualObjectCm, focalFromReadings,
-};
+  firstImageCm, nullPositionCm, retraceQuality, finalImageCm, virtualObjectCm, focalFromReadings, nullIndicator};
