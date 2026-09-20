@@ -131,10 +131,13 @@ const READOUT_PROBE = () => {
 };
 
 /** Drive one control to a value it does not currently hold. Returns what it did. */
-const NUDGE_CONTROL = ({ idx, fraction }) => {
+const NUDGE_CONTROL = ({ idx, fraction, slidersOnly }) => {
   const sel = '#controls input[type=range], #controls .seg button, #controls .wiring button, #controls .sw, #controls select, #controls input[type=checkbox]';
   const el = document.querySelectorAll(sel)[idx];
   if (!el) return null;
+  /* Once the bench has objected to a mixed set, hunting must not quietly
+     swap the specimen again while looking for a recordable setting. */
+  if (slidersOnly && el.type !== 'range') return { kind: 'already' };
   if (el.tagName === 'BUTTON') {
     if (el.getAttribute('aria-pressed') === 'true' && !el.classList.contains('sw')) return { kind: 'already', label: el.textContent.trim() };
     el.click();
@@ -277,7 +280,7 @@ async function runLane(lane, queue, reports, onDone) {
    * stop. If no setting anywhere on the bench yields a reading, the
    * experiment genuinely cannot be performed.
    */
-  async function huntForReading(nControls, stops = 5, phase = 0, stopAt = Infinity) {
+  async function huntForReading(nControls, stops = 5, phase = 0, stopAt = Infinity, slidersOnly = false) {
     const limit = Math.min(nControls, 6);
     if (Date.now() > stopAt) return { ok: false, why: 'ran out of time before a reading could be found' };
     for (let n = 0; n < limit; n += 1) {
@@ -285,7 +288,7 @@ async function runLane(lane, queue, reports, onDone) {
       for (let j = 0; j <= stops; j += 1) {
         const k = (j + phase * 3) % (stops + 1);
         if (Date.now() > stopAt) return { ok: false, why: 'ran out of time before a reading could be found' };
-        const did = await page.evaluate(NUDGE_CONTROL, { idx: i, fraction: k / stops });
+        const did = await page.evaluate(NUDGE_CONTROL, { idx: i, fraction: k / stops, slidersOnly });
         if (!did || did.kind === 'already') continue;
         await settle(340);
         const t = await takeReading();
@@ -478,6 +481,11 @@ async function runLane(lane, queue, reports, onDone) {
         else pass('scene', `ink ${(s0.ink * 100).toFixed(0)}%, ${s0.colours} tones`);
 
         /* ── STAGE 3 · CONTROLS exist and are wired ─────────────────── */
+        /* How every option group was set when the lab opened — the
+           configuration the experiment's accepted value belongs to. */
+        const openingChoice = await page.evaluate(() =>
+          [...document.querySelectorAll('#controls .seg, #controls .wiring')].map((g) =>
+            [...g.querySelectorAll('button')].findIndex((b) => b.getAttribute('aria-pressed') === 'true')));
         const nControls = await page.evaluate(() =>
           document.querySelectorAll('#controls input[type=range], #controls .seg button, #controls .wiring button, #controls .sw, #controls select, #controls input[type=checkbox]').length);
         if (!nControls) fail('controls', 'the student can change nothing');
@@ -511,6 +519,27 @@ async function runLane(lane, queue, reports, onDone) {
         await wait(120);
         const refusals = [];
         let got = 0;
+        /*
+         * Some practicals want a SET of different things — four salts, four
+         * components, three forks — and some want ONE thing measured several
+         * times. The bench says which, when it refuses: "these readings are of
+         * 3 different objects; a mean is a measurement only when every reading
+         * is of the same one". A student told that stops changing the specimen
+         * and starts the set again, so this does too.
+         */
+        let mixingRefused = false;
+        /* And the opposite lesson. The law of length needs three different
+           tuning forks at ONE tension — so the same bench that refuses a set
+           taken across two wires demands a set taken across several forks.
+           The tray goes back into use when it is asked for. */
+        let traySetNeeded = false;
+        /* What the bench objected to, verbatim. It names the thing that must
+           stay fixed — "3 different wires (Steel wire (thin), Brass wire…)" —
+           so the group holding those names is the one NOT to cycle when a set
+           is wanted after all. The law of length needs different forks on ONE
+           wire; both are option groups and only the refusal distinguishes
+           them. */
+        let mixedWhat = '';
         let slowestWait = 0;
         let hunted = 0;
     let nulled = 0;
@@ -528,13 +557,21 @@ async function runLane(lane, queue, reports, onDone) {
              * on the bench, and nudging the first slider four times takes one
              * reading four times over.
              */
-            await page.evaluate((idx) => {
+            await page.evaluate(({ idx, stop, objected }) => {
               // The tray, not the first switch on the panel: take the group
               // with the most choices in it, which is the specimen selector.
-              const groups = [...document.querySelectorAll('#controls .seg, #controls .wiring')]
+              let groups = [...document.querySelectorAll('#controls .seg, #controls .wiring')]
                 .map((g) => [...g.querySelectorAll('button')])
-                .filter((b) => b.length >= 2)
-                .sort((a, b) => b.length - a.length);
+                .filter((b) => b.length >= 2);
+              if (objected) {
+                // Leave alone whichever group the bench named.
+                const blamed = groups.filter((btns) =>
+                  btns.some((b) => objected.includes(b.textContent.trim()) && b.textContent.trim().length > 2));
+                if (blamed.length && blamed.length < groups.length) {
+                  groups = groups.filter((g) => !blamed.includes(g));
+                }
+              }
+              groups.sort((a, b) => b.length - a.length);
               /* A switch is a two-position setting like any other — the shunt
                  in or out, the balance tared or not — and half-deflection
                  needs a reading in each position. */
@@ -542,18 +579,20 @@ async function runLane(lane, queue, reports, onDone) {
                 const on = sw.getAttribute('aria-checked') === 'true';
                 if (on !== (idx % 2 === 1)) sw.click();
               }
-              if (!groups.length) return;
+              if (!groups.length || (stop && !groups.length)) return;
+              if (!stop) {
               // The tray first, then the second setting at a slower rate, so
               // the pair is actually swept: four components BOTH ways round
               // needs component and direction to advance together.
-              groups[0][idx % groups[0].length].click();
+                groups[0][idx % groups[0].length].click();
+              }
               /* And alternate the SMALLEST group every reading. The two-phase
                  procedures turn on a two-position setting — DC then AC, shunt
                  out then in — and cycling only the big trays never reaches
                  them. */
               const last = groups[groups.length - 1];
-              if (last && last !== groups[0]) last[idx % last.length].click();
-            }, k);
+              if (last && last !== groups[0] && !stop) last[idx % last.length].click();
+            }, { idx: k, stop: mixingRefused && !traySetNeeded, objected: mixedWhat });
             /* Then move a SLIDER — never another button, because the
                buttons are the specimen tray and pressing one of those would
                put the specimen just chosen straight back. */
@@ -579,7 +618,7 @@ async function runLane(lane, queue, reports, onDone) {
             const firstRefusal = t.why;
             // First do what the instrument itself tells you to do.
             if (await homeInOnNull(nControls, Math.max(1000, Math.min(20000, labDeadline - Date.now())))) { nulled += 1; t = await takeReading(); }
-            if (!t.ok) t = await huntForReading(nControls, 5, k, labDeadline);
+            if (!t.ok) t = await huntForReading(nControls, 5, k, labDeadline, mixingRefused && !traySetNeeded);
             if (t.ok) hunted += 1; else refusals.push(firstRefusal);
           }
           if (t.ok) got = t.rows;
@@ -592,9 +631,36 @@ async function runLane(lane, queue, reports, onDone) {
            * round is eight readings — and the number is not in the JSON, it is
            * in what the calculation says it is missing.
            */
+          const asking = await page.evaluate(() =>
+            (document.querySelector('#stillNeeded:not([hidden])')?.textContent || ''));
+          if (mixingRefused && !traySetNeeded
+              && /different (tuning forks|tubes|salts|boards|components|specimens|solutions|arrangements)|work through at least|both direction/i.test(asking)) {
+            // Now it wants a set after all: put the tray back into use.
+            traySetNeeded = true;
+            budget = Math.min(16, budget + want);
+            continue;
+          }
+          if (!mixingRefused && /\bdifferent (objects|wires|liquids|resistances|specimens|solutions)\b|its own set|one liquid per|one wire at a time/i.test(asking)) {
+            mixingRefused = true;
+            mixedWhat = asking;
+            /* Put the bench back the way it opened before starting again:
+               measuring the brass cylinder and comparing it against the steel
+               sphere's accepted diameter is a different wrong answer, not a
+               right one. */
+            await page.evaluate((choice) => {
+              [...document.querySelectorAll('#controls .seg, #controls .wiring')].forEach((g, i) => {
+                const btns = [...g.querySelectorAll('button')];
+                const want = choice[i];
+                if (want >= 0 && btns[want]) btns[want].click();
+              });
+              document.querySelector('#clearBtn')?.click();
+            }, openingChoice);
+            await wait(200);
+            got = 0;
+            budget = Math.min(14, budget + want);
+            continue;
+          }
           if (k === budget - 1 && budget < 12 && !outOfTime()) {
-            const asking = await page.evaluate(() =>
-              (document.querySelector('#stillNeeded:not([hidden])')?.textContent || ''));
             if (/at least|work through|both direction|different/i.test(asking)) budget += 2;
           }
         }

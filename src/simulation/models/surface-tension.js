@@ -74,7 +74,10 @@ export function derive(rows, inputs = defaults) {
      two different constants. */
   const liquids = [...new Set((rows || []).map((r) => r.liquid).filter(Boolean))];
   if (liquids.length > 1) {
-    return { ok: false, reason: `These readings are of ${liquids.length} different liquids. Surface tension is a property of the liquid, so one liquid per set of tubes.` };
+    // Name them. "2 different liquids" tells a student to look for the
+    // mistake; naming them shows where it is.
+    const names = liquids.map((k) => (LIQUIDS[k] || {}).label || k);
+    return { ok: false, reason: `These readings are of ${liquids.length} different liquids (${names.join(', ')}). Surface tension is a property of the liquid, so one liquid per set of tubes.` };
   }
   const pts = rows.map((r) => ({ x: Number(r.invRadius), y: Number(r.riseCm) }));
   if (pts.length < 3) return { ok: false, reason: 'Record the rise in at least three different tubes.' };
