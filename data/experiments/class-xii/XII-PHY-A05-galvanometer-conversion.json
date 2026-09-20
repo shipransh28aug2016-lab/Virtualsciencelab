@@ -278,20 +278,32 @@
         "decimals": 1
       },
       {
-        "key": "currentMicroA",
-        "label": "I through coil",
-        "unit": "µA",
-        "decimals": 2
+        "key": "standardReading",
+        "label": "Standard meter",
+        "unit": "",
+        "decimals": 3
+      },
+      {
+        "key": "convertedReading",
+        "label": "Converted meter",
+        "unit": "",
+        "decimals": 3
+      },
+      {
+        "key": "difference",
+        "label": "Difference",
+        "unit": "",
+        "decimals": 3
       }
     ],
     "graph": {
-      "x": "trial",
-      "y": "deflection",
-      "xLabel": "Reading number",
-      "yLabel": "Deflection (div)",
-      "throughOrigin": false
+      "x": "standardReading",
+      "y": "convertedReading",
+      "xLabel": "Standard meter reading",
+      "yLabel": "Converted instrument reading",
+      "throughOrigin": true
     },
-    "minRows": 2
+    "minRows": 3
   },
   "calculations": {
     "steps": [

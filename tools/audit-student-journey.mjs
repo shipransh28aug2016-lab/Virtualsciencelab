@@ -665,7 +665,11 @@ async function runLane(lane, queue, reports, onDone) {
            * every reading and then told, correctly, that a sagitta measured
            * at 30 mm and one measured at 50 mm have no mean.
            */
-          const mixedSet = /\bdifferent (objects|wires|liquids|resistances|specimens|solutions|surfaces|prisms|lenses|mirrors|diodes|tubes|rollers|separations|settings)\b|its own set|one liquid per|one wire at a time|cannot be averaged/i.test(asking);
+          /* The benches all phrase it the same way — "these readings are of 3
+             different galvanometers (…)" — so match the shape rather than
+             keeping a list of nouns that is one experiment out of date. */
+          const mixedSet = /\b\d+ different [a-z]+/i.test(asking)
+            || /\bdifferent (objects|wires|liquids|specimens|solutions|separations|settings)\b|its own set|one liquid per|one wire at a time|cannot be averaged/i.test(asking);
           if (!mixingRefused && mixedSet) {
             mixingRefused = true;
             mixedWhat = asking;

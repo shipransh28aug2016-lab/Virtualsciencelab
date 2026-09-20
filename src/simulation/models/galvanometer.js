@@ -5,7 +5,7 @@
  * Ammeter shunt (parallel): S = IgG/(I−Ig). Voltmeter series: R = V/Ig − G.
  */
 import { makeRng, jitter } from '../../utils/rng.js';
-import { sigFig } from '../../utils/measure.js';
+import { sigFig, toLeastCount } from '../../utils/measure.js';
 
 export const meta = {
   id: 'XII-PHY-A04',
@@ -50,6 +50,9 @@ export const defaults = { resistanceR: 3000, shuntS: 50, shuntConnected: false, 
 export function galvOf(inputs) { return GALVANOMETERS[inputs.galvanometer] || GALVANOMETERS.g1; }
 export function cellOf(inputs) { return CELLS[inputs.cell] || CELLS.c2; }
 export function fullScaleDiv() { return 30; }
+
+/** Ampere or volt, according to what the galvanometer is being converted into. */
+export function unitOf(inputs) { return inputs.conversion === 'voltmeter' ? 'V' : 'A'; }
 
 /** Deflection in divisions for the half-deflection circuit (A04). */
 export function deflectionDiv(inputs) {
@@ -145,21 +148,72 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   if (inputs.conversion) {
     const g = galvOf(inputs);
     const ig = g.kMicro * 1e-6 * fullScaleDiv();
+    /*
+     * The last four steps of this practical are "connect the converted
+     * instrument together with the standard meter", "compare them at several
+     * points across the range", "tabulate the TWO readings and find the
+     * difference at each point", "confirm that the converted instrument reads
+     * correctly over its full range" — and the observation table had one
+     * column for the deflection and nowhere to write either reading down.
+     * Four steps of the procedure could not be carried out at the bench that
+     * prints them.
+     */
+    if (inputs.testValue > inputs.targetRange) {
+      return {
+        v: null,
+        reason: `The test ${inputs.conversion === 'ammeter' ? 'current' : 'voltage'} is ${sigFig(inputs.testValue, 3)} ${unitOf(inputs)}, beyond the ${inputs.targetRange} ${unitOf(inputs)} the instrument was converted to — the pointer is hard against its stop. Bring it back inside the range, or convert the galvanometer to a larger one.`,
+      };
+    }
     const defl = Math.min(fullScaleDiv(), (inputs.testValue / inputs.targetRange) * fullScaleDiv() + jitter(rng, 0.2));
-    return { trial, resistanceR: inputs.resistanceR, deflection: Number(defl.toFixed(1)), currentMicroA: sigFig(ig * (defl / fullScaleDiv()) * 1e6, 4) };
+    /* The converted instrument is read off ITS scale: one division is a
+       thirtieth of the range, and that is as finely as it can be read. */
+    const lcConverted = inputs.targetRange / fullScaleDiv();
+    const converted = toLeastCount((defl / fullScaleDiv()) * inputs.targetRange, lcConverted);
+    /* The standard meter beside it is a better instrument, read to a
+       hundredth of the same range. */
+    const standard = toLeastCount(inputs.testValue + jitter(rng, lcConverted * 0.08), inputs.targetRange / 100);
+    return {
+      trial, resistanceR: inputs.resistanceR, deflection: Number(defl.toFixed(1)),
+      standardReading: sigFig(standard, 4), convertedReading: sigFig(converted, 4),
+      difference: sigFig(converted - standard, 2),
+      currentMicroA: sigFig(ig * (defl / fullScaleDiv()) * 1e6, 4),
+    };
   }
   const defl = deflectionDiv(inputs) + jitter(rng, 0.15);
   const g = galvOf(inputs);
-  return { trial, resistanceR: inputs.resistanceR, shuntS: inputs.shuntConnected ? inputs.shuntS : 0, deflection: Number(defl.toFixed(1)), currentMicroA: sigFig(defl * g.kMicro, 4) };
+  return { trial, galvanometer: g.label, resistanceR: inputs.resistanceR, shuntS: inputs.shuntConnected ? inputs.shuntS : 0, deflection: Number(defl.toFixed(1)), currentMicroA: sigFig(defl * g.kMicro, 4) };
 }
 
 export function derive(rows, inputs = defaults) {
   if (inputs.conversion) {
-    if (rows.length < 1) return { ok: false, reason: 'Take at least one reading with the converted meter.' };
+    const tested = rows.filter((r) => Number.isFinite(Number(r.standardReading)));
+    if (tested.length < 3) {
+      return { ok: false, reason: `Compare the converted instrument with the standard at ${3 - tested.length} more point${3 - tested.length > 1 ? 's' : ''} across its range — one agreement is not a calibration.` };
+    }
+    const spread = new Set(tested.map((r) => Number(r.standardReading)));
+    if (spread.size < 3) {
+      return { ok: false, reason: 'All these comparisons were made at the same test value. Move the rheostat and compare at several points across the range.' };
+    }
     const g = galvOf(inputs);
     const isAmmeter = inputs.conversion === 'ammeter';
+    const diffs = tested.map((r) => Math.abs(Number(r.convertedReading) - Number(r.standardReading)));
+    const worst = Math.max(...diffs);
+    const oneDivision = inputs.targetRange / fullScaleDiv();
     return {
       ok: true, mode: inputs.conversion, range: inputs.targetRange, unit: isAmmeter ? 'A' : 'V',
+      /*
+       * The shunt is CALCULATED from G, Ig and the range chosen, so its
+       * "accepted value" is whatever that calculation gives for the range on
+       * the bench — not the 0.0468 Ω belonging to the 1 A conversion in the
+       * manual. What can be right or wrong here is the finished instrument,
+       * and that is what these last three numbers report.
+       */
+      accepted: sigFig(requiredResistance(inputs), 4),
+      pointsCompared: tested.length,
+      worstDifference: sigFig(worst, 2),
+      meanDifference: sigFig(diffs.reduce((a, b) => a + b, 0) / diffs.length, 2),
+      readsTrue: worst <= oneDivision * 1.01,
+      oneDivision: sigFig(oneDivision, 3),
       connection: isAmmeter ? 'shunt, in parallel with the galvanometer' : 'resistance, in series with the galvanometer',
       formula: isAmmeter ? 'S = IgG/(I−Ig)' : 'R = V/Ig − G',
       galvanometerResistance: g.G,
@@ -177,6 +231,18 @@ export function derive(rows, inputs = defaults) {
    * refused with "record both without and with the shunt connected", which
    * they believe they have. So the two cases are told apart.
    */
+  /*
+   * Half deflection measures ONE galvanometer. Three of them are on the
+   * bench, and a set taken across all three — θ on the first, the shunted
+   * reading on the second — gives a G that belongs to no instrument at all.
+   * Nothing said so, and the answer came back 27% from the resistance of
+   * whichever one happened to be connected last.
+   */
+  const instruments = [...new Set(rows.map((r) => r.galvanometer).filter(Boolean))];
+  if (instruments.length > 1) {
+    return { ok: false, reason: `These readings are of ${instruments.length} different galvanometers (${instruments.join(', ')}). G belongs to one instrument — clear the table and take θ and the shunted reading on the same one.` };
+  }
+
   const noShunt = rows.find((r) => Number(r.shuntS) === 0);
   const withShunt = rows.filter((r) => Number(r.shuntS) > 0);
   if (!noShunt) {
@@ -191,11 +257,12 @@ export function derive(rows, inputs = defaults) {
   const S = Number(half.shuntS);
   const G = (S * R) / (R - S);
   const k = Number(noShunt.currentMicroA) / theta;
-  const g = galvOf(inputs);
+  /* The accepted G belongs to the instrument the READINGS were taken on. */
+  const g = Object.values(GALVANOMETERS).find((x) => x.label === instruments[0]) || galvOf(inputs);
   return {
     ok: true, mode: 'half-deflection', resistance: sigFig(G, 4), figureOfMeritMicro: sigFig(k, 4),
     fullScaleCurrentMicroA: sigFig(k * fullScaleDiv(), 4), approxG: sigFig(S, 4), approxResistance: sigFig(S, 4),
-    accepted: g.G, acceptedK: g.kMicro,
+    instrument: g.label, accepted: g.G, acceptedK: g.kMicro,
     n: rows.length, points: rows.map((r) => ({ x: Number(r.resistanceR), y: Number(r.deflection) })),
   };
 }

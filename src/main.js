@@ -2228,6 +2228,9 @@ function renderResult(d) {
     html = `<b>Conversion ${esc(d.mode === 'ammeter' ? 'into an ammeter' : 'into a voltmeter')} of range ${d.range} ${d.unit}</b>
       <span class="big">${d.requiredResistance} Ω ${esc(d.connection)}</span>
       ${esc(d.formula)} &nbsp;·&nbsp; Ig = ${d.fullScaleCurrentMicroA} µA &nbsp;·&nbsp; G = ${d.galvanometerResistance} Ω
+      <div style="margin-top:6px">Checked against the standard meter at ${d.pointsCompared} points: worst difference ${d.worstDifference} ${d.unit}, mean ${d.meanDifference} ${d.unit} — ${d.readsTrue
+        ? `within one division of its own scale (${d.oneDivision} ${d.unit}), so the converted instrument reads true across its range.`
+        : `more than one division of its own scale (${d.oneDivision} ${d.unit}), so it does not yet read true — check the resistance actually connected.`}</div>
       <div style="font-size:12px;margin-top:4px;color:var(--muted)">The finished instrument has a resistance of ${d.meterResistance} Ω — ${d.mode === 'ammeter'
         ? 'very low, as an ammeter in series must be, so it barely disturbs the current it measures.'
         : 'very high, as a voltmeter in parallel must be, so it draws almost no current from the circuit.'}</div>`;

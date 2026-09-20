@@ -287,6 +287,12 @@
         "decimals": 0
       },
       {
+        "key": "galvanometer",
+        "label": "Galvanometer",
+        "unit": "",
+        "decimals": 0
+      },
+      {
         "key": "resistanceR",
         "label": "R",
         "unit": "Ω",
