@@ -396,14 +396,123 @@ export function dialysis(ctx, w, h, state, inputs) {
       : 'Water changed regularly — the gradient is kept up',
     { anchor: 'below', size: 11 });
 }
+const OIL_LABEL = { mustard: 'Mustard oil', coconut: 'Coconut oil', olive: 'Olive oil', castor: 'Castor oil' };
+const AGENT_LABEL = { none: 'No emulsifier', soap: 'Soap', detergent: 'Detergent', gum: 'Gum acacia', limewater: 'Lime water' };
+const AGENT_TYPE = { none: null, soap: 'oil-in-water', detergent: 'oil-in-water', gum: 'oil-in-water', limewater: 'water-in-oil' };
+
+/**
+ * An emulsion, and the two tests done on it.
+ *
+ * The bench was a test tube of one colour and a thin rectangle that grew
+ * for two seconds. The measurement here is a TIME — how long the mixture
+ * stays milky — and there was no clock; the two layers that separate were
+ * never drawn; and the dilution test, which is half the practical and the
+ * only way to tell an oil-in-water emulsion from a water-in-oil one, was a
+ * word in a picker that changed nothing on the bench at all.
+ */
 export function emulsion(ctx, w, h, state, inputs) {
   const th = theme();
-  const cx = w / 2;
-  const { topY, bot } = drawTestTube(ctx, cx, 20, 150, 34, 0.6, '#e8d089', { label: `Oil + water${inputs?.agent && inputs.agent !== 'none' ? ' + ' + inputs.agent : ''}` });
-  ctx.save(); ctx.fillStyle = '#f2e6b0'; ctx.globalAlpha = 0.8;
-  const sep = Math.min(1, (state?.t ?? 0) / 2);
-  ctx.fillRect(cx - 15, topY + 20, 30, 20 * sep);
-  ctx.globalAlpha = 1; ctx.restore();
+  const cx = w / 2 - 110;
+  const sep = clamp(state?.separation ?? 0, 0, 1);
+  const oilName = OIL_LABEL[inputs?.oil] || 'Mustard oil';
+  const agentKey = inputs?.agent || 'none';
+  const agentName = AGENT_LABEL[agentKey] || 'No emulsifier';
+  const type = AGENT_TYPE[agentKey];
+  const dilution = inputs?.test === 'dilution';
+  const pct = Number(inputs?.agentPct ?? 0);
+
+  const topY = 60, hgt = 230, wid = 56;
+  const { bot } = drawTestTube(ctx, cx, topY, hgt, wid, 0.78, '#ecdfae',
+    { label: `${oilName} + water${agentKey !== 'none' ? ` + ${agentName} ${pct.toFixed(1)}%` : ''}` });
+
+  /*
+   * The contents, in the three bands they actually form: oil floating on
+   * top, water below, and the milky emulsion between them. As the mixture
+   * separates the milk is squeezed out of the middle into the two clear
+   * layers, which is exactly what the separation time measures.
+   */
+  const liqTop = topY + hgt * 0.16;
+  const liqBot = bot - 16;
+  const span = liqBot - liqTop;
+  const oilBand = span * 0.34 * sep;
+  const waterBand = span * 0.66 * sep;
+  ctx.save();
+  ctx.globalAlpha = 0.92;
+  ctx.fillStyle = '#e4c75f';                                   // oil, risen
+  ctx.fillRect(cx - wid / 2 + 3, liqTop, wid - 6, oilBand);
+  ctx.fillStyle = mixColor('#f7f3e4', '#cfd9e6', 0.5);          // water, below
+  ctx.fillRect(cx - wid / 2 + 3, liqBot - waterBand, wid - 6, waterBand);
+  ctx.fillStyle = '#f6f1df';                                    // the emulsion itself
+  ctx.fillRect(cx - wid / 2 + 3, liqTop + oilBand, wid - 6, span - oilBand - waterBand);
+  ctx.restore();
+
+  if (sep > 0.06 && sep < 0.97) {
+    label(ctx, cx + wid / 2 + 6, liqTop + oilBand, 'oil', { anchor: 'right', size: 10 });
+    label(ctx, cx + wid / 2 + 6, liqBot - waterBand, 'water', { anchor: 'right', size: 10 });
+  }
+
+  const elapsed = state?.elapsed ?? 0;
+  if (!dilution) {
+    /* The clock belongs to the separation test — the dilution test is not
+       timed, and a clock ticking beside it says otherwise. */
+    drawStopClock(ctx, cx + 220, 150, 72, elapsed, {
+      leastCount: 1,
+      label: 'Stop clock',
+      sub: sep > 0.95 ? 'layers separated' : 'timing the emulsion',
+      running: sep < 0.95,
+    });
+    label(ctx, cx, topY - 22,
+      sep > 0.95 ? `Separated after ${elapsed.toFixed(0)} s`
+        : sep > 0.5 ? 'Separating — the milky band is thinning'
+          : 'Milky throughout — still emulsified',
+      { anchor: 'above', bold: true });
+    return;
+  }
+
+  /*
+   * THE DILUTION TEST. A drop of the emulsion is put into water and another
+   * into oil; whichever it mixes freely with is the continuous phase. That
+   * is the whole of how an oil-in-water emulsion is told from a
+   * water-in-oil one, and it was not on the bench.
+   */
+  const ow = type === 'oil-in-water';
+  const dishes = [
+    { x: cx + 170, name: 'diluted with WATER', mixes: ow },
+    { x: cx + 310, name: 'diluted with OIL', mixes: type === 'water-in-oil' },
+  ];
+  for (const d of dishes) {
+    const dy = 150;
+    ctx.save();
+    ctx.strokeStyle = rgba(th.ink, 0.35); ctx.lineWidth = 1.4;
+    ctx.fillStyle = rgba('#ffffff', 0.22);
+    ctx.beginPath(); ctx.ellipse(d.x, dy, 54, 17, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(d.x - 54, dy); ctx.quadraticCurveTo(d.x, dy + 52, d.x + 54, dy); ctx.stroke();
+    ctx.restore();
+
+    ctx.save();
+    if (d.mixes) {
+      /* Mixes freely: one even, slightly cloudy pool. */
+      ctx.fillStyle = rgba('#eef0e6', 0.9);
+      ctx.beginPath(); ctx.ellipse(d.x, dy + 9, 46, 15, 0, 0, Math.PI * 2); ctx.fill();
+    } else {
+      /* Refuses: the drop stays as a separate globule. */
+      ctx.fillStyle = rgba('#dfe6ef', 0.85);
+      ctx.beginPath(); ctx.ellipse(d.x, dy + 9, 46, 15, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#e4c75f';
+      for (const [ddx, ddy, rr] of [[-14, 4, 9], [10, 9, 7], [0, 14, 5]]) {
+        ctx.beginPath(); ctx.ellipse(d.x + ddx, dy + ddy, rr, rr * 0.62, 0, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    ctx.restore();
+    label(ctx, d.x, dy - 20, d.name, { anchor: 'above', size: 11 });
+    label(ctx, d.x, dy + 42, d.mixes ? 'mixes freely' : 'stays as globules',
+      { anchor: 'below', size: 11, bold: d.mixes, color: d.mixes ? '#0d7a52' : undefined });
+  }
+  label(ctx, cx + 240, 248,
+    type ? `Continuous phase: ${ow ? 'water' : 'oil'} — ${type}`
+      : 'No emulsifier — nothing stays mixed to dilute',
+    { anchor: 'below', bold: true });
 }
 /**
  * The thiosulphate clock reaction.

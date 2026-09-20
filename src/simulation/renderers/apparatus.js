@@ -763,14 +763,32 @@ export function drawThermometer(ctx, x, topY, hgt, fracHot = 0.5, opts = {}) {
   ctx.fillStyle = 'rgba(255,255,255,0.55)';
   ctx.beginPath(); ctx.arc(x - bulbR * 0.34, bot - bulbR - bulbR * 0.36, bulbR * 0.26, 0, Math.PI * 2); ctx.fill();
 
-  // Scale.
+  /*
+   * Scale.
+   *
+   * The graduations are what a thermometer's LEAST COUNT looks like: a
+   * half-degree instrument carries twice as many lines in the same length of
+   * stem as a one-degree instrument, and that is the whole visible difference
+   * between them. Drawn as a fixed ten ticks whatever was chosen, the three
+   * thermometers on these benches were the same thermometer with a different
+   * number in the table — the student picked a finer instrument, watched
+   * their reading gain a decimal place, and saw nothing change.
+   *
+   * `span` is how many degrees the stem covers; `leastCount` how much one
+   * graduation is worth. Together they fix the number of lines.
+   */
+  const lc = Number(opts.leastCount) || 0;
+  const span = Number(opts.span) || 100;
+  const divisions = lc > 0 ? Math.max(4, Math.min(100, Math.round(span / lc))) : 10;
+  const majorEvery = Math.max(1, Math.round(divisions / 10));
   ctx.strokeStyle = rgba(th.ink, 0.55);
-  for (let i = 0; i <= 10; i++) {
-    const gy = topY + 3 + ((hgt - bulbR - 6) * i) / 10;
-    ctx.lineWidth = i % 5 === 0 ? 1.1 : 0.7;
+  for (let i = 0; i <= divisions; i++) {
+    const gy = topY + 3 + ((hgt - bulbR - 6) * i) / divisions;
+    const major = i % majorEvery === 0;
+    ctx.lineWidth = major ? 1.1 : 0.6;
     ctx.beginPath();
     ctx.moveTo(x + stemW / 2 - 0.5, gy);
-    ctx.lineTo(x + stemW / 2 + (i % 5 === 0 ? 5 : 2.5), gy);
+    ctx.lineTo(x + stemW / 2 + (major ? 5 : 2.5), gy);
     ctx.stroke();
   }
   ctx.restore();
@@ -778,6 +796,7 @@ export function drawThermometer(ctx, x, topY, hgt, fracHot = 0.5, opts = {}) {
   const name = opts.label || 'Thermometer';
   I.apparatus(name, x - stemW, topY, stemW * 2 + 6, hgt, { note: opts.note });
   label(ctx, x, topY, name, { anchor: 'above' });
+  if (lc > 0) label(ctx, x, bot + 4, `least count ${lc} \u00b0C`, { anchor: 'below', size: 10 });
 }
 
 /* ------------------------------------------------------------------ *
@@ -876,11 +895,23 @@ export function drawDial(ctx, cx, cy, r, valueFrac, opts = {}) {
   ctx.save();
   const startA = Math.PI + Math.PI / 6;
   const endA = -Math.PI / 6;
-  const N = 10;
+  /*
+   * A meter's LEAST COUNT is how many graduations it carries. Ten of them,
+   * always, meant a 0.02 V voltmeter and a 0.1 V one were the same instrument
+   * with a different number of decimals in the table — the student chose a
+   * finer meter and the meter did not change. Pass `leastCount` with the
+   * scale's `fullScale` and the face is divided the way the real one is.
+   */
+  const lcDial = Number(opts.leastCount) || 0;
+  const fullScale = Number(opts.fullScale) || 0;
+  const N = lcDial > 0 && fullScale > 0
+    ? Math.max(5, Math.min(60, Math.round(fullScale / lcDial)))
+    : 10;
+  const majorEvery = Math.max(1, Math.round(N / 6));
   for (let i = 0; i <= N; i++) {
     const t = i / N;
     const a = startA + (endA - startA) * t;
-    const major = i % 5 === 0;
+    const major = i % majorEvery === 0;
     ctx.strokeStyle = major ? '#1a2333' : '#57657d';
     ctx.lineWidth = major ? 1.6 : 1;
     ctx.beginPath();
@@ -913,6 +944,7 @@ export function drawDial(ctx, cx, cy, r, valueFrac, opts = {}) {
   const name = `${lab}${unit ? ` (${unit})` : ''}`;
   I.apparatus(lab, cx - r - 5, cy - r - 5, (r + 5) * 2, (r + 5) * 2, { note: opts.note });
   label(ctx, cx, cy + r + 6, name, { anchor: 'below' });
+  if (lcDial > 0) label(ctx, cx, cy + r + 22, `least count ${lcDial} ${unit}`, { anchor: 'below', size: 10 });
 }
 
 /**

@@ -2,7 +2,7 @@
  * Apparatus renderers — heat, fluids and their Section-B activities.
  */
 import {
-  label, drawBeaker, drawThermometer, drawRetortStand, drawBurner, drawTestTube, theme, drawWeight, brushedMetal, chrome, plastic, contactShadow, incandescence, noteBounds, drawClamp,
+  label, drawBeaker, drawThermometer, drawRetortStand, drawBurner, drawTestTube, theme, drawWeight, brushedMetal, chrome, plastic, contactShadow, incandescence, noteBounds, drawClamp, drawStopClock,
 } from './apparatus.js';
 import { clock, rgba, shade, mixColor, clamp, lerp, noise1 } from './realism.js';
 
@@ -174,29 +174,102 @@ export function coolingCurve(ctx, w, h, state, inputs) {
   label(ctx, cx, bot + 6, `${(state?.tempC ?? inputs.startTempC ?? 80).toFixed(1)} °C`, { anchor: 'below', bold: true });
 }
 
+/*
+ * Metals, as they look on a bench. The solid is a lump of a named metal and
+ * the calorimeter is a vessel made of one, and the bench drew a grey ball in
+ * a beaker labelled "Calorimeter + water" whichever was chosen — so the
+ * student who swapped copper for lead saw the table change and the apparatus
+ * stay exactly where it was.
+ */
+const METAL_COLOUR = {
+  Copper: '#b06a3a', Aluminium: '#c3c9d1', Brass: '#c2a347', Lead: '#7c828c',
+};
+const SOLID_LABEL = { copper: 'Copper', aluminium: 'Aluminium', brass: 'Brass', lead: 'Lead' };
+const CAL_LABEL = { copper: 'Copper', aluminium: 'Aluminium' };
+
 export function specificHeat(ctx, w, h, state, inputs) {
   const th = theme();
   const cx = w / 2 - 40;
+  const solidName = SOLID_LABEL[inputs?.solid] || 'Copper';
+  const calName = CAL_LABEL[inputs?.calorimeter] || 'Copper';
+  const solidColour = METAL_COLOUR[solidName] || '#8b93a3';
+  const calColour = METAL_COLOUR[calName] || '#b06a3a';
+  const slow = inputs?.transfer === 'slow';
+
+  const heaterX = w - 190;
   drawRetortStand(ctx, cx, h - 30, h - 100);
-  const { topY, bot } = drawBeaker(ctx, cx, 70, 90, 90, 0.6, th.liquid, { label: 'Calorimeter + water' });
+  const { topY, bot } = drawBeaker(ctx, cx, 150, 150, 140, 0.6, th.liquid, { label: `${calName} calorimeter + water` });
+
+  /* The calorimeter is made of the metal chosen: a band of it round the
+     vessel, which is the part of the apparatus the water equivalent belongs
+     to. */
+  ctx.save();
+  ctx.strokeStyle = calColour; ctx.lineWidth = 5; ctx.lineCap = 'butt';
+  ctx.strokeRect(cx - 77, topY + 10, 154, bot - topY - 16);
+  ctx.restore();
+
   /* The calorimeter's own thermometer, and the solid's ball in its boiling
      tube, both track the model's live temperatures: room temperature and
      a lit burner throughout used to sit here regardless of how far the
      solid had heated or how long it had been mixing into the water. */
   const waterT = state?.waterTempNow ?? inputs.waterTempC ?? 25;
   const solidT = state?.solidTempNow ?? inputs.waterTempC ?? 25;
-  drawThermometer(ctx, cx, topY - 30, 120, clamp((waterT - 15) / 90, 0, 1));
-  drawBurner(ctx, w - 70, h - 30, state?.heating !== false);
+  drawThermometer(ctx, cx + 44, topY - 66, 180, clamp((waterT - 15) / 90, 0, 1),
+    { label: `${waterT.toFixed(1)} \u00b0C` });
+  drawBurner(ctx, heaterX, h - 30, state?.heating !== false);
+
+  /* The solid itself: the metal's own colour, glowing towards red as it
+     heats, and drawn in the calorimeter once it has been transferred. */
   const ballFrac = clamp((solidT - 15) / 90, 0, 1);
+  const inCalorimeter = !!state?.dropped;
+  if (!inCalorimeter) {
+    /* A boiling tube over the burner, which is where a solid is brought to
+       steam temperature before it is dropped in. */
+    ctx.save();
+    ctx.fillStyle = rgba('#ffffff', 0.14);
+    ctx.strokeStyle = rgba('#5a6678', 0.55); ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.moveTo(heaterX - 22, h - 226); ctx.lineTo(heaterX - 22, h - 118);
+    ctx.quadraticCurveTo(heaterX, h - 96, heaterX + 22, h - 118);
+    ctx.lineTo(heaterX + 22, h - 226);
+    ctx.stroke();
+    ctx.fill();
+    ctx.restore();
+    label(ctx, heaterX, h - 228, 'Boiling tube', { anchor: 'above', size: 11 });
+  }
+  const bx = inCalorimeter ? cx - 24 : heaterX;
+  const by = inCalorimeter ? bot - 26 : h - 128;
+  const r = 12 + (inputs?.solidMassG ?? 100) / 60;
   ctx.save();
-  ctx.fillStyle = mixColor('#8b93a3', '#c02626', ballFrac * 0.7);
-  ctx.beginPath(); ctx.arc(w - 70, h - 100, 12, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = mixColor(solidColour, '#c02626', ballFrac * 0.55);
+  ctx.beginPath(); ctx.arc(bx, by, r, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = rgba('#20262f', 0.45); ctx.lineWidth = 1.2; ctx.stroke();
   ctx.restore();
-  label(ctx, w - 70, h - 116, state?.dropped ? 'Solid, transferred into the calorimeter' : 'Solid heating in a boiling tube', { anchor: 'above' });
+  label(ctx, bx, by - r - 4,
+    `${solidName}, ${(inputs?.solidMassG ?? 100).toFixed(0)} g`, { anchor: 'above', size: 11 });
+
+  /* Quick or slow is a choice about the transfer, so it is drawn on the path
+     the solid takes: a short hop with the tongs, or a long one with heat
+     leaving it on the way. */
+  if (!inCalorimeter) {
+    ctx.save();
+    ctx.strokeStyle = slow ? rgba('#c02626', 0.55) : rgba('#0d7a52', 0.55);
+    ctx.lineWidth = 2; ctx.setLineDash(slow ? [4, 6] : [9, 5]);
+    ctx.beginPath();
+    ctx.moveTo(heaterX - r, h - 128);
+    ctx.quadraticCurveTo((heaterX + cx) / 2, slow ? h - 268 : h - 208, cx + 76, bot - 34);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+    label(ctx, (heaterX + cx) / 2, slow ? h - 274 : h - 214,
+      slow ? 'Slow transfer — heat is lost to the air on the way' : 'Quick transfer with tongs',
+      { anchor: 'above', size: 11, color: slow ? '#c02626' : '#0d7a52' });
+  }
+
   label(ctx, cx, bot + 24,
     state?.dropped
       ? (state?.settled ? `Settled at ${waterT.toFixed(1)} °C` : `Mixing — ${waterT.toFixed(1)} °C`)
-      : `Solid at ${solidT.toFixed(1)} °C, heating`,
+      : `${solidName} at ${solidT.toFixed(1)} °C, heating`,
     { anchor: 'below', bold: true });
 }
 
@@ -213,7 +286,9 @@ export function sonometer(ctx, w, h, state, inputs) {
   ctx.fillStyle = 'rgba(20,12,4,0.6)';
   for (const dx of [0.3, 0.7]) { ctx.beginPath(); ctx.arc(x0 + (x1 - x0) * dx, boxY + 23, 9, 0, Math.PI * 2); ctx.fill(); }
   ctx.restore();
-  label(ctx, (x0 + x1) / 2, boxY + 48, 'Sonometer (hollow wooden box)', { anchor: 'below' });
+  label(ctx, (x0 + x1) / 2, boxY + 48,
+    `Sonometer (hollow wooden box) · ${{ steel: 'Steel wire (thin)', brass: 'Brass wire', steelThick: 'Steel wire (thick)' }[inputs?.wire] || 'Steel wire (thin)'}`,
+    { anchor: 'below' });
 
   // Bridges, at the separation the student has set.
   const sep = inputs.bridgeSeparationCm ?? 30;
@@ -232,8 +307,22 @@ export function sonometer(ctx, w, h, state, inputs) {
      the wire is in tune with the fork. */
   const amp = clamp(state?.amplitude ?? 0, 0, 1) * 26;
   const ph = state?.phase ?? 0;
+  /*
+   * The wire is drawn as the wire that was chosen. Steel is grey and brass is
+   * yellow, and the thick steel wire is thicker — which is the only reason
+   * it sounds a lower note at the same tension. All three were one grey line
+   * two pixels wide, so the bench that asks "how does the frequency depend on
+   * the wire?" showed the same wire whichever answer was being tested.
+   */
+  const WIRE_LOOK = {
+    steel: { colour: '#b9c2d0', mm: 0.20 },
+    brass: { colour: '#c2a347', mm: 0.22 },
+    steelThick: { colour: '#b9c2d0', mm: 0.30 },
+  };
+  const look = WIRE_LOOK[inputs?.wire] || WIRE_LOOK.steel;
   ctx.save();
-  ctx.strokeStyle = shade('#b9c2d0', 0.1); ctx.lineWidth = 2;
+  ctx.strokeStyle = shade(look.colour, 0.1);
+  ctx.lineWidth = 1.2 + look.mm * 5.5;
   ctx.beginPath(); ctx.moveTo(x0 + 20, boxY - 20); ctx.lineTo(bA, boxY - 20);
   ctx.moveTo(bB, boxY - 20); ctx.lineTo(x1 - 20, boxY - 20); ctx.stroke();
   // The segment itself.
@@ -358,12 +447,80 @@ export function resonanceTube(ctx, w, h, state, inputs) {
     { anchor: 'above', bold: true, color: state?.resonant ? '#0d7a52' : undefined });
 }
 
+/** How fine a thermometer the student picked, in degrees. */
+const WAX_THERMOMETER_LC = { t1: 1.0, t05: 0.5, t01: 0.1 };
+/** How often they decided to read it, in seconds. */
+const WAX_INTERVAL_S = { i30: 30, i60: 60, i300: 300 };
+const WAX_LABEL = { paraffin: 'Paraffin wax', beeswax: 'Beeswax', stearic: 'Stearic acid' };
+
 export function waxCooling(ctx, w, h, state, inputs) {
   const th = theme();
-  const cx = w / 2;
-  drawRetortStand(ctx, cx, h - 30, h - 100);
-  drawTestTube(ctx, cx, 40, 130, 40, 0.7, '#e8c877', { label: 'Wax (in a boiling tube)' });
-  drawThermometer(ctx, cx, 30, 110, Math.min(1, ((state?.tempC ?? inputs.startTempC ?? 80) - 25) / 60));
+  const cx = w / 2 - 60;
+  const tempC = state?.tempC ?? inputs?.startTempC ?? 85;
+  const phase = state?.phase || 'liquid';
+  const lc = WAX_THERMOMETER_LC[inputs?.thermometer] || 0.5;
+  const every = WAX_INTERVAL_S[inputs?.interval] || 30;
+  const waxName = WAX_LABEL[inputs?.wax] || 'Paraffin wax';
+
+  drawRetortStand(ctx, cx, h - 30, h - 110);
+
+  /*
+   * A cooling curve is a boiling tube of wax standing in a water bath, read
+   * against a clock. The bench drew the tube and the thermometer and nothing
+   * else: no bath, no stirrer, no clock on an experiment whose x-axis is
+   * time, and no visible difference between a one-degree thermometer and a
+   * tenth-degree one or between reading every 30 s and every 5 minutes.
+   */
+  const bath = drawBeaker(ctx, cx, 150, 190, 150, 0.55, th.liquid, { label: 'Water bath' });
+
+  /* The wax: liquid and translucent while it is above its freezing point,
+     opaque and pale once it has set, and half-and-half on the plateau —
+     which is the observation the whole experiment is about. */
+  const waxColour = phase === 'solid' ? '#f3e6c0' : phase === 'freezing' ? '#eddaa4' : '#e8c877';
+  const tube = drawTestTube(ctx, cx, 92, 190, 46, 0.62, waxColour,
+    { label: `${waxName} · ${phase === 'freezing' ? 'freezing' : phase}` });
+
+  if (phase === 'freezing') {
+    /* Solid crystallising on the wall of the tube while the rest is still
+       liquid: the plateau, drawn. */
+    ctx.save();
+    ctx.fillStyle = rgba('#fbf1d8', 0.85);
+    const top = (tube?.topY ?? 92) + 70;
+    ctx.fillRect(cx - 21, top, 9, (tube?.bot ?? 240) - top - 8);
+    ctx.fillRect(cx + 12, top, 9, (tube?.bot ?? 240) - top - 8);
+    ctx.restore();
+  }
+
+  drawThermometer(ctx, cx + 26, 62, 200, clamp((tempC - 20) / 75, 0, 1),
+    { label: `${tempC.toFixed(lc < 1 ? (lc < 0.5 ? 2 : 1) : 0)} °C`, leastCount: lc, span: 110 });
+
+  /* A stirrer, when the student chose to stir — without it the tube reads
+     its own wall rather than the wax. */
+  if (inputs?.stirred !== false) {
+    ctx.save();
+    ctx.strokeStyle = shade(th.metal, -0.1); ctx.lineWidth = 2.4; ctx.lineCap = 'round';
+    const wobble = Math.sin(clock() * 2.2) * 5;
+    ctx.beginPath();
+    ctx.moveTo(cx - 34 + wobble, 70);
+    ctx.lineTo(cx - 30 + wobble, 232);
+    ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx - 30 + wobble, 236, 6, Math.PI, 0); ctx.stroke();
+    ctx.restore();
+    label(ctx, cx - 34, 66, 'Stirrer', { anchor: 'above', size: 11 });
+  }
+
+  const elapsed = state?.elapsed ?? 0;
+  drawStopClock(ctx, w - 130, h * 0.42, 74, elapsed, {
+    leastCount: 1,
+    label: 'Stop clock',
+    sub: `read every ${every >= 60 ? `${every / 60} min` : `${every} s`}`,
+    running: state?.running !== false,
+  });
+  /* The next reading is due when the clock reaches the next multiple of the
+     interval, which is what a student watches for. */
+  const due = Math.max(0, every - (elapsed % every));
+  label(ctx, w - 130, h * 0.42 + 92,
+    `next reading in ${due.toFixed(0)} s`, { anchor: 'below', size: 11 });
 }
 
 export function bimetallicStrip(ctx, w, h, state, inputs) {

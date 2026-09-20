@@ -700,14 +700,29 @@ export function potentialDrop(ctx, w, h, state, inputs) {
   ctx.restore();
   label(ctx, x1, y - 152, 'Potential gradient (V per metre)', { anchor: 'right', size: 11, color: th.accent });
 
+  /* The voltmeter on the bench is the one the student chose: its scale is
+     divided by its own least count, and it is read to that division and no
+     finer. Printing 1.284 V off a meter graduated in 0.1 V is three digits
+     the instrument cannot give. */
   const vmax = 3;
-  drawDial(ctx, tapX, y - 150, 38, clamp((state?.voltage ?? 0) / vmax, 0, 1), { label: 'Voltmeter', unit: 'V' });
-  drawCell(ctx, x0 - 30, y - 80, { label: 'Driver cell' });
+  const vLc = { v01: 0.1, v005: 0.05, v002: 0.02 }[inputs?.voltmeter] || 0.05;
+  const vRead = Math.round((state?.voltage ?? 0) / vLc) * vLc;
+  drawDial(ctx, tapX, y - 150, 38, clamp(vRead / vmax, 0, 1),
+    { label: 'Voltmeter', unit: 'V', leastCount: vLc, fullScale: vmax });
+  /* The driver is drawn as what it is — one cell, or a battery of them —
+     and named with its emf. Labelled 'Driver cell' whichever was chosen, the
+     three supplies on this bench looked identical while the potential
+     gradient they set up differed fourfold. */
+  const driver = { cell15: { n: 1, label: '1.5 V cell' }, cell30: { n: 2, label: '3 V battery' }, cell60: { n: 4, label: '6 V battery' } }[inputs?.driver]
+    || { n: 2, label: '3 V battery' };
+  for (let i = 0; i < driver.n; i += 1) {
+    drawCell(ctx, x0 - 30 + i * 26, y - 80, { label: i === driver.n - 1 ? driver.label : '' });
+  }
   drawResistor(ctx, x0 + 90, y - 120, 60, { label: 'Rheostat' });
   drawKey(ctx, x0 + 220, y - 120, true);
 
   label(ctx, (x0 + x1) / 2, y - 210,
-    `V at the tapping point = ${(state?.voltage ?? 0).toFixed(3)} V`,
+    `V at the tapping point = ${vRead.toFixed(vLc < 0.05 ? 2 : vLc < 0.1 ? 2 : 1)} V`,
     { anchor: 'above', bold: true });
 }
 
