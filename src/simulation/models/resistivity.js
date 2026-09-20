@@ -76,17 +76,61 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const I = circuitCurrent(inputs) * (0.4 + 0.15 * ((trial - 1) % 6));
   const V = I * resistanceOhm(inputs) + jitter(rng, 0.01);
   const Iread = Number((I + jitter(rng, I * 0.01)).toFixed(3));
-  return { trial, current: Iread, voltage: Number(V.toFixed(3)), ratio: sigFig(V / Iread, 4) };
+  /* The specimen this reading belongs to travels WITH the reading. Without
+     it, derive() had to take the wire, the length and the diameter from
+     whatever happened to be set when Calculate was pressed — which need not
+     be what was on the bench when the readings were taken. */
+  return {
+    trial, current: Iread, voltage: Number(V.toFixed(3)), ratio: sigFig(V / Iread, 4),
+    wire: wireOf(inputs).label, wireKey: inputs.wire,
+    lengthCm: inputs.lengthCm, diameterMm: inputs.diameterMm,
+  };
 }
 
 export function derive(rows, inputs = defaults) {
   const pts = rows.map((r) => ({ x: Number(r.current), y: Number(r.voltage) }));
   if (pts.length < 4) return { ok: false, reason: 'Record at least four different current settings.' };
+
+  /*
+   * ONE SPECIMEN PER GRAPH.
+   *
+   * The V–I line has a single slope because it is the resistance of ONE piece
+   * of wire. Readings taken after the wire, its length or its diameter were
+   * changed belong to a different resistance, and fitting one line through
+   * the lot produced a slope that is not the resistance of anything — from
+   * which ρ was then computed, to three significant figures, using whichever
+   * length and diameter happened to be set at the moment Calculate was
+   * pressed rather than the ones the readings were taken at.
+   *
+   * Changing the specimen is the right thing to do — it is how you show ρ is
+   * a property of the material and not of the sample — but it starts a new
+   * graph, and it has to be said rather than silently averaged.
+   */
+  const specimens = new Set(rows.map((r) => `${r.wireKey ?? ''}|${r.lengthCm ?? ''}|${r.diameterMm ?? ''}`));
+  if (specimens.size > 1) {
+    const wires = [...new Set(rows.map((r) => r.wire).filter(Boolean))];
+    return {
+      ok: false,
+      reason: wires.length > 1
+        ? `These readings come from ${wires.length} different wires (${wires.join(', ')}). One V–I line is the resistance of one specimen — clear the table and take a full set on each wire separately.`
+        : 'The length or diameter of the wire was changed part-way through. One V–I line is the resistance of one specimen, so clear the table and take a full set at each setting.',
+    };
+  }
+
+  // Take the specimen from the READINGS, falling back to the current setup
+  // only for a table recorded before this was tracked.
+  const first = rows[0] || {};
+  const lengthCm = Number.isFinite(Number(first.lengthCm)) ? Number(first.lengthCm) : inputs.lengthCm;
+  const diameterMm = Number.isFinite(Number(first.diameterMm)) ? Number(first.diameterMm) : inputs.diameterMm;
+  const specimen = { ...inputs, lengthCm, diameterMm, wire: first.wireKey || inputs.wire };
+
   const fit = fitThroughOrigin(pts);
-  const rho = (fit.slope * areaM2(inputs)) / (inputs.lengthCm / 100);
-  const accepted = wireOf(inputs).rho;
+  const rho = (fit.slope * areaM2(specimen)) / (lengthCm / 100);
+  const accepted = wireOf(specimen).rho;
   return {
-    ok: true, resistance: sigFig(fit.slope, 4), rho: sigFig(rho, 3), accepted, r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts,
+    ok: true, resistance: sigFig(fit.slope, 4), rho: sigFig(rho, 3), accepted,
+    r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts,
+    wire: wireOf(specimen).label, lengthCm, diameterMm,
     rhoText: sciText(rho, 'Ω·m'), acceptedText: sciText(accepted, 'Ω·m'),
   };
 }
