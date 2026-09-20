@@ -408,6 +408,12 @@ async function runLane(lane, queue, reports, onDone) {
       const fail = (stage, msg) => { rep.problems.push({ stage, msg }); rep.stages[stage] = 'FAIL'; };
       const pass = (stage, note) => { rep.stages[stage] = note ? `ok (${note})` : 'ok'; };
 
+      /* A hard wall clock around the whole lab. Individual helpers are already
+       bounded, but a sweep that can be stalled by one bench is a sweep nobody
+       will run — and the stall is itself the finding, so it is reported. */
+    let timedOut = false;
+    const wallClock = new Promise((resolve) => setTimeout(() => { timedOut = true; resolve('timeout'); }, LAB_BUDGET_MS + 30000));
+    const walk = (async () => {
       try {
         await page.goto(`${BASE}/index.html#/exp/${entry.id}`, { waitUntil: 'domcontentloaded' });
         await wait(420);
@@ -424,9 +430,9 @@ async function runLane(lane, queue, reports, onDone) {
 
         /* ── STAGE 1 · OPEN ─────────────────────────────────────────── */
         const r0 = await probeRead();
-        if (r0.labError) { fail('open', 'lab opened into its error boundary'); reports.push(rep); continue; }
+        if (r0.labError) { fail('open', 'lab opened into its error boundary'); return; }
         const onLab = await page.evaluate(() => !document.querySelector('#viewLab')?.hidden);
-        if (!onLab) { fail('open', 'did not reach the lab view'); reports.push(rep); continue; }
+        if (!onLab) { fail('open', 'did not reach the lab view'); return; }
         pass('open');
 
         /* ── STAGE 2 · SEE the apparatus ────────────────────────────── */
@@ -568,6 +574,11 @@ async function runLane(lane, queue, reports, onDone) {
       } catch (err) {
         fail('crash', String(err?.message || err).slice(0, 200));
       }
+    })();
+    await Promise.race([walk, wallClock]);
+    if (timedOut) {
+      rep.problems.push({ stage: 'budget', msg: `did not finish within ${((LAB_BUDGET_MS + 30000) / 1000).toFixed(0)} s` });
+    }
 
       const newErrors = lane.errors.slice(before);
       if (newErrors.length) {

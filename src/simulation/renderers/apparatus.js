@@ -1748,9 +1748,14 @@ export function drawRayDiagram(ctx, elemX, axisY, opts = {}) {
 
     // The image itself, inverted when m is negative — the whole point.
     arrow(ctx, imgX, axisY, imgX, imgTop, '#c02626', 2.6);
-    label(ctx, imgX, imgTop + (imgTop > axisY ? 8 : -8),
+    /* Placed to the LEFT of the image rather than centred on it. The screen
+       stands exactly where a real image is caught, and its post is drawn
+       after this, so a centred caption was cut in half by the apparatus it
+       was describing — "Real, inverted · v = 24.0 c" with the last character
+       behind the upright. */
+    label(ctx, imgX - 6, imgTop + (imgTop > axisY ? 8 : -8),
       `${v > 0 ? 'Real' : 'Virtual'}, ${m < 0 ? 'inverted' : 'erect'} · v = ${v.toFixed(1)} cm`,
-      { anchor: imgTop > axisY ? 'below' : 'above', size: 11, bold: true });
+      { anchor: 'left', size: 11, bold: true });
   } else if (!Number.isFinite(v)) {
     label(ctx, elemX + 40, axisY - 40, 'Object at F — emergent rays parallel, no image', { anchor: 'right', color: '#8a5a00' });
   }

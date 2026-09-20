@@ -295,9 +295,9 @@
     ]
   },
   "expectedResult": {
-    "quantity": "Knee voltage of the silicon diode",
+    "quantity": "Knee (cut-in) voltage of the silicon diode",
     "symbol": "V_knee",
-    "value": 0.65,
+    "value": 0.7,
     "tolerance": 0.12,
     "unit": "V",
     "secondary": {

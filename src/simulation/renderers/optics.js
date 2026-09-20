@@ -34,6 +34,44 @@ function focalOf(inputs, fallback) {
   return m ? Number(m[1]) : (inputs?.focalLengthCm ?? fallback);
 }
 
+/**
+ * The lens (or mirror) formula, written out with the signs actually applied.
+ *
+ * The bench used to show "u = 40.0 cm" beside "1/v − 1/u = 1/f", and a
+ * student who substituted what was on the screen got f = 60 cm for a lens
+ * labelled 15 cm. Both statements were defensible on their own — a distance
+ * measured off an optical bench with a ruler IS 40 cm, and the CBSE lens
+ * formula IS 1/v − 1/u = 1/f — but they belong to different conventions, and
+ * nothing on the screen carried the student from one to the other. That step,
+ * applying the sign convention to measured distances, is the step the whole
+ * chapter turns on.
+ *
+ * So it is shown: the measured distances, then the same distances signed,
+ * then the arithmetic, then the answer.
+ */
+function formulaPanel(ctx, x, y, { kind, u, v, f }) {
+  // Cartesian convention: distances are measured from the optical centre (or
+  // pole), and anything on the side the light comes FROM is negative. A real
+  // object is therefore always at −u.
+  const su = -Math.abs(u);
+  const sv = kind === 'mirror' ? -Math.abs(v) : Math.abs(v);
+  const lhs = kind === 'mirror' ? '1/v + 1/u = 1/f' : '1/v − 1/u = 1/f';
+  const neg0 = (n) => (n < 0 ? `−${Math.abs(n).toFixed(1)}` : n.toFixed(1));
+  const sub = kind === 'mirror'
+    ? `1/(${neg0(sv)}) + 1/(${neg0(su)})`
+    : `1/(${neg0(sv)}) − 1/(${neg0(su)})`;
+  /* Read top to bottom: the rule, the numbers put into it, the answer, and
+     why the sign is what it is. Anchoring 'above' draws each plate upward
+     from its y, so the lines are emitted bottom-first to come out in order. */
+  const neg = (n) => (n < 0 ? `−${Math.abs(n).toFixed(1)}` : n.toFixed(1));
+  label(ctx, x, y + 44, 'The object is on the side the light comes from, so u is negative.',
+    { anchor: 'above', size: 11.5, color: '#5b6b84' });
+  label(ctx, x, y + 22, `${sub} = 1/(${neg(f)})   →   f = ${neg(f)} cm`,
+    { anchor: 'above', size: 12.5 });
+  label(ctx, x, y, `${lhs}    u = ${neg(su)} cm,  v = ${neg(sv)} cm`,
+    { anchor: 'above', bold: true, size: 13 });
+}
+
 export function convexLens(ctx, w, h, state, inputs) {
   const lensX = 380;
   const u = inputs?.objectDistanceCm ?? 40;
@@ -68,9 +106,11 @@ export function convexLens(ctx, w, h, state, inputs) {
     drag: { varId: 'screenPosCm', axis: 'x', unit: 'screen position',
       p0: lensX, p1: lensX + 120 * SCALE, v0: 0, v1: 120 },
   });
-  if (sharp > 0.9) label(ctx, (lensX + screenX) / 2, AXIS_Y - 150,
-    `1/v − 1/u = 1/f   →   f = ${(1 / (1 / geom.v + 1 / u)).toFixed(1)} cm`,
-    { anchor: 'above', bold: true, size: 13 });
+  if (sharp > 0.9) {
+    formulaPanel(ctx, (lensX + screenX) / 2, AXIS_Y - 168, {
+      kind: 'lens', u, v: geom.v, f: 1 / (1 / geom.v + 1 / u),
+    });
+  }
 }
 export function concaveMirror(ctx, w, h, state, inputs) {
   const mirrorX = 700;
@@ -100,6 +140,12 @@ export function concaveMirror(ctx, w, h, state, inputs) {
     drawUpright(ctx, sx, BENCH_Y, BENCH_Y - AXIS_Y - 60);
     drawScreen(ctx, sx, AXIS_Y + 60, 120, { label: `Screen · v = ${v.toFixed(1)} cm` });
     drawImageOnScreen(ctx, sx, AXIS_Y, 120, geom, { scale: SCALE });
+    /* A concave mirror forms its real image on the same side as the object,
+       so BOTH distances are negative and so is f — which is exactly why the
+       mirror formula adds where the lens formula subtracts. */
+    formulaPanel(ctx, (mirrorX + sx) / 2, AXIS_Y - 168, {
+      kind: 'mirror', u, v, f: -Math.abs(f),
+    });
   }
 }
 /**
