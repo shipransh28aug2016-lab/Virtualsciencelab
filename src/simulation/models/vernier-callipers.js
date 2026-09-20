@@ -126,6 +126,8 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const corrected = toLeastCount(observed - zeroErrorCm(inputs), lc);
   return {
     trial,
+    specimen: inputs.specimen,
+    specimenLabel: `${(SPECIMENS[inputs.specimen] || SPECIMENS.sphere).label} (${inputs.measuring})`,
     mainScaleReading: msr,
     vernierDivision: vsr,
     leastCount: lc,
@@ -136,6 +138,25 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 }
 
 export function derive(rows, inputs = defaults) {
+  /*
+   * ONE SPECIMEN PER SET.
+   *
+   * A mean is only a measurement when every reading is of the same thing.
+   * Readings taken after the specimen was changed belong to a different
+   * object, and averaging them produced a confident number that describes
+   * nothing. Averaging a sphere with a cylinder gives the mean of two different objects, which is not a measurement of either.
+   *
+   * Measuring several objects is the right thing to do — it is how the
+   * instrument is learnt — but each one is its own set of readings.
+   */
+  const specimens = [...new Set((rows || []).map((r) => r.specimen).filter(Boolean))];
+  if (specimens.length > 1) {
+    const names = [...new Set(rows.map((r) => r.specimenLabel).filter(Boolean))];
+    return {
+      ok: false,
+      reason: `These readings are of ${specimens.length} different objects${names.length ? ` (${names.join(', ')})` : ''}. A mean is a measurement only when every reading is of the same one — clear the table and take a full set on each.`,
+    };
+  }
   const vals = rows.map((r) => Number(r.corrected)).filter(Number.isFinite);
   if (vals.length < 3) return { ok: false, reason: 'Record at least three readings of the same dimension.' };
   const m = mean(vals);

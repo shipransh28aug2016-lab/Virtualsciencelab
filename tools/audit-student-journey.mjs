@@ -319,6 +319,32 @@ async function runLane(lane, queue, reports, onDone) {
    * reach the balance point then the guidance does not work — a student with a
    * jockey and a metre of wire has no better information than this probe does.
    */
+  /**
+   * Read the indicator once it has stopped moving.
+   *
+   * A fixed pause after setting a control is enough on an idle machine and
+   * not enough on a loaded one: with four lanes sharing the CPU the model had
+   * often not been stepped yet, so the probe read the PREVIOUS indicator and
+   * searched in the wrong direction. These labs passed one at a time and
+   * failed in a sweep, which is the signature of a timing assumption rather
+   * than a defect.
+   */
+  async function readIndicator(capMs = 900) {
+    // Give the change a frame to be applied before reading anything: two
+    // identical reads taken before the input event was even processed are
+    // "settled" only in the sense that nothing has happened yet.
+    await wait(110);
+    const t0 = Date.now();
+    let last = await page.evaluate(NULL_PROBE);
+    while (Date.now() - t0 < capMs) {
+      await wait(70);
+      const now = await page.evaluate(NULL_PROBE);
+      if (now && last && now.text === last.text) return now;
+      last = now;
+    }
+    return last;
+  }
+
   async function homeInOnNull(nControls, capMs = 20000) {
     const t0 = Date.now();
     if (!(await page.evaluate(NULL_PROBE))) return false;
@@ -350,13 +376,11 @@ async function runLane(lane, queue, reports, onDone) {
       }, { sel: SEL, idx: i });
       const restore = async () => { if (before !== null) await setAt(before); };
 
-      if ((await page.evaluate(NULL_PROBE))?.atNull) return true;
+      if ((await readIndicator())?.atNull) return true;
       await setAt(range.min);
-      await wait(90);
-      const low = await page.evaluate(NULL_PROBE);
+      const low = await readIndicator();
       await setAt(range.max);
-      await wait(90);
-      const high = await page.evaluate(NULL_PROBE);
+      const high = await readIndicator();
       if (!low || !high) { await restore(); continue; }
       if (low.atNull) { await setAt(range.min); return true; }
       if (high.atNull) return true;
@@ -368,14 +392,13 @@ async function runLane(lane, queue, reports, onDone) {
       for (let k = 0; k < 30 && Date.now() - t0 < capMs; k += 1) {
         const mid = Math.round(((lo + hi) / 2 - range.min) / range.step) * range.step + range.min;
         await setAt(Number(mid.toFixed(6)));
-        await wait(70);
-        const now = await page.evaluate(NULL_PROBE);
+        const now = await readIndicator(600);
         if (!now) break;
         if (now.atNull) return true;
         if (hi - lo <= range.step * 1.01) break;
         if (now.up) lo = mid; else hi = mid;
       }
-      if ((await page.evaluate(NULL_PROBE))?.atNull) return true;
+      if ((await readIndicator())?.atNull) return true;
       // The bisection leaves the control at its best value, which is an
       // improvement even when it did not reach the null — so it is kept.
     }

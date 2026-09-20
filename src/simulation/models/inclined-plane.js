@@ -4,7 +4,7 @@
  * At equilibrium F = W sinθ (roller); for a sliding block, F = W(sinθ + μcosθ).
  */
 import { makeRng, jitter } from '../../utils/rng.js';
-import { fitThroughOrigin, sigFig } from '../../utils/measure.js';
+import { fitThroughOrigin, sigFig, linearFit} from '../../utils/measure.js';
 import { nullPoint, nullRefusal } from '../null-point.js';
 
 export const meta = {
@@ -95,14 +95,32 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   return { trial, angleDeg: inputs.angleDeg, sinTheta: Number(sinTheta(inputs).toFixed(4)), panGwt: F, forceN: sigFig((F / 1000) * G, 4), body: inputs.body };
 }
 
-export function derive(rows) {
+export function derive(rows, inputs = defaults) {
   const pts = rows.map((r) => ({ x: Number(r.sinTheta), y: Number(r.panGwt) }));
   if (pts.length < 4) return { ok: false, reason: 'Record the balancing force for at least four different angles.' };
   const through = fitThroughOrigin(pts);
   const isBlock = rows[0].body === 'block';
+  /*
+   * The panel names the body, states the accepted weight and reports the
+   * intercept — which is the whole distinction between the two cases. A
+   * roller needs F = W sin θ, so its line passes through the origin; a
+   * sliding block needs F = W(sin θ + μ cos θ), so its line is lifted by
+   * μW and the intercept is that friction. None of the three was returned,
+   * so the line read "undefined · accepted undefined gwt · intercept
+   * undefined gwt" under the result.
+   */
+  const free = pts.length >= 3 ? linearFit(pts) : null;
+  const body = isBlock ? BLOCK : (ROLLERS[rows[0].roller] || ROLLERS[inputs.roller] || ROLLERS.r250);
   return {
     ok: true, weightGwt: sigFig(through.slope, 4), weightN: sigFig((through.slope / 1000) * G, 4),
-    r2: Number(through.r2.toFixed(4)), body: rows[0].body, sliding: isBlock, n: pts.length, points: pts,
+    r2: Number(through.r2.toFixed(4)), body: rows[0].body, sliding: isBlock,
+    bodyLabel: body.label || (isBlock ? 'Wooden block' : 'Roller'),
+    accepted: sigFig(body.weightGwt, 4),
+    intercept: free ? sigFig(free.intercept, 3) : 0,
+    interceptMeaning: isBlock
+      ? 'A sliding block needs F = W(sin θ + μ cos θ), so the line does not pass through the origin: the intercept is μW, the friction that has to be overcome before it moves at all.'
+      : 'A roller needs only F = W sin θ, so the line should pass through the origin — an intercept much above zero means friction is not negligible.',
+    n: pts.length, points: pts,
   };
 }
 

@@ -117,10 +117,29 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const hsr = Math.round((observed % g.pitch < 0 ? observed % g.pitch + g.pitch : observed % g.pitch) / lc);
   const psr = Number((observed - hsr * lc).toFixed(3));
   const corrected = toLeastCount(observed - zeroErrorMm(inputs), lc);
-  return { trial, pitchScaleReading: psr, circularDivision: hsr, leastCount: lc, observed, zeroError: Number(zeroErrorMm(inputs).toFixed(3)), corrected };
+  return { trial, pitchScaleReading: psr, circularDivision: hsr, leastCount: lc, observed, zeroError: Number(zeroErrorMm(inputs).toFixed(3)), corrected, specimen: inputs.specimen, specimenLabel: specimenOf(inputs).label };
 }
 
 export function derive(rows) {
+  /*
+   * ONE SPECIMEN PER SET.
+   *
+   * A mean is only a measurement when every reading is of the same thing.
+   * Readings taken after the specimen was changed belong to a different
+   * object, and averaging them produced a confident number that describes
+   * nothing. Averaging a wire with a glass plate gives the mean of two different objects, which is not a measurement of either.
+   *
+   * Measuring several objects is the right thing to do — it is how the
+   * instrument is learnt — but each one is its own set of readings.
+   */
+  const specimens = [...new Set((rows || []).map((r) => r.specimen).filter(Boolean))];
+  if (specimens.length > 1) {
+    const names = [...new Set(rows.map((r) => r.specimenLabel).filter(Boolean))];
+    return {
+      ok: false,
+      reason: `These readings are of ${specimens.length} different objects${names.length ? ` (${names.join(', ')})` : ''}. A mean is a measurement only when every reading is of the same one — clear the table and take a full set on each.`,
+    };
+  }
   const vals = rows.map((r) => Number(r.corrected)).filter(Number.isFinite);
   if (vals.length < 3) return { ok: false, reason: 'Record at least three readings at different places on the specimen.' };
   const m = vals.reduce((a, b) => a + b, 0) / vals.length;
