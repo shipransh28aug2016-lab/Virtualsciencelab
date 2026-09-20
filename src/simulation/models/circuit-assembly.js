@@ -152,6 +152,26 @@ export function loadVoltageV(inputs) {
   return circuitCurrentA(inputs) * load.ohm;
 }
 
+/**
+ * What this one fault would do, with everything else connected properly.
+ *
+ * A fault's consequence has to be computed in isolation, because that is what
+ * the sentence describing it claims. With the voltmeter also mis-wired into
+ * the path, the current is a few microampere no matter where the ammeter is —
+ * so the warning about the ammeter read "very nearly a short circuit — about
+ * 0.00 A would flow", which is the opposite of what a short circuit does. A
+ * student who makes two mistakes at once was told something false about each.
+ */
+const WIRED_RIGHT = {
+  ammeterMode: 'series', voltmeterMode: 'parallel',
+  polarity: 'correct', rheostatMode: 'variable',
+};
+function currentWithOnly(inputs, fault) {
+  // The student's own cell, load and rheostat setting; only the OTHER faults
+  // put right, so the number describes this fault on this bench.
+  return circuitCurrentA({ ...inputs, ...WIRED_RIGHT, ...fault });
+}
+
 /** Is every connection right? */
 export function isCorrect(inputs) {
   return (AMMETER_MODE[inputs.ammeterMode] || {}).correct === true
@@ -162,7 +182,9 @@ export function isCorrect(inputs) {
 
 /** Would the ammeter be damaged by this arrangement? */
 export function ammeterAtRisk(inputs) {
-  return inputs.ammeterMode === 'parallel' && circuitCurrentA(inputs) > 1.5;
+  // Judged on what the ammeter alone would carry, with the rest wired right.
+  return inputs.ammeterMode === 'parallel'
+    && currentWithOnly(inputs, { ammeterMode: 'parallel' }) > 1.5;
 }
 
 export function validate(inputs) {
@@ -173,7 +195,7 @@ export function validate(inputs) {
     errors.push({
       field: 'ammeterMode',
       code: 'AMMETER_IN_PARALLEL',
-      message: `The ammeter is across the load, which is very nearly a short circuit — about ${circuitCurrentA(inputs).toFixed(2)} A would flow.`,
+      message: `The ammeter is across the load, which is very nearly a short circuit — about ${currentWithOnly(inputs, { ammeterMode: 'parallel' }).toFixed(2)} A would flow.`,
       why: 'An ammeter is built with a very LOW resistance so that inserting it does not change the current it is measuring. Placed across the load, that low resistance carries almost all the current and bypasses the component entirely. The meter is not rated for this and would be damaged.',
       fix: 'Break the circuit and put the ammeter IN the path, in series with the load.',
     });
@@ -183,7 +205,7 @@ export function validate(inputs) {
     errors.push({
       field: 'voltmeterMode',
       code: 'VOLTMETER_IN_SERIES',
-      message: `The voltmeter is in the path, so only about ${(circuitCurrentA(inputs) * 1e6).toFixed(0)} µA flows and nothing works.`,
+      message: `The voltmeter is in the path, so only about ${(currentWithOnly(inputs, { voltmeterMode: 'series' }) * 1e6).toFixed(0)} µA flows and nothing works.`,
       why: 'A voltmeter is built with a very HIGH resistance so that it draws almost no current from the circuit it examines. Put in series, that high resistance chokes the current to nearly nothing, and almost the whole supply voltage appears across the meter instead of across the load.',
       fix: 'Connect the voltmeter ACROSS the load, in parallel with it.',
     });

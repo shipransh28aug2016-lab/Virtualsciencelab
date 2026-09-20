@@ -140,7 +140,7 @@
       "label": "Meter polarity",
       "symbol": "",
       "unit": "",
-      "type": "independent",
+      "type": "control",
       "default": "correct",
       "options": [
         "correct",
@@ -152,7 +152,7 @@
       "label": "Rheostat wiring",
       "symbol": "",
       "unit": "",
-      "type": "independent",
+      "type": "control",
       "default": "variable",
       "options": [
         "variable",
@@ -164,7 +164,7 @@
       "label": "Key while wiring",
       "symbol": "",
       "unit": "",
-      "type": "independent",
+      "type": "control",
       "default": "open",
       "options": [
         "open",
@@ -234,16 +234,13 @@
     "fps": 30,
     "controls": [
       {
-        "var": "rheostatOhm",
-        "widget": "slider"
-      },
-      {
         "var": "ammeterMode",
         "widget": "wiring",
         "options": [
           "series",
           "parallel"
-        ]
+        ],
+        "group": "setup"
       },
       {
         "var": "voltmeterMode",
@@ -251,7 +248,8 @@
         "options": [
           "parallel",
           "series"
-        ]
+        ],
+        "group": "setup"
       },
       {
         "var": "polarity",
@@ -259,7 +257,8 @@
         "options": [
           "correct",
           "reversed"
-        ]
+        ],
+        "group": "setup"
       },
       {
         "var": "rheostatMode",
@@ -267,7 +266,8 @@
         "options": [
           "variable",
           "full"
-        ]
+        ],
+        "group": "setup"
       },
       {
         "var": "keyState",
@@ -275,7 +275,8 @@
         "options": [
           "open",
           "closed"
-        ]
+        ],
+        "group": "setup"
       },
       {
         "var": "load",
@@ -285,7 +286,8 @@
           "r22",
           "r47",
           "lamp"
-        ]
+        ],
+        "group": "setup"
       },
       {
         "var": "cell",
@@ -294,7 +296,13 @@
           "c15",
           "c30",
           "c60"
-        ]
+        ],
+        "group": "setup"
+      },
+      {
+        "var": "rheostatOhm",
+        "widget": "slider",
+        "group": "measure"
       }
     ],
     "actions": [

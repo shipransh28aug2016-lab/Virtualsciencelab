@@ -404,6 +404,9 @@ canvas{display:block;width:100%;touch-action:none}
 .panel-body>div{overflow:hidden;min-height:0}
 .panel-collapsible.is-collapsed .panel-body{grid-template-rows:0fr;opacity:0}
 
+.ctl-group{margin:2px 0 10px;font-size:11px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--muted)}
+.ctl-group+.ctl{margin-top:0}
+.ctl+.ctl-group{margin-top:20px;padding-top:14px;border-top:1px solid var(--stroke)}
 .ctl{margin-bottom:14px}
 .ctl label{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;margin-bottom:6px;gap:8px}
 .ctl label b{font-variant-numeric:tabular-nums;color:var(--accent-ink);font-size:17px;font-weight:700}

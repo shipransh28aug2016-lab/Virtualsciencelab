@@ -130,9 +130,22 @@ const READOUT_PROBE = () => {
   };
 };
 
+/*
+ * Some benches separate the controls you SETTLE from the controls you VARY,
+ * and mark the first kind `data-group="setup"`. Circuit assembly is the clear
+ * case: where the ammeter goes and whether the key is open are decided once,
+ * and only the rheostat moves between readings. A student who re-wires the
+ * circuit between readings is told off by the bench, correctly — so the probe
+ * does not do it either. Benches that draw no such distinction are unaffected:
+ * nothing carries the attribute, so nothing is excluded.
+ */
+const VARIABLE_WIDGETS = [
+  'input[type=range]', '.seg button', '.wiring button', '.sw', 'select', 'input[type=checkbox]',
+].map((w) => `#controls .ctl:not([data-group="setup"]) ${w}`).join(', ');
+
 /** Drive one control to a value it does not currently hold. Returns what it did. */
 const NUDGE_CONTROL = ({ idx, fraction, slidersOnly }) => {
-  const sel = '#controls input[type=range], #controls .seg button, #controls .wiring button, #controls .sw, #controls select, #controls input[type=checkbox]';
+  const sel = '#controls .ctl:not([data-group="setup"]) input[type=range], #controls .ctl:not([data-group="setup"]) .seg button, #controls .ctl:not([data-group="setup"]) .wiring button, #controls .ctl:not([data-group="setup"]) .sw, #controls .ctl:not([data-group="setup"]) select, #controls .ctl:not([data-group="setup"]) input[type=checkbox]';
   const el = document.querySelectorAll(sel)[idx];
   if (!el) return null;
   /* Once the bench has objected to a mixed set, hunting must not quietly
@@ -486,8 +499,7 @@ async function runLane(lane, queue, reports, onDone) {
         const openingChoice = await page.evaluate(() =>
           [...document.querySelectorAll('#controls .seg, #controls .wiring')].map((g) =>
             [...g.querySelectorAll('button')].findIndex((b) => b.getAttribute('aria-pressed') === 'true')));
-        const nControls = await page.evaluate(() =>
-          document.querySelectorAll('#controls input[type=range], #controls .seg button, #controls .wiring button, #controls .sw, #controls select, #controls input[type=checkbox]').length);
+        const nControls = await page.evaluate((sel) => document.querySelectorAll(sel).length, VARIABLE_WIDGETS);
         if (!nControls) fail('controls', 'the student can change nothing');
         else pass('controls', `${nControls} widgets`);
 
@@ -560,7 +572,7 @@ async function runLane(lane, queue, reports, onDone) {
             await page.evaluate(({ idx, stop, objected }) => {
               // The tray, not the first switch on the panel: take the group
               // with the most choices in it, which is the specimen selector.
-              let groups = [...document.querySelectorAll('#controls .seg, #controls .wiring')]
+              let groups = [...document.querySelectorAll('#controls .ctl:not([data-group="setup"]) .seg, #controls .ctl:not([data-group="setup"]) .wiring')]
                 .map((g) => [...g.querySelectorAll('button')])
                 .filter((b) => b.length >= 2);
               if (objected) {
@@ -575,7 +587,7 @@ async function runLane(lane, queue, reports, onDone) {
               /* A switch is a two-position setting like any other — the shunt
                  in or out, the balance tared or not — and half-deflection
                  needs a reading in each position. */
-              for (const sw of document.querySelectorAll('#controls .sw')) {
+              for (const sw of document.querySelectorAll('#controls .ctl:not([data-group="setup"]) .sw')) {
                 const on = sw.getAttribute('aria-checked') === 'true';
                 if (on !== (idx % 2 === 1)) sw.click();
               }
@@ -598,7 +610,7 @@ async function runLane(lane, queue, reports, onDone) {
                put the specimen just chosen straight back. */
             const frac = 0.15 + (0.7 * k) / want;
             if (k > 0) await page.evaluate((f) => {
-              const sliders = [...document.querySelectorAll('#controls input[type=range]')];
+              const sliders = [...document.querySelectorAll('#controls .ctl:not([data-group="setup"]) input[type=range]')];
               const el = sliders[0];
               if (!el) return;
               const min = Number(el.min); const max = Number(el.max); const step = Number(el.step) || 1;

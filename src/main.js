@@ -1119,17 +1119,49 @@ function calculate() {
 }
 
 /* ── controls ── */
+/*
+ * Not every control on a bench is the same kind of thing, and the panel used
+ * to say they were. The circuit-assembly activity offered eight controls in
+ * one flat list: seven of them are the ASSEMBLY — where the ammeter goes,
+ * which way round the meters are, whether the key is open — settled once
+ * before the key is closed, and exactly one, the rheostat, is what you move
+ * between readings. A student working down the list changed the wiring
+ * between readings and the bench refused every one of them, correctly and
+ * uselessly, because nothing had said which control was which.
+ *
+ * A control may now declare `"group": "setup"`. Where an experiment uses the
+ * field, the panel prints a heading above each run of controls, so the thing
+ * you set once and the thing you vary are visibly different parts of the
+ * bench. Experiments that do not use it are unchanged: one group, no heading.
+ */
+const CONTROL_GROUPS = {
+  setup: 'Set up the apparatus — settle these first',
+  measure: 'Take the readings — vary these',
+};
+
 function buildControls() {
   const exp = app.exp;
   const byId = Object.fromEntries(exp.variables.map((v) => [v.id, v]));
   const host = $('#controls');
   host.innerHTML = '';
 
+  const grouped = new Set(exp.simulation.controls.map((c) => c.group || 'measure')).size > 1;
+  let shownGroup = null;
+
   for (const c of exp.simulation.controls) {
     const v = byId[c.var];
     if (!v) continue;
+    const group = c.group || 'measure';
+    if (grouped && group !== shownGroup) {
+      shownGroup = group;
+      const head = document.createElement('p');
+      head.className = 'ctl-group';
+      head.textContent = CONTROL_GROUPS[group] || group;
+      host.appendChild(head);
+    }
     const wrap = document.createElement('div');
     wrap.className = 'ctl';
+    wrap.dataset.group = group;
 
     if (c.widget === 'slider') {
       const id = `c_${v.id}`;
