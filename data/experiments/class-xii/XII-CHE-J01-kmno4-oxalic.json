@@ -17,7 +17,7 @@
     "subtopic": "Standardising KMnO4 against standard oxalic acid",
     "practical": "Determination of concentration/molarity of KMnO4 solution by titrating it against a standard solution of Oxalic acid.",
     "learningObjectives": [
-      "Titrate KMnO4 against standard standard oxalic acid in acidic medium",
+      "Titrate KMnO4 against standard oxalic acid in acidic medium",
       "Recognise the self-indicating end point (permanent pale pink)",
       "Apply N1V1=N2V2 using the correct n-factor for the redox change",
       "Calculate the molarity/normality of the KMnO4 solution"
@@ -33,7 +33,7 @@
   "title": "Molarity of KMnO4 vs Standard Oxalic Acid",
   "shortTitle": "KMnO₄ vs Oxalic Acid",
   "objective": [
-    "Titrate KMnO4 against standard standard oxalic acid in acidic medium",
+    "Titrate KMnO4 against standard oxalic acid in acidic medium",
     "Recognise the self-indicating end point (permanent pale pink)",
     "Apply N1V1=N2V2 using the correct n-factor for the redox change",
     "Calculate the molarity/normality of the KMnO4 solution"
@@ -233,17 +233,18 @@
     ],
     "resultKeys": [
       "normality",
+      "molarity",
       "strength",
       "meanTitre"
     ]
   },
   "expectedResult": {
-    "quantity": "Normality of the KMnO4 solution",
+    "quantity": "Normality of the KMnO₄ solution (0.02 M, n = 5)",
     "symbol": "N",
-    "value": 0.02,
-    "tolerance": 0.0024,
+    "value": 0.1,
+    "tolerance": 0.012,
     "unit": "N",
-    "statement": "Three concordant titrations against standard standard oxalic acid give the normality of the KMnO4 solution to within a few per cent, using the self-indicating permanent-pink end point — no external indicator is needed."
+    "statement": "Three concordant titrations against standard oxalic acid give the normality of the KMnO₄ solution as about 0.1 N — that is 0.02 M, since n = 5 for MnO₄⁻ in acidic medium — to within a few per cent, using the self-indicating permanent-pink end point — no external indicator is needed."
   },
   "safety": [
     "Concentrated/dilute sulphuric acid is corrosive — handle carefully.",

@@ -305,6 +305,17 @@ canvas{display:block;width:100%;touch-action:none}
 /* Apparatus is grabbable, so the canvas must not select as text mid-drag. */
 #cv{user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
 .toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:12px}
+/* ── simulation clock ──
+   Present only on benches that actually move. It changes how long the student
+   waits, never what the apparatus does, so it is styled as an instrument
+   control (quiet, secondary) rather than as an experiment action. */
+.clock{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.clock-label{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-left:2px}
+.clock-seg button{min-height:32px;padding:5px 11px;font-size:13px;font-variant-numeric:tabular-nums}
+.speed-flag{position:absolute;top:10px;right:12px;z-index:3;
+  font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;
+  color:var(--on-accent);background:var(--warn);border-radius:999px;padding:3px 11px;
+  box-shadow:var(--shadow-xs)}
 .btn{border:1px solid var(--stroke);background:var(--surface-2);color:var(--txt);padding:11px 17px;border-radius:11px;
   cursor:pointer;font-size:15px;font-weight:600;font-family:inherit;
   transition:background .2s var(--ease),border-color .2s var(--ease),transform .18s var(--ease-out),box-shadow .2s var(--ease);

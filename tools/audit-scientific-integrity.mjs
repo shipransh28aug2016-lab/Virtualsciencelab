@@ -13,4 +13,92 @@ assert.ok(titration.pHAt(acidInputs, 0) > titration.pHAt(acidInputs, 50), 'acid 
 assert.equal(titration.validate({ analyte: 'hcl', titrant: 'oxalic' }).ok, false);
 assert.ok(kinetics.reactionTimeS({ thioVolume: 25, waterVolume: 25, hclVolume: 5, tempC: 25 }) > 0);
 assert.ok(kinetics.reactionTimeS({ thioVolume: 25, waterVolume: 25, hclVolume: 5, tempC: 35 }) < kinetics.reactionTimeS({ thioVolume: 25, waterVolume: 25, hclVolume: 5, tempC: 25 }), 'higher temperature must accelerate the reaction');
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * TITRATION: every published titration must be PERFORMABLE and SELF-CONSISTENT
+ *
+ * Both KMnO4 practicals once demanded 100 mL of titrant from a 50 mL burette,
+ * because trueUnknownN held the solution's molarity (0.02) where every formula
+ * downstream reads a normality (0.1 N, n = 5). Nothing caught it: the model
+ * stepped without throwing, the bench drew, the audits passed — and the
+ * experiment simply could not be completed. These checks exist so that class
+ * of error announces itself here instead of in front of a class.
+ * ────────────────────────────────────────────────────────────────────────── */
+const { readFile } = await import('node:fs/promises');
+const { join } = await import('node:path');
+const troot = process.env.VLAB_ROOT || process.cwd();
+const tindex = JSON.parse(await readFile(join(troot, 'data/experiments/index.json'), 'utf8'));
+
+for (const entry of tindex.experiments.filter((e) => e.contentStatus === 'published')) {
+  const exp = JSON.parse(await readFile(join(troot, entry.file), 'utf8'));
+  if (exp.simulation?.model !== 'titration') continue;
+
+  const inputs = { ...titration.defaults };
+  for (const v of exp.variables || []) {
+    if (v.type !== 'dependent' && v.default != null) inputs[v.id] = v.default;
+  }
+  const burette = (exp.variables || []).find((v) => v.id === 'buretteVolume');
+  const capacity = burette ? Number(burette.max) : 50;
+
+  const vEq = titration.equivalenceVolume(inputs);
+  assert.ok(Number.isFinite(vEq) && vEq > 0, `${entry.id}: equivalence volume is not a positive number`);
+  assert.ok(vEq <= capacity,
+    `${entry.id}: needs ${vEq.toFixed(1)} mL of titrant from a ${capacity} mL burette — the titration cannot be completed`);
+  assert.ok(vEq >= capacity * 0.15,
+    `${entry.id}: reaches its end point after only ${vEq.toFixed(1)} mL of a ${capacity} mL burette — too small a titre to read accurately`);
+
+  const vEnd = titration.endPointVolume(inputs);
+  assert.ok(vEnd != null && vEnd > 0 && vEnd <= capacity,
+    `${entry.id}: the chosen indicator never turns within the burette's ${capacity} mL`);
+
+  /* There must be no volume that is neither short of the end point, at it,
+     nor past it: a student who stops in such a gap is refused a reading with
+     nothing to act on. */
+  let state = titration.init(inputs);
+  for (let v = 0; v <= capacity; v += 0.25) {
+    const probe = { ...inputs, buretteVolume: v };
+    state = titration.init(inputs);
+    state.delivered = v;
+    state = titration.step(state, probe, 1 / 120);
+    const classified = state.delivered < vEnd - titration.DROP_ML || state.atEndPoint || state.overshot;
+    assert.ok(classified, `${entry.id}: ${v.toFixed(2)} mL is neither before, at, nor past the end point`);
+  }
+
+  /* strength = normality x equivalent mass must reproduce the true solution,
+     and for a redox system the molarity must be the normality over n. */
+  const rows = [];
+  for (let trial = 1; trial <= 3; trial += 1) {
+    let s = titration.init(inputs);
+    const at = { ...inputs, buretteVolume: Number(vEnd.toFixed(1)) };
+    for (let f = 0; f < 900; f += 1) s = titration.step(s, at, 1 / 120);
+    const r = titration.measure(s, at, 7, trial);
+    assert.ok(r && r.v !== null, `${entry.id}: no reading can be taken at its own end point`);
+    rows.push(r);
+  }
+  const d = titration.derive(rows, inputs);
+  assert.ok(d.ok, `${entry.id}: three readings at the end point still give no result — ${d.reason}`);
+  const sys = titration.systemOf(inputs);
+  const trueN = sys.unknownSide === 'titrant'
+    ? sys.trueUnknownN
+    : (inputs.titrantConc * vEq) / inputs.analyteVolume;
+  const err = Math.abs(d.normality - trueN) / trueN;
+  assert.ok(err < 0.03,
+    `${entry.id}: recovered normality ${d.normality} N against a true ${trueN} N (${(err * 100).toFixed(1)}% out)`);
+  if (sys.nFactor) {
+    // Both are reported to three significant figures, so they are compared to
+    // that precision rather than exactly.
+    assert.ok(Math.abs(d.molarity * sys.nFactor - d.normality) <= Math.abs(d.normality) * 0.005,
+      `${entry.id}: molarity ${d.molarity} M x n ${sys.nFactor} is not the reported normality ${d.normality} N`);
+    assert.ok(Math.abs(sys.eqMassUnknown * sys.nFactor - sys.molarMass) < 0.5,
+      `${entry.id}: equivalent mass ${sys.eqMassUnknown} x n ${sys.nFactor} is not the molar mass ${sys.molarMass}`);
+  }
+}
+
+/* The indicator must decide the end point, or choosing the wrong one teaches
+   nothing: a warning that the numbers then contradict is worse than silence. */
+const phEnd = titration.endPointVolume({ ...titration.defaults, indicator: 'phenolphthalein' });
+const moEnd = titration.endPointVolume({ ...titration.defaults, indicator: 'methylOrange' });
+assert.ok(Math.abs(phEnd - moEnd) > 0.5,
+  'the same titre is obtained with the right and the wrong indicator — the end point is not coming from the chemistry');
+
 console.log('Scientific integrity checks passed.');
