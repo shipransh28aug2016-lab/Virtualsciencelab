@@ -120,7 +120,28 @@ export function derive(rows, inputs = defaults) {
   const T = inputs.tempC + 273.15;
   const coeff = (2.303 * 8.314 * T) / 96485;
   const nFromSlope = -coeff / fit.slope;
-  return { ok: true, standardPotential: sigFig(fit.intercept, 4), slope: sigFig(fit.slope, 4), nFromSlope: sigFig(nFromSlope, 3), r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts };
+  /*
+   * The panel states what the slope SHOULD be, how many electrons that
+   * implies, and the accepted E°. None of the three was returned, so it read
+   * "Slope = -0.0296 V per decade (expected undefined)" and "n = 2.00
+   * (expected undefined) · accepted E° = undefined V" — the three numbers a
+   * student checks their work against.
+   *
+   * The Nernst slope is 2.303RT/nF per decade, and it is NEGATIVE here
+   * because the x-axis is log([Zn²⁺]/[Cu²⁺]): raising the anode ion
+   * concentration lowers the cell potential.
+   */
+  const expectedSlope = -coeff / N_ELECTRONS;
+  return {
+    ok: true,
+    standardPotential: sigFig(fit.intercept, 4),
+    slope: sigFig(fit.slope, 4),
+    expectedSlope: sigFig(expectedSlope, 4),
+    nFromSlope: sigFig(nFromSlope, 3),
+    electrons: N_ELECTRONS,
+    acceptedE0: sigFig(standardEMF(inputs), 4),
+    r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts,
+  };
 }
 
 export default { solutionColour, meta, defaults, ELECTRODES, N_ELECTRONS, init, step, measure, derive, validate, anodeOf, cathodeOf, standardEMF, emfV };

@@ -171,9 +171,11 @@ export function derive(rows, inputs = defaults) {
    * undefined V" — the word undefined, in the panel that states the answer.
    */
   const reverse = rows.filter((r) => r.bias === 'reverse');
+  // Nothing measured on the reverse branch is nought microamps, not a null:
+  // the panel prints this figure and "null µA" is not a reading.
   const maxReverseMicroA = reverse.length
     ? sigFig(Math.max(...reverse.map((r) => Math.abs(Number(r.current)) * 1000)), 3)
-    : null;
+    : 0;
   return {
     ok: true,
     kneeVoltage: sigFig(kneeVoltage, 3),

@@ -122,8 +122,19 @@ export function derive(rows, inputs = defaults) {
   const speed = 2 * f * (l2 - l1) / 100;
   const e = (l2 - 3 * l1) / 2;
   const accepted = speedOfSoundAt(inputs.tempC);
+  /*
+   * The panel shows the working: l₁ and l₂ themselves, the fork, the
+   * temperature, and what the end correction should come to for a tube of
+   * this bore. All five were missing, so it opened with "l₁ = undefined cm,
+   * l₂ = undefined cm" above a correct speed of sound.
+   */
   return {
-    ok: true, speed: sigFig(speed, 4), endCorrection: sigFig(e, 3), wavelengthCm: sigFig(2 * (l2 - l1), 4),
+    ok: true,
+    l1: sigFig(l1, 4), l2: sigFig(l2, 4),
+    frequency: f, tempC: inputs.tempC,
+    speed: sigFig(speed, 4), endCorrection: sigFig(e, 3), wavelengthCm: sigFig(2 * (l2 - l1), 4),
+    // e ≈ 0.6 r for a cylindrical tube open at one end.
+    acceptedEndCorrection: sigFig(0.6 * TUBE_RADIUS_CM, 3),
     accepted: sigFig(accepted, 4), percentError: sigFig(((speed - accepted) / accepted) * 100, 3),
     n: rows.length, points: rows.map((r) => ({ x: Number(r.resonanceNumber), y: Number(r.airColumnCm) })),
   };

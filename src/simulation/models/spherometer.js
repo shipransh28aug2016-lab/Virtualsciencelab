@@ -100,7 +100,7 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   return { trial, legMm: l, verticalScale: turns * pitch, discDivision: disc, sagitta: Number(h.toFixed(3)), radiusCm: sigFig(R / 10, 4) };
 }
 
-export function derive(rows) {
+export function derive(rows, inputs = defaults) {
   const vals = rows.map((r) => Number(r.radiusCm)).filter(Number.isFinite);
   if (vals.length < 3) return { ok: false, reason: 'Record contact at least three times.' };
   const hs = rows.map((r) => Math.abs(Number(r.sagitta)));
@@ -108,7 +108,17 @@ export function derive(rows) {
   const meanH = mean(hs);
   const mainTerm = (l * l) / (6 * meanH) / 10;
   const correctionTerm = meanH / 2 / 10;
+  /*
+   * The panel names the leg separation, the accepted radius for the surface
+   * in use, and what fraction of the answer the h/2 correction is — the line
+   * that makes the exact formula worth writing out. All three were missing,
+   * so it read "l = undefined mm", "accepted R ≈ undefined cm" and "the
+   * correction term is only undefined% of the result".
+   */
   return {
+    legSeparation: l,
+    accepted: sigFig(surfaceOf(inputs).radiusCm, 4),
+    correctionPct: sigFig((correctionTerm / (mainTerm + correctionTerm)) * 100, 2),
     ok: true, radius: sigFig(mean(vals), 4), meanSagitta: sigFig(meanH, 4), correctionTerm: sigFig(correctionTerm, 3),
     mainTerm: sigFig(mainTerm, 4), correctionPercent: sigFig((correctionTerm / (mainTerm + correctionTerm)) * 100, 3),
     n: vals.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.radiusCm) })),

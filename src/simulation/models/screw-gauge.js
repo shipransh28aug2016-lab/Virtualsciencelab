@@ -146,6 +146,9 @@ export function derive(rows) {
   const area = Math.PI * (m / 2) ** 2;
   return {
     ok: true, meanValue: sigFig(m, 4), radius: sigFig(m / 2, 4), area: sigFig(area, 4),
+    // The panel states which formula produced the area; without it the line
+    // read "Radius = 0.21 mm · undefined = 0.132 mm²".
+    areaFormula: 'πr²',
     n: vals.length, spread: Number((Math.max(...vals) - Math.min(...vals)).toFixed(3)),
     points: rows.map((r, i) => ({ x: i + 1, y: Number(r.corrected) })),
   };

@@ -150,6 +150,47 @@ function seekNull(model, inputs, variable) {
   return final?.ind?.atNull ? final.probe : inputs;
 }
 
+/*
+ * THE RESULT PANEL IS ASSEMBLED FROM FIELDS THE MODEL RETURNS.
+ *
+ * renderResult() in src/main.js interpolates `${d.something}` for each model.
+ * When a template reads a field the model never produces, the student is
+ * shown the literal word "undefined" — in the panel that states the answer,
+ * set in the same type as everything that is correct. It has happened often
+ * enough (the metre bridge's spread, the lamina's whole error budget, the
+ * diode's nominal knee, the inclined plane's intercept) to be worth checking
+ * for every model, against a derive that actually ran.
+ */
+const mainSource = await readFile(join(root, 'src/main.js'), 'utf8');
+function templateFields(modelName) {
+  const re = new RegExp(`m === '${modelName.replace(/[.*+?^$()|[\]\\]/g, '\\$&')}'`, 'g');
+  const blocks = [];
+  let m;
+  while ((m = re.exec(mainSource))) {
+    const rest = mainSource.slice(m.index, m.index + 2600);
+    const end = rest.indexOf('\n  } else if (m ===', 40);
+    const block = end > 0 ? rest.slice(0, end) : rest;
+    const fields = new Set([...block.matchAll(/\$\{d\.([A-Za-z0-9_]+)/g)].map((r) => r[1]));
+    // `d.x ? … : …`, `d.x ?? …`, `d.x && …` are deliberate optionals
+    for (const g of block.matchAll(/d\.([A-Za-z0-9_]+)\s*(\?|\?\?|&&|\|\|)/g)) fields.delete(g[1]);
+    /* Anything inside a `${… ? … : …}` is printed only when the template
+       decides to, so it is optional by construction — the diode's reverse
+       current is read only when there ARE reverse readings. */
+    for (const cond of block.matchAll(/\$\{[^}]*\?[^}]*\}/g)) {
+      for (const ref of cond[0].matchAll(/d\.([A-Za-z0-9_]+)/g)) fields.delete(ref[1]);
+    }
+    blocks.push(fields);
+  }
+  if (!blocks.length) return [];
+  /*
+   * A model may have SEVERAL branches here and run only one of them: the
+   * sonometer's three laws, the calorimeter's three modes, the galvanometer
+   * converted or half-deflected. A field the other branch prints is not
+   * missing from this one, so only what EVERY branch prints is required.
+   */
+  return [...blocks[0]].filter((k) => blocks.every((b) => b.has(k)));
+}
+
 const failures = [];
 const skipped = [];
 let checked = 0;
@@ -496,6 +537,22 @@ for (const entry of targets) {
     failures.push({ id: entry.id, kind: 'unreadable',
       msg: `the result declares "${expected.symbol}" but derive() returns none of ${candidates.filter(Boolean).join(', ')}` });
     continue;
+  }
+
+  /*
+   * Does the panel have everything it prints?
+   *
+   * Skipped for a model whose result carries a `mode` or `method`: those
+   * templates switch on it INSIDE one branch — the refractive-index panel
+   * draws three different experiments, the calorimeter three modes — and a
+   * field belonging to the method that did not run is not missing.
+   */
+  const branching = derived.mode !== undefined || derived.method !== undefined;
+  const wanted = branching ? [] : templateFields(modelName);
+  const blank = wanted.filter((k) => !(k in derived) || derived[k] === undefined || derived[k] === null);
+  if (blank.length) {
+    failures.push({ id: entry.id, kind: 'panel-fields',
+      msg: `the result panel prints ${blank.map((k) => `"${k}"`).join(', ')}, which derive() does not return` });
   }
 
   const value = derived[key];
