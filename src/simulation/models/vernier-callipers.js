@@ -68,7 +68,7 @@ export function gripped(inputs) {
 export function nullIndicator(inputs) {
   return nullPoint({
     label: 'Vernier jaws',
-    current: inputs.jawCm,
+    current: inputs.jawOpening,
     target: trueDimension(inputs),
     tolerance: Math.max(0.02, leastCount(inputs) * 3),
     increase: 'The jaws are still clear of the object — close them further.',

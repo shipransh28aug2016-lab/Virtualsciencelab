@@ -340,17 +340,27 @@ async function runLane(lane, queue, reports, onDone) {
         return Number(el.value);
       }, { sel: SEL, idx: i, val: v });
 
-      // Does this control move the indicator at all? If not, it is not the one.
+      /* Does this control move the indicator at all? Probing that means
+         driving it to both ends, so whatever it was set to is remembered and
+         PUT BACK if this is not the control — otherwise testing a control
+         that does nothing destroys the setting a previous one got right. */
+      const before = await page.evaluate(({ sel, idx }) => {
+        const el = document.querySelectorAll(sel)[idx];
+        return el ? Number(el.value) : null;
+      }, { sel: SEL, idx: i });
+      const restore = async () => { if (before !== null) await setAt(before); };
+
+      if ((await page.evaluate(NULL_PROBE))?.atNull) return true;
       await setAt(range.min);
       await wait(90);
       const low = await page.evaluate(NULL_PROBE);
       await setAt(range.max);
       await wait(90);
       const high = await page.evaluate(NULL_PROBE);
-      if (!low || !high) continue;
+      if (!low || !high) { await restore(); continue; }
       if (low.atNull) { await setAt(range.min); return true; }
       if (high.atNull) return true;
-      if (low.up === high.up) continue;             // the null is not inside this range
+      if (low.up === high.up) { await restore(); continue; }   // the null is not inside this range
 
       // Bisect on the direction the indicator points.
       let lo = range.min;
@@ -366,6 +376,8 @@ async function runLane(lane, queue, reports, onDone) {
         if (now.up) lo = mid; else hi = mid;
       }
       if ((await page.evaluate(NULL_PROBE))?.atNull) return true;
+      // The bisection leaves the control at its best value, which is an
+      // improvement even when it did not reach the null — so it is kept.
     }
     return false;
   }

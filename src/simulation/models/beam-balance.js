@@ -160,7 +160,17 @@ export function nullIndicator(inputs) {
     label: 'Pointer',
     current: -excess,                        // the control the student raises is the pan load
     target: bal.zeroDiv / bal.sensitivity,   // the zero of THIS balance, in mg
-    tolerance: 10 / bal.sensitivity / 2,     // half the pointer scale, in mg
+    /*
+     * The whole pointer scale, in mg — which is exactly the condition
+     * measure() records under, |resting| <= 10 divisions.
+     *
+     * It was half that, and the balance could then never null: the smallest
+     * fractional weight is 10 mg, so the closest a student can bring the pans
+     * for body A is 4 mg, and a +/-3.3 mg window excludes it. The indicator
+     * said "hard over" at the best setting the weight box can produce while
+     * the bench was perfectly willing to record it.
+     */
+    tolerance: 10 / bal.sensitivity,
     increase: excess > 1000
       ? 'The body side is far heavier — add gram weights to the pan.'
       : 'The body side is still heavier — add fractional weights.',

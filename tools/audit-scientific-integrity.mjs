@@ -135,6 +135,7 @@ for (const entry of tindex.experiments.filter((e) => e.contentStatus === 'publis
     v.type !== 'dependent' && Number.isFinite(v.min) && Number.isFinite(v.max) && v.max > v.min);
 
   const offenders = [];
+  let everNulled = false;
   for (const v of controls) {
     const step = Number(v.step) || (v.max - v.min) / 200;
     for (let x = v.min; x <= v.max + 1e-9; x += step) {
@@ -142,6 +143,7 @@ for (const entry of tindex.experiments.filter((e) => e.contentStatus === 'publis
       let ind;
       try { ind = model.nullIndicator(probe); } catch { break; }
       if (!ind?.atNull) continue;
+      everNulled = true;
       let state = model.init(probe);
       for (const flag of ['running', 'heating', 'released', 'rolling', 'flowing', 'started', 'settled', 'gripped']) {
         if (flag in state) state[flag] = true;
@@ -159,6 +161,16 @@ for (const entry of tindex.experiments.filter((e) => e.contentStatus === 'publis
   indicatorModels.add(modelName);
   assert.equal(offenders.length, 0,
     `${entry.id} [${modelName}]: the null indicator says "take the reading now" at ${offenders.slice(0, 3).join(', ')}, where measure() refuses to record`);
+  /*
+   * And it has to be REACHABLE. An indicator that never nulls anywhere in the
+   * declared ranges passes the check above without meaning anything, and
+   * leads a student round in circles: the vernier's read `inputs.jawCm` where
+   * the control is `jawOpening`, so its current value was undefined, every
+   * comparison was NaN, and it said "the jaws are pressing into the object —
+   * open them a little" at every setting including fully open.
+   */
+  assert.ok(everNulled,
+    `${entry.id} [${modelName}]: the null indicator never reports a null anywhere in the ranges this experiment declares — check that it is reading a control that exists`);
 }
 assert.ok(indicatorModels.size >= 8,
   `only ${indicatorModels.size} models carry a null indicator — expected the whole family`);
