@@ -1073,7 +1073,20 @@ function extraRowMeta() {
 }
 
 function calculate() {
-  if (app.rows.length < 2) { toast('Record at least two readings first', 'bad'); return; }
+  if (app.rows.length < 2) {
+    /* A toast is gone in three seconds and the panel keeps its opening
+       placeholder, so pressing Calculate too early looked like the button had
+       simply been ignored. The panel says what is missing, and stays saying
+       it. */
+    const need = app.exp.observationModel?.minRows || 2;
+    const box = $('#resultBox');
+    box.className = 'result-box warn';
+    box.innerHTML = `<b>Not enough readings yet</b>
+      <div style="margin-top:6px">${app.rows.length === 0 ? 'No readings have been taken.' : 'One reading has been taken.'}
+      This experiment needs ${need} before a result can be calculated.</div>`;
+    toast(`Record at least ${need} readings first`, 'bad');
+    return;
+  }
   app.machine.to(STATES.CALCULATION);
   /*
    * Always hand `inputs` to derive(). Maintaining a hardcoded list of which
@@ -1954,7 +1967,13 @@ function renderTable() {
 function renderStillNeeded() {
   const host = $('#stillNeeded');
   if (!host) return;
-  if (!app.rows.length) { host.hidden = true; host.innerHTML = ''; return; }
+  /*
+   * Shown from the start, not once readings exist. Several practicals are
+   * "work through four different salts", "test four components both ways",
+   * "three different tuning forks" — and a student who takes four readings of
+   * ONE salt has done four readings' work before anything tells them the set
+   * had to be varied. What they need is to know that before they begin.
+   */
   let refusal = null;
   try {
     const d = app.model.derive(app.rows, app.inputs);

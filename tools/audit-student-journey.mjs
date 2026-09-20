@@ -484,13 +484,43 @@ async function runLane(lane, queue, reports, onDone) {
         for (let k = 0; k < budget && !outOfTime(); k += 1) {
           // move the first responsive control across its range between readings,
           // exactly as a student varies the independent variable
-          if (k > 0 && nControls) {
+          if (nControls) {
+            /*
+             * Work through the apparatus settings, not just the sliders.
+             * "Record at least four different salts", "test four components
+             * both ways", "three different tuning forks" — for those labs the
+             * thing that has to change between readings is WHICH specimen is
+             * on the bench, and nudging the first slider four times takes one
+             * reading four times over.
+             */
+            await page.evaluate((idx) => {
+              // The tray, not the first switch on the panel: take the group
+              // with the most choices in it, which is the specimen selector.
+              const groups = [...document.querySelectorAll('#controls .seg, #controls .wiring')]
+                .map((g) => [...g.querySelectorAll('button')])
+                .filter((b) => b.length >= 2)
+                .sort((a, b) => b.length - a.length);
+              if (!groups.length) return;
+              // The tray first, then the second setting at a slower rate, so
+              // the pair is actually swept: four components BOTH ways round
+              // needs component and direction to advance together.
+              groups[0][idx % groups[0].length].click();
+              if (groups[1]) groups[1][Math.floor(idx / groups[0].length) % groups[1].length].click();
+            }, k);
+            /* Then move a SLIDER — never another button, because the
+               buttons are the specimen tray and pressing one of those would
+               put the specimen just chosen straight back. */
             const frac = 0.15 + (0.7 * k) / want;
-            for (let i = 0; i < nControls; i += 1) {
-              const did = await page.evaluate(NUDGE_CONTROL, { idx: i, fraction: frac });
-              if (did && did.kind !== 'already') break;
-            }
-            await wait(200);
+            if (k > 0) await page.evaluate((f) => {
+              const sliders = [...document.querySelectorAll('#controls input[type=range]')];
+              const el = sliders[0];
+              if (!el) return;
+              const min = Number(el.min); const max = Number(el.max); const step = Number(el.step) || 1;
+              const want2 = min + (max - min) * f;
+              el.value = String(Math.round((want2 - min) / step) * step + min);
+              el.dispatchEvent(new Event('input', { bubbles: true }));
+            }, frac);
+            await wait(220);
           }
           const run = isTitration ? await titrateToEndPoint() : await runProcessAndWait(Math.max(2000, Math.min(34000, labDeadline - Date.now())));
           slowestWait = Math.max(slowestWait, run.waitedMs || 0);
@@ -507,6 +537,19 @@ async function runLane(lane, queue, reports, onDone) {
           }
           if (t.ok) got = t.rows;
           await wait(80);
+
+          /*
+           * Read the bench's own "still needed" line and carry on while it is
+           * asking for more, which is what a student does. Some practicals
+           * need a set rather than a count — four components tested both ways
+           * round is eight readings — and the number is not in the JSON, it is
+           * in what the calculation says it is missing.
+           */
+          if (k === budget - 1 && budget < 12 && !outOfTime()) {
+            const asking = await page.evaluate(() =>
+              (document.querySelector('#stillNeeded:not([hidden])')?.textContent || ''));
+            if (/at least|work through|both direction|different/i.test(asking)) budget += 2;
+          }
         }
         rep.slowestWaitMs = slowestWait;
         if (slowestWait > 15000 && !hasClock) {
