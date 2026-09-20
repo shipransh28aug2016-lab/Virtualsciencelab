@@ -168,9 +168,21 @@ for (const meta of targets) {
     }
     if (broke) { problems.push({ id: meta.id, kind: 'draw', msg: `${g.label || g.id} — ${broke}` }); continue; }
 
-    /* 1 · the picture never moves */
+    const measuredRows = trials.filter((t) => recorded(t.row));
+
+    /*
+     * 1 · the picture never moves — but only where the TABLE does.
+     *
+     * A multimeter's voltage-range switch changes nothing on a bench set to
+     * measure resistance, and should not: a rotary switch has one position.
+     * Reporting that as a bench ignoring the student would bury the real
+     * finding under settings that are simply inert in this combination. The
+     * defect worth naming is the one where the recorded reading moves and the
+     * apparatus does not.
+     */
     const hashes = new Set(trials.map((t) => t.hash));
-    if (hashes.size === 1) {
+    const rowsSeen = new Set(measuredRows.map((t) => JSON.stringify(t.row)));
+    if (hashes.size === 1 && rowsSeen.size > 1) {
       problems.push({
         id: meta.id, kind: 'static',
         msg: `the bench draws an identical picture for all ${g.options.length} settings of "${g.label || g.id}" (${g.options.join(', ')})`,
@@ -186,7 +198,7 @@ for (const meta of targets) {
      * some OTHER setting" accused six benches of naming the wrong apparatus
      * when all they were doing was labelling the apparatus that was there.
      */
-    const measured = trials.filter((t) => recorded(t.row));
+    const measured = measuredRows;
     const vocab = new Map();          // word → the option it belongs to
     const spoken = new Map();         // option → the words its own row uses
     for (const t of measured) {
