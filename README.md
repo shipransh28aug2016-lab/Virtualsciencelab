@@ -142,64 +142,58 @@ own wording, not a paraphrase.
 
 ## Verify it
 
-There is no build step to fail, so "verifying it" means confirming the app actually boots and
-every experiment actually runs — not compiling. What is checked here, mechanically, rather than
-asserted:
+There is no build step to fail, so verifying this means confirming that a student can actually
+*perform* every experiment and get an answer that agrees with the physics — not that it
+compiles.
 
 ```bash
-node -e "…"   # every model: init → step → validate → measure → derive, with the
-              # experiment's OWN declared default inputs (not just the model's fallback)
-              # against all 100 experiment JSON files — no exceptions, no skips
+npm run audit          # everything below, in order
 ```
 
-```
-ALL 100 EXPERIMENTS PASS FULL PIPELINE WITH THEIR OWN JSON-DECLARED DEFAULT INPUTS
-ALL 100 EXPERIMENTS RESOLVE TO A REAL RENDERER FUNCTION
-ALL 76 RENDERERS EXECUTE CLEANLY AGAINST A MOCK CANVAS
-```
+Two of these ask questions the others do not, and both were written after the ones above them
+had been passing for some time while labs were still unusable.
 
-The rendering and fluid engines are checked the same way — mechanically, against the
-property that is supposed to hold, not by looking at a screenshot:
+**`npm run audit:golden` — does each experiment reproduce its own accepted value?**
 
-```
-published experiments : 100
-rendered cleanly      : 100      (both themes, 12 animated frames each)
-render failures       : 0
+Every experiment declares a result: *g* = 9.79 m·s⁻², strength = 3.92 g/L, ρ = 4.9 × 10⁻⁷ Ω·m.
+This performs each one's own prescribed procedure — its declared settings, its declared
+independent variable, the instrument brought to its null the way the bench guides a student to
+it — and compares what comes out against what the experiment says should. It runs headless in
+about a second.
 
-volume conserved after impact : yes (0.0e+0)
-ripple decay 1-5s             : 0.741 → 0.131 → 0.019 → 0.003 → 0.001   (damps to rest)
-bubble v ∝ r² (r=1,2,3.5)     : 52px/s, 209px/s, 641px/s
-stirring homogenises          : 0.265 → 0.086   (mass conserved: 0.1250)
+When it was first written, **49 of the 89 quantitative experiments failed it.** Among what it
+found: both KMnO₄ titrations demanded 100 mL of titrant from a 50 mL burette and could not be
+completed at all; the result panel was matching quantities by list order, so XII-PHY-A01
+compared a resistance in ohms against a resistivity in Ω·m and told the student they were out
+by 798 571 328.6%; the sonometer silently switched a Class XI law-of-length practical into a
+Class XII AC-mains one when the student varied the length; and the diode solver diverged to
+1002 A. All 89 pass now.
 
-drag the bob 60 cm → 120 cm    : theoretical T 1.5553 s → 2.1996 s   (√2 × 1.5553 = 2.1995)
-```
+**`npm run audit:journey` — can a student get from opening a lab to a result?**
 
-And a real boot, of the real `index.html` running the real `src/main.js` (jsdom +
-fake-indexeddb, no hand-rolled harness):
+This drives the real application in a real browser and walks the whole journey: open, see the
+apparatus, change a control and watch it respond, run the process, take readings at different
+settings, watch them plot, calculate, compare. It follows the bench's own null indicator the
+way a student does, works through the specimen tray when a practical calls for four different
+salts, and reads the "still needed" line and keeps going while it is asking for more. A failure
+is reported against the stage it broke at, so the fix goes into the layer that is wrong rather
+than wherever the symptom surfaced.
 
-```
-home screen cards total: 34   built(clickable): 34      (Class XI Physics, the default filter)
-metrics text: "100 Simulations · 104 Practicals mapped · 0 Network calls · 100% CBSE traced"
-[XI-PHY-A07]  title correct · canvas renders · 6 controls · apparatus tab: 7 labelled items
-[XI-CHE-E03]  title correct · canvas renders · 5 controls · apparatus tab: 9 labelled items
-[XI-CHE-D01]  title correct · canvas renders · 5 controls · apparatus tab: 5 labelled items
-[XI-CHE-F02]  title correct · canvas renders · 11 controls · apparatus tab: 5 labelled items
-[XII-CHE-B02] title correct · canvas renders · 4 controls · apparatus tab: 5 labelled items
-[XII-CHE-G01] title correct · canvas renders · 3 controls · apparatus tab: 4 labelled items
-[XII-CHE-K01] title correct · canvas renders · 27 controls · apparatus tab: 5 labelled items
-```
+It is the slowest check here and the only one that can still be defeated by a procedure it
+cannot infer; where a procedure is genuinely not inferable, the experiment declares it in
+`simulation.goldenProcedure` rather than leaving an audit to guess and report a sound model as
+broken.
 
-### About the historical test suite
+**The rest**, each a few seconds:
 
-An earlier version of this project (per its own commit history and the elaborate `npm run
-check`/`npm run e2e*` scripts once referenced in `package.json`) apparently had a much larger
-automated test suite — `tools/curriculum-audit.mjs`, `tools/lint-layers.mjs`,
-`tools/contrast.mjs`, `tools/e2e/*.mjs`, and a `tests/` directory. **None of those files were
-present in the repository this project now builds from** — only the application code and content
-that depends on them survived. Rather than claim scripts exist that don't, `package.json` now
-lists only the scripts that are actually in the repo (`start`, `dev`, `build:index`). Rebuilding
-that historical test infrastructure — a real, standalone project on its own — is future work, not
-claimed here.
+| | |
+|---|---|
+| `audit:every-experiment` | every model steps 180 frames under every experiment's own declared inputs |
+| `audit:renderers` | every experiment resolves to a real renderer and it draws cleanly, both themes |
+| `audit:models` | which benches evolve in time, which are correctly still, which respond to nothing |
+| `audit:scientific` | balanced equations, titration direction, and every titration performable on its own burette, with no volume that is neither before, at, nor past its end point; every null indicator held to saying "take the reading now" only where a reading can be taken |
+| `audit:liveness` | the canvas actually changes, in a browser |
+| `audit:recovery` | a failing simulation is contained rather than freezing the bench |
 
 ## Deliberate limits
 
