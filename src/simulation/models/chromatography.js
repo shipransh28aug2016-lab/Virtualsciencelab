@@ -46,6 +46,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { sigFig, percentError, toLeastCount } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XII-CHE-E01',
@@ -372,7 +373,7 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const fastest = rows[0];
 
   return {
-    trial,
+    trial, solvent: (SOLVENTS[inputs.solvent] || {}).label,
     sample: sampleOf(inputs).label,
     frontCm: sigFig(front, 3),
     spots: rows.length,
@@ -388,6 +389,9 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'solvent', 'solvents');
+  if (mixed) return mixed;
+
   if (!rows || rows.length < 2) {
     return {
       ok: false,

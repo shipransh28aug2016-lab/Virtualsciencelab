@@ -225,7 +225,11 @@
     "controls": [
       {
         "var": "thioVolume",
-        "widget": "slider"
+        "widget": "slider",
+        "makeUp": {
+          "with": "waterVolume",
+          "total": 50
+        }
       },
       {
         "var": "waterVolume",

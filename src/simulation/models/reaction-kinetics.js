@@ -73,7 +73,11 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   if (!state?.finishedAt) return { v: null, reason: 'The cross is still visible. Add the acid and let the sulphur cloud build up until the cross has completely disappeared, then record the time.' };
   const rng = makeRng(seed + trial * 281);
   const time = Number((reactionTimeS(inputs) * (1 + jitter(rng, 0.03))).toFixed(1));
-  return { thioVolume: inputs.thioVolume, waterVolume: inputs.waterVolume, thioConc: sigFig(thioConc(inputs), 4), tempC: inputs.tempC, time, rate: sigFig(1 / time, 6) };
+  /* The total volume goes in the row because the method depends on it: every
+     run must be made up to the same volume, or the concentration is not the
+     only thing that changed. */
+  const totalMl = Number(inputs.thioVolume || 0) + Number(inputs.waterVolume || 0) + Number(inputs.hclVolume || 0);
+  return { trial, thioVolume: inputs.thioVolume, waterVolume: inputs.waterVolume, totalMl, thioConc: sigFig(thioConc(inputs), 4), tempC: inputs.tempC, time, rate: sigFig(1 / time, 6) };
 }
 export function derive(rows) {
   const temps = new Set(rows.map((r) => Number(r.tempC)));
@@ -85,8 +89,33 @@ export function derive(rows) {
   }
   const points = rows.map((r) => ({ x: Number(r.thioConc), y: Number(r.rate) }));
   if (points.length < 4) return { ok: false, reason: 'Record at least four different thiosulphate concentrations or vary temperature for an Arrhenius plot.' };
+
+  /*
+   * Every run must be made up to the SAME total volume.
+   *
+   * That is the whole reason water is added: thiosulphate and water together
+   * always make 50 mL, so the only thing that changes between runs is the
+   * concentration. Left to vary, the acid is diluted along with everything
+   * else and the rate stops being proportional to [S₂O₃²⁻]. The bench
+   * carried this as a gentle warning and then fitted the points anyway,
+   * reporting "Order = null" — the word null, on the line that is supposed
+   * to carry the answer.
+   */
+  const totals = [...new Set(rows.map((r) => Number(r.totalMl)).filter(Number.isFinite))];
+  if (totals.length > 1) {
+    return {
+      ok: false,
+      reason: `These runs were made up to ${totals.length} different total volumes (${totals.map((t) => `${t} mL`).join(', ')}). Thiosulphate and water together must always come to the same volume, so that concentration is the only thing that changes — add water to make up whatever thiosulphate you leave out.`,
+    };
+  }
+
   const fit = fitThroughOrigin(points);
-  const order = fit && fit.r2 > 0.9 ? 1 : null;
-  return { ok: true, mode: 'concentration', order, orderRounded: order === null ? null : 1, activationEnergy: sigFig(EA_JMOL / 1000, 4), slope: fit ? sigFig(fit.slope, 4) : null, r2: fit ? Number(fit.r2.toFixed(4)) : null, n: points.length, points };
+  if (!fit || !(fit.r2 > 0.9)) {
+    return {
+      ok: false,
+      reason: `The rate does not fall on a straight line through the origin (r² = ${fit ? fit.r2.toFixed(3) : '—'}). For a first-order reaction it should. Check that each run was timed to the same degree of cloudiness, that the temperature held steady, and that the total volume was the same every time.`,
+    };
+  }
+  return { ok: true, mode: 'concentration', order: 1, orderRounded: 1, activationEnergy: sigFig(EA_JMOL / 1000, 4), slope: sigFig(fit.slope, 4), r2: Number(fit.r2.toFixed(4)), n: points.length, points };
 }
 export default { meta, defaults, STOCK_THIO_M, R_GAS, EA_JMOL, A_FACTOR, TURBIDITY_ENDPOINT, init, step, measure, derive, validate, thioConc, rateConstant, reactionTimeS };

@@ -79,10 +79,28 @@ export function derive(rows, inputs = defaults) {
     const names = liquids.map((k) => (LIQUIDS[k] || {}).label || k);
     return { ok: false, reason: `These readings are of ${liquids.length} different liquids (${names.join(', ')}). Surface tension is a property of the liquid, so one liquid per set of tubes.` };
   }
+  /*
+   * The temperature is not allowed to differ either, and only the liquid was
+   * being checked — a comment two lines above said so and the code did not.
+   * Surface tension falls by about 0.15 mN/m for every degree, so a set taken
+   * at 20 °C and 45 °C is two different constants fitted with one line: the
+   * points scattered to r² = 0.45 and the answer came out 32% from the
+   * accepted value, from seven perfectly good readings.
+   */
+  const temps = [...new Set((rows || []).map((r) => Number(r.tempC)).filter(Number.isFinite))];
+  if (temps.length > 1) {
+    return {
+      ok: false,
+      reason: `These readings were taken at ${temps.length} different temperatures (${temps.map((t) => `${t} °C`).join(', ')}). Surface tension falls as the liquid warms, so a set spanning two temperatures has no single value — hold the bath steady and take the whole set of tubes at one temperature.`,
+    };
+  }
+
   const pts = rows.map((r) => ({ x: Number(r.invRadius), y: Number(r.riseCm) }));
   if (pts.length < 3) return { ok: false, reason: 'Record the rise in at least three different tubes.' };
   const fit = fitThroughOrigin(pts);
   const l = liquidOf(inputs);
+  /* Both the liquid and the temperature come from the READINGS. */
+  const atTemp = { ...inputs, liquid: liquids[0] ?? inputs.liquid, tempC: temps[0] ?? inputs.tempC };
   // slope = 2T/(ρg), with r,h in cm -> convert to SI: slope(cm²) * 1e-4 m² / cm²... slope units cm since y=h(cm), x=1/r(1/cm) => slope has units cm².
   const slopeM2 = fit.slope * 1e-4;
   const T = (slopeM2 * l.rho * G) / 2;
@@ -90,7 +108,8 @@ export function derive(rows, inputs = defaults) {
   const meanProduct = products.reduce((a, b) => a + b, 0) / products.length;
   return {
     ok: true, surfaceTension: sigFig(T, 4), tFromGraph: sigFig(T, 4), productConstant: sigFig(meanProduct, 4),
-    accepted: sigFig(surfaceTensionAt(inputs), 4),
+    accepted: sigFig(surfaceTensionAt(atTemp), 4),
+    tempC: atTemp.tempC, liquid: (LIQUIDS[atTemp.liquid] || l).label,
     r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts,
   };
 }

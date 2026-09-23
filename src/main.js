@@ -839,10 +839,19 @@ function syncToolbar() {
 
   const model = app.exp.simulation.model;
   if (model === 'reaction-kinetics' && rec) {
-    const done = Boolean(app.state?.finished);
+    /*
+     * The model records the moment the cross vanishes in `finishedAt`. This
+     * asked for `finished`, which the model has never set, so the answer was
+     * always false: "Record time" was disabled from the moment the lab opened
+     * until the moment it was closed, and the two clock-reaction practicals
+     * could not have a single reading taken on them. The button's own tooltip
+     * said "add the acid and wait until the cross disappears" to a student who
+     * had done both and was still waiting.
+     */
+    const done = Number.isFinite(app.state?.finishedAt);
     rec.disabled = !done;
     rec.classList.toggle('primary', done);
-    rec.title = done ? 'Record this run in the table'
+    rec.title = done ? `Record this run — the cross went at ${app.state.finishedAt.toFixed(1)} s`
       : 'Add the acid and wait until the cross disappears';
   }
   if (model === 'titration') {
@@ -1003,7 +1012,11 @@ function record() {
     const s = app.state.sharp ?? 0;
     if (s < 0.85) { toast('Focus the image sharply before recording', 'bad'); return; }
   }
-  if (app.exp.simulation.model === 'reaction-kinetics' && !app.state.finished) {
+  if (app.exp.simulation.model === 'reaction-kinetics' && !Number.isFinite(app.state.finishedAt)) {
+    /* Same field as the toolbar gate above: `finished` is a name this model
+       has never used, so this guard was unreachable and the button it guards
+       was permanently disabled. Both now read `finishedAt`, the moment the
+       cross actually went. */
     toast('Wait until the cross has completely disappeared', 'bad');
     return;
   }
@@ -1193,6 +1206,31 @@ function buildControls() {
       const sync = () => {
         const val = Number(input.value);
         app.inputs[v.id] = val;
+        /*
+         * MAKING UP TO A FIXED VOLUME.
+         *
+         * A rate-of-reaction run is only about concentration if every flask
+         * holds the same total volume: thiosulphate and water together always
+         * come to 50 mL, so the only thing that changes is how much of it is
+         * thiosulphate. With two independent sliders a student could move one
+         * and not the other, and the bench warned them afterwards while the
+         * calculation went ahead and fitted the points anyway.
+         *
+         * Where a control declares `makeUp`, its partner follows it so that
+         * the total holds. The partner's slider moves visibly as it happens,
+         * which is the point: the student sees the rule being kept rather
+         * than being told off for breaking it.
+         */
+        if (c.makeUp && byId[c.makeUp.with]) {
+          const other = byId[c.makeUp.with];
+          const want = Math.min(other.max, Math.max(other.min, c.makeUp.total - val));
+          app.inputs[other.id] = want;
+          const otherEl = host.querySelector(`#c_${other.id}`);
+          if (otherEl && Number(otherEl.value) !== want) {
+            otherEl.value = String(want);
+            otherEl.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+        }
         if (v.id === 'buretteVolume' && app.state) {
           app.state = { ...app.state, delivered: val, flowing: false, flowRate: 0 };
         }

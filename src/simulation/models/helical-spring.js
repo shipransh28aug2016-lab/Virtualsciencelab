@@ -6,6 +6,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { fitThroughOrigin, sigFig } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-B02',
@@ -47,10 +48,13 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 79);
   const trueX = extensionM(inputs);
   const xM = trueX + jitter(rng, 0.0006);
-  return { trial, loadG: inputs.loadG, loadN: sigFig((inputs.loadG / 1000) * G, 4), extensionCm: Number((xM * 100).toFixed(2)), extensionM: Number(xM.toFixed(4)) };
+  return { trial, springType: (SPRINGS[inputs.springType] || {}).label, loadG: inputs.loadG, loadN: sigFig((inputs.loadG / 1000) * G, 4), extensionCm: Number((xM * 100).toFixed(2)), extensionM: Number(xM.toFixed(4)) };
 }
 
 export function derive(rows) {
+  const mixed = mixedSetRefusal(rows, 'springType', 'springs');
+  if (mixed) return mixed;
+
   const pts = rows.map((r) => ({ x: Number(r.extensionM), y: Number(r.loadN) })).filter((p) => p.x > 0);
   if (pts.length < 4) return { ok: false, reason: 'Record at least four different loads.' };
   const fit = fitThroughOrigin(pts);

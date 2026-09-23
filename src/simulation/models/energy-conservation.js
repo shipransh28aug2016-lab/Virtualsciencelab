@@ -6,6 +6,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { mean, sigFig } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-ACT-A6',
@@ -62,13 +63,16 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const h1 = inputs.releaseHeightCm / 100;
   const h2 = regainedHeightCm(inputs) / 100 + jitter(rng, 0.003);
   return {
-    trial, h1: Number((h1 * 100).toFixed(2)), h2: Number((h2 * 100).toFixed(2)),
+    trial, track: (TRACKS[inputs.track] || {}).label, h1: Number((h1 * 100).toFixed(2)), h2: Number((h2 * 100).toFixed(2)),
     ratio: sigFig(h2 / h1, 4), pe1: sigFig(m * G * h1 * 1000, 4), pe2: sigFig(m * G * h2 * 1000, 4),
     lostMJ: sigFig(m * G * (h1 - h2) * 1000, 4),
   };
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'track', 'tracks');
+  if (mixed) return mixed;
+
   const ratios = rows.map((r) => Number(r.ratio)).filter(Number.isFinite);
   if (ratios.length < 3) return { ok: false, reason: 'Record at least three release heights.' };
   const m = mean(ratios);

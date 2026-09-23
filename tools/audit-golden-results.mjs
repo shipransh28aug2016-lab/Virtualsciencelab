@@ -298,6 +298,22 @@ for (const entry of targets) {
         const snapped = Math.min(independent.max, Math.max(independent.min, Math.round(raw / step) * step));
         inputs[independent.id] = Number(snapped.toFixed(6));
       }
+      /*
+       * Make up to the fixed total, as the bench does.
+       *
+       * Where a control declares `makeUp`, moving it moves its partner so
+       * that the two always come to the same volume — thiosulphate and water
+       * to 50 mL. Sweeping one and leaving the other behind is the mistake
+       * the bench now prevents, so a sweep that did it here would be testing
+       * a bench that no longer exists.
+       */
+      for (const c of exp.simulation?.controls || []) {
+        if (!c.makeUp || !(c.var in inputs)) continue;
+        const other = vars.find((v) => v.id === c.makeUp.with);
+        if (!other) continue;
+        const want = c.makeUp.total - Number(inputs[c.var]);
+        inputs[c.makeUp.with] = Math.min(other.max ?? want, Math.max(other.min ?? want, want));
+      }
       /* Then bring the instrument to its null, if it has one. Every numeric
          control is tried, coarse first and then fine, KEEPING each
          adjustment — a beam balance is brought on scale with gram weights and
@@ -610,7 +626,18 @@ for (const entry of targets) {
         per = out.rows.length >= 2 ? model.derive(out.rows, { ...base }) : null;
       } catch { per = null; }
       base[oc.id] = saved;
-      if (per?.ok && Number.isFinite(per.accepted)) acceptedPer.push(per.accepted);
+      /*
+       * The model's own accepted value where it has one, and otherwise the
+       * RESULT it reports. A model that never names an accepted value was
+       * invisible to this check: the convex-lens bench offers three lenses of
+       * 10, 15 and 20 cm, reported none of them, and so was never asked
+       * whether a set taken across two of them is refused. It was not.
+       */
+      if (!per?.ok) continue;
+      const ownKey = [expected.key, ...(exp.calculations?.resultKeys || [])]
+        .find((k) => k && Number.isFinite(per[k]));
+      const value = Number.isFinite(per.accepted) ? per.accepted : (ownKey ? per[ownKey] : null);
+      if (Number.isFinite(value)) acceptedPer.push(value);
     }
     if (acceptedPer.length < 2) continue;
     const lo = Math.min(...acceptedPer);
@@ -623,6 +650,23 @@ for (const entry of targets) {
       const out = collect({ name: 'mixed', at: null, cycle: oc }, Math.max(want, oc.options.length));
       mixed = out.rows.length >= 2 ? model.derive(out.rows, { ...base }) : null;
     } catch { mixed = null; }
+
+    /*
+     * Not every practical that works through a tray is averaging across it.
+     * Measuring twelve solutions' pH, or plotting four given datasets, gives
+     * a different answer for each and is MEANT to: the table holds one row
+     * per specimen and the result belongs to the one in hand. What is wrong
+     * is a result that lands BETWEEN two specimens' values, because the only
+     * way to get there is to have averaged them.
+     */
+    if (mixed?.ok && !Number.isFinite(derived.accepted)) {
+      const mixedKey = [expected.key, ...(exp.calculations?.resultKeys || [])]
+        .find((k) => k && Number.isFinite(mixed[k]));
+      const mv = mixedKey ? mixed[mixedKey] : null;
+      const margin = (hi - lo) * 0.05;
+      const between = Number.isFinite(mv) && mv > lo + margin && mv < hi - margin;
+      if (!between) continue;
+    }
     if (mixed?.ok) {
       failures.push({ id: entry.id, kind: 'mixed-set',
         msg: `a set taken across the ${oc.options.length} settings of "${oc.id}" is averaged into one result, though their accepted values run from ${lo} to ${hi}` });

@@ -7,6 +7,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { sigFig, mean } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-CHE-B03',
@@ -99,10 +100,14 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 173);
   const crystalMass = Math.max(0, crystalMassG(inputs) + jitter(rng, 0.15));
   const mp = purityMeltingPoint(inputs) + jitter(rng, 0.3);
-  return { trial, compound: compoundOf(inputs).label, crudeMassG: inputs.massG, solventMl: inputs.solventMl, cooling: inputs.cooling, crystalMassG: sigFig(crystalMass, 4), recoveryPct: sigFig((crystalMass / inputs.massG) * 100, 4), meltingPointC: sigFig(mp, 4) };
+  return { trial, crude: (CRUDE[inputs.crude] || CRUDE.moderate).label, compound: compoundOf(inputs).label, crudeMassG: inputs.massG, solventMl: inputs.solventMl, cooling: inputs.cooling, crystalMassG: sigFig(crystalMass, 4), recoveryPct: sigFig((crystalMass / inputs.massG) * 100, 4), meltingPointC: sigFig(mp, 4) };
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'compound', 'compounds')
+    || mixedSetRefusal(rows, 'crude', 'crude samples');
+  if (mixed) return mixed;
+
   if (rows.length < 1) return { ok: false, reason: 'Complete at least one crystallisation run.' };
   const recovery = mean(rows.map((r) => Number(r.recoveryPct)));
   const crystalMass = mean(rows.map((r) => Number(r.crystalMassG)));

@@ -5,6 +5,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, mean, sigFig } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-ACT-A1',
@@ -45,12 +46,21 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 }
 
 export function derive(rows, inputs = defaults) {
+  /* The whole point of this activity is to measure ONE object with scales of
+     different least count and watch the error change. Measuring a different
+     object each time and averaging gives the mean length of a pencil, an
+     eraser and a spoon, which is nothing at all. */
+  const mixed = mixedSetRefusal(rows, 'object', 'objects',
+    'measure one of them with each scale in turn, which is what shows how the least count changes the error.');
+  if (mixed) return mixed;
+
   if (rows.length < 3) return { ok: false, reason: 'Take at least three readings.' };
   const vals = rows.map((r) => Number(r.reading));
   const meanReading = mean(vals);
   const leastCount = Number(rows[0].leastCount);
   const maxError = Number(rows[0].maxError);
-  const trueLen = objectOf(inputs).trueCm;
+  const object = specimenOfRows(OBJECTS, rows, 'object', objectOf(inputs));
+  const trueLen = object.trueCm;
   const withinLeastCount = Math.abs(meanReading - trueLen) <= leastCount;
 
   const scales = new Map();
@@ -68,7 +78,8 @@ export function derive(rows, inputs = defaults) {
   return {
     ok: true, meanReading: sigFig(meanReading, 4), leastCount, maxError,
     percentError: sigFig((maxError / meanReading) * 100, 3), spread: sigFig(Math.max(...vals) - Math.min(...vals), 3),
-    object: objectOf(inputs).label, divisions: Number(rows[rows.length - 1].divisions),
+    /* The true length belongs to the object MEASURED. */
+    object: object.label, accepted: object.trueCm, divisions: Number(rows[rows.length - 1].divisions),
     comparison, scalesCompared: scales.size, withinLeastCount,
     n: vals.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.reading) })),
   };
