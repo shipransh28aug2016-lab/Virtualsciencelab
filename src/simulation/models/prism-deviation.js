@@ -82,16 +82,57 @@ export function derive(rows, inputs = defaults) {
   if (mixed) return mixed;
 
   if (rows.length < 5) return { ok: false, reason: 'Record the deviation for at least five different angles of incidence, spanning the minimum.' };
-  const minRow = rows.reduce((a, b) => (Number(a.deviation) <= Number(b.deviation) ? a : b));
-  const A = prismOf(inputs).A;
-  const dm = Number(minRow.deviation);
+
+  /*
+   * The minimum of the δ–i curve, found where the practical says to find it:
+   * at the VERTEX of the plotted curve, not at the smallest number in the
+   * table.
+   *
+   * Those are the same thing only when the readings straddle the minimum. A
+   * set taken entirely on one side of it has its smallest deviation at an
+   * end, and reporting that as δm gave 26° against an accepted 38.9° — with
+   * the panel describing it as "the vertex of the fitted curve", which is
+   * what it was supposed to be and was not. The curve is flat near its
+   * minimum, so the three readings around the lowest one fix the vertex far
+   * better than the lowest one alone.
+   */
+  const bySlot = [...rows].sort((a, b) => Number(a.incidence) - Number(b.incidence));
+  let at = 0;
+  for (let k = 1; k < bySlot.length; k += 1) {
+    if (Number(bySlot[k].deviation) < Number(bySlot[at].deviation)) at = k;
+  }
+  if (at === 0 || at === bySlot.length - 1) {
+    const side = at === 0 ? 'smaller' : 'larger';
+    return {
+      ok: false,
+      reason: `The smallest deviation in this set is at the very ${at === 0 ? 'first' : 'last'} angle of incidence (${bySlot[at].incidence}°), so the readings do not straddle the minimum — the curve is still falling when they stop. Take more readings at ${side} angles until the deviation is seen to rise again on both sides.`,
+    };
+  }
+  const p0 = bySlot[at - 1], p1 = bySlot[at], p2 = bySlot[at + 1];
+  const [x0, y0] = [Number(p0.incidence), Number(p0.deviation)];
+  const [x1, y1] = [Number(p1.incidence), Number(p1.deviation)];
+  const [x2, y2] = [Number(p2.incidence), Number(p2.deviation)];
+  /* Vertex of the parabola through three points, which is the graphical
+     construction done exactly rather than by eye. */
+  const denom = (x0 - x1) * (x0 - x2) * (x1 - x2);
+  let iMin = Number(p1.incidence);
+  let dm = Number(p1.deviation);
+  if (Math.abs(denom) > 1e-9) {
+    const a = (x2 * (y1 - y0) + x1 * (y0 - y2) + x0 * (y2 - y1)) / denom;
+    const b = (x2 * x2 * (y0 - y1) + x1 * x1 * (y2 - y0) + x0 * x0 * (y1 - y2)) / denom;
+    const c = (x1 * x2 * (x1 - x2) * y0 + x2 * x0 * (x2 - x0) * y1 + x0 * x1 * (x0 - x1) * y2) / denom;
+    if (a > 0) { iMin = -b / (2 * a); dm = c - (b * b) / (4 * a); }
+  }
+
+  const prism = specimenOfRows(PRISMS, rows, 'prism', prismOf(inputs));
+  const A = prism.A;
   const mu = Math.sin(((A + dm) * Math.PI) / 360) / Math.sin((A * Math.PI) / 360);
-  const acceptedMu = muOf(inputs);
+  const acceptedMu = prism.mu ?? muOf(inputs);
   // Invert mu = sin((A+dm)/2)/sin(A/2) for the theoretical minimum deviation
   // at this prism's accepted refractive index, to compare against.
   const acceptedDeltaM = (2 * Math.asin(acceptedMu * Math.sin((A * Math.PI) / 360)) * 180) / Math.PI - A;
   return {
-    ok: true, minimumDeviation: sigFig(dm, 4), refractiveIndex: sigFig(mu, 4), incidenceAtMinimum: Number(minRow.incidence),
+    ok: true, minimumDeviation: sigFig(dm, 4), refractiveIndex: sigFig(mu, 4), incidenceAtMinimum: sigFig(iMin, 4),
     /* `accepted` is read by the result checker as the accepted value of the
        quantity this experiment reports, which is the minimum deviation — not
        the refractive index it is worked out from. Both are printed, under

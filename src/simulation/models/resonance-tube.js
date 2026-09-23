@@ -98,7 +98,32 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 export function derive(rows, inputs = defaults) {
   const first = rows.find((r) => r.resonanceNumber === 1);
   const second = rows.find((r) => r.resonanceNumber === 2);
-  if (!first || !second) return { ok: false, reason: 'Record both the first and second resonance positions.' };
+  if (!first || !second) {
+    /*
+     * Say which one is missing and where to look for it.
+     *
+     * "Record both the first and second resonance positions" is true and
+     * unusable: a student standing at the first one has no way of knowing
+     * that the next is near three times that length, and a student with
+     * neither does not know the tube resonates twice. The three-to-one
+     * relation between l₁ and l₂ is the thing this practical is teaching, so
+     * naming it is teaching rather than answering — the length itself still
+     * has to be found by ear.
+     */
+    if (first) {
+      return {
+        ok: false,
+        reason: `The first resonance is recorded at ${Number(first.airColumnCm).toFixed(1)} cm. Now lower the water level further, past the quiet stretch, until the note is loud again — the second resonance is near three times the first.`,
+      };
+    }
+    if (second) {
+      return {
+        ok: false,
+        reason: `The second resonance is recorded at ${Number(second.airColumnCm).toFixed(1)} cm. Raise the water level back up until the note is loud again — the first resonance is near a third of the second.`,
+      };
+    }
+    return { ok: false, reason: 'Move the water level until the note from the fork is loudest, and record that air column. The tube resonates twice over its length: record the first and the second.' };
+  }
   /*
    * Both resonances must belong to the SAME fork.
    *

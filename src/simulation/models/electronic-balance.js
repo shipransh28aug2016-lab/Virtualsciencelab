@@ -126,7 +126,12 @@ export function derive(rows, inputs = defaults) {
   const m = mean(vals);
   return { ok: true, meanMass: sigFig(m, 5), /* The accepted mass belongs to the object WEIGHED, not to whatever is on
        the pan when Calculate is pressed. */
+    /* The bench's own settings, with only the object and the taring taken
+       from the READINGS — the container mass the tare subtracts lives in
+       inputs too, and dropping it made a tared weighing report its gross
+       mass as the accepted value. */
     accepted: sigFig(netMassG({
+      ...inputs,
       object: Object.keys(OBJECTS).find((k) => OBJECTS[k].label === rows[0]?.object) || inputs.object,
       tared: rows[0]?.tared !== 'container not tared',
     }), 5), spread: Number((Math.max(...vals) - Math.min(...vals)).toFixed(4)), n: vals.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.reading) })) };

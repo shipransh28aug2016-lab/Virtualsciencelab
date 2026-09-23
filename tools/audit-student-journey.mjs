@@ -212,6 +212,17 @@ async function runLane(lane, queue, reports, onDone) {
    */
   async function runProcessAndWait(capMs = 34000) {
     const t0 = Date.now();
+    /* Put the clock back to its fastest before every run. A student who has
+       set a bench to ×10 does not set it back between readings, but the
+       toolbar rebuilds itself when the apparatus changes, and a rebuilt
+       toolbar opens at ×1 — which turned a 40-second clock reaction into a
+       40-second wait, five times over. */
+    await page.evaluate(() => {
+      const host = document.querySelector('#clock');
+      if (!host || host.hidden) return;
+      const fast = [...host.querySelectorAll('.clock-seg button')].pop();
+      if (fast && fast.getAttribute('aria-pressed') !== 'true') fast.click();
+    });
     const started = await page.evaluate(() => {
       const b = document.querySelector('#aRun, #aStart, #aRelease');
       if (!b || b.disabled) return null;
@@ -466,8 +477,21 @@ async function runLane(lane, queue, reports, onDone) {
     const wallClock = new Promise((resolve) => setTimeout(() => { timedOut = true; resolve('timeout'); }, LAB_BUDGET_MS + 30000));
     const walk = (async () => {
       try {
-        await page.goto(`${BASE}/index.html#/exp/${entry.id}`, { waitUntil: 'domcontentloaded' });
-        await wait(420);
+        /*
+         * Open the lab, and give it a second go if it does not come up.
+         *
+         * Four lanes navigating at the same instant is enough to lose one:
+         * the run that reported "did not reach the lab view" for every lab
+         * in a four-lab batch passed all of them one lane at a time. A
+         * student whose page does not load presses reload, and a probe that
+         * reports the lab broken instead is reporting its own impatience.
+         */
+        let reached = false;
+        for (let attempt = 0; attempt < 2 && !reached; attempt += 1) {
+          await page.goto(`${BASE}/index.html#/exp/${entry.id}`, { waitUntil: 'domcontentloaded' });
+          await wait(attempt ? 1400 : 420);
+          reached = await page.evaluate(() => !document.querySelector('#viewLab')?.hidden);
+        }
         // A student facing a fifty-second pendulum reaches for the speed
         // control, so the probe does too — and notes whether one was there.
         const hasClock = await page.evaluate(() => {
@@ -482,8 +506,7 @@ async function runLane(lane, queue, reports, onDone) {
         /* ── STAGE 1 · OPEN ─────────────────────────────────────────── */
         const r0 = await probeRead();
         if (r0.labError) { fail('open', 'lab opened into its error boundary'); return; }
-        const onLab = await page.evaluate(() => !document.querySelector('#viewLab')?.hidden);
-        if (!onLab) { fail('open', 'did not reach the lab view'); return; }
+        if (!reached) { fail('open', 'did not reach the lab view, even after a reload'); return; }
         pass('open');
 
         /* ── STAGE 2 · SEE the apparatus ────────────────────────────── */
@@ -562,6 +585,22 @@ async function runLane(lane, queue, reports, onDone) {
         /* Set when the bench says the READINGS cannot be averaged because a
            continuously-variable setting was moved between them. */
         let freezeSliders = false;
+        /* A value the bench asked the student to stay under, in the units of
+           whichever slider it belongs to. */
+        let sliderCeiling = null;
+        /* How long to let a process run between readings, once a bench has
+           said its readings must be spread over time. */
+        /*
+         * A cooling curve, a dialysis run, a clock reaction: the x-axis is
+         * TIME, so the readings have to be taken as the process runs, not as
+         * fast as the Record button can be pressed. Eight readings hammered
+         * out in thirteen seconds of model time span less than the
+         * thermometer can resolve, and the bench says so — rightly, and after
+         * the fact. A student watching a clock paces themselves from the
+         * start, so this does too.
+         */
+        const timeAxis = /^(timeS|timeMin|time|elapsed|tMin|tS)$/i.test(String(exp.observationModel?.graph?.x || ''));
+        let paceBetweenReadings = timeAxis ? 2500 : 0;
         let slowestWait = 0;
         let hunted = 0;
     let nulled = 0;
@@ -597,9 +636,11 @@ async function runLane(lane, queue, reports, onDone) {
               /* A switch is a two-position setting like any other — the shunt
                  in or out, the balance tared or not — and half-deflection
                  needs a reading in each position. */
-              for (const sw of document.querySelectorAll('#controls .ctl:not([data-group="setup"]) .sw')) {
-                const on = sw.getAttribute('aria-checked') === 'true';
-                if (on !== (idx % 2 === 1)) sw.click();
+              if (!stop) {
+                for (const sw of document.querySelectorAll('#controls .ctl:not([data-group="setup"]) .sw')) {
+                  const on = sw.getAttribute('aria-checked') === 'true';
+                  if (on !== (idx % 2 === 1)) sw.click();
+                }
               }
               if (!groups.length || (stop && !groups.length)) return;
               if (!stop) {
@@ -619,18 +660,33 @@ async function runLane(lane, queue, reports, onDone) {
                buttons are the specimen tray and pressing one of those would
                put the specimen just chosen straight back. */
             const frac = 0.15 + (0.7 * k) / want;
-            if (k > 0 && !freezeSliders) await page.evaluate((f) => {
+            if (k > 0 && !freezeSliders) await page.evaluate(({ f, cap }) => {
               const sliders = [...document.querySelectorAll('#controls .ctl:not([data-group="setup"]) input[type=range]')];
               const el = sliders[0];
               if (!el) return;
-              const min = Number(el.min); const max = Number(el.max); const step = Number(el.step) || 1;
-              const want2 = min + (max - min) * f;
+              const min = Number(el.min); const step = Number(el.step) || 1;
+              /* A bench that names a ceiling is obeyed. "Keep the load under
+                 about 5.6 kg for this wire" is the whole instruction, and a
+                 sweep that runs the slider to 10 kg regardless throws seven
+                 readings out of ten past the elastic limit and then asks why
+                 there are not four good ones. */
+              const ceiling = Number.isFinite(cap) && cap > min && cap <= Number(el.max) ? cap : Number(el.max);
+              const want2 = min + (ceiling - min) * f;
               el.value = String(Math.round((want2 - min) / step) * step + min);
               el.dispatchEvent(new Event('input', { bubbles: true }));
-            }, frac);
+            }, { f: frac, cap: sliderCeiling });
             await wait(220);
           }
-          const run = isTitration ? await titrateToEndPoint() : await runProcessAndWait(Math.max(2000, Math.min(34000, labDeadline - Date.now())));
+          if (paceBetweenReadings) await wait(paceBetweenReadings);
+          /*
+           * On a timed experiment the clock is started ONCE and the readings
+           * are taken as it runs. Pressing Start before every reading puts it
+           * back to zero — which the bench now says out loud — and turns a
+           * cooling curve into eight readings at the same instant.
+           */
+          const run = isTitration ? await titrateToEndPoint()
+            : (timeAxis && k > 0) ? { started: 'already running', waitedMs: 0 }
+              : await runProcessAndWait(Math.max(2000, Math.min(34000, labDeadline - Date.now())));
           slowestWait = Math.max(slowestWait, run.waitedMs || 0);
           // A process that costs the student half a minute per reading is not
           // repeated six times here; the point is already made by three.
@@ -655,15 +711,48 @@ async function runLane(lane, queue, reports, onDone) {
            */
           const asking = await page.evaluate(() =>
             (document.querySelector('#stillNeeded:not([hidden])')?.textContent || ''));
+          /* A bench that wants readings SPREAD OVER TIME is telling the probe
+             to stop hammering Record: let the process run between readings,
+             the way a student watches a clock and writes down a temperature
+             every half minute. */
+          /* "roughly 4 more readings before the plateau begins" is an
+             instruction to keep going, and the number says how far. */
+          const moreAsked = asking.match(/roughly (\d+) more reading/i);
+          if (moreAsked) budget = Math.min(24, budget + Number(moreAsked[1]) + 2);
+          if (/keep recording|record more often|until the temperature stops falling/i.test(asking)) {
+            budget = Math.min(24, Math.max(budget, got + 4));
+          }
+          if (/same instant|spread over time|several TIMES|every half minute|span only/i.test(asking)) {
+            paceBetweenReadings = Math.max(paceBetweenReadings, 3000);
+            budget = Math.min(16, budget + 2);
+          }
+
+          /* "Keep the load under about 5.6 kg", "stay below 40 °C": a ceiling
+             the bench states is part of the method, so it is read off the
+             refusal and applied to the slider it fits. */
+          const capAsked = asking.match(/\b(?:under|below|less than)\s+(?:about\s+)?([\d.]+)/i);
+          if (capAsked) {
+            const value = Number(capAsked[1]);
+            const fits = await page.evaluate((v) => {
+              const el = [...document.querySelectorAll('#controls .ctl:not([data-group="setup"]) input[type=range]')][0];
+              if (!el) return false;
+              return v > Number(el.min) && v <= Number(el.max);
+            }, value);
+            if (fits) sliderCeiling = value;
+          }
+
           /* And the bench may ask for a RANGE after the set has been made
              consistent — "vary the supply so the current climbs" — which is
              the opposite instruction to the one that froze the sliders. */
-          if (freezeSliders && /\bvary\b|across the range|spread|climbs|at several points/i.test(asking)) {
+          const mixedSetAgain = /\b(?:these readings are of )?\d+ different [a-z]+/i.test(asking)
+            || /\bdifferent (objects|wires|liquids|specimens|solutions|separations|settings)\b|its own set|one liquid per|one wire at a time|cannot be averaged/i.test(asking);
+          if (freezeSliders && !mixedSetAgain
+              && /\bvary\b|across the range|spread|climbs|at several points|lower the (?:water )?level|raise the (?:water )?level|until .* again|near three times|near a third|further/i.test(asking)) {
             freezeSliders = false;
             budget = Math.min(16, budget + 2);
           }
           if (mixingRefused && !traySetNeeded
-              && /different (tuning forks|tubes|salts|boards|components|specimens|solutions|arrangements)|work through at least|both direction/i.test(asking)) {
+              && /different (tuning forks|tubes|salts|boards|components|specimens|solutions|arrangements)|work through at least|both direction|with and without|in each position/i.test(asking)) {
             // Now it wants a set after all: put the tray back into use.
             traySetNeeded = true;
             budget = Math.min(16, budget + want);
@@ -682,18 +771,38 @@ async function runLane(lane, queue, reports, onDone) {
           /* The benches all phrase it the same way — "these readings are of 3
              different galvanometers (…)" — so match the shape rather than
              keeping a list of nouns that is one experiment out of date. */
-          const mixedSet = /\b\d+ different [a-z]+/i.test(asking)
-            || /\bdifferent (objects|wires|liquids|specimens|solutions|separations|settings)\b|its own set|one liquid per|one wire at a time|cannot be averaged/i.test(asking);
-          if (!mixingRefused && mixedSet) {
+          if (mixingRefused && mixedSetAgain && !freezeSliders) {
+            // Objected to twice: the quantity being swept is the problem.
+            freezeSliders = true;
+            budget = Math.min(16, budget + want);
+            await page.evaluate((sliders) => {
+              [...document.querySelectorAll('#controls input[type=range]')].forEach((el, i) => {
+                if (sliders[i] === undefined) return;
+                el.value = sliders[i];
+                el.dispatchEvent(new Event('input', { bubbles: true }));
+              });
+              document.querySelector('#clearBtn')?.click();
+            }, openingSliders);
+            await wait(200);
+            continue;
+          }
+          if (!mixingRefused && mixedSetAgain) {
             mixingRefused = true;
             mixedWhat = asking;
-            /* When the bench says the set is mixed, a student stops changing
-               things — all of them, not just the tray. The set that follows
-               is of ONE specimen at ONE setting, which is what "clear the
-               table and take a set" asks for. Where a set of different
-               specimens turns out to be wanted after all, the tray comes back
-               into use below; the sliders stay where they are. */
-            freezeSliders = true;
+            /*
+             * Stop changing the SPECIMEN, and go on varying the quantity.
+             *
+             * Almost every one of these benches wants a set taken on one
+             * specimen at several settings of a slider: three weighings of
+             * one body, four loads on one wire, a cooling curve at one
+             * volume. Freezing everything at the first objection turned all
+             * of those into one reading taken four times, and the bench then
+             * asked, rightly, for readings that differ. So the tray stops
+             * and the slider carries on; only a SECOND objection — which
+             * means the slider was the thing being complained about, as with
+             * the spherometer's leg separation or the mass on the balance —
+             * freezes that too.
+             */
             /* Put the bench back the way it opened before starting again:
                measuring the brass cylinder and comparing it against the steel
                sphere's accepted diameter is a different wrong answer, not a

@@ -6,6 +6,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { fitThroughOrigin, sigFig, sciText } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-B01',
@@ -80,7 +81,7 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const extM = trueExt + jitter(rng, 0.00004);
   const extCm = extM * 100;
   return {
-    trial, loadKg: inputs.loadKg, loadN: sigFig(loadN(inputs), 4),
+    trial, wire: wireOf(inputs).label, loadKg: inputs.loadKg, loadN: sigFig(loadN(inputs), 4),
     extensionCm: Number(extCm.toFixed(3)), extensionMm: Number((extCm * 10).toFixed(2)),
     stressMPa: sigFig(loadN(inputs) / areaM2(inputs) / 1e6, 4),
     strain: sigFig(extM / inputs.lengthM, 5),
@@ -89,19 +90,39 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'wire', 'wires');
+  if (mixed) return mixed;
+  const wire = specimenOfRows(WIRES, rows, 'wire', wireOf(inputs));
+
   const usable = rows.filter((r) => !r._beyond);
-  if (usable.length < 4) return { ok: false, reason: 'Record at least four readings within the elastic limit (discard any taken beyond it).' };
+  if (usable.length < 4) {
+    /*
+     * Say WHERE the limit is. "Record at least four readings within the
+     * elastic limit" is not actionable on a bench that never names the load
+     * at which the limit is passed — the student can only load the wire and
+     * find out afterwards which of their readings were thrown away.
+     */
+    const beyond = rows.length - usable.length;
+    const maxKg = (wire.elasticLimitN / G).toFixed(1);
+    return {
+      ok: false,
+      reason: `Only ${usable.length} of ${rows.length} readings are within the elastic limit of the ${wire.label.toLowerCase()}`
+        + `${beyond ? ` — ${beyond} were taken past it` : ''}. `
+        + `Keep the load under about ${maxKg} kg for this wire, and take at least four readings below that.`,
+    };
+  }
   const pts = usable.map((r) => ({ x: Number(r.extensionMm), y: Number(r.loadN) }));
   const fit = fitThroughOrigin(pts);
   if (!fit) return { ok: false, reason: 'Vary the load between readings.' };
   const slopeSI = fit.slope * 1000; // N per mm -> N per m
   const Y = (slopeSI * inputs.lengthM) / areaM2(inputs);
   const discarded = rows.length - usable.length;
-  const wire = wireOf(inputs);
   return {
     ok: true, youngsModulus: sigFig(Y, 4), slope: sigFig(slopeSI, 4), r2: Number(fit.r2.toFixed(4)),
     discardedBeyondLimit: discarded, discarded, n: usable.length, points: pts,
     material: wire.label, areaM2: areaM2(inputs),
+    /* Y belongs to the wire the readings were taken on. */
+    accepted: wire.Y, elasticLimitKg: Number((wire.elasticLimitN / G).toFixed(1)),
     youngsModulusText: sciText(Y, 'Pa'), acceptedText: sciText(wire.Y, 'Pa'),
   };
 }

@@ -935,6 +935,24 @@ function startProcess() {
   showFeedback(v);
   if (!v.ok) { toast(v.errors[0].message, 'bad'); return; }
   if (!processFlag()) return;
+
+  /*
+   * Starting puts the clock back to zero, and on a timed experiment that
+   * matters to readings already written down.
+   *
+   * A cooling curve is a temperature at each of several TIMES. Pressing
+   * Start again silently re-ran it from t = 0 while the table kept the rows
+   * from the previous run, so a student who pressed it between readings
+   * ended up with eight readings all at the same instant and a calculation
+   * that could not fit a line through them. The restart is a legitimate
+   * thing to do — it is how you begin again — but it has to be said out
+   * loud while there are readings it invalidates.
+   */
+  const wasRunning = app.machine.state === STATES.RUNNING;
+  if (wasRunning && app.rows.length) {
+    toast('The clock goes back to zero. Readings already in the table belong to the previous run — clear the table before recording again.', 'warn');
+  }
+
   const primed = primeProcess(app.model, app.inputs, app.model.init(app.inputs));
   app.state = primed.state;
   app.machine.to(STATES.RUNNING);

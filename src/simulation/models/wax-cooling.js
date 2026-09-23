@@ -82,12 +82,40 @@ export function derive(rows, inputs = defaults) {
   const mixed = mixedSetRefusal(rows, 'wax', 'waxes');
   if (mixed) return mixed;
 
+  const w = specimenOfRows(WAXES, rows, 'wax', waxOf(inputs));
   const plateauRows = rows.filter((r) => r.state === 'freezing');
   if (rows.length < 6) return { ok: false, reason: 'Record enough readings to see the plateau — at least six.' };
-  if (!plateauRows.length) return { ok: false, reason: 'No plateau was captured. Space the readings further apart or start hotter.' };
+  if (!plateauRows.length) {
+    /*
+     * Say where the wax has got to, and what has to happen next.
+     *
+     * "No plateau was captured. Space the readings further apart or start
+     * hotter" is advice about the set-up, given to a student whose set-up is
+     * fine and who has simply not waited long enough: paraffin at 85 °C in a
+     * room at 28 °C takes about three and a half minutes to reach its
+     * freezing point, which is seven readings at half-minute intervals, and
+     * the table asks for six. The plateau IS the experiment, so the bench
+     * should say how far off it is rather than suggest starting again.
+     */
+    const last = rows[rows.length - 1];
+    const nowC = Number(last.tempC);
+    const stillLiquid = rows.every((r) => r.state === 'liquid');
+    const interval = INTERVALS[inputs.interval] || 30;
+    if (stillLiquid && nowC > w.mp) {
+      const perReading = Math.max(0.1, (Number(rows[0].tempC) - nowC) / Math.max(1, rows.length - 1));
+      const more = Math.ceil((nowC - w.mp) / perReading);
+      return {
+        ok: false,
+        reason: `After ${rows.length} readings the wax is at ${nowC.toFixed(1)} °C and still liquid — ${w.label.toLowerCase()} freezes at about ${w.mp} °C. Keep recording every ${interval} s; on this rate of fall it is roughly ${more} more reading${more === 1 ? '' : 's'} before the temperature stops falling and the plateau begins.`,
+      };
+    }
+    return {
+      ok: false,
+      reason: `These ${rows.length} readings have passed straight from liquid to solid without catching the plateau. Record more often — every ${Math.max(15, Math.round(interval / 2))} s — so that the stretch where the temperature holds steady is not stepped over.`,
+    };
+  }
   const meltingPoint = sigFig(plateauRows.reduce((a, r) => a + Number(r.tempC), 0) / plateauRows.length, 4);
   const times = plateauRows.map((r) => Number(r.timeS));
-  const w = waxOf(inputs);
   const accepted = w.mp;
   return {
     ok: true, meltingPoint, hasPlateau: true, plateauPoints: plateauRows.length,
