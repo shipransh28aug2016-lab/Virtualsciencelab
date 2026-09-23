@@ -206,8 +206,17 @@ export function endPointVolume(inputs) {
 
 /** One drop from a burette, mL — the finest step a titration can resolve. */
 export const DROP_ML = 0.05;
-/** Past this much excess the colour is unmistakably too deep: an overshoot. */
-export const OVERSHOOT_ML = 0.5;
+/**
+ * Past this much excess the colour is unmistakably too deep: an overshoot.
+ *
+ * Half a millilitre is ten drops, and a window ten drops wide makes
+ * concordance impossible by construction: three titres taken correctly could
+ * land 0.5 mL apart and the bench would then refuse them for not agreeing
+ * within 0.2 mL. A student is taught to stop at the FIRST permanent colour,
+ * which is one drop past the equivalence — so two drops past it is where the
+ * pink has gone too deep.
+ */
+export const OVERSHOOT_ML = 0.1;
 
 export function colourAt(inputs, delivered) {
   const s = systemOf(inputs);
@@ -369,7 +378,10 @@ export function measure(state, inputs, seed = 1, trial = 1) {
    * student is taught to repeat until readings are concordant, and readings
    * that cannot disagree teach nothing about concordance.
    */
-  const finalReading = toLeastCount(state.delivered + jitter(rng, 0.09), 0.1);
+  /* Half a graduation of reading scatter — the meniscus, the light, the eye.
+     Any more and titres taken by one careful worker cannot agree to the two
+     graduations that "concordant" means. */
+  const finalReading = toLeastCount(state.delivered + jitter(rng, 0.05), 0.1);
   return {
     trial, initialReading: initial, finalReading, volumeUsed: Number((finalReading - initial).toFixed(1)),
     pHAtStop: Number(state.pH.toFixed(2)), _overshot: state.overshot,

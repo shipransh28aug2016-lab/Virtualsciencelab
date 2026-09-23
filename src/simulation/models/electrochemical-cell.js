@@ -109,7 +109,7 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 283);
   const ratio = inputs.anodeConc / inputs.cathodeConc;
   const reading = Number((e + jitter(rng, 0.004)).toFixed(4));
-  return { anodeConc: inputs.anodeConc, cathodeConc: inputs.cathodeConc, ratio: sigFig(ratio, 4), logRatio: Number(Math.log10(ratio).toFixed(4)), emf: reading, tempC: inputs.tempC };
+  return { trial, anodeConc: inputs.anodeConc, cathodeConc: inputs.cathodeConc, ratio: sigFig(ratio, 4), logRatio: Number(Math.log10(ratio).toFixed(4)), emf: reading, tempC: inputs.tempC };
 }
 
 export function derive(rows, inputs = defaults) {

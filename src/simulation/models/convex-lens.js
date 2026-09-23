@@ -106,7 +106,7 @@ export function step(state, inputs, dt) {
   return s;
 }
 
-export function measure(state, inputs, seed = 1) {
+export function measure(state, inputs, seed = 1, trial = 1) {
   const lens = LENSES[inputs.lens] || LENSES.L15;
   const rng = makeRng(seed + Math.round(inputs.objectDistanceCm * 3));
   const vTrue = imageDistance(inputs.objectDistanceCm, lens.f);
@@ -115,6 +115,9 @@ export function measure(state, inputs, seed = 1) {
   const uRead = toLeastCount(inputs.objectDistanceCm + jitter(rng, 0.15), inputs.benchLC);
   const m = finite ? -vRead / uRead : null;
   return {
+    /* Every observation table is keyed by its reading number, and this one
+       left it out — so a reading here could not be told from a refusal. */
+    trial,
     lens: lens.label,
     u: Number(uRead.toFixed(1)),
     v: finite ? Number(vRead.toFixed(1)) : null,
