@@ -249,7 +249,16 @@ export function init(inputs = defaults) {
 
 export function step(state, inputs, dt) {
   const s = { ...state };
-  if (s.finishedAt) return s;
+  /*
+   * The meters go on following the circuit.
+   *
+   * `if (s.finishedAt) return s;` froze the whole bench half a second after
+   * it opened: the needles stopped tracking, and a student who then changed
+   * the board, moved the slider or corrected the wiring saw two meters
+   * showing the previous circuit's readings for ever. A meter settles — it
+   * does not stop working. So the needles keep following, and "settled" is
+   * what it means on a real instrument: the needle has stopped moving.
+   */
   s.t += dt;
 
   const r = meterReadings(inputs);
@@ -258,10 +267,12 @@ export function step(state, inputs, dt) {
   s.backwards = r.backwards;
   s.live = r.live;
 
-  if (!s.settled && s.t > 0.5) {
-    s.settled = true;
-    s.finishedAt = s.t;
-  }
+  /* Settled means the needles have stopped moving, not that half a second
+     has gone by since the bench opened. */
+  const moving = Math.abs(r.currentA - s.currentA) > Math.max(1e-4, Math.abs(r.currentA) * 0.005)
+    || Math.abs(r.voltageV - s.voltageV) > Math.max(1e-3, Math.abs(r.voltageV) * 0.005);
+  s.settled = !moving && s.t > 0.2;
+  if (s.settled && !s.finishedAt) s.finishedAt = s.t;
   return s;
 }
 

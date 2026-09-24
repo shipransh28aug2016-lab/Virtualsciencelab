@@ -458,7 +458,11 @@ async function runLane(lane, queue, reports, onDone) {
      */
     const said = await page.evaluate(() => {
       const box = document.querySelector('#feedback');
-      const full = box && !box.hidden ? box.textContent.replace(/\s+/g, ' ').trim() : '';
+      /* The panel is a heading and a body; joined without a separator they
+         run together as "No reading takenRead the meters…". */
+      const full = box && !box.hidden
+        ? [...box.childNodes].map((n) => n.textContent.trim()).filter(Boolean).join(' \u2014 ').replace(/\s+/g, ' ').trim()
+        : '';
       const toast = document.querySelector('#toast')?.textContent.trim() || '';
       return full.length > toast.length ? full : toast;
     });
@@ -614,6 +618,49 @@ async function runLane(lane, queue, reports, onDone) {
          * Record. Only the first was read, so a bench that said exactly what
          * to do while refusing a reading was refused three times over.
          */
+        /**
+         * When a refusal names a control, answer it with that control.
+         *
+         * "Read the meters, decide what is wrong with this board, and select
+         * that DIAGNOSIS before recording it" is an instruction about one
+         * picker, and the probe had frozen every picker because an earlier
+         * refusal said a SET must not mix specimens. Those are different
+         * objections: one says stop changing the specimen, the other says
+         * this control has not been set at all.
+         */
+        const answerNamedControl = async (text) => {
+          if (!text) return false;
+          return page.evaluate((said) => {
+            const lower = said.toLowerCase();
+            /* Never an ASSEMBLY control. "The meters have not settled" contains
+               the word "meter", which matched the circuit-assembly bench's
+               "Meter polarity" picker and turned the meters round — the probe
+               answering a complaint about settling by miswiring the circuit. */
+            for (const ctl of document.querySelectorAll('#controls .ctl:not([data-group="setup"])')) {
+              const name = (ctl.querySelector('label')?.textContent || '').trim();
+              /* Match on any substantial word of the control's name, not the
+                 whole of it: the picker is labelled "Your diagnosis" and the
+                 refusal says "select that diagnosis". */
+              const words = name.toLowerCase().replace(/\(.*\)/, '')
+                .split(/[^a-z\u00e9]+/).filter((x) => x.length >= 5);
+              if (!words.length || !words.some((x) => lower.includes(x))) continue;
+              const btns = [...ctl.querySelectorAll('button')];
+              if (btns.length < 2) continue;
+              /* "Not yet" is not a choice a student makes; it is the absence
+                 of one, and the bench is asking for a choice. */
+              const blank = (b) => /^(not yet|none|—|-|no |undecided)/i.test(b.textContent.trim());
+              const at = btns.findIndex((b) => b.getAttribute('aria-pressed') === 'true');
+              for (let step = 1; step <= btns.length; step += 1) {
+                const next = btns[(at + step + btns.length) % btns.length];
+                if (!next || next === btns[at] || blank(next)) continue;
+                next.click();
+                return true;
+              }
+            }
+            return false;
+          }, text);
+        };
+
         const obeyStatedLimits = async (text) => {
           if (!text) return;
           const floor = text.match(/\bat least\s+(?:about\s+)?([\d.]+)\s*(?:mL|ml|g|cm|mm|V|A|°C)/i);
@@ -708,7 +755,13 @@ async function runLane(lane, queue, reports, onDone) {
               // The tray first, then the second setting at a slower rate, so
               // the pair is actually swept: four components BOTH ways round
               // needs component and direction to advance together.
-                groups[0][idx % groups[0].length].click();
+                /* Skip an "answer not given" option when working through a
+                   picker: a diagnosis of "Not yet" is not a diagnosis. */
+                const first = groups[0];
+                const blankOpt = (b) => /^(not yet|none|\u2014|-|no |undecided)/i.test(b.textContent.trim());
+                const usable = first.filter((b) => !blankOpt(b));
+                const pool = usable.length ? usable : first;
+                pool[idx % pool.length].click();
               }
               /* And alternate the SMALLEST group every reading. The two-phase
                  procedures turn on a two-position setting — DC then AC, shunt
@@ -754,9 +807,11 @@ async function runLane(lane, queue, reports, onDone) {
           if (k === 0 && run.waitedMs > 8000) budget = Math.min(budget, 3);
           let t = await takeReading();
           if (!t.ok) {
-            /* Act on any limit the refusal itself states, then try once more
-               before falling back to hunting blindly. */
+            /* Act on what the refusal actually says — a limit with a number
+               in it, or a control it names — then try once more before
+               falling back to hunting blindly. */
             await obeyStatedLimits(t.why);
+            if (await answerNamedControl(t.why)) await wait(260);
             await wait(200);
             t = await takeReading();
           }
@@ -810,10 +865,21 @@ async function runLane(lane, queue, reports, onDone) {
             freezeSliders = false;
             budget = Math.min(16, budget + 2);
           }
-          if (mixingRefused && !traySetNeeded
+          /*
+           * The bench is asking for a SET, and it can ask without ever having
+           * objected to a mixed one. "Only 1 different board examined — each
+           * board carries a different fault, work through at least three of
+           * them" is that request, and it was only listened to after a mixing
+           * refusal had first frozen the tray.
+           */
+          if (!traySetNeeded
               && /different (tuning forks|tubes|salts|boards|components|specimens|solutions|arrangements)|work through at least|both direction|with and without|in each position/i.test(asking)) {
-            // Now it wants a set after all: put the tray back into use.
+            // Now it wants a set after all: put the tray back into use, and
+            // advance the picker it actually named — "work through at least
+            // three BOARDS" is about the board tray, not whichever tray
+            // happens to have the most buttons on it.
             traySetNeeded = true;
+            await answerNamedControl(asking);
             budget = Math.min(16, budget + want);
             continue;
           }
@@ -870,7 +936,13 @@ async function runLane(lane, queue, reports, onDone) {
               [...document.querySelectorAll('#controls .seg, #controls .wiring')].forEach((g, i) => {
                 const btns = [...g.querySelectorAll('button')];
                 const want = choice[i];
-                if (want >= 0 && btns[want]) btns[want].click();
+                if (!(want >= 0) || !btns[want]) return;
+                /* Putting the bench back the way it opened must not put an
+                   ANSWER back to "not given". The fault-finding bench opens
+                   with its diagnosis picker on "Not yet", and restoring that
+                   left the probe unable to record anything ever again. */
+                if (/^(not yet|none|\u2014|-|no |undecided)/i.test(btns[want].textContent.trim())) return;
+                btns[want].click();
               });
               [...document.querySelectorAll('#controls input[type=range]')].forEach((el, i) => {
                 if (sliders[i] === undefined) return;
