@@ -446,8 +446,23 @@ async function runLane(lane, queue, reports, onDone) {
     await wait(150);
     const after = await probeRead();
     if (after.rows > before) return { ok: true, rows: after.rows };
-    const toast = await page.evaluate(() => document.querySelector('#toast')?.textContent.trim() || '');
-    return { ok: false, why: `refused: ${toast || 'no row appeared'}` };
+    /*
+     * Read the FEEDBACK PANEL, not the toast.
+     *
+     * The toast is cut at 88 characters so it fits on screen; the panel holds
+     * the whole sentence, and the whole sentence is where the numbers are.
+     * "Keep the object between 21 cm and under about 33 cm from the lens for
+     * this mirror" arrived here as "The radius of curvature is larger than
+     * the distance to I1. The mirror must stand betw…", which says the bench
+     * is unhappy and not one thing about what to do.
+     */
+    const said = await page.evaluate(() => {
+      const box = document.querySelector('#feedback');
+      const full = box && !box.hidden ? box.textContent.replace(/\s+/g, ' ').trim() : '';
+      const toast = document.querySelector('#toast')?.textContent.trim() || '';
+      return full.length > toast.length ? full : toast;
+    });
+    return { ok: false, why: `refused: ${said || 'no row appeared'}` };
   }
 
 
@@ -588,6 +603,52 @@ async function runLane(lane, queue, reports, onDone) {
         /* A value the bench asked the student to stay under, in the units of
            whichever slider it belongs to. */
         let sliderCeiling = null;
+
+        /**
+         * Do what the bench just told you, wherever it said it.
+         *
+         * "Keep the object between 21 cm and under about 33 cm", "at least
+         * 26 mL is needed for 8 g" — these are instructions with numbers in
+         * them, and a student acts on them whether they arrive in the
+         * still-needed line or in the refusal that comes back from pressing
+         * Record. Only the first was read, so a bench that said exactly what
+         * to do while refusing a reading was refused three times over.
+         */
+        const obeyStatedLimits = async (text) => {
+          if (!text) return;
+          const floor = text.match(/\bat least\s+(?:about\s+)?([\d.]+)\s*(?:mL|ml|g|cm|mm|V|A|°C)/i);
+          if (floor) {
+            await page.evaluate((v) => {
+              const el = [...document.querySelectorAll('#controls .ctl:not([data-group="setup"]) input[type=range]')]
+                .find((x) => v > Number(x.min) && v <= Number(x.max));
+              if (!el) return;
+              const step = Number(el.step) || 1;
+              el.value = String(Math.min(Number(el.max), Math.ceil((Number(v) * 1.15) / step) * step));
+              el.dispatchEvent(new Event('input', { bubbles: true }));
+            }, Number(floor[1]));
+            budget = Math.min(16, budget + 2);
+          }
+          const cap = text.match(/\b(?:under|below|less than)\s+(?:about\s+)?([\d.]+)/i);
+          if (cap) {
+            const value = Number(cap[1]);
+            const which = await page.evaluate((v) => {
+              const sliders = [...document.querySelectorAll('#controls .ctl:not([data-group="setup"]) input[type=range]')];
+              const i = sliders.findIndex((x) => v > Number(x.min) && v <= Number(x.max));
+              if (i < 0) return null;
+              /* Come back inside the stated range at once, rather than waiting
+                 for the next reading to sweep there. */
+              const el = sliders[i];
+              const step = Number(el.step) || 1;
+              if (Number(el.value) >= v) {
+                el.value = String(Math.max(Number(el.min), Math.floor((v * 0.9) / step) * step));
+                el.dispatchEvent(new Event('input', { bubbles: true }));
+              }
+              return i;
+            }, value);
+            if (which === 0) sliderCeiling = value;
+            if (which !== null) budget = Math.min(16, budget + 1);
+          }
+        };
         /* How long to let a process run between readings, once a bench has
            said its readings must be spread over time. */
         /*
@@ -693,6 +754,13 @@ async function runLane(lane, queue, reports, onDone) {
           if (k === 0 && run.waitedMs > 8000) budget = Math.min(budget, 3);
           let t = await takeReading();
           if (!t.ok) {
+            /* Act on any limit the refusal itself states, then try once more
+               before falling back to hunting blindly. */
+            await obeyStatedLimits(t.why);
+            await wait(200);
+            t = await takeReading();
+          }
+          if (!t.ok) {
             const firstRefusal = t.why;
             // First do what the instrument itself tells you to do.
             if (await homeInOnNull(nControls, Math.max(1000, Math.min(20000, labDeadline - Date.now())))) { nulled += 1; t = await takeReading(); }
@@ -730,16 +798,7 @@ async function runLane(lane, queue, reports, onDone) {
           /* "Keep the load under about 5.6 kg", "stay below 40 °C": a ceiling
              the bench states is part of the method, so it is read off the
              refusal and applied to the slider it fits. */
-          const capAsked = asking.match(/\b(?:under|below|less than)\s+(?:about\s+)?([\d.]+)/i);
-          if (capAsked) {
-            const value = Number(capAsked[1]);
-            const fits = await page.evaluate((v) => {
-              const el = [...document.querySelectorAll('#controls .ctl:not([data-group="setup"]) input[type=range]')][0];
-              if (!el) return false;
-              return v > Number(el.min) && v <= Number(el.max);
-            }, value);
-            if (fits) sliderCeiling = value;
-          }
+          await obeyStatedLimits(asking);
 
           /* And the bench may ask for a RANGE after the set has been made
              consistent — "vary the supply so the current climbs" — which is

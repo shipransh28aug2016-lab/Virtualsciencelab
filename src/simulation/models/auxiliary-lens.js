@@ -232,7 +232,16 @@ export function validate(inputs = defaults) {
         code: 'MIRROR_CANNOT_REACH',
         message: 'The radius of curvature is larger than the distance to I₁.',
         why: `The mirror must stand between the lens and I₁ at a distance R from I₁, but R = ${2 * el.focal} cm is more than the ${v1.toFixed(1)} cm to I₁, so there is no room.`,
-        fix: 'Move the object closer to the lens so I₁ forms further away, or use a mirror of smaller radius.',
+        /*
+         * Name the range, not just the direction.
+         *
+         * I₁ must form further from the lens than R, so u f/(u − f) > R, which
+         * holds for u below R f/(R − f) — and above f, or the lens makes no
+         * real image at all. "Move the object closer" left a student to find
+         * both ends of that window by trial, on a bench where two thirds of
+         * the slider's travel cannot be used with this mirror.
+         */
+        fix: `Keep the object between ${(lens.focal + 1).toFixed(0)} cm and under about ${((2 * el.focal * lens.focal) / (2 * el.focal - lens.focal)).toFixed(0)} cm from the lens for this mirror, or use a mirror of smaller radius.`,
       });
     }
   } else if (v1 !== null) {

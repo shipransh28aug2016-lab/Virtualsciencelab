@@ -1073,7 +1073,14 @@ function record() {
       if (reading?.imageType) return reading.imageType;
       const w = v.warnings?.[0] || v.errors?.[0];
       if (!w) return 'Nothing to measure here — no reading recorded';
-      return [w.message, w.fix || w.why].filter(Boolean).join(' ');
+      /*
+       * All three parts, not two. The crystallisation bench says "this is not
+       * enough hot solvent" in `message`, "add more, a little at a time" in
+       * `fix`, and "this solvent dissolves 32 g per 100 mL, so at least 26 mL
+       * is needed for 8 g" in `why` — and it was the `why` that carried the
+       * number, and the `why` that was dropped whenever a `fix` existed.
+       */
+      return [w.message, w.why, w.fix].filter(Boolean).join(' ');
     })();
     const why = guidance;
     const box = $('#feedback');
