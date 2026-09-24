@@ -399,19 +399,26 @@ export function friction(ctx, w, h, state, inputs) {
   const th = theme();
   const tableY = 300, x0 = 60, pulleyX = 620;
   ctx.save();
-  ctx.fillStyle = th.wood; ctx.fillRect(x0, tableY, pulleyX - x0 + 20, 14);
+  /* The table STOPS at the pulley, which is clamped to its edge. Drawn
+     twenty pixels past it, the pulley stood on the table top and the pan
+     hung above the table — a pan that cannot fall cannot pull. */
+  const edgeX = pulleyX - 16;
+  ctx.fillStyle = th.wood; ctx.fillRect(x0, tableY, edgeX - x0, 14);
   ctx.strokeStyle = rgba('#3a2412', 0.4); ctx.lineWidth = 1;
-  ctx.strokeRect(x0, tableY, pulleyX - x0 + 20, 14);
+  ctx.strokeRect(x0, tableY, edgeX - x0, 14);
+  // A leg, so the table reads as a table and the pan as hanging clear of it.
+  ctx.fillStyle = shade(th.wood, -0.25);
+  ctx.fillRect(x0 + 26, tableY + 14, 16, 150);
   ctx.restore();
-  label(ctx, (x0 + pulleyX) / 2, tableY + 15, 'Horizontal table', { anchor: 'below' });
+  label(ctx, (x0 + edgeX) / 2, tableY + 15, 'Horizontal table', { anchor: 'below' });
 
   const blockW = inputs.face === 'narrow' ? 46 : 92;
   const blockH = inputs.face === 'narrow' ? 56 : 32;
   /* The block sits still until the pull exceeds limiting friction, then
      slides. `state.x` is the model's integrated displacement, so what is
      seen is the motion the physics produced. */
-  const slid = clamp((state?.x ?? 0) * 260, 0, pulleyX - x0 - blockW - 130);
-  const bx = 150 + slid;
+  const slid = clamp((state?.x ?? 0) * 260, 0, pulleyX - blockW - 270);
+  const bx = 230 + slid;   // room to the left for the friction arrow
   contactShadow(ctx, bx + blockW / 2, tableY + 1, blockW * 1.2, { strength: 0.5 });
   ctx.save();
   const g = ctx.createLinearGradient(0, tableY - blockH, 0, tableY);
@@ -421,7 +428,20 @@ export function friction(ctx, w, h, state, inputs) {
   ctx.strokeStyle = rgba('#4a3016', 0.6); ctx.lineWidth = 1.2;
   ctx.strokeRect(bx, tableY - blockH, blockW, blockH);
   ctx.restore();
-  label(ctx, bx + blockW / 2, tableY - blockH - 4, 'Wooden block', { anchor: 'above' });
+  /* The load on the block, drawn where it is: on top of the block. */
+  const loadG = Number(inputs?.loadG || 0);
+  if (loadG > 0) {
+    const lw = Math.min(blockW - 8, 22 + loadG / 14);
+    ctx.save();
+    ctx.fillStyle = shade(th.metal, -0.15);
+    ctx.fillRect(bx + (blockW - lw) / 2, tableY - blockH - 12, lw, 12);
+    ctx.strokeStyle = rgba('#20262f', 0.5); ctx.lineWidth = 1;
+    ctx.strokeRect(bx + (blockW - lw) / 2, tableY - blockH - 12, lw, 12);
+    ctx.restore();
+    label(ctx, bx + blockW / 2, tableY - blockH - 14, `${loadG} g on the block`, { anchor: 'above', size: 11 });
+  }
+  label(ctx, bx + blockW / 2, tableY - blockH - (loadG > 0 ? 34 : 4),
+    `Wooden block (${inputs?.blockMassG ?? 200} g)`, { anchor: 'above' });
 
   // Thread over the pulley to the pan.
   ctx.save();
@@ -431,20 +451,43 @@ export function friction(ctx, w, h, state, inputs) {
   ctx.lineTo(pulleyX, tableY - blockH / 2);
   ctx.stroke();
   ctx.restore();
-  chrome(ctx, pulleyX - 12, tableY - blockH / 2 - 12, 24, 24, 12);
-  label(ctx, pulleyX + 14, tableY - blockH / 2 - 16, 'Frictionless pulley', { anchor: 'right' });
+  /* The pulley is clamped to the table edge, and the thread turns over it
+     and hangs FREE, clear of the table. */
+  ctx.save();
+  ctx.fillStyle = shade(th.metal, -0.3);
+  ctx.fillRect(edgeX - 4, tableY - blockH / 2, 8, 16);
+  ctx.restore();
+  chrome(ctx, pulleyX - 14, tableY - blockH / 2 - 14, 28, 28, 14);
+  label(ctx, pulleyX + 16, tableY - blockH / 2 - 18, 'Pulley clamped at the edge', { anchor: 'right' });
 
-  const panDrop = clamp((state?.x ?? 0) * 260, 0, 120);
-  drawWeight(ctx, pulleyX, tableY - blockH / 2 + 34 + panDrop, { label: `Pan + weights (${inputs.loadG ?? 0} g)` });
+  const panDrop = clamp((state?.x ?? 0) * 260, 0, 90);
+  const panY = tableY + 118 + panDrop;
+  ctx.save();
+  ctx.strokeStyle = rgba(th.ink, 0.8); ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.moveTo(pulleyX + 14, tableY - blockH / 2);
+  ctx.lineTo(pulleyX + 14, panY - 16);
+  ctx.stroke();
+  ctx.restore();
+  /* `panG` is the weight IN THE PAN; `loadG` is the load sitting ON THE
+     BLOCK. The pan was labelled with the block's load, so moving the slider
+     that presses the block down made the hanging pan announce a weight it
+     did not have, on the bench where the whole point is telling those two
+     apart. */
+  drawWeight(ctx, pulleyX + 14, panY, { label: `Pan + weights (${inputs.panG ?? 0} g)` });
 
   // Force arrows: what is pulling, and what is holding it back.
   const applied = state?.applied ?? 0;
-  const scale = 240;
+  /* Long enough to read, short enough to stay on the bench. At a fixed
+     240 px per newton the friction arrow ran off the left-hand edge and its
+     label came out as "e pull)". */
+  const headroom = Math.max(60, bx - x0 - 16);
+  const scale = applied > 0 ? Math.min(240, headroom / applied) : 240;
   if (applied > 0.0005) {
     arrowLabel(ctx, bx + blockW, tableY - blockH / 2, applied * scale, th.accent, `Pull ${(applied).toFixed(3)} N`);
     const back = state?.slipping ? applied * 0.85 : applied;
     arrowLabel(ctx, bx, tableY - blockH / 2, -back * scale, '#c02626',
-      state?.slipping ? 'Kinetic friction' : 'Static friction (matches the pull)');
+      state?.slipping ? 'Kinetic friction' : 'Static friction', bx - 46);
   }
   label(ctx, (x0 + pulleyX) / 2, 130,
     state?.slipping ? `Slipping — the block is accelerating (v = ${(state.v ?? 0).toFixed(2)} m/s)`
@@ -453,8 +496,14 @@ export function friction(ctx, w, h, state, inputs) {
     { anchor: 'above', bold: true, color: state?.slipping ? '#c02626' : undefined });
 }
 
-/** A horizontal force arrow with its magnitude named beside it. */
-function arrowLabel(ctx, x, y, len, colour, text) {
+/**
+ * A horizontal force arrow with its magnitude named beside it.
+ *
+ * `minLabelX` keeps the name on the bench: centred on the arrow, the static
+ * friction's label ran off the left-hand edge of the scene and came out as
+ * "riction".
+ */
+function arrowLabel(ctx, x, y, len, colour, text, minLabelX = -Infinity) {
   if (Math.abs(len) < 2) return;
   ctx.save();
   ctx.strokeStyle = colour; ctx.fillStyle = colour; ctx.lineWidth = 2.4;
@@ -466,7 +515,7 @@ function arrowLabel(ctx, x, y, len, colour, text) {
   ctx.lineTo(x + len - d * 9, y + 5);
   ctx.closePath(); ctx.fill();
   ctx.restore();
-  label(ctx, x + len / 2, y - 8, text, { anchor: 'above', size: 11, color: colour });
+  label(ctx, Math.max(minLabelX, x + len / 2), y - 8, text, { anchor: 'above', size: 11, color: colour });
 }
 export function inclinedPlane(ctx, w, h, state, inputs) {
   const th = theme();
