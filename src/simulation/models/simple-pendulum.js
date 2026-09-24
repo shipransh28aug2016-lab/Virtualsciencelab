@@ -77,7 +77,16 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!state || !state.finishedAt) return null;
+  /*
+   * A bench that will not take a reading has to say why.
+   *
+   * These returned a bare null, which reached the student as "Nothing to
+   * measure here — no reading recorded": true of a mirror forming no image,
+   * and useless on a bench where the apparatus is simply not ready yet. The
+   * student has pressed the right button at the wrong moment, and the bench
+   * knows exactly which moment it is waiting for.
+   */
+  if (!state || !state.finishedAt) return { v: null, reason: 'The bob has not completed the oscillations being timed. Release it from a small angle, let the stop clock run out the full count, and then record the time.' };
   const rng = makeRng(seed + trial * 61);
   const lc = 0.2; // stopwatch least count, s (reaction-time limited)
   const trueTotal = inputs.oscillations * periodTrue(inputs);

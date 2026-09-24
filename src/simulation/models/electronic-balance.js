@@ -105,7 +105,16 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!state || !state.settled) return null;
+  /*
+   * A bench that will not take a reading has to say why.
+   *
+   * These returned a bare null, which reached the student as "Nothing to
+   * measure here — no reading recorded": true of a mirror forming no image,
+   * and useless on a bench where the apparatus is simply not ready yet. The
+   * student has pressed the right button at the wrong moment, and the bench
+   * knows exactly which moment it is waiting for.
+   */
+  if (!state || !state.settled) return { v: null, reason: 'The display is still settling. Wait for the reading to stop changing before writing it down — a balance is read only when its last digit is steady.' };
   const rng = makeRng(seed + trial * 307);
   const lc = balanceOf(inputs).lc;
   const reading = toLeastCount(netMassG(inputs) + jitter(rng, lc * 0.6), lc);

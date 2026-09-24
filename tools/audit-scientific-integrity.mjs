@@ -182,4 +182,38 @@ for (const entry of tindex.experiments.filter((e) => e.contentStatus === 'publis
 assert.ok(indicatorModels.size >= 8,
   `only ${indicatorModels.size} models carry a null indicator — expected the whole family`);
 
-console.log(`Scientific integrity checks passed (${indicatorModels.size} null-indicator models verified across ${indicatorsChecked} experiments).`);
+/*
+ * A BENCH THAT WILL NOT TAKE A READING HAS TO SAY WHY.
+ *
+ * Refusing is teaching: the balance is still settling, the bob has not
+ * finished its swings, the solvent front has not reached the top. Refusing in
+ * silence is not. Twelve benches returned a bare null at the moment a student
+ * first presses Record, and the app could only fall back to "Nothing to
+ * measure here — no reading recorded" — true of a mirror forming no image,
+ * useless on a bench where the apparatus is simply not ready yet.
+ *
+ * So every refusal must carry words: its own `reason`, or a warning from
+ * validate() that the app can show in its place.
+ */
+let silent = [];
+for (const entry of tindex.experiments.filter((e) => e.contentStatus === 'published')) {
+  const exp = JSON.parse(await readFile(join(troot, entry.file), 'utf8'));
+  const modelName = exp.simulation.model;
+  const model = await import(pathToFileURL(join(troot, 'src/simulation/models', `${modelName}.js`)));
+  const inputs = { ...model.defaults };
+  for (const v of exp.variables || []) {
+    if (v.default == null || v.type === 'dependent') continue;
+    inputs[v.id] = v.default;
+  }
+  let row;
+  try { row = model.measure(model.init(inputs), inputs, 1, 1); } catch { continue; }
+  const refused = row == null || (row && typeof row === 'object' && 'v' in row && row.v == null);
+  if (!refused || row?.reason) continue;
+  const v = model.validate ? model.validate(inputs) : { warnings: [], errors: [] };
+  if ((v.errors || [])[0] || (v.warnings || [])[0]) continue;
+  silent.push(`${entry.id} [${modelName}]`);
+}
+assert.equal(silent.length, 0,
+  `these benches refuse a reading without saying why, so the student is told only "Nothing to measure here": ${silent.join(', ')}`);
+
+console.log(`Scientific integrity checks passed (${indicatorModels.size} null-indicator models verified across ${indicatorsChecked} experiments; no bench refuses a reading in silence).`);

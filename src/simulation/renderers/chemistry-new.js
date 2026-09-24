@@ -57,7 +57,7 @@ export function equilibriumShift(ctx, w, h, state, inputs) {
   label(ctx, cx, 22, state?.equationFull || (cocl ? '[Co(H₂O)₆]²⁺ + 4Cl⁻ ⇌ [CoCl₄]²⁻ + 6H₂O' : 'Fe³⁺ + SCN⁻ ⇌ [FeSCN]²⁺'),
     { anchor: 'below', bold: true, size: 13 });
   label(ctx, cx, 48,
-    state?.shifting ? `Shifting ${pos > 0.5 ? 'forward' : 'backward'} — ${inputs?.reagent || 'reagent'} added`
+    state?.shifting ? `Shifting ${pos > 0.5 ? 'forward' : 'backward'} — ${state?.reagentLabel || 'reagent'} added`
       : 'At equilibrium', { anchor: 'below', bold: true, color: state?.shifting ? '#8a5a00' : '#0d7a52' });
 
   drawRack(ctx, cx, BENCH_Y, 1, 120);

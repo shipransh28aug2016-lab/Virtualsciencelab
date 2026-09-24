@@ -244,8 +244,31 @@ export function step(state, inputs, dt) {
  * point cannot be quoted from a liquid that is still merely warming.
  */
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!bathAdequate(inputs)) return null;
-  if (!state || state.phase !== 'read') return null;
+  /*
+   * Refusing is fine; refusing without saying why is not.
+   *
+   * Both of these returned a bare null, which reached the student as
+   * "Nothing to measure here — no reading recorded" — on a bench where
+   * there is a great deal to measure and the run has simply not got to the
+   * point where the reading is taken. A boiling point by the Siwoloboff
+   * method is read as the bubbling STOPS on cooling, and that is the
+   * sentence to say.
+   */
+  if (!bathAdequate(inputs)) {
+    const bath = BATHS[inputs.bath] || BATHS.oil;
+    return {
+      v: null,
+      reason: `The ${bath.label.toLowerCase()} cannot reach ${boilingPointC(inputs).toFixed(0)} °C — it is safe only to ${bath.maxC} °C, so this liquid never boils in it. Choose a bath that goes higher.`,
+    };
+  }
+  if (!state || state.phase !== 'read') {
+    const said = {
+      warming: 'The liquid is still warming. Heat it until a rapid stream of bubbles comes from the capillary.',
+      bubbling: 'Bubbles are still streaming from the capillary. Stop heating and let the bath cool — the reading is taken as the bubbling STOPS.',
+      cooling: 'The bath is cooling. Watch the capillary: the boiling point is the temperature at the moment the last bubble is drawn back in.',
+    }[state?.phase] || 'Start the heating first: the boiling point is read as the bubbling stops on cooling.';
+    return { v: null, reason: said };
+  }
 
   const lc = 0.5;
   const rng = makeRng(seed + trial * 59);

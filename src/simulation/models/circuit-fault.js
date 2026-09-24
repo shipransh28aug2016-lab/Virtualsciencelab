@@ -270,8 +270,23 @@ export function step(state, inputs, dt) {
  * records a judgement, and "I have not decided" is not one.
  */
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!validate(inputs).ok) return null;
-  if (!state || !state.settled) return null;
+  const check = validate(inputs);
+  if (!check.ok) {
+    /* The model already wrote the explanation, for the feedback panel; say
+       the same thing here rather than refusing in silence. */
+    const w = check.errors[0] || check.warnings[0];
+    return { v: null, reason: w ? [w.message, w.fix || w.why].filter(Boolean).join(' ') : 'The apparatus is not set up for a reading yet.' };
+  }
+  /*
+   * A bench that will not take a reading has to say why.
+   *
+   * These returned a bare null, which reached the student as "Nothing to
+   * measure here — no reading recorded": true of a mirror forming no image,
+   * and useless on a bench where the apparatus is simply not ready yet. The
+   * student has pressed the right button at the wrong moment, and the bench
+   * knows exactly which moment it is waiting for.
+   */
+  if (!state || !state.settled) return { v: null, reason: 'The test is not finished. Make the connection, let the meter settle, and then record what it shows.' };
   if (inputs.diagnosis === 'none') return { v: null, reason: 'Read the meters, decide what is wrong with this board, and select that diagnosis before recording it.' };
 
   const fault = activeFault(inputs);
