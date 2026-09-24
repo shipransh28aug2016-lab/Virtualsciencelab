@@ -2,7 +2,7 @@
  * Apparatus renderers — heat, fluids and their Section-B activities.
  */
 import {
-  label, drawBeaker, drawThermometer, drawRetortStand, drawBurner, drawTestTube, theme, drawWeight, brushedMetal, chrome, plastic, contactShadow, incandescence, noteBounds, drawClamp, drawStopClock,
+  label, drawBeaker, drawThermometer, drawRetortStand, drawBurner, drawTestTube, theme, drawWeight, brushedMetal, chrome, plastic, contactShadow, incandescence, noteBounds, drawClamp, drawStopClock, heatingAssembly,
 } from './apparatus.js';
 import { clock, rgba, shade, mixColor, clamp, lerp, noise1 } from './realism.js';
 
@@ -540,7 +540,21 @@ export function bimetallicStrip(ctx, w, h, state, inputs) {
 export function liquidExpansion(ctx, w, h, state, inputs) {
   const th = theme();
   const cx = w / 2;
-  const { topY, bot } = drawBeaker(ctx, cx, h - 120, 160, 90, 0.85, th.liquid, { label: 'Flask of liquid' });
+  /*
+   * On a tripod over the burner, not around it.
+   *
+   * The flask was drawn from h−120 to h−30 and the burner's base at h−10,
+   * so the burner stood INSIDE the vessel with its flame rising through the
+   * liquid, across the vessel's own label. Heating a flask over a gauze on a
+   * tripod is the arrangement this activity uses, and there is a primitive
+   * for it that every other heated bench already uses.
+   */
+  const { topY } = heatingAssembly(ctx, cx, h - 40, {
+    vesselWidth: 170, vesselHeight: 104, fill: 0.85,
+    liquid: th.liquid, lit: state?.heating !== false,
+    vesselLabel: `Flask of ${(inputs?.liquid || 'liquid')}`,
+    stand: false,
+  });
   ctx.save(); ctx.strokeStyle = th.glassStroke; ctx.lineWidth = 1.4;
   ctx.beginPath(); ctx.moveTo(cx - 4, topY - 100); ctx.lineTo(cx - 4, topY); ctx.lineTo(cx + 4, topY); ctx.lineTo(cx + 4, topY - 100); ctx.stroke();
   /* The stem level is read straight off the model's own levelMm, which
@@ -552,8 +566,7 @@ export function liquidExpansion(ctx, w, h, state, inputs) {
   const levelPx = clamp(baselinePx + (state?.levelMm ?? 0) * 2.2, 4, 96);
   ctx.fillStyle = th.liquid; ctx.fillRect(cx - 3, topY - levelPx, 6, levelPx); ctx.restore();
   label(ctx, cx, topY - 100, 'Narrow stem', { anchor: 'above' });
-  drawBurner(ctx, cx, h - 10, state?.heating !== false);
-  label(ctx, cx, h - 30,
+  label(ctx, cx, h - 14,
     state?.heating
       ? `Heating — vessel +${(state?.tempVesselC ?? 0).toFixed(1)} °C, liquid +${(state?.tempLiquidC ?? 0).toFixed(1)} °C · level ${(state?.levelMm ?? 0).toFixed(2)} mm`
       : 'Press start to heat the flask',
