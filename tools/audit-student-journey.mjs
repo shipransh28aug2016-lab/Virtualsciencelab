@@ -698,6 +698,8 @@ async function runLane(lane, queue, reports, onDone) {
         /* Set when the bench says the READINGS cannot be averaged because a
            continuously-variable setting was moved between them. */
         let freezeSliders = false;
+        /* Whether the second mixing complaint has already been acted on. */
+        let blamedTwice = false;
         /* A value the bench asked the student to stay under, in the units of
            whichever slider it belongs to. */
         let sliderCeiling = null;
@@ -706,6 +708,9 @@ async function runLane(lane, queue, reports, onDone) {
            curve of a prism has to be walked past its minimum on both sides
            before a minimum-deviation reading exists at all. */
         let sweepOutward = null;
+        /* Where the OTHER null is, when the bench has more than one and says
+           where to look for the one still missing. */
+        let nullWindow = null;
 
         /**
          * Do what the bench just told you, wherever it said it.
@@ -727,6 +732,21 @@ async function runLane(lane, queue, reports, onDone) {
          * objections: one says stop changing the specimen, the other says
          * this control has not been set at all.
          */
+        /* "The first resonance is recorded at 29.0 cm. Now lower the water
+           level further, past the quiet stretch, until the note is loud again
+           — the second resonance is near three times the first." A bench with
+           two nulls has to be able to say which one is still missing, and the
+           hunt has to be told, or it bisects its way back to the one already
+           recorded. */
+        const windowFrom = (text) => {
+          const m = String(text || '').match(/recorded at\s+([\d.]+)\s*(?:cm|mm)\b[\s\S]*?near (three times|a third)/i);
+          if (!m) return null;
+          const at = Number(m[1]);
+          return /three times/i.test(m[2])
+            ? { lo: at * 2.1, hi: at * 4 }
+            : { lo: at / 4, hi: at / 2.1 };
+        };
+
         const answerNamedControl = async (text) => {
           if (!text) return false;
           /* Never in answer to a complaint ABOUT a control. "These readings
@@ -734,7 +754,9 @@ async function runLane(lane, queue, reports, onDone) {
              slab…)" contains the word "specimens", which matched the specimen
              picker's own label — so the probe answered "stop changing the
              specimen" by changing the specimen. */
-          if (/\d+ different |cannot be averaged|one .* at a time|its own set/i.test(text)) return false;
+          const complainsAboutMixing = /these readings are of \d+ different|were taken (?:on|at|with) \d+ different|are at \d+ different|cannot be averaged|one .* at a time|its own set/i.test(text);
+          const asksForASet = /only \d+ different|work through at least|at least (?:two|three|four|\d+) different/i.test(text);
+          if (complainsAboutMixing && !asksForASet) return false;
           return page.evaluate((said) => {
             const lower = said.toLowerCase();
             /* Never an ASSEMBLY control. "The meters have not settled" contains
@@ -994,14 +1016,14 @@ async function runLane(lane, queue, reports, onDone) {
                "the second resonance is near three times the first" — and the
                search has to be told, or it bisects its way back to the null it
                already has. */
-            const other = String(t.why || '').match(/recorded at\s+([\d.]+)\s*(?:cm|mm)\b[\s\S]*?near (three times|a third)/i);
-            let window = null;
-            if (other) {
-              const at = Number(other[1]);
-              window = /three times/i.test(other[2])
-                ? { lo: at * 2.1, hi: at * 4 }
-                : { lo: at / 4, hi: at / 2.1 };
-            }
+            const window = windowFrom(t.why) || nullWindow;
+            /* While hunting the OTHER null of the same standing wave, the
+               apparatus stays as it is. The tube found its first resonance
+               with the 288 Hz fork and its second with the 320 Hz one,
+               because the tray went on cycling between readings — two
+               different wavelengths, and v = 2f(l2 - l1) means nothing across
+               them. */
+            if (window) mixingRefused = true;
             const homed = await homeInOnNull(nControls, Math.max(1000, Math.min(20000, labDeadline - Date.now())), window);
             if (TRACE) console.log(`      homeInOnNull -> ${homed}; indicator now "${(await page.evaluate(NULL_PROBE))?.text || 'none'}"`);
             if (homed) { nulled += 1; t = await takeReading(); }
@@ -1054,6 +1076,9 @@ async function runLane(lane, queue, reports, onDone) {
              the bench states is part of the method, so it is read off the
              refusal and applied to the slider it fits. */
           await obeyStatedLimits(asking);
+          /* The bench asks for the other resonance in the still-needed line,
+             not in the refusal, so that is where to read it from. */
+          nullWindow = windowFrom(asking) || nullWindow;
           /* "The smallest deviation in this set is at the very first angle of
              incidence (49 deg), so the readings do not straddle the minimum
              ... take more readings at smaller angles until the deviation is
@@ -1078,10 +1103,25 @@ async function runLane(lane, queue, reports, onDone) {
           /* And the bench may ask for a RANGE after the set has been made
              consistent — "vary the supply so the current climbs" — which is
              the opposite instruction to the one that froze the sliders. */
-          const mixedSetAgain = /\b(?:these readings are of )?\d+ different [a-z]+/i.test(asking)
-            || /\bdifferent (objects|wires|liquids|specimens|solutions|separations|settings)\b|its own set|one liquid per|one wire at a time|cannot be averaged/i.test(asking);
-          if (freezeSliders && !mixedSetAgain
-              && /\bvary\b|across the range|spread|climbs|at several points|lower the (?:water )?level|raise the (?:water )?level|until .* again|near three times|near a third|further/i.test(asking)) {
+          /* A COMPLAINT that the set mixes things, not a REQUEST for more of
+             them. "Only 1 different iodide concentration in the table, time
+             the clock at four or more" says to vary the very thing the
+             complaint form says to hold still, and reading it as a complaint
+             froze the slider at one concentration and cleared the table after
+             every reading. */
+          const mixedSetAgain = (/\b(?:these readings are of )?\d+ different [a-z]+/i.test(asking)
+            || /\bdifferent (objects|wires|liquids|specimens|solutions|separations|settings)\b|its own set|one liquid per|one wire at a time|cannot be averaged/i.test(asking))
+            && !/only \d+ different|at least (?:two|three|four|\d+) different|four or more|work through at least/i.test(asking);
+          if (freezeSliders
+              && ((!mixedSetAgain
+                   && /\bvary\b|across the range|spread|climbs|at several points|lower the (?:water )?level|raise the (?:water )?level|until .* again|near three times|near a third|further/i.test(asking))
+                  /* "Only 1 different iodide concentration in the table. Time
+                     the clock at four or more" asks for a RANGE of a
+                     slider-driven quantity, which is the opposite instruction
+                     to the one that froze the sliders — and it can arrive in
+                     the same breath as a complaint about something else. */
+                  || (/only \d+ different|at least (?:two|three|four|\d+) different|four or more/i.test(asking)
+                      && await namesASlider(asking)))) {
             freezeSliders = false;
             budget = Math.min(16, budget + 2);
           }
@@ -1100,8 +1140,15 @@ async function runLane(lane, queue, reports, onDone) {
             switchSetNeeded = true;
             budget = Math.min(16, budget + 2);
           }
-          if (!traySetNeeded
-              && /different (tuning forks|tubes|salts|boards|components|specimens|solutions|arrangements)|work through at least|both direction|with and without|in each position/i.test(asking)) {
+          /* "These readings are of 3 different specimens" is a COMPLAINT
+             about the tray, and it was being read as a request for a set from
+             it — so the bench that had just said stop changing the slab was
+             answered by changing the slab. Only a request puts the tray back
+             into use. */
+          const asksForASetNow = /only \d+ different|work through at least|at least (?:two|three|four|\d+) different|both direction|with and without|in each position/i.test(asking)
+            || (/different (tuning forks|tubes|salts|boards|components|specimens|solutions|arrangements)/i.test(asking)
+                && !/these readings are of \d+ different|were taken (?:on|at|with) \d+ different/i.test(asking));
+          if (!traySetNeeded && asksForASetNow) {
             // Now it wants a set after all: put the tray back into use, and
             // advance the picker it actually named — "work through at least
             // three BOARDS" is about the board tray, not whichever tray
@@ -1130,11 +1177,21 @@ async function runLane(lane, queue, reports, onDone) {
             // are not: add it to the list of groups left alone and start the
             // set again.
             if (!(await namesASlider(asking))) {
+              /* ONCE. Clearing the table is how a student starts the set
+                 again, and a bench that goes on saying the same thing was
+                 having its table cleared after every single reading — so it
+                 never held more than the one reading just taken, and the
+                 bench went on asking for more of them for the whole budget.
+                 The second blame is recorded either way, so the tray it names
+                 stops being cycled. */
               mixedWhat = `${mixedWhat}\n${asking}`;
-              budget = Math.min(16, budget + want);
-              await page.evaluate(() => document.querySelector('#clearBtn')?.click());
-              await wait(200);
-              continue;
+              if (!blamedTwice) {
+                blamedTwice = true;
+                budget = Math.min(16, budget + want);
+                await page.evaluate(() => document.querySelector('#clearBtn')?.click());
+                await wait(200);
+                continue;
+              }
             }
             // The quantity being swept is the problem.
             freezeSliders = true;
