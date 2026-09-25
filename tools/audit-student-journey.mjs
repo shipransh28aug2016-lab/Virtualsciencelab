@@ -1090,7 +1090,29 @@ async function runLane(lane, queue, reports, onDone) {
               return false;
             }, { f: frac, cap: sliderCeiling, out: sweepOutward, skip: nulledControl });
             if (railed) sweepOutward = null;
-            await wait(220);
+            /* Wait for the BENCH to show the new setting, not for a fixed
+               fifth of a second. The control prints its own live value beside
+               its label, and under four lanes that redraw can land after the
+               pause — so Record was pressed while the bench still held the
+               previous load, two readings came out identical, and the bench
+               asked, rightly, for readings that differ. These labs passed one
+               at a time and failed in a sweep. */
+            await page.evaluate(async () => {
+              const frame = () => new Promise((r) => {
+                requestAnimationFrame(() => requestAnimationFrame(() => r()));
+              });
+              const sliders = [...document.querySelectorAll('#controls .ctl:not([data-group="setup"]) input[type=range]')];
+              const shown = () => sliders.map((el) => (document.getElementById(`${el.id}_v`)?.textContent || '').trim()).join('|');
+              const t0 = Date.now();
+              let last = null;
+              while (Date.now() - t0 < 900) {
+                await frame();
+                const now = shown();
+                if (now === last) return;
+                last = now;
+              }
+            }).catch(() => {});
+            await wait(120);
           }
           if (paceBetweenReadings) await wait(paceBetweenReadings);
           if (TRACE) {
