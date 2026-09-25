@@ -265,8 +265,14 @@ async function runLane(lane, queue, reports, onDone) {
    * as the practical demands. Running the tap wide open to the end point is a
    * procedural error, and the model is right to call it an overshoot.
    */
-  async function titrateToEndPoint() {
+  async function titrateToEndPoint(deadline = Infinity) {
     const t0 = Date.now();
+    /* A titration must not outlast the lab. Running the burette in from zero
+       in millilitre steps, waiting for the tap each time, costs the best part
+       of a minute; doing it for every titre of every set, with nothing
+       checking the clock until the whole titration was over, is how a
+       titration bench came to hold a sweep lane for twenty minutes. */
+    const spent = () => Date.now() > deadline;
     /* Every titration starts from a full burette. A student refills before
        each one, and now that titrant cannot be taken back out of the flask
        the probe has to do the same — otherwise a burette left part-way down
@@ -293,7 +299,7 @@ async function runLane(lane, queue, reports, onDone) {
        19.7 mL but has only delivered 19.4 is still short of the end point, and
        sweeping faster than it can pour reads the wrong volume. */
     let hit = null;
-    for (let v = range.min; v <= range.max; v += 1) {
+    for (let v = range.min; v <= range.max && !spent(); v += 1) {
       await setBurette(Number(v.toFixed(2)));
       await settle(900);            // the tap must finish pouring, whatever the load
       const f = await flag();
@@ -310,7 +316,7 @@ async function runLane(lane, queue, reports, onDone) {
     await settle(900);
     await setBurette(Number(Math.max(range.min, hit - 1.5).toFixed(2)));
     await settle(900);
-    for (let v = Math.max(range.min, hit - 1.5); v <= hit + 0.2; v += Math.max(range.step, 0.05)) {
+    for (let v = Math.max(range.min, hit - 1.5); v <= hit + 0.2 && !spent(); v += Math.max(range.step, 0.05)) {
       await setBurette(Number(v.toFixed(2)));
       await settle(900);
       const f = await flag();
@@ -391,7 +397,7 @@ async function runLane(lane, queue, reports, onDone) {
    * per frame and ran the slowest benches out of their budget, so the loop
    * was moved across.
    */
-  async function readIndicator(capMs = 1600) {
+  async function readIndicator(capMs = 1300) {
     return page.evaluate(async ({ cap, src }) => {
       // eslint-disable-next-line no-new-func
       const read = new Function(`return (${src})`)();
@@ -402,7 +408,12 @@ async function runLane(lane, queue, reports, onDone) {
          whole lane hangs past its budget. */
       const frame = () => Promise.race([
         new Promise((r) => { requestAnimationFrame(() => requestAnimationFrame(() => r())); }),
-        new Promise((r) => { setTimeout(r, 250); }),
+        /* Two frames at 60 fps is 33 ms. 150 gives a page under load room to
+           deliver them — at 80 the read came back before the bench had
+           redrawn, and the hunt bisected away from the null again — without
+           paying a quarter of a second for every read, of which a null hunt
+           makes a dozen for every reading. */
+        new Promise((r) => { setTimeout(r, 150); }),
       ]);
       const t0 = Date.now();
       await frame();
@@ -528,7 +539,7 @@ async function runLane(lane, queue, reports, onDone) {
       for (let k = 0; k < 30 && Date.now() - t0 < capMs; k += 1) {
         const mid = Math.round(((lo + hi) / 2 - range.min) / range.step) * range.step + range.min;
         await setAt(Number(mid.toFixed(6)));
-        const now = await readIndicator(1200);
+        const now = await readIndicator(1000);
         if (!now) break;
         if (now.atNull) { nulledWidget = i; nulledControl = await asSliderIndex(); return true; }
         if (hi - lo <= range.step * 1.01) break;
@@ -881,8 +892,15 @@ async function runLane(lane, queue, reports, onDone) {
             const lower = said.toLowerCase();
             for (const ctl of document.querySelectorAll('#controls .ctl:not([data-group="setup"])')) {
               if (!ctl.querySelector('input[type=range]')) continue;
+              /* Four letters, not five: sliders are labelled "Load", "Mass",
+                 "Span". "Record at least four different loads" names the Load
+                 slider, and a five-letter floor missed it — so the request was
+                 read as a request for four different SPRINGS, the tray went
+                 back into use, and the bench was given four loads on four
+                 springs. The plural is allowed for, since the bench says
+                 "loads" where the label says "Load". */
               const words = (ctl.querySelector('label')?.textContent || '').toLowerCase()
-                .replace(/\(.*\)/, '').split(/[^a-z\u00e9]+/).filter((x) => x.length >= 5);
+                .replace(/\(.*\)/, '').split(/[^a-z\u00e9]+/).filter((x) => x.length >= 4);
               if (words.some((x) => lower.includes(x))) return true;
             }
             return false;
@@ -1009,7 +1027,12 @@ async function runLane(lane, queue, reports, onDone) {
                  them. */
               const last = groups[groups.length - 1];
               if (last && last !== groups[0] && !stop) last[idx % last.length].click();
-            }, { idx: k, stop: mixingRefused && !traySetNeeded, stopSwitches: switchesSettled || (mixingRefused && !switchSetNeeded), objected: mixedWhat });
+              /* A titration is repeated under the SAME conditions until two
+                 titres agree, so the flask and the burette keep their
+                 contents: cycling the analyte and titrant pickers between
+                 titres gave 20.6 mL and 14.1 mL and a bench that rightly
+                 said they do not agree. */
+            }, { idx: k, stop: isTitration || (mixingRefused && !traySetNeeded), stopSwitches: isTitration || switchesSettled || (mixingRefused && !switchSetNeeded), objected: mixedWhat });
             /* Then move a SLIDER — never another button, because the
                buttons are the specimen tray and pressing one of those would
                put the specimen just chosen straight back. */
@@ -1078,7 +1101,7 @@ async function runLane(lane, queue, reports, onDone) {
            * back to zero — which the bench now says out loud — and turns a
            * cooling curve into eight readings at the same instant.
            */
-          const run = isTitration ? await titrateToEndPoint()
+          const run = isTitration ? await titrateToEndPoint(labDeadline)
             : (timeAxis && k > 0) ? { started: 'already running', waitedMs: 0 }
               : await runProcessAndWait(Math.max(2000, Math.min(34000, labDeadline - Date.now())));
           slowestWait = Math.max(slowestWait, run.waitedMs || 0);
@@ -1236,9 +1259,16 @@ async function runLane(lane, queue, reports, onDone) {
              it — so the bench that had just said stop changing the slab was
              answered by changing the slab. Only a request puts the tray back
              into use. */
-          const asksForASetNow = /only \d+ different|work through at least|at least (?:two|three|four|\d+) different|both direction|with and without|in each position/i.test(asking)
+          const asksForASetNow = (/only \d+ different|work through at least|at least (?:two|three|four|\d+) different|both direction|with and without|in each position/i.test(asking)
             || (/different (tuning forks|tubes|salts|boards|components|specimens|solutions|arrangements)/i.test(asking)
-                && !/these readings are of \d+ different|were taken (?:on|at|with) \d+ different/i.test(asking));
+                && !/these readings are of \d+ different|were taken (?:on|at|with) \d+ different/i.test(asking)))
+            /* …of SPECIMENS, not of readings. "Record at least four different
+               loads" asks for four settings of a slider, and reading it as a
+               request for four springs put the tray back into use: the probe
+               changed the spring between every load, the bench rightly
+               refused the mixed set, and the table was cleared down to a
+               couple of readings of the same thing. */
+            && !(await namesASlider(asking));
           if (traySetNeeded && asksForASetNow) {
             /* Still asking. "Only 2 different boards examined, work through at
                least three of them" needs the BOARD picker advanced again, and
