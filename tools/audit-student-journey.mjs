@@ -265,6 +265,10 @@ async function runLane(lane, queue, reports, onDone) {
    * as the practical demands. Running the tap wide open to the end point is a
    * procedural error, and the model is right to call it an overshoot.
    */
+  /* Where this bench's end point was found, so every titre of the set is run
+     the same way. Cleared when the lab changes. */
+  let knownEndPoint = null;
+
   async function titrateToEndPoint(deadline = Infinity) {
     const t0 = Date.now();
     /* A titration must not outlast the lab. Running the burette in from zero
@@ -306,6 +310,13 @@ async function runLane(lane, queue, reports, onDone) {
       if (f.flagged || /overshot/i.test(f.title)) { hit = v; break; }
     }
     if (hit === null) return { started: 'burette', waitedMs: Date.now() - t0, endpoint: false };
+    /* Every titre of a set approaches from the SAME place. The rough pass
+       steps a millilitre at a time and can flag anywhere in that millilitre,
+       so starting the accurate run from wherever it stopped gave titres 1.1 mL
+       apart — a spread the bench rightly refuses as not concordant. Once one
+       titration has found the end point, the rest start 1.5 mL below that. */
+    if (knownEndPoint === null) knownEndPoint = hit;
+    const from = Math.max(range.min, (knownEndPoint ?? hit) - 1.5);
 
     /* The rough titration is over, and it ran past the end point. A burette
        does not go backwards, so the flask is refilled and the titration done
@@ -314,9 +325,9 @@ async function runLane(lane, queue, reports, onDone) {
        the bench now requires it. */
     await page.evaluate(() => document.querySelector('#aReset')?.click());
     await settle(900);
-    await setBurette(Number(Math.max(range.min, hit - 1.5).toFixed(2)));
+    await setBurette(Number(from.toFixed(2)));
     await settle(900);
-    for (let v = Math.max(range.min, hit - 1.5); v <= hit + 0.2 && !spent(); v += Math.max(range.step, 0.05)) {
+    for (let v = from; v <= from + 2 && !spent(); v += Math.max(range.step, 0.05)) {
       await setBurette(Number(v.toFixed(2)));
       await settle(900);
       const f = await flag();
@@ -790,6 +801,44 @@ async function runLane(lane, queue, reports, onDone) {
            two nulls has to be able to say which one is still missing, and the
            hunt has to be told, or it bisects its way back to the one already
            recorded. */
+        /* WHAT the bench wants more of, and nothing else of the sentence.
+           "Record the resonant length for at least three different tuning
+           forks, at fixed tension" asks for three FORKS; testing the whole
+           sentence against the slider labels found "length" and "tension" and
+           concluded it was asking for slider settings, so the fork tray never
+           advanced. */
+        const wantedMoreOf = (text) => {
+          const m = String(text || '').match(/(?:only \d+|at least (?:two|three|four|five|\d+)|\d+ or more|four or more) different ([a-z\u00e9 ]{3,40})/i);
+          return m ? m[1].trim() : '';
+        };
+
+        /* Does the bench's phrase name one of the PICKERS on this bench?
+           "at least three different tuning forks" does; "three different
+           pairs of P and Q" does not — those are slider settings, and reading
+           them as a request for three different bodies put the tray back into
+           use and gave the bench a mean of three different objects. Asking
+           which control is named is the question; "not a slider" was a guess
+           at it that got both of these wrong in turn. */
+        const namesAPicker = (text) => {
+          if (!text) return false;
+          return page.evaluate((said) => {
+            const lower = said.toLowerCase();
+            for (const ctl of document.querySelectorAll('#controls .ctl:not([data-group="setup"])')) {
+              if (ctl.querySelectorAll('button').length < 2) continue;
+              const words = (ctl.querySelector('label')?.textContent || '').toLowerCase()
+                .replace(/\(.*\)/, '').split(/[^a-z\u00e9]+/).filter((x) => x.length >= 4);
+              if (words.some((x) => lower.includes(x))) return true;
+              /* Or the name of one of its own options: the picker is labelled
+                 "Fork" and the bench says "three different tuning forks". */
+              for (const b of ctl.querySelectorAll('button')) {
+                const opt = b.textContent.toLowerCase().split(/[^a-z\u00e9]+/).filter((x) => x.length >= 5);
+                if (opt.some((x) => lower.includes(x))) return true;
+              }
+            }
+            return false;
+          }, text);
+        };
+
         const windowFrom = (text) => {
           const m = String(text || '').match(/recorded at\s+([\d.]+)\s*(?:cm|mm)\b[\s\S]*?near (three times|a third)/i);
           if (!m) return null;
@@ -965,6 +1014,7 @@ async function runLane(lane, queue, reports, onDone) {
         nulledWidget = null;
         let budget = want;
         const isTitration = exp.simulation?.model === 'titration';
+        knownEndPoint = null;
         for (let k = 0; k < budget && !outOfTime(); k += 1) {
           // move the first responsive control across its range between readings,
           // exactly as a student varies the independent variable
@@ -1264,7 +1314,7 @@ async function runLane(lane, queue, reports, onDone) {
                      to the one that froze the sliders — and it can arrive in
                      the same breath as a complaint about something else. */
                   || (/only \d+ different|at least (?:two|three|four|\d+) different|four or more/i.test(asking)
-                      && await namesASlider(asking)))) {
+                      && await namesASlider(wantedMoreOf(asking) || asking)))) {
             freezeSliders = false;
             budget = Math.min(16, budget + 2);
           }
@@ -1297,7 +1347,7 @@ async function runLane(lane, queue, reports, onDone) {
                changed the spring between every load, the bench rightly
                refused the mixed set, and the table was cleared down to a
                couple of readings of the same thing. */
-            && !(await namesASlider(asking));
+            && await namesAPicker(wantedMoreOf(asking) || asking);
           /* And when what it wants more of IS slider-driven — "record at least
              four different loads" — the specimen stays put while the slider
              does the work. The tray cycles by default, so without this the
@@ -1305,7 +1355,7 @@ async function runLane(lane, queue, reports, onDone) {
              different spring. */
           if (!holdTray
               && /only \d+ different|at least (?:two|three|four|\d+) different|four or more|record at least/i.test(asking)
-              && await namesASlider(asking)) {
+              && await namesASlider(wantedMoreOf(asking) || asking)) {
             holdTray = true;
           }
           if (traySetNeeded && asksForASetNow) {
