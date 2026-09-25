@@ -265,10 +265,6 @@ async function runLane(lane, queue, reports, onDone) {
    * as the practical demands. Running the tap wide open to the end point is a
    * procedural error, and the model is right to call it an overshoot.
    */
-  /* Where this bench's end point was found, so every titre of the set is run
-     the same way. Cleared when the lab changes. */
-  let knownEndPoint = null;
-
   async function titrateToEndPoint(deadline = Infinity) {
     const t0 = Date.now();
     /* A titration must not outlast the lab. Running the burette in from zero
@@ -310,13 +306,6 @@ async function runLane(lane, queue, reports, onDone) {
       if (f.flagged || /overshot/i.test(f.title)) { hit = v; break; }
     }
     if (hit === null) return { started: 'burette', waitedMs: Date.now() - t0, endpoint: false };
-    /* Every titre of a set approaches from the SAME place. The rough pass
-       steps a millilitre at a time and can flag anywhere in that millilitre,
-       so starting the accurate run from wherever it stopped gave titres 1.1 mL
-       apart — a spread the bench rightly refuses as not concordant. Once one
-       titration has found the end point, the rest start 1.5 mL below that. */
-    if (knownEndPoint === null) knownEndPoint = hit;
-    const from = Math.max(range.min, (knownEndPoint ?? hit) - 1.5);
 
     /* The rough titration is over, and it ran past the end point. A burette
        does not go backwards, so the flask is refilled and the titration done
@@ -325,9 +314,9 @@ async function runLane(lane, queue, reports, onDone) {
        the bench now requires it. */
     await page.evaluate(() => document.querySelector('#aReset')?.click());
     await settle(900);
-    await setBurette(Number(from.toFixed(2)));
+    await setBurette(Number(Math.max(range.min, hit - 1.5).toFixed(2)));
     await settle(900);
-    for (let v = from; v <= from + 2 && !spent(); v += Math.max(range.step, 0.05)) {
+    for (let v = Math.max(range.min, hit - 1.5); v <= hit + 0.2 && !spent(); v += Math.max(range.step, 0.05)) {
       await setBurette(Number(v.toFixed(2)));
       await settle(900);
       const f = await flag();
@@ -1014,7 +1003,6 @@ async function runLane(lane, queue, reports, onDone) {
         nulledWidget = null;
         let budget = want;
         const isTitration = exp.simulation?.model === 'titration';
-        knownEndPoint = null;
         for (let k = 0; k < budget && !outOfTime(); k += 1) {
           // move the first responsive control across its range between readings,
           // exactly as a student varies the independent variable
