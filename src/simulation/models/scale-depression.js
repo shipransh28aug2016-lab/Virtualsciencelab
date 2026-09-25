@@ -67,7 +67,12 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 163);
   const d = depressionMm(inputs) + jitter(rng, 0.1);
   const W = (inputs.loadG / 1000) * G;
-  return { trial, orientation: String(inputs.orientation), loadG: inputs.loadG, loadN: sigFig(W, 4), spanCm: inputs.spanCm, depressionMm: Number(d.toFixed(3)), perNewton: sigFig(d / W, 4), arrangement: inputs.arrangement };
+  return { trial, orientation: String(inputs.orientation), loadG: inputs.loadG, loadN: sigFig(W, 4), spanCm: inputs.spanCm, depressionMm: Number(d.toFixed(3)), perNewton: sigFig(d / W, 4),
+    /* The arrangement in words, because this is a column of the student's own
+       observation table. The key stays alongside it, under a name the table
+       does not show, for the grouping in derive(). */
+    arrangement: ARRANGEMENTS[inputs.arrangement] || String(inputs.arrangement),
+    _arrangement: inputs.arrangement };
 }
 
 export function derive(rows, inputs = defaults) {
@@ -85,7 +90,7 @@ export function derive(rows, inputs = defaults) {
    */
   const byArr = new Map();
   for (const r of rows) {
-    const a = r.arrangement || inputs.arrangement;
+    const a = r._arrangement || inputs.arrangement;
     if (!byArr.has(a)) byArr.set(a, []);
     byArr.get(a).push(r);
   }

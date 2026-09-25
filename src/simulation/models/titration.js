@@ -80,6 +80,10 @@ export const INDICATORS = {
   phenolphthalein: { label: 'Phenolphthalein', below: 'colourless', above: 'pink', range: [8.2, 10] },
   methylOrange: { label: 'Methyl orange', below: 'pink', above: 'yellow', range: [3.1, 4.4] },
   universal: { label: 'Universal indicator', below: 'red-orange', above: 'violet', range: [7, 7] },
+  /* Permanganate is its own indicator, and the observation table has to say so
+     in words. Without an entry here the raw picker key leaked into the
+     student's own table, which read "self" in the indicator column. */
+  self: { label: 'None — the permanganate is its own indicator', below: 'colourless', above: 'pale pink', range: [7, 7] },
 };
 
 export const defaults = { system: 'naoh_oxalic', titrantConc: 0.1, analyteVolume: 20, indicator: 'phenolphthalein', buretteVolume: 0 };
