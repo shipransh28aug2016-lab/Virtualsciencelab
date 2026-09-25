@@ -196,8 +196,14 @@
     "fps": 60,
     "controls": [
       {
+        "var": "tempC",
+        "widget": "slider",
+        "group": "setup"
+      },
+      {
         "var": "airColumnCm",
-        "widget": "slider"
+        "widget": "slider",
+        "group": "measure"
       },
       {
         "var": "fork",
@@ -208,11 +214,8 @@
           "f320",
           "f384",
           "f512"
-        ]
-      },
-      {
-        "var": "tempC",
-        "widget": "slider"
+        ],
+        "group": "measure"
       }
     ],
     "actions": [

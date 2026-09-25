@@ -379,9 +379,15 @@ async function runLane(lane, queue, reports, onDone) {
     return page.evaluate(async ({ cap, src }) => {
       // eslint-disable-next-line no-new-func
       const read = new Function(`return (${src})`)();
-      const frame = () => new Promise((r) => {
-        requestAnimationFrame(() => requestAnimationFrame(() => r()));
-      });
+      /* A frame, or a quarter of a second, whichever comes first. A page
+         whose animation frames stop — a lab that has thrown, a tab the
+         browser has throttled — would otherwise leave this waiting for a
+         frame that never comes, with no timeout anywhere above it, and the
+         whole lane hangs past its budget. */
+      const frame = () => Promise.race([
+        new Promise((r) => { requestAnimationFrame(() => requestAnimationFrame(() => r())); }),
+        new Promise((r) => { setTimeout(r, 250); }),
+      ]);
       const t0 = Date.now();
       await frame();
       let last = read();
@@ -486,9 +492,15 @@ async function runLane(lane, queue, reports, onDone) {
 
       if ((await readIndicator())?.atNull) { nulledWidget = i; nulledControl = await asSliderIndex(); return true; }
       await setAt(range.min);
-      const low = await readIndicator();
+      let low = await readIndicator();
+      if (!low) low = await readIndicator();
       await setAt(range.max);
-      const high = await readIndicator();
+      let high = await readIndicator();
+      if (!high) high = await readIndicator();
+      /* One missed read is a moment when the indicator was not on the page,
+         not an answer about this control: asked again rather than skipped,
+         because skipping it is how a hunt comes back "the indicator cannot be
+         followed" having never followed it. */
       if (!low || !high) { await restore(); continue; }
       if (low.atNull) { await setAt(range.min); nulledWidget = i; nulledControl = await asSliderIndex(); return true; }
       if (high.atNull) { nulledWidget = i; nulledControl = await asSliderIndex(); return true; }
@@ -1287,6 +1299,14 @@ async function runLane(lane, queue, reports, onDone) {
         const rr = await probeRead();
         const refusedResult = /^Not enough to calculate/.test(rr.result);
         if (refusedResult) fail('result', `refused: ${rr.result.replace(/\s+/g, ' ').slice(0, 170)}`);
+        if (refusedResult && TRACE) {
+          /* What the bench was actually looking at when it refused. Working
+             out which readings a refusal is about by reasoning backwards from
+             the sweep arithmetic is guesswork; the table is right there. */
+          const table = await page.evaluate(() => [...document.querySelectorAll('#tbody tr')]
+            .map((tr) => [...tr.children].map((td) => td.textContent.trim()).join(' ')).join(' ⏎ '));
+          console.log(`      table: ${table.slice(0, 600)}`);
+        }
         else if (!rr.result || /Take readings, then calculate/.test(rr.result)) fail('result', 'Calculate produced nothing');
         else pass('result', rr.result.replace(/\s+/g, ' ').slice(0, 80));
 
