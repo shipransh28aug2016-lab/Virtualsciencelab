@@ -103,7 +103,7 @@ export function derive(rows) {
   if (temps.length > 1 && iodides.length > 1) {
     return {
       ok: false,
-      reason: `This set changes two things at once — the temperature (${temps.join(', ')} °C) and the iodide concentration (${iodides.join(', ')} M). A rate is measured by moving one of them and holding the other still. Clear the table and either keep the temperature fixed and vary the KI volume, which gives the order in iodide, or keep every volume fixed and vary the temperature, which gives the activation energy.`,
+      reason: `These readings are at ${temps.length} different temperatures (${temps.join(', ')} °C) AND ${iodides.length} different iodide concentrations (${iodides.join(', ')} M). A rate is measured by moving one of them and holding the other still. Clear the table and either hold the temperature and vary the KI volume, which gives the order in iodide, or hold every volume and vary the temperature, which gives the activation energy.`,
     };
   }
 

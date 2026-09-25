@@ -196,6 +196,8 @@ export function derive(rows, inputs = defaults) {
     || mixedSetRefusal(rows, 'liquid', 'liquids')
     || mixedSetRefusal(rows, 'lid', 'arrangements',
       'a lid cuts the evaporation loss by nearly a third, so leave it on or off for the whole run.')
+    || mixedSetRefusal(rows, 'roomTempC', 'room temperatures',
+      'the excess temperature is measured from the room, so a room that changed between readings means ln(θ − θ₀) was taken from two different baselines — settle the room temperature first and leave it alone.')
     || mixedSetRefusal(rows, 'massG', 'masses of liquid',
       'the cooling constant goes as 1/mass, so weigh out one mass and let that one run cool.');
   if (mixed) return mixed;
@@ -203,6 +205,36 @@ export function derive(rows, inputs = defaults) {
   const usable = rows.filter((r) => Number(r.excess) > 0.6 && Number.isFinite(Number(r.lnExcess)));
   if (usable.length < 4) {
     return { ok: false, reason: 'Record at least four readings while the liquid is still well above room temperature.' };
+  }
+
+  /*
+   * A SLOPE IS ONLY A SLOPE IF THE QUANTITY ACTUALLY FELL.
+   *
+   * Newton's law is read off the gradient of ln(excess) against time, and the
+   * gradient is worth having only when the excess falls by a useful factor
+   * across the set and every reading is several thermometer divisions clear of
+   * room temperature. A set taken entirely in the tail — 3.0 °C falling to
+   * 2.0 °C on a thermometer reading to 0.5 °C — is four divisions of
+   * rounding, and fitting it returned a confident cooling constant half as
+   * large as the true one with an r² that looked perfectly respectable. So
+   * the bench says which part of the curve the readings are on, rather than
+   * reporting the rounding as a measurement.
+   */
+  const excesses = usable.map((r) => Number(r.excess));
+  const hottest = Math.max(...excesses);
+  const coolest = Math.min(...excesses);
+  const lc = Number(inputs.thermoLC) || 0.5;
+  if (coolest < lc * 4) {
+    return {
+      ok: false,
+      reason: `The coolest of these readings is only ${coolest.toFixed(1)} °C above the room, which is ${Math.round(coolest / lc)} division${Math.round(coolest / lc) === 1 ? '' : 's'} on a thermometer reading to ${lc} °C. Readings that close to room temperature are mostly rounding, so the gradient of ln(θ − θ₀) cannot be trusted. Take the set higher up the curve, while the liquid is still well above the room, and stop before the last few degrees.`,
+    };
+  }
+  if (hottest / coolest < 1.5) {
+    return {
+      ok: false,
+      reason: `Across these readings the excess temperature fell only from ${hottest.toFixed(1)} °C to ${coolest.toFixed(1)} °C — a factor of ${(hottest / coolest).toFixed(2)}. The gradient of ln(θ − θ₀) against time is not fixed by so short a fall. Follow the cooling until the excess has at least halved, which takes about a ln 2 ÷ k of it: several minutes for water in a calorimeter.`,
+    };
   }
 
   const logPts = usable.map((r) => ({ x: Number(r.timeS), y: Number(r.lnExcess) }));

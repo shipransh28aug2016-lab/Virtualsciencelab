@@ -278,9 +278,16 @@ async function runLane(lane, queue, reports, onDone) {
     }
     if (hit === null) return { started: 'burette', waitedMs: Date.now() - t0, endpoint: false };
 
-    // Then approach dropwise from well before it, so the titre recorded is the
-    // first drop that holds the colour rather than a millilitre past it.
-    for (let v = Math.max(range.min, hit - 1.5); v <= hit + 0.2; v += Math.max(range.step, 0.1)) {
+    /* The rough titration is over, and it ran past the end point. A burette
+       does not go backwards, so the flask is refilled and the titration done
+       again properly: fast to a millilitre short of where the colour turned,
+       then drop by drop. That is the procedure the practical prescribes, and
+       the bench now requires it. */
+    await page.evaluate(() => document.querySelector('#aReset')?.click());
+    await settle(900);
+    await setBurette(Number(Math.max(range.min, hit - 1.5).toFixed(2)));
+    await settle(900);
+    for (let v = Math.max(range.min, hit - 1.5); v <= hit + 0.2; v += Math.max(range.step, 0.05)) {
       await setBurette(Number(v.toFixed(2)));
       await settle(900);
       const f = await flag();
@@ -360,23 +367,55 @@ async function runLane(lane, queue, reports, onDone) {
    * failed in a sweep, which is the signature of a timing assumption rather
    * than a defect.
    */
-  async function readIndicator(capMs = 900) {
-    // Give the change a frame to be applied before reading anything: two
-    // identical reads taken before the input event was even processed are
-    // "settled" only in the sense that nothing has happened yet.
-    await wait(110);
+  /* Wait for FRAMES, not for milliseconds.
+   *
+   * The indicator is redrawn from the model, and the model is stepped on an
+   * animation frame. A fixed pause is enough on an idle machine and not
+   * enough on a loaded one, so with four lanes sharing the CPU the probe kept
+   * reading the PREVIOUS indicator and bisecting away from the null: the same
+   * labs passed one at a time and failed in a sweep. Waiting on
+   * requestAnimationFrame waits on the thing that actually has to happen,
+   * however long the machine takes to get to it. */
+  const twoFrames = () => page.evaluate(() => new Promise((r) => {
+    requestAnimationFrame(() => requestAnimationFrame(() => r(true)));
+  })).catch(() => false);
+
+  async function readIndicator(capMs = 1600) {
+    await twoFrames();
     const t0 = Date.now();
     let last = await page.evaluate(NULL_PROBE);
+    let same = 0;
     while (Date.now() - t0 < capMs) {
-      await wait(70);
+      await twoFrames();
       const now = await page.evaluate(NULL_PROBE);
-      if (now && last && now.text === last.text) return now;
+      if (now && last && now.text === last.text) {
+        same += 1;
+        // Two agreeing reads, each a frame apart, is the model having settled
+        // rather than the probe having been quick.
+        if (same >= 2) return now;
+      } else {
+        same = 0;
+      }
       last = now;
     }
     return last;
   }
 
-  async function homeInOnNull(nControls, capMs = 20000) {
+  /**
+   * @param {{lo:number, hi:number}|null} window Search only this part of the
+   *   first slider's travel. A tube resonates twice over its length and a
+   *   bridge wire balances at one point only: where there is more than one
+   *   null, a bisection of the whole range keeps finding the same one, and the
+   *   bench that asked for the OTHER one has to be able to say where to look.
+   */
+  /* Which control the last successful hunt nulled. On a null bench the
+     reading is taken AT the null, so that control is not the one to vary
+     between readings — the student changes the resistance in the box, or the
+     load, or the specimen, and brings the jockey back to balance. Sweeping it
+     instead gave one reading and then three refusals. */
+  let nulledControl = null;
+
+  async function homeInOnNull(nControls, capMs = 20000, window = null) {
     const t0 = Date.now();
     if (!(await page.evaluate(NULL_PROBE))) return false;
     /* The SAME widget list the rest of the probe counts and drives. This
@@ -394,6 +433,23 @@ async function runLane(lane, queue, reports, onDone) {
         return { min: Number(el.min), max: Number(el.max), step: Number(el.step) || 1 };
       }, { sel: SEL, idx: i });
       if (!range) continue;
+      if (window && i === 0) {
+        range.min = Math.max(range.min, window.lo);
+        range.max = Math.min(range.max, window.hi);
+        if (!(range.max - range.min > range.step)) continue;
+      }
+
+      /* `i` indexes EVERY variable widget; the per-reading sweep indexes the
+         sliders alone. Recording one in the other's terms made the sweep skip
+         the wrong control — on a bench whose specimen tray comes first, it
+         skipped the zero-error slider and went on sweeping the jaw opening
+         the hunt had just balanced. */
+      const asSliderIndex = () => page.evaluate(({ sel, idx }) => {
+        const el = document.querySelectorAll(sel)[idx];
+        const sliders = [...document.querySelectorAll('#controls .ctl:not([data-group="setup"]) input[type=range]')];
+        const at = sliders.indexOf(el);
+        return at < 0 ? null : at;
+      }, { sel: SEL, idx: i });
 
       const setAt = (v) => page.evaluate(({ sel, idx, val }) => {
         const el = document.querySelectorAll(sel)[idx];
@@ -413,14 +469,14 @@ async function runLane(lane, queue, reports, onDone) {
       }, { sel: SEL, idx: i });
       const restore = async () => { if (before !== null) await setAt(before); };
 
-      if ((await readIndicator())?.atNull) return true;
+      if ((await readIndicator())?.atNull) { nulledControl = await asSliderIndex(); return true; }
       await setAt(range.min);
       const low = await readIndicator();
       await setAt(range.max);
       const high = await readIndicator();
       if (!low || !high) { await restore(); continue; }
-      if (low.atNull) { await setAt(range.min); return true; }
-      if (high.atNull) return true;
+      if (low.atNull) { await setAt(range.min); nulledControl = await asSliderIndex(); return true; }
+      if (high.atNull) { nulledControl = await asSliderIndex(); return true; }
       if (low.up === high.up) { await restore(); continue; }   // the null is not inside this range
 
       // Bisect on the direction the indicator points.
@@ -429,13 +485,13 @@ async function runLane(lane, queue, reports, onDone) {
       for (let k = 0; k < 30 && Date.now() - t0 < capMs; k += 1) {
         const mid = Math.round(((lo + hi) / 2 - range.min) / range.step) * range.step + range.min;
         await setAt(Number(mid.toFixed(6)));
-        const now = await readIndicator(600);
+        const now = await readIndicator(1200);
         if (!now) break;
-        if (now.atNull) return true;
+        if (now.atNull) { nulledControl = await asSliderIndex(); return true; }
         if (hi - lo <= range.step * 1.01) break;
         if (now.up) lo = mid; else hi = mid;
       }
-      if ((await readIndicator())?.atNull) return true;
+      if ((await readIndicator())?.atNull) { nulledControl = await asSliderIndex(); return true; }
       // The bisection leaves the control at its best value, which is an
       // improvement even when it did not reach the null — so it is kept.
     }
@@ -766,6 +822,7 @@ async function runLane(lane, queue, reports, onDone) {
         let slowestWait = 0;
         let hunted = 0;
     let nulled = 0;
+        nulledControl = null;
         let budget = want;
         const isTitration = exp.simulation?.model === 'titration';
         for (let k = 0; k < budget && !outOfTime(); k += 1) {
@@ -839,9 +896,14 @@ async function runLane(lane, queue, reports, onDone) {
                put the specimen just chosen straight back. */
             const frac = 0.15 + (0.7 * k) / want;
             if (sweepOutward) sweepOutward.n += 1;
-            const railed = k > 0 && !freezeSliders && await page.evaluate(({ f, cap, out }) => {
+            const railed = k > 0 && !freezeSliders && await page.evaluate(({ f, cap, out, skip }) => {
               const sliders = [...document.querySelectorAll('#controls .ctl:not([data-group="setup"]) input[type=range]')];
-              const el = sliders[0];
+              /* Never the control that holds the null. The reading is taken AT
+                 the balance point, so on these benches the student varies
+                 something else — the resistance in the box, the load in the
+                 pan, the fork — and brings this one back to balance. */
+              const pick = sliders.findIndex((_, i) => i !== skip);
+              const el = pick < 0 ? sliders[0] : sliders[pick];
               if (!el) return;
               const min = Number(el.min); const step = Number(el.step) || 1;
               /* Walking past the turning point: step away from the edge the
@@ -870,7 +932,7 @@ async function runLane(lane, queue, reports, onDone) {
               el.value = String(Math.round((want2 - min) / step) * step + min);
               el.dispatchEvent(new Event('input', { bubbles: true }));
               return false;
-            }, { f: frac, cap: sliderCeiling, out: sweepOutward });
+            }, { f: frac, cap: sliderCeiling, out: sweepOutward, skip: nulledControl });
             if (railed) sweepOutward = null;
             await wait(220);
           }
@@ -898,7 +960,19 @@ async function runLane(lane, queue, reports, onDone) {
             const firstRefusal = t.why;
             if (TRACE) console.log(`      refused: ${String(t.why || '').slice(0, 150)}`);
             // First do what the instrument itself tells you to do.
-            const homed = await homeInOnNull(nControls, Math.max(1000, Math.min(20000, labDeadline - Date.now())));
+            /* A bench with more than one null says where the next one is —
+               "the second resonance is near three times the first" — and the
+               search has to be told, or it bisects its way back to the null it
+               already has. */
+            const other = String(t.why || '').match(/recorded at\s+([\d.]+)\s*(?:cm|mm)\b[\s\S]*?near (three times|a third)/i);
+            let window = null;
+            if (other) {
+              const at = Number(other[1]);
+              window = /three times/i.test(other[2])
+                ? { lo: at * 2.1, hi: at * 4 }
+                : { lo: at / 4, hi: at / 2.1 };
+            }
+            const homed = await homeInOnNull(nControls, Math.max(1000, Math.min(20000, labDeadline - Date.now())), window);
             if (TRACE) console.log(`      homeInOnNull -> ${homed}; indicator now "${(await page.evaluate(NULL_PROBE))?.text || 'none'}"`);
             if (homed) { nulled += 1; t = await takeReading(); }
             /*
@@ -1151,7 +1225,14 @@ async function runLane(lane, queue, reports, onDone) {
           const off = flat.match(/differs from the accepted [^\s]+ ?[^\s]* by (-?[\d.]+)%/);
           if (off) {
             const pct = Math.abs(Number(off[1]));
-            if (pct > 25) fail('accuracy', `result is ${pct.toFixed(0)}% away from the accepted value`);
+            /* A shortfall the bench ACCOUNTS FOR is the lesson, not a defect.
+               A preparation cooled fast and left unacidified genuinely gives a
+               poor yield, and this bench says which step cost what — that is
+               the whole point of the practical, and marking it as a wrong
+               answer would be marking the experiment for working. */
+            const explained = /rapid cooling|not acidified|trap mother liquor|stays dissolved|left in the light|hydrolysed|was not (?:washed|dried)/i.test(flat);
+            if (pct > 25 && !explained) fail('accuracy', `result is ${pct.toFixed(0)}% away from the accepted value`);
+            else if (pct > 25) rep.stages.accuracy = `off by ${pct.toFixed(0)}%, and the bench says which step cost it`;
             else rep.stages.accuracy = `off by ${pct.toFixed(1)}%`;
           } else if (/Within the accepted range/.test(flat)) {
             rep.stages.accuracy = 'within accepted range';

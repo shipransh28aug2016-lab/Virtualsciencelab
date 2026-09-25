@@ -260,7 +260,7 @@ export function validate(inputs) {
 export function init(inputs = defaults) {
   const sys = systemOf(inputs);
   return {
-    t: 0, delivered: 0, flowRate: 0, pH: 7, colour: 'colourless', flowing: false, atEndPoint: false, overshot: false, noEndPoint: false, finishedAt: null,
+    t: 0, delivered: 0, flowRate: 0, pH: 7, colour: 'colourless', flowing: false, atEndPoint: false, overshot: false, noEndPoint: false, windingBack: false, finishedAt: null,
     analyteName: sys.analyte, titrantName: sys.titrant, titrantIsPermanganate: sys.titrant === 'Potassium permanganate',
   };
 }
@@ -310,9 +310,21 @@ export function step(state, inputs, dt) {
      * lagging one. The reading a student takes must be the volume the burette
      * has actually delivered, so the last fraction of a drop is snapped home.
      */
-    const target = Math.max(0, Math.min(50, inputs.buretteVolume));
+    /*
+     * A BURETTE DOES NOT RUN BACKWARDS.
+     *
+     * Titrant that has been let into the flask is in the flask. The model used
+     * to follow the slider down as readily as up, so a student who ran past
+     * the end point could wind the level back and find it again by feel — and
+     * the bench's own advice, "you overshot the end point, refill the burette
+     * and repeat", described something the bench did not do. Delivery is now
+     * one way; Refill is what puts the burette back, which is what it is for.
+     */
+    const asked = Math.max(0, Math.min(50, inputs.buretteVolume));
+    const target = Math.max(s.delivered, asked);
     const gap = target - s.delivered;
     s.delivered = Math.abs(gap) <= DROP_ML ? target : s.delivered + gap * Math.min(1, dt * 18);
+    s.windingBack = asked < s.delivered - DROP_ML;
     s.flowing = false;
   }
   s.pH = pHAt(inputs, s.delivered);
@@ -358,6 +370,9 @@ export function measure(state, inputs, seed = 1, trial = 1) {
    * plenty to measure, the colour simply has not changed yet.
    */
   if (!state) return null;
+  if (state.windingBack) {
+    return { v: null, reason: `The burette has already delivered ${state.delivered.toFixed(1)} mL, and titrant that has been run into the flask cannot go back up the burette. Press Refill burette to start this titration again, and run the last millilitre in drop by drop.` };
+  }
   if (state.noEndPoint) {
     return { v: null, reason: `${(INDICATORS[inputs.indicator] || {}).label || 'This indicator'} does not change colour anywhere in this titration — its transition pH lies outside the whole pH range of the curve. Choose an indicator that turns near pH ${systemOf(inputs).equivalencePH}.` };
   }

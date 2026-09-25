@@ -1114,7 +1114,12 @@ function record() {
   renderTable();
   toast(`Reading ${app.rows.length} recorded`, 'good');
   const m = app.exp.simulation.model;
-  if (m === 'simple-pendulum' || m === 'titration' || m === 'reaction-kinetics') {
+  /* A run that ENDS when the reading is taken starts again from a fresh
+     flask, a fresh swing, a fresh burette. The iodine clock was missing from
+     this list, so after the first timing the flask stayed blue-black and
+     every later concentration was recorded without the clock ever having been
+     watched run. */
+  if (m === 'simple-pendulum' || m === 'titration' || m === 'reaction-kinetics' || m === 'clock-reaction') {
     app.state = app.model.init(app.inputs);
   }
   syncToolbar();

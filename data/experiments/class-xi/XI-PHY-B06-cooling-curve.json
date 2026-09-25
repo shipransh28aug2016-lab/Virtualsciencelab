@@ -218,11 +218,13 @@
     "controls": [
       {
         "var": "startTempC",
-        "widget": "slider"
+        "widget": "slider",
+        "group": "setup"
       },
       {
         "var": "roomTempC",
-        "widget": "slider"
+        "widget": "slider",
+        "group": "setup"
       },
       {
         "var": "vessel",
@@ -231,11 +233,13 @@
           "polished",
           "blackened",
           "glass"
-        ]
+        ],
+        "group": "measure"
       },
       {
         "var": "lidOn",
-        "widget": "switch"
+        "widget": "switch",
+        "group": "measure"
       }
     ],
     "actions": [

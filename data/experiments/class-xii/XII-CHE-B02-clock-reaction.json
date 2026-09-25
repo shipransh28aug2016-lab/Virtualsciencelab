@@ -165,24 +165,28 @@
     "fps": 10,
     "controls": [
       {
+        "var": "tempC",
+        "widget": "slider",
+        "group": "setup"
+      },
+      {
         "var": "kiVolume",
         "widget": "slider",
         "makeUp": {
           "with": "waterVolume",
           "total": 20
-        }
+        },
+        "group": "measure"
       },
       {
         "var": "waterVolume",
-        "widget": "slider"
+        "widget": "slider",
+        "group": "measure"
       },
       {
         "var": "h2o2Volume",
-        "widget": "slider"
-      },
-      {
-        "var": "tempC",
-        "widget": "slider"
+        "widget": "slider",
+        "group": "measure"
       }
     ],
     "actions": [
