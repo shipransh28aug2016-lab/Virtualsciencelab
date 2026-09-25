@@ -821,18 +821,23 @@ async function runLane(lane, queue, reports, onDone) {
           if (k === 0 && run.waitedMs > 8000) budget = Math.min(budget, 3);
           let t = await takeReading();
           if (!t.ok) {
-            /* Act on what the refusal actually says — a limit with a number
-               in it, or a control it names — then try once more before
-               falling back to hunting blindly. */
-            await obeyStatedLimits(t.why);
-            if (await answerNamedControl(t.why)) await wait(260);
-            await wait(200);
-            t = await takeReading();
-          }
-          if (!t.ok) {
             const firstRefusal = t.why;
             // First do what the instrument itself tells you to do.
             if (await homeInOnNull(nControls, Math.max(1000, Math.min(20000, labDeadline - Date.now())))) { nulled += 1; t = await takeReading(); }
+            /*
+             * Then act on what the refusal SAYS — a limit with a number in
+             * it, or a control it names. This has to come after the null
+             * hunt, not before: a null refusal ("the jaws are pressing into
+             * the object — open them a little") names the instrument, and
+             * answering it by changing the instrument swapped the callipers
+             * mid-hunt on seven benches whose whole task is to find a null.
+             */
+            if (!t.ok && !/[\u25b8\u25c2\u25cf]/.test(String(t.why))) {
+              await obeyStatedLimits(t.why);
+              if (await answerNamedControl(t.why)) await wait(260);
+              await wait(200);
+              t = await takeReading();
+            }
             if (!t.ok) t = await huntForReading(nControls, 5, k, labDeadline, mixingRefused && !traySetNeeded);
             if (t.ok) hunted += 1; else refusals.push(firstRefusal);
           }

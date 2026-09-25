@@ -854,6 +854,23 @@ function syncToolbar() {
     rec.title = done ? `Record this run — the cross went at ${app.state.finishedAt.toFixed(1)} s`
       : 'Add the acid and wait until the cross disappears';
   }
+  if (model === 'boiling-point' && rec) {
+    /*
+     * A boiling point by the Siwoloboff method is read as the bubbling STOPS
+     * on cooling, and until then there is nothing to read. The button was
+     * live from the moment the bench opened, so a student pressed it while
+     * the liquid was still warming and was turned away — three times, before
+     * anything told them what the bench was waiting for. It now says.
+     */
+    const phase = app.state?.phase;
+    const ready = phase === 'read';
+    rec.disabled = !ready;
+    rec.classList.toggle('primary', ready);
+    rec.title = ready ? 'Record this determination'
+      : phase === 'bubbling' ? 'Stop heating and wait: the reading is taken as the bubbling STOPS'
+        : phase === 'cooling' ? 'Watch the capillary — record at the moment the last bubble is drawn back in'
+          : 'Heat the bath first, until a rapid stream of bubbles leaves the capillary';
+  }
   if (model === 'titration') {
     const flowing = Boolean(app.state?.flowing);
     const stop = $('#aStop');
