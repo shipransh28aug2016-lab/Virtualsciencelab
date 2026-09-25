@@ -700,6 +700,9 @@ async function runLane(lane, queue, reports, onDone) {
            positions of a two-position setting — the shunt out and then in —
            and say so. That request is about the switch itself. */
         let switchSetNeeded = false;
+        /* Set once the bench has had to ask for a particular switch position;
+           from then on the switches stay where they are. */
+        let switchesSettled = false;
         /* What the bench objected to, verbatim. It names the thing that must
            stay fixed — "3 different wires (Steel wire (thin), Brass wire…)" —
            so the group holding those names is the one NOT to cycle when a set
@@ -712,6 +715,8 @@ async function runLane(lane, queue, reports, onDone) {
         let freezeSliders = false;
         /* Whether the second mixing complaint has already been acted on. */
         let blamedTwice = false;
+        /* The reading number the current set started at. */
+        let sweptFrom = 0;
         /* A value the bench asked the student to stay under, in the units of
            whichever slider it belongs to. */
         let sliderCeiling = null;
@@ -780,9 +785,25 @@ async function runLane(lane, queue, reports, onDone) {
               /* Match on any substantial word of the control's name, not the
                  whole of it: the picker is labelled "Your diagnosis" and the
                  refusal says "select that diagnosis". */
+              /* Switch labels are short — "Body on the pan", "Lid on" — so a
+                 five-letter floor never matches one. Four is enough for them
+                 and still well clear of "the" and "on". */
+              const floor = ctl.querySelector('.sw') ? 4 : 5;
               const words = name.toLowerCase().replace(/\(.*\)/, '')
-                .split(/[^a-z\u00e9]+/).filter((x) => x.length >= 5);
+                .split(/[^a-z\u00e9]+/).filter((x) => x.length >= floor);
               if (!words.length || !words.some((x) => lower.includes(x))) continue;
+              /* A named SWITCH is answered by throwing it. "There is no body
+                 on the left pan, so there is nothing for the weights to
+                 balance — put the body on the pan first" names the switch
+                 that was turned off, and every null hunt after that was
+                 looking for a balance point that does not exist. */
+              const sw = ctl.querySelector('.sw');
+              if (sw) {
+                const on = sw.getAttribute('aria-checked') === 'true';
+                const wantsOn = !/\b(off|remove|take .* off|without)\b/i.test(lower);
+                if (on !== wantsOn) { sw.click(); return 'switch'; }
+                continue;
+              }
               const btns = [...ctl.querySelectorAll('button')];
               if (btns.length < 2) continue;
               /* "Not yet" is not a choice a student makes; it is the absence
@@ -949,11 +970,17 @@ async function runLane(lane, queue, reports, onDone) {
                  them. */
               const last = groups[groups.length - 1];
               if (last && last !== groups[0] && !stop) last[idx % last.length].click();
-            }, { idx: k, stop: mixingRefused && !traySetNeeded, stopSwitches: mixingRefused && !switchSetNeeded, objected: mixedWhat });
+            }, { idx: k, stop: mixingRefused && !traySetNeeded, stopSwitches: switchesSettled || (mixingRefused && !switchSetNeeded), objected: mixedWhat });
             /* Then move a SLIDER — never another button, because the
                buttons are the specimen tray and pressing one of those would
                put the specimen just chosen straight back. */
-            const frac = 0.15 + (0.7 * k) / want;
+            /* A cleared table is a set started again, and the sweep starts
+               again with it. Counting on from where the abandoned set left
+               off spent the whole remaining budget in one corner of the
+               range: the prism recorded five readings at two angles, both of
+               them ends of the travel, and the minimum deviation cannot be
+               seen from there. */
+            const frac = 0.15 + (0.7 * Math.max(0, k - sweptFrom)) / want;
             if (sweepOutward) sweepOutward.n += 1;
             /* A titration is repeated under the SAME conditions until two
                titres agree — that is what concordance means. Varying the
@@ -1049,7 +1076,13 @@ async function runLane(lane, queue, reports, onDone) {
              */
             if (!t.ok && !/[\u25b8\u25c2\u25cf]/.test(String(t.why))) {
               await obeyStatedLimits(t.why);
-              if (await answerNamedControl(t.why)) await wait(260);
+              const answered = await answerNamedControl(t.why);
+              /* A switch the bench had to ask for is not a condition to
+                 alternate any more. The balance's body was being lifted off
+                 the pan every other reading, and no weight box can balance an
+                 empty pan. */
+              if (answered === 'switch') switchesSettled = true;
+              if (answered) await wait(260);
               await wait(200);
               t = await takeReading();
             }
@@ -1090,7 +1123,14 @@ async function runLane(lane, queue, reports, onDone) {
           await obeyStatedLimits(asking);
           /* The bench asks for the other resonance in the still-needed line,
              not in the refusal, so that is where to read it from. */
-          nullWindow = windowFrom(asking) || nullWindow;
+          if (!nullWindow && windowFrom(asking)) {
+            nullWindow = windowFrom(asking);
+            /* Both positions of one standing wave are found with one fork.
+               The tray was advancing between them, so l₁ came from the 288 Hz
+               fork and l₂ from the 320 Hz one — two wavelengths, and
+               v = 2f(l₂ − l₁) means nothing across them. */
+            mixingRefused = true;
+          }
           /* "The smallest deviation in this set is at the very first angle of
              incidence (49 deg), so the readings do not straddle the minimum
              ... take more readings at smaller angles until the deviation is
@@ -1160,13 +1200,20 @@ async function runLane(lane, queue, reports, onDone) {
           const asksForASetNow = /only \d+ different|work through at least|at least (?:two|three|four|\d+) different|both direction|with and without|in each position/i.test(asking)
             || (/different (tuning forks|tubes|salts|boards|components|specimens|solutions|arrangements)/i.test(asking)
                 && !/these readings are of \d+ different|were taken (?:on|at|with) \d+ different/i.test(asking));
+          if (traySetNeeded && asksForASetNow) {
+            /* Still asking. "Only 2 different boards examined, work through at
+               least three of them" needs the BOARD picker advanced again, and
+               the ordinary cycling advances the largest tray instead — which
+               on that bench is the diagnosis list. */
+            if (await answerNamedControl(asking) === 'switch') switchesSettled = true;
+          }
           if (!traySetNeeded && asksForASetNow) {
             // Now it wants a set after all: put the tray back into use, and
             // advance the picker it actually named — "work through at least
             // three BOARDS" is about the board tray, not whichever tray
             // happens to have the most buttons on it.
             traySetNeeded = true;
-            await answerNamedControl(asking);
+            if (await answerNamedControl(asking) === 'switch') switchesSettled = true;
             budget = Math.min(16, budget + want);
             continue;
           }
@@ -1201,6 +1248,7 @@ async function runLane(lane, queue, reports, onDone) {
                 blamedTwice = true;
                 budget = Math.min(16, budget + want);
                 await page.evaluate(() => document.querySelector('#clearBtn')?.click());
+                sweptFrom = k + 1;
                 await wait(200);
                 continue;
               }
@@ -1216,6 +1264,7 @@ async function runLane(lane, queue, reports, onDone) {
               });
               document.querySelector('#clearBtn')?.click();
             }, openingSliders);
+            sweptFrom = k + 1;
             await wait(200);
             continue;
           }
@@ -1259,6 +1308,7 @@ async function runLane(lane, queue, reports, onDone) {
               });
               document.querySelector('#clearBtn')?.click();
             }, { choice: openingChoice, sliders: openingSliders });
+            sweptFrom = k + 1;
             await wait(200);
             got = 0;
             budget = Math.min(14, budget + want);
