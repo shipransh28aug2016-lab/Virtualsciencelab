@@ -77,7 +77,16 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!state || !state.finishedAt) return null;
+  /*
+   * A bench that will not take a reading has to say why.
+   *
+   * These returned a bare null, which reached the student as "Nothing to
+   * measure here — no reading recorded": true of a mirror forming no image,
+   * and useless on a bench where the apparatus is simply not ready yet. The
+   * student has pressed the right button at the wrong moment, and the bench
+   * knows exactly which moment it is waiting for.
+   */
+  if (!state || !state.finishedAt) return { v: null, reason: 'The bob has not completed the oscillations being timed. Release it from a small angle, let the stop clock run out the full count, and then record the time.' };
   const rng = makeRng(seed + trial * 61);
   const lc = 0.2; // stopwatch least count, s (reaction-time limited)
   const trueTotal = inputs.oscillations * periodTrue(inputs);
@@ -113,9 +122,37 @@ export function derive(rows) {
   const spread = Math.max(...periods) - Math.min(...periods);
   const L = Number(rows[0].lengthM);
   const g = (4 * Math.PI * Math.PI * L) / (meanT * meanT);
+  /*
+   * THIS RESULT HAS TO SAY WHICH EXPERIMENT IT IS.
+   *
+   * The panel chooses its wording on `d.mode === 'mass-independence'`, and
+   * this branch never set one — so XI-PHY-A08, whose whole question is
+   * whether the period depends on the mass, was rendered with the L–T²
+   * panel from XI-PHY-A07: a slope, an r², and a second's pendulum length,
+   * none of which it had computed. The fields it did compute were named
+   * differently again, so the line that should read "T = 1.55 s for every
+   * mass" read "undefined".
+   *
+   * The timing uncertainty is what decides the answer: a spread no larger
+   * than the stop clock's own resolution over the oscillations timed is not
+   * evidence of dependence on mass.
+   */
+  const masses = rows.map((r) => Number(r.massG)).filter(Number.isFinite);
+  const oscillations = Number(rows[0].oscillations) || 20;
+  const timingUncertainty = Number((0.2 / oscillations).toFixed(4));   // stop clock least count per oscillation
   return {
-    ok: true, g: sigFig(g, 4), slope: 0, spreadOfT: Number(spread.toFixed(4)),
-    massIndependent: spread < 0.05, meanPeriod: sigFig(meanT, 4),
+    ok: true,
+    mode: 'mass-independence',
+    g: sigFig(g, 4),
+    slope: 0,
+    lengthCm: sigFig(L * 100, 4),
+    meanPeriod: sigFig(meanT, 4),
+    spread: Number(spread.toFixed(4)),
+    spreadOfT: Number(spread.toFixed(4)),
+    timingUncertainty,
+    independent: spread <= timingUncertainty,
+    massIndependent: spread <= timingUncertainty,
+    massRange: masses.length ? `${Math.min(...masses)}–${Math.max(...masses)} g` : '—',
     secondsPendulumCm: sigFig((g / (Math.PI * Math.PI)) * 100, 4),
     n: rows.length, points: rows.map((r) => ({ x: Number(r.massG), y: Number(r.period) })),
   };

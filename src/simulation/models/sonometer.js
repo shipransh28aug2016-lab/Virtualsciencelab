@@ -77,7 +77,7 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init() { return { t: 0, phase: 0, amplitude: 0, resonant: false, beat: 0 }; }
+export function init(inputs = defaults) { return { forkHz: FORKS[inputs.fork] || 512, t: 0, phase: 0, amplitude: 0, resonant: false, beat: 0 }; }
 /**
  * The wire under the fork. Resonance is sharp: the paper rider is only
  * thrown off when the bridge separation puts the wire's natural frequency
@@ -86,6 +86,9 @@ export function init() { return { t: 0, phase: 0, amplitude: 0, resonant: false,
  */
 export function step(state, inputs, dt) {
   const s = { ...state };
+  /* The fork's FREQUENCY, not the picker's key: the bench read "Tuning
+     fork f256 Hz". */
+  s.forkHz = FORKS[inputs.fork] || 512;
   s.t += dt;
   const fWire = frequencyHz(inputs);
   const fFork = inputs.forkHz ?? (typeof inputs.fork === 'string' ? Number((inputs.fork.match(/\d+/) || [256])[0]) : 256);

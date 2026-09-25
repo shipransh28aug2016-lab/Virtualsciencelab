@@ -839,11 +839,48 @@ function syncToolbar() {
 
   const model = app.exp.simulation.model;
   if (model === 'reaction-kinetics' && rec) {
-    const done = Boolean(app.state?.finished);
+    /*
+     * The model records the moment the cross vanishes in `finishedAt`. This
+     * asked for `finished`, which the model has never set, so the answer was
+     * always false: "Record time" was disabled from the moment the lab opened
+     * until the moment it was closed, and the two clock-reaction practicals
+     * could not have a single reading taken on them. The button's own tooltip
+     * said "add the acid and wait until the cross disappears" to a student who
+     * had done both and was still waiting.
+     */
+    const done = Number.isFinite(app.state?.finishedAt);
     rec.disabled = !done;
     rec.classList.toggle('primary', done);
-    rec.title = done ? 'Record this run in the table'
+    rec.title = done ? `Record this run — the cross went at ${app.state.finishedAt.toFixed(1)} s`
       : 'Add the acid and wait until the cross disappears';
+  }
+  if (model === 'clock-reaction' && rec) {
+    /* The reading IS the clock time, so there is nothing to record until the
+       flask has gone blue-black. The bench had no gate at all here, so a
+       student could press Record while the solution was still colourless and
+       be given a time the clock had not measured. */
+    const done = Number.isFinite(app.state?.finishedAt);
+    rec.disabled = !done;
+    rec.classList.toggle('primary', done);
+    rec.title = done ? `Record this run — the flask went blue-black at ${app.state.finishedAt.toFixed(1)} s`
+      : 'Add the peroxide and wait until the flask turns blue-black';
+  }
+  if (model === 'boiling-point' && rec) {
+    /*
+     * A boiling point by the Siwoloboff method is read as the bubbling STOPS
+     * on cooling, and until then there is nothing to read. The button was
+     * live from the moment the bench opened, so a student pressed it while
+     * the liquid was still warming and was turned away — three times, before
+     * anything told them what the bench was waiting for. It now says.
+     */
+    const phase = app.state?.phase;
+    const ready = phase === 'read';
+    rec.disabled = !ready;
+    rec.classList.toggle('primary', ready);
+    rec.title = ready ? 'Record this determination'
+      : phase === 'bubbling' ? 'Stop heating and wait: the reading is taken as the bubbling STOPS'
+        : phase === 'cooling' ? 'Watch the capillary — record at the moment the last bubble is drawn back in'
+          : 'Heat the bath first, until a rapid stream of bubbles leaves the capillary';
   }
   if (model === 'titration') {
     const flowing = Boolean(app.state?.flowing);
@@ -935,6 +972,24 @@ function startProcess() {
   showFeedback(v);
   if (!v.ok) { toast(v.errors[0].message, 'bad'); return; }
   if (!processFlag()) return;
+
+  /*
+   * Starting puts the clock back to zero, and on a timed experiment that
+   * matters to readings already written down.
+   *
+   * A cooling curve is a temperature at each of several TIMES. Pressing
+   * Start again silently re-ran it from t = 0 while the table kept the rows
+   * from the previous run, so a student who pressed it between readings
+   * ended up with eight readings all at the same instant and a calculation
+   * that could not fit a line through them. The restart is a legitimate
+   * thing to do — it is how you begin again — but it has to be said out
+   * loud while there are readings it invalidates.
+   */
+  const wasRunning = app.machine.state === STATES.RUNNING;
+  if (wasRunning && app.rows.length) {
+    toast('The clock goes back to zero. Readings already in the table belong to the previous run — clear the table before recording again.', 'warn');
+  }
+
   const primed = primeProcess(app.model, app.inputs, app.model.init(app.inputs));
   app.state = primed.state;
   app.machine.to(STATES.RUNNING);
@@ -985,8 +1040,16 @@ function record() {
     const s = app.state.sharp ?? 0;
     if (s < 0.85) { toast('Focus the image sharply before recording', 'bad'); return; }
   }
-  if (app.exp.simulation.model === 'reaction-kinetics' && !app.state.finished) {
+  if (app.exp.simulation.model === 'reaction-kinetics' && !Number.isFinite(app.state.finishedAt)) {
+    /* Same field as the toolbar gate above: `finished` is a name this model
+       has never used, so this guard was unreachable and the button it guards
+       was permanently disabled. Both now read `finishedAt`, the moment the
+       cross actually went. */
     toast('Wait until the cross has completely disappeared', 'bad');
+    return;
+  }
+  if (app.exp.simulation.model === 'clock-reaction' && !Number.isFinite(app.state.finishedAt)) {
+    toast('Wait until the flask turns blue-black', 'bad');
     return;
   }
   if (app.exp.simulation.model === 'titration' && app.state.overshot) {
@@ -1042,7 +1105,14 @@ function record() {
       if (reading?.imageType) return reading.imageType;
       const w = v.warnings?.[0] || v.errors?.[0];
       if (!w) return 'Nothing to measure here — no reading recorded';
-      return [w.message, w.fix || w.why].filter(Boolean).join(' ');
+      /*
+       * All three parts, not two. The crystallisation bench says "this is not
+       * enough hot solvent" in `message`, "add more, a little at a time" in
+       * `fix`, and "this solvent dissolves 32 g per 100 mL, so at least 26 mL
+       * is needed for 8 g" in `why` — and it was the `why` that carried the
+       * number, and the `why` that was dropped whenever a `fix` existed.
+       */
+      return [w.message, w.why, w.fix].filter(Boolean).join(' ');
     })();
     const why = guidance;
     const box = $('#feedback');
@@ -1059,7 +1129,12 @@ function record() {
   renderTable();
   toast(`Reading ${app.rows.length} recorded`, 'good');
   const m = app.exp.simulation.model;
-  if (m === 'simple-pendulum' || m === 'titration' || m === 'reaction-kinetics') {
+  /* A run that ENDS when the reading is taken starts again from a fresh
+     flask, a fresh swing, a fresh burette. The iodine clock was missing from
+     this list, so after the first timing the flask stayed blue-black and
+     every later concentration was recorded without the clock ever having been
+     watched run. */
+  if (m === 'simple-pendulum' || m === 'titration' || m === 'reaction-kinetics' || m === 'clock-reaction') {
     app.state = app.model.init(app.inputs);
   }
   syncToolbar();
@@ -1119,17 +1194,49 @@ function calculate() {
 }
 
 /* ── controls ── */
+/*
+ * Not every control on a bench is the same kind of thing, and the panel used
+ * to say they were. The circuit-assembly activity offered eight controls in
+ * one flat list: seven of them are the ASSEMBLY — where the ammeter goes,
+ * which way round the meters are, whether the key is open — settled once
+ * before the key is closed, and exactly one, the rheostat, is what you move
+ * between readings. A student working down the list changed the wiring
+ * between readings and the bench refused every one of them, correctly and
+ * uselessly, because nothing had said which control was which.
+ *
+ * A control may now declare `"group": "setup"`. Where an experiment uses the
+ * field, the panel prints a heading above each run of controls, so the thing
+ * you set once and the thing you vary are visibly different parts of the
+ * bench. Experiments that do not use it are unchanged: one group, no heading.
+ */
+const CONTROL_GROUPS = {
+  setup: 'Set up the apparatus — settle these first',
+  measure: 'Take the readings — vary these',
+};
+
 function buildControls() {
   const exp = app.exp;
   const byId = Object.fromEntries(exp.variables.map((v) => [v.id, v]));
   const host = $('#controls');
   host.innerHTML = '';
 
+  const grouped = new Set(exp.simulation.controls.map((c) => c.group || 'measure')).size > 1;
+  let shownGroup = null;
+
   for (const c of exp.simulation.controls) {
     const v = byId[c.var];
     if (!v) continue;
+    const group = c.group || 'measure';
+    if (grouped && group !== shownGroup) {
+      shownGroup = group;
+      const head = document.createElement('p');
+      head.className = 'ctl-group';
+      head.textContent = CONTROL_GROUPS[group] || group;
+      host.appendChild(head);
+    }
     const wrap = document.createElement('div');
     wrap.className = 'ctl';
+    wrap.dataset.group = group;
 
     if (c.widget === 'slider') {
       const id = `c_${v.id}`;
@@ -1143,6 +1250,31 @@ function buildControls() {
       const sync = () => {
         const val = Number(input.value);
         app.inputs[v.id] = val;
+        /*
+         * MAKING UP TO A FIXED VOLUME.
+         *
+         * A rate-of-reaction run is only about concentration if every flask
+         * holds the same total volume: thiosulphate and water together always
+         * come to 50 mL, so the only thing that changes is how much of it is
+         * thiosulphate. With two independent sliders a student could move one
+         * and not the other, and the bench warned them afterwards while the
+         * calculation went ahead and fitted the points anyway.
+         *
+         * Where a control declares `makeUp`, its partner follows it so that
+         * the total holds. The partner's slider moves visibly as it happens,
+         * which is the point: the student sees the rule being kept rather
+         * than being told off for breaking it.
+         */
+        if (c.makeUp && byId[c.makeUp.with]) {
+          const other = byId[c.makeUp.with];
+          const want = Math.min(other.max, Math.max(other.min, c.makeUp.total - val));
+          app.inputs[other.id] = want;
+          const otherEl = host.querySelector(`#c_${other.id}`);
+          if (otherEl && Number(otherEl.value) !== want) {
+            otherEl.value = String(want);
+            otherEl.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+        }
         if (v.id === 'buretteVolume' && app.state) {
           app.state = { ...app.state, delivered: val, flowing: false, flowRate: 0 };
         }
@@ -2032,6 +2164,26 @@ function renderResult(d) {
     html = `<b>Resistance from V–I slope:</b> ${d.resistance} Ω &nbsp;(r² = ${d.r2})
       <span class="big">ρ = ${d.rhoText}</span>
       Standard value for ${esc(app.rows[0].wire)}: ${d.acceptedText || '—'}`;
+  } else if (m === 'salt-preparation') {
+    /* A yield that comes out low has not failed mysteriously: something in
+       the method took it there, and the bench knows which. */
+    html = `<b>${esc(d.product)}</b>
+      <span class="big">${d.percentYield} % yield</span>
+      ${d.crystalMass} g of ${esc(d.colour)} crystals &nbsp;·&nbsp; a careful preparation gives about ${d.accepted} %
+      <div style="font-size:12px;margin-top:4px;color:var(--muted)">${esc(d.method)}.${d.lostTo
+        ? ` ${esc(d.lostTo[0].toUpperCase() + d.lostTo.slice(1))}.`
+        : ' What is missing from 100% stays dissolved in the mother liquor and on the glass — that loss is not a mistake.'}</div>`;
+  } else if (m === 'standard-solution') {
+    /* The practical is "prepare 250 mL of M/20": the mass to weigh is the
+       first calculation a student does, and the bench never named either the
+       target or the mass it needs. */
+    const off = Math.abs(d.errorPct ?? 0);
+    html = `<b>Standard solution prepared</b>
+      <span class="big">${d.normality} N &nbsp;(${d.molarity} M)</span>
+      Target ${d.targetNormality} N &nbsp;·&nbsp; needs ${d.requiredMassG} g in the flask &nbsp;·&nbsp; ${d.massG} g was weighed
+      <div style="font-size:12px;margin-top:4px;color:var(--muted)">${off <= 2
+        ? `Within ${off.toFixed(1)}% of the target — a usable standard solution.`
+        : `${off.toFixed(1)}% from the target: the mass weighed out is ${Math.abs(d.massErrorG)} g ${d.massErrorG > 0 ? 'more' : 'less'} than the calculation asks for. A standard solution is only standard if the mass is right.`}</div>`;
   } else if (m === 'titration') {
     /* A redox titration is asked in molarity and answered in normality, so
        both are shown with the factor that connects them stated, rather than
@@ -2039,8 +2191,9 @@ function renderResult(d) {
     const molarLine = d.nFactor
       ? `Normality = ${d.normality} N &nbsp;·&nbsp; <b>Molarity = ${d.molarity} M</b> &nbsp;(M = N ÷ ${d.nFactor})`
       : `Normality = ${d.normality} N &nbsp;·&nbsp; Molarity = ${d.molarity ?? '—'} M`;
-    html = `<b>Mean of ${d.concordantCount ?? d.n} concordant titres:</b> ${d.meanTitre} mL
-      ${d.concordant === false ? ' <span style="color:var(--warn)">(readings are not concordant — repeat until three agree within 0.2 mL)</span>' : ''}
+    html = `<b>Mean of ${d.concordantCount ?? d.n} concordant titres:</b> ${d.meanTitre} mL (spread ${d.titreSpread ?? '—'} mL)
+      ${d.discarded ? ` <span style="color:var(--warn)">(${d.discarded} titre${d.discarded > 1 ? 's' : ''} outside the concordant set, not averaged)</span>` : ''}
+      ${d.concordant === false ? ' <span style="color:var(--warn)">(only two agree — run a third to confirm)</span>' : ''}
       <span class="big">Strength = ${d.strength} g/L</span>
       ${molarLine}
       <div style="font-size:12px;margin-top:4px;color:var(--muted)">N₁V₁ = N₂V₂ &nbsp;→&nbsp; strength = N × equivalent mass</div>`;
@@ -2054,6 +2207,17 @@ function renderResult(d) {
         <span class="big">Order = ${d.orderRounded ?? d.order} in S₂O₃²⁻</span>
         Log-log slope = ${d.order} &nbsp;·&nbsp; a straight line through the origin means first order`;
     }
+  } else if (m === 'clock-reaction') {
+    /* Which quantity this set measured is the model's decision, not the
+       panel's: a set taken at one temperature gives the order in iodide, a set
+       taken at one concentration gives the activation energy. */
+    html = d.mode === 'arrhenius'
+      ? `<b>Arrhenius plot</b> ln(1/t) against 1/T over ${d.n} temperatures &nbsp;(r&sup2; = ${d.r2})
+        <span class="big">Eₐ = ${d.activationEnergy} kJ/mol</span>
+        Slope = ${d.slope} K &nbsp;·&nbsp; accepted ≈ ${d.acceptedEa} kJ/mol`
+      : `<b>1/t against [I⁻]</b> over ${d.n} concentrations &nbsp;(r&sup2; = ${d.r2})
+        <span class="big">Order in I⁻ = ${d.orderRounded} &nbsp;(log–log slope ${d.logSlope})</span>
+        A straight line through the origin is what first order looks like &nbsp;·&nbsp; log–log r&sup2; = ${d.logR2}`;
   } else if (m === 'convex-lens') {
     html = `<b>Mean of f = uv/(u+v):</b> ${d.fMean} cm &nbsp; <b>From 1/u–1/v intercept:</b> ${d.fFromGraph} cm
       <span class="big">f = ${d.fMean} cm &nbsp;·&nbsp; P = ${d.power} D</span>
@@ -2195,6 +2359,9 @@ function renderResult(d) {
     html = `<b>Conversion ${esc(d.mode === 'ammeter' ? 'into an ammeter' : 'into a voltmeter')} of range ${d.range} ${d.unit}</b>
       <span class="big">${d.requiredResistance} Ω ${esc(d.connection)}</span>
       ${esc(d.formula)} &nbsp;·&nbsp; Ig = ${d.fullScaleCurrentMicroA} µA &nbsp;·&nbsp; G = ${d.galvanometerResistance} Ω
+      <div style="margin-top:6px">Checked against the standard meter at ${d.pointsCompared} points: worst difference ${d.worstDifference} ${d.unit}, mean ${d.meanDifference} ${d.unit} — ${d.readsTrue
+        ? `within one division of its own scale (${d.oneDivision} ${d.unit}), so the converted instrument reads true across its range.`
+        : `more than one division of its own scale (${d.oneDivision} ${d.unit}), so it does not yet read true — check the resistance actually connected.`}</div>
       <div style="font-size:12px;margin-top:4px;color:var(--muted)">The finished instrument has a resistance of ${d.meterResistance} Ω — ${d.mode === 'ammeter'
         ? 'very low, as an ammeter in series must be, so it barely disturbs the current it measures.'
         : 'very high, as a voltmeter in parallel must be, so it draws almost no current from the circuit.'}</div>`;

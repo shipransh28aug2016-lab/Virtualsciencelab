@@ -2,7 +2,7 @@
  * Apparatus renderers — chemistry (Classes XI and XII).
  */
 import {
-  label, drawBeaker, drawConicalFlask, drawBurette, drawTestTube, drawThermometer, drawRetortStand, drawBurner, drawSwatch, theme, heatingAssembly, drawClamp, drawTripod, drawGauze, heatAt, noteBounds, drawDigitalReadout, brushedMetal, chrome, plastic, contactShadow, incandescence,
+  label, drawBeaker, drawConicalFlask, drawBurette, drawTestTube, drawThermometer, drawRetortStand, drawBurner, drawSwatch, drawStopClock, theme, heatingAssembly, drawClamp, drawTripod, drawGauze, heatAt, noteBounds, drawDigitalReadout, brushedMetal, chrome, plastic, contactShadow, incandescence,
 } from './apparatus.js';
 import { clock, rgba, shade, mixColor, clamp, lerp, noise1 } from './realism.js';
 
@@ -174,7 +174,7 @@ export function phDetermination(ctx, w, h, state, inputs) {
   const colour = colourFor(shown);
 
   drawBeaker(ctx, cx, BENCH_Y - 150, 160, 150, 0.62, colour, {
-    label: inputs?.sample || 'Sample solution', graduations: false,
+    label: state?.sampleLabel || 'Sample solution', graduations: false,
   });
 
   // Electrode (or the paper strip) dipping into it.
@@ -339,7 +339,7 @@ export function solPreparation(ctx, w, h, state, inputs) {
       : 'Sol is stable — the beam shows a clear Tyndall cone',
     { anchor: 'above', bold: true, color: state?.coagulation > 0.05 ? '#8a5a00' : '#0d7a52' });
   label(ctx, cx, B.bot + 28,
-    `${inputs?.electrolyte || 'Electrolyte'} at ${(inputs?.concentrationMm ?? 0).toFixed(1)} mmol/L`,
+    `${state?.electrolyteLabel || 'Electrolyte'} at ${(inputs?.concentrationMm ?? 0).toFixed(1)} mmol/L`,
     { anchor: 'below', size: 11 });
 }
 export function dialysis(ctx, w, h, state, inputs) {
@@ -396,24 +396,198 @@ export function dialysis(ctx, w, h, state, inputs) {
       : 'Water changed regularly — the gradient is kept up',
     { anchor: 'below', size: 11 });
 }
+const OIL_LABEL = { mustard: 'Mustard oil', coconut: 'Coconut oil', olive: 'Olive oil', castor: 'Castor oil' };
+const AGENT_LABEL = { none: 'No emulsifier', soap: 'Soap', detergent: 'Detergent', gum: 'Gum acacia', limewater: 'Lime water' };
+const AGENT_TYPE = { none: null, soap: 'oil-in-water', detergent: 'oil-in-water', gum: 'oil-in-water', limewater: 'water-in-oil' };
+
+/**
+ * An emulsion, and the two tests done on it.
+ *
+ * The bench was a test tube of one colour and a thin rectangle that grew
+ * for two seconds. The measurement here is a TIME — how long the mixture
+ * stays milky — and there was no clock; the two layers that separate were
+ * never drawn; and the dilution test, which is half the practical and the
+ * only way to tell an oil-in-water emulsion from a water-in-oil one, was a
+ * word in a picker that changed nothing on the bench at all.
+ */
 export function emulsion(ctx, w, h, state, inputs) {
   const th = theme();
-  const cx = w / 2;
-  const { topY, bot } = drawTestTube(ctx, cx, 20, 150, 34, 0.6, '#e8d089', { label: `Oil + water${inputs?.agent && inputs.agent !== 'none' ? ' + ' + inputs.agent : ''}` });
-  ctx.save(); ctx.fillStyle = '#f2e6b0'; ctx.globalAlpha = 0.8;
-  const sep = Math.min(1, (state?.t ?? 0) / 2);
-  ctx.fillRect(cx - 15, topY + 20, 30, 20 * sep);
-  ctx.globalAlpha = 1; ctx.restore();
+  const cx = w / 2 - 110;
+  const sep = clamp(state?.separation ?? 0, 0, 1);
+  const oilName = OIL_LABEL[inputs?.oil] || 'Mustard oil';
+  const agentKey = inputs?.agent || 'none';
+  const agentName = AGENT_LABEL[agentKey] || 'No emulsifier';
+  const type = AGENT_TYPE[agentKey];
+  const dilution = inputs?.test === 'dilution';
+  const pct = Number(inputs?.agentPct ?? 0);
+
+  const topY = 60, hgt = 230, wid = 56;
+  const { bot } = drawTestTube(ctx, cx, topY, hgt, wid, 0.78, '#ecdfae',
+    { label: `${oilName} + water${agentKey !== 'none' ? ` + ${agentName} ${pct.toFixed(1)}%` : ''}` });
+
+  /*
+   * The contents, in the three bands they actually form: oil floating on
+   * top, water below, and the milky emulsion between them. As the mixture
+   * separates the milk is squeezed out of the middle into the two clear
+   * layers, which is exactly what the separation time measures.
+   */
+  const liqTop = topY + hgt * 0.16;
+  const liqBot = bot - 16;
+  const span = liqBot - liqTop;
+  const oilBand = span * 0.34 * sep;
+  const waterBand = span * 0.66 * sep;
+  ctx.save();
+  ctx.globalAlpha = 0.92;
+  ctx.fillStyle = '#e4c75f';                                   // oil, risen
+  ctx.fillRect(cx - wid / 2 + 3, liqTop, wid - 6, oilBand);
+  ctx.fillStyle = mixColor('#f7f3e4', '#cfd9e6', 0.5);          // water, below
+  ctx.fillRect(cx - wid / 2 + 3, liqBot - waterBand, wid - 6, waterBand);
+  ctx.fillStyle = '#f6f1df';                                    // the emulsion itself
+  ctx.fillRect(cx - wid / 2 + 3, liqTop + oilBand, wid - 6, span - oilBand - waterBand);
+  ctx.restore();
+
+  if (sep > 0.06 && sep < 0.97) {
+    label(ctx, cx + wid / 2 + 6, liqTop + oilBand, 'oil', { anchor: 'right', size: 10 });
+    label(ctx, cx + wid / 2 + 6, liqBot - waterBand, 'water', { anchor: 'right', size: 10 });
+  }
+
+  const elapsed = state?.elapsed ?? 0;
+  if (!dilution) {
+    /* The clock belongs to the separation test — the dilution test is not
+       timed, and a clock ticking beside it says otherwise. */
+    drawStopClock(ctx, cx + 220, 150, 72, elapsed, {
+      leastCount: 1,
+      label: 'Stop clock',
+      sub: sep > 0.95 ? 'layers separated' : 'timing the emulsion',
+      running: sep < 0.95,
+    });
+    label(ctx, cx, topY - 22,
+      sep > 0.95 ? `Separated after ${elapsed.toFixed(0)} s`
+        : sep > 0.5 ? 'Separating — the milky band is thinning'
+          : 'Milky throughout — still emulsified',
+      { anchor: 'above', bold: true });
+    return;
+  }
+
+  /*
+   * THE DILUTION TEST. A drop of the emulsion is put into water and another
+   * into oil; whichever it mixes freely with is the continuous phase. That
+   * is the whole of how an oil-in-water emulsion is told from a
+   * water-in-oil one, and it was not on the bench.
+   */
+  const ow = type === 'oil-in-water';
+  const dishes = [
+    { x: cx + 170, name: 'diluted with WATER', mixes: ow },
+    { x: cx + 310, name: 'diluted with OIL', mixes: type === 'water-in-oil' },
+  ];
+  for (const d of dishes) {
+    const dy = 150;
+    ctx.save();
+    ctx.strokeStyle = rgba(th.ink, 0.35); ctx.lineWidth = 1.4;
+    ctx.fillStyle = rgba('#ffffff', 0.22);
+    ctx.beginPath(); ctx.ellipse(d.x, dy, 54, 17, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(d.x - 54, dy); ctx.quadraticCurveTo(d.x, dy + 52, d.x + 54, dy); ctx.stroke();
+    ctx.restore();
+
+    ctx.save();
+    if (d.mixes) {
+      /* Mixes freely: one even, slightly cloudy pool. */
+      ctx.fillStyle = rgba('#eef0e6', 0.9);
+      ctx.beginPath(); ctx.ellipse(d.x, dy + 9, 46, 15, 0, 0, Math.PI * 2); ctx.fill();
+    } else {
+      /* Refuses: the drop stays as a separate globule. */
+      ctx.fillStyle = rgba('#dfe6ef', 0.85);
+      ctx.beginPath(); ctx.ellipse(d.x, dy + 9, 46, 15, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#e4c75f';
+      for (const [ddx, ddy, rr] of [[-14, 4, 9], [10, 9, 7], [0, 14, 5]]) {
+        ctx.beginPath(); ctx.ellipse(d.x + ddx, dy + ddy, rr, rr * 0.62, 0, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    ctx.restore();
+    label(ctx, d.x, dy - 20, d.name, { anchor: 'above', size: 11 });
+    label(ctx, d.x, dy + 42, d.mixes ? 'mixes freely' : 'stays as globules',
+      { anchor: 'below', size: 11, bold: d.mixes, color: d.mixes ? '#0d7a52' : undefined });
+  }
+  label(ctx, cx + 240, 248,
+    type ? `Continuous phase: ${ow ? 'water' : 'oil'} — ${type}`
+      : 'No emulsifier — nothing stays mixed to dilute',
+    { anchor: 'below', bold: true });
 }
+/**
+ * The thiosulphate clock reaction.
+ *
+ * What the bench showed was a flask, and a TRIANGLE where the cross should
+ * be, and nothing else. On an experiment whose measurement is a time it had
+ * no clock; on an experiment whose variable is a concentration it looked the
+ * same at every concentration; and its temperature, the other thing the rate
+ * depends on, was a number in a panel rather than a thermometer in the
+ * liquid.
+ *
+ * Everything drawn here comes from the model: the turbidity is the sulphur
+ * the reaction has actually produced, the tint is the thiosulphate actually
+ * in the flask, and the clock reads the model's own elapsed time.
+ */
 export function reactionKinetics(ctx, w, h, state, inputs) {
   const th = theme();
-  const cx = w / 2;
-  const { topY, bot } = drawConicalFlask(ctx, cx, 30, 40, 130, 120, 0.5, th.liquid, { label: 'Na₂S₂O₃ + HCl' });
+  const cx = w / 2 - 90;
   const turbidity = Math.min(1, state?.turbidity ?? 0);
-  ctx.save(); ctx.fillStyle = '#222'; ctx.globalAlpha = 1 - turbidity;
-  ctx.beginPath(); ctx.moveTo(cx - 8, bot - 6); ctx.lineTo(cx + 8, bot - 6); ctx.lineTo(cx, bot - 20); ctx.closePath(); ctx.fill();
+
+  /* Concentration is visible, because it is the independent variable. The
+     tint comes from how much of the 50 mL is thiosulphate rather than water,
+     so a dilute flask looks dilute before the reaction begins. */
+  const thio = Number(inputs?.thioVolume ?? 50);
+  const water = Number(inputs?.waterVolume ?? 0);
+  const frac = thio + water > 0 ? thio / (thio + water) : 1;
+  const liquid = mixColor('#eef4f8', '#dfe9d8', frac);
+
+  const { bot } = drawConicalFlask(ctx, cx, 30, 40, 130, 120, 0.5, liquid,
+    { label: `${thio.toFixed(0)} mL Na₂S₂O₃ + ${water.toFixed(0)} mL water + ${Number(inputs?.hclVolume ?? 5).toFixed(0)} mL HCl` });
+
+  /* The sulphur, as it forms: a pale suspension that thickens across the
+     whole liquid rather than a shade drawn over the cross. */
+  if (turbidity > 0.01) {
+    ctx.save();
+    ctx.globalAlpha = 0.85 * turbidity;
+    ctx.fillStyle = '#f2f3ec';
+    ctx.beginPath();
+    ctx.moveTo(cx - 58, bot - 4);
+    ctx.lineTo(cx + 58, bot - 4);
+    ctx.lineTo(cx + 19, bot - 62);
+    ctx.lineTo(cx - 19, bot - 62);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  /* An actual cross, on the tile under the flask, seen through the liquid. */
+  ctx.save();
+  ctx.globalAlpha = Math.max(0, 1 - turbidity / 0.78);
+  ctx.strokeStyle = '#1a2333';
+  ctx.lineWidth = 3.4;
+  ctx.lineCap = 'round';
+  const r = 11;
+  ctx.beginPath();
+  ctx.moveTo(cx - r, bot - 20 - r); ctx.lineTo(cx + r, bot - 20 + r);
+  ctx.moveTo(cx + r, bot - 20 - r); ctx.lineTo(cx - r, bot - 20 + r);
+  ctx.stroke();
   ctx.restore();
-  label(ctx, cx, bot + 6, turbidity > 0.9 ? 'Cross has disappeared' : 'Cross mark under the flask', { anchor: 'below' });
+
+  drawThermometer(ctx, cx + 92, 44, 130, clamp(((Number(inputs?.tempC ?? 25)) - 10) / 60, 0, 1),
+    { label: `${Number(inputs?.tempC ?? 25).toFixed(0)} °C` });
+
+  // The instrument this experiment measures with.
+  drawStopClock(ctx, w - 150, h * 0.42, 70, state?.elapsed ?? 0, {
+    leastCount: 0.2,
+    running: Boolean(state?.running && !state?.finishedAt),
+    sub: state?.finishedAt ? 'cross gone — record the time' : 'watching the cross',
+  });
+
+  label(ctx, cx, bot + 8,
+    turbidity >= 0.78 ? 'The cross has disappeared — stop the clock'
+      : state?.running ? 'Cross still visible through the liquid'
+        : 'Cross mark on the tile under the flask',
+    { anchor: 'below' });
 }
 export function calorimetry(ctx, w, h, state, inputs) {
   const th = theme();

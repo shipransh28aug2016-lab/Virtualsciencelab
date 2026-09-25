@@ -10,6 +10,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { sigFig, mean } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XII-CHE-F01',
@@ -21,10 +22,27 @@ export const meta = {
   expectedBehaviour: ['Correct stoichiometry and acidification give large, well-formed, characteristically coloured crystals', 'Slow, undisturbed cooling gives the best yield of good crystals, as in ordinary crystallisation'],
 };
 
+/**
+ * `theoreticalG` is the mass stoichiometry allows from 7 g of the limiting
+ * reagent. `recovery` is the fraction of it a careful worker actually gets
+ * into the filter paper.
+ *
+ * The model had no recovery at all: the ideal procedure — acidified, kept
+ * out of the light, cooled slowly — returned the full theoretical mass and
+ * a yield of 100%, which no preparation in any laboratory has ever given.
+ * The accepted values these experiments declare (62% for Mohr's salt, 55%
+ * for potassium ferric oxalate) are the real figures, so the bench could
+ * only reach them by doing the preparation BADLY: a student who followed the
+ * method perfectly was told they were 45% out, and one who left the complex
+ * in the light was told they were right.
+ *
+ * What is lost is not a mistake. Some product stays dissolved in the mother
+ * liquor at the crystallising temperature, and some is left on the glass.
+ */
 export const PRODUCTS = {
-  mohr: { label: "Mohr's salt, FeSO₄·(NH₄)₂SO₄·6H₂O", molarMass: 392.14, colour: 'pale green', needsAcid: true, theoreticalG: 9.8 },
-  alum: { label: 'Potash alum, K₂SO₄·Al₂(SO₄)₃·24H₂O', molarMass: 948.0, colour: 'colourless, octahedral', needsAcid: false, theoreticalG: 9.5 },
-  ferricOxalate: { label: 'Potassium ferric oxalate, K₃[Fe(C₂O₄)₃]·3H₂O', molarMass: 491.24, colour: 'emerald green, light-sensitive', needsAcid: false, theoreticalG: 8.5 },
+  mohr: { label: "Mohr's salt, FeSO₄·(NH₄)₂SO₄·6H₂O", molarMass: 392.14, colour: 'pale green', needsAcid: true, theoreticalG: 9.8, recovery: 0.62 },
+  alum: { label: 'Potash alum, K₂SO₄·Al₂(SO₄)₃·24H₂O', molarMass: 948.0, colour: 'colourless, octahedral', needsAcid: false, theoreticalG: 9.5, recovery: 0.66 },
+  ferricOxalate: { label: 'Potassium ferric oxalate, K₃[Fe(C₂O₄)₃]·3H₂O', molarMass: 491.24, colour: 'emerald green, light-sensitive', needsAcid: false, theoreticalG: 8.5, recovery: 0.55 },
 };
 export const COOLING = { slow: { label: 'Slow, undisturbed cooling', factor: 1.0 }, fast: { label: 'Rapid cooling', factor: 0.85 } };
 
@@ -37,7 +55,7 @@ export function yieldG(inputs) {
   const acidPenalty = p.needsAcid && !inputs.acidified ? 0.55 : 1;
   const lightPenalty = inputs.product === 'ferricOxalate' && !inputs.litProtected ? 0.7 : 1;
   const coolFactor = (COOLING[inputs.cooling] || COOLING.slow).factor;
-  return p.theoreticalG * scaleFactor * acidPenalty * lightPenalty * coolFactor;
+  return p.theoreticalG * (p.recovery ?? 0.62) * scaleFactor * acidPenalty * lightPenalty * coolFactor;
 }
 export function percentYield(inputs) { return (yieldG(inputs) / (productOf(inputs).theoreticalG * (inputs.limitingReagentG / 7))) * 100; }
 
@@ -72,13 +90,53 @@ export function step(state, inputs, dt) {
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 317);
   const y = Math.max(0, yieldG(inputs) + jitter(rng, 0.15));
-  return { trial, product: productOf(inputs).label, limitingReagentG: inputs.limitingReagentG, crystalMassG: sigFig(y, 4), percentYield: sigFig((y / (productOf(inputs).theoreticalG * (inputs.limitingReagentG / 7))) * 100, 4), colour: productOf(inputs).colour };
+  /* How the preparation was actually done, so the result can say why the
+     yield came out where it did rather than leaving the student to guess. */
+  return { trial, product: productOf(inputs).label,
+    acidified: inputs.acidified ? 'acidified' : 'not acidified',
+    cooling: (COOLING[inputs.cooling] || COOLING.slow).label,
+    litProtected: inputs.litProtected ? 'kept dark' : 'left in the light', limitingReagentG: inputs.limitingReagentG, crystalMassG: sigFig(y, 4), percentYield: sigFig((y / (productOf(inputs).theoreticalG * (inputs.limitingReagentG / 7))) * 100, 4), colour: productOf(inputs).colour };
 }
 
-export function derive(rows) {
+export function derive(rows, inputs = defaults) {
   if (rows.length < 1) return { ok: false, reason: 'Complete at least one preparation.' };
+  const mixed = mixedSetRefusal(rows, 'product', 'salts');
+  if (mixed) return mixed;
+
+  const p = specimenOfRows(PRODUCTS, rows, 'product', productOf(inputs));
   const yields = rows.map((r) => Number(r.percentYield));
-  return { ok: true, crystalMass: sigFig(mean(rows.map((r) => Number(r.crystalMassG))), 4), percentYield: sigFig(mean(yields), 4), n: rows.length, points: [] };
+
+  /*
+   * Name what the yield was lost to.
+   *
+   * A preparation that comes out at 39% instead of 62% has not failed
+   * mysteriously: something in the method took it there, and the bench knows
+   * which. Leaving the student with "your value differs by 36%" turns a
+   * teaching moment into a mark.
+   */
+  const last = rows[rows.length - 1];
+  const lost = [];
+  if (last.acidified === 'not acidified' && p.needsAcid) {
+    lost.push('the solution was not acidified, so some of the iron(II) hydrolysed before it could crystallise');
+  }
+  if (/rapid/i.test(String(last.cooling))) {
+    lost.push('rapid cooling gives many small crystals that trap mother liquor, and less product on the filter');
+  }
+  if (last.litProtected === 'left in the light' && p.label.includes('oxalate')) {
+    lost.push('the complex was left in the light, and light reduces Fe(III) in it to Fe(II)');
+  }
+  return {
+    ok: true,
+    crystalMass: sigFig(mean(rows.map((r) => Number(r.crystalMassG))), 4),
+    percentYield: sigFig(mean(yields), 4),
+    /* What a careful preparation of THIS salt gives — the rest stays in the
+       mother liquor and on the glass. */
+    accepted: sigFig((p.recovery ?? 0.62) * 100, 3),
+    product: p.label, colour: p.colour,
+    lostTo: lost.length ? lost.join('; ') : null,
+    method: `${last.cooling}, ${last.acidified}${p.label.includes('oxalate') ? `, ${last.litProtected}` : ''}`,
+    n: rows.length, points: [],
+  };
 }
 
 export default { meta, defaults, PRODUCTS, COOLING, init, step, measure, derive, validate, productOf, yieldG, percentYield };

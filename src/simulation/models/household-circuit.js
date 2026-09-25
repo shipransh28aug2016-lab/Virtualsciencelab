@@ -18,6 +18,14 @@ export const meta = {
   expectedBehaviour: ['Parallel wiring gives full brightness and independent switching', 'Series wiring dims every lamp to a ninth of its rated power'],
 };
 
+/* Where the switches sit, in words, because this is a column of the student's
+   own observation table and "eachLive" is a lookup key, not an answer. */
+export const SWITCH_PLACEMENTS = {
+  eachLive: 'one in the live wire of each lamp',
+  eachNeutral: 'one in the neutral wire of each lamp',
+  oneCommon: 'one common switch for all three',
+};
+
 export const LAMPS = { w40: { label: '40 W lamp', ratedW: 40 }, w60: { label: '60 W lamp', ratedW: 60 }, w100: { label: '100 W lamp', ratedW: 100 } };
 export const SUPPLY_V = 220;
 
@@ -76,18 +84,20 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const v = voltagePerLampV(inputs) + jitter(rng, 1);
   const p = (v * v) / lampResistanceOhm(inputs);
   const iTotal = totalCurrentA(inputs) + jitter(rng, 0.01);
-  return { trial, wiring: inputs.wiring, switches: inputs.switches, fuse: inputs.fuse, earthing: inputs.earthing, voltagePerLamp: Number(v.toFixed(1)), powerPerLamp: sigFig(p, 4), totalCurrent: sigFig(iTotal, 4) };
+  return { trial, wiring: inputs.wiring,
+    switches: SWITCH_PLACEMENTS[inputs.switches] || String(inputs.switches),
+    _switches: inputs.switches, fuse: inputs.fuse, earthing: inputs.earthing, voltagePerLamp: Number(v.toFixed(1)), powerPerLamp: sigFig(p, 4), totalCurrent: sigFig(iTotal, 4) };
 }
 
 /** The three safety faults this activity specifically tests for. */
-function rowUnsafe(r) { return r.switches === 'eachNeutral' || r.fuse !== 'live' || r.earthing !== 'earthed'; }
+function rowUnsafe(r) { return r._switches === 'eachNeutral' || r.fuse !== 'live' || r.earthing !== 'earthed'; }
 /** The one fully correct assembly: parallel lamps, a switch per lamp in the live wire, fuse in the live wire, earthed casing. */
-function rowCorrect(r) { return r.wiring === 'parallel' && r.switches === 'eachLive' && r.fuse === 'live' && r.earthing === 'earthed'; }
+function rowCorrect(r) { return r.wiring === 'parallel' && r._switches === 'eachLive' && r.fuse === 'live' && r.earthing === 'earthed'; }
 
 export function derive(rows, inputs = defaults) {
   if (rows.length < 1) return { ok: false, reason: 'Assemble and test at least one wiring arrangement.' };
   const last = rows[rows.length - 1];
-  const arrangements = new Set(rows.map((r) => `${r.wiring}|${r.switches}|${r.fuse}|${r.earthing}`));
+  const arrangements = new Set(rows.map((r) => `${r.wiring}|${r._switches}|${r.fuse}|${r.earthing}`));
   const unsafeRows = rows.filter(rowUnsafe);
   const correctRow = rows.find(rowCorrect);
   return {
@@ -106,4 +116,4 @@ export function derive(rows, inputs = defaults) {
   };
 }
 
-export default { meta, defaults, LAMPS, SUPPLY_V, init, step, measure, derive, validate, lampOf, lampResistanceOhm, voltagePerLampV, powerPerLampW, totalCurrentA, safeFuse, switchesSafe, fuseInLive };
+export default { SWITCH_PLACEMENTS, meta, defaults, LAMPS, SUPPLY_V, init, step, measure, derive, validate, lampOf, lampResistanceOhm, voltagePerLampV, powerPerLampW, totalCurrentA, safeFuse, switchesSafe, fuseInLive };

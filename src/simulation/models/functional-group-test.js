@@ -25,17 +25,17 @@ export const COMPOUNDS = {
   hexane: { label: 'Hexane (saturated, control)', group: 'none' },
 };
 export const TESTS = {
-  bromineWater: { label: 'Bromine water', target: 'unsaturation', positive: 'Decolourises the orange bromine water instantly (addition across the C=C)' },
-  baeyer: { label: "Baeyer's test (cold dil. KMnO₄)", target: 'unsaturation', positive: 'Purple colour discharged, brown MnO₂ precipitate forms' },
-  ceric: { label: 'Ceric ammonium nitrate', target: 'alcohol', positive: 'Red colour forms (a cerium-alkoxide complex)' },
-  lucas: { label: "Lucas' reagent", target: 'alcohol', positive: 'Turbidity/oily layer (rate distinguishes 1°/2°/3°, but this is a general alcohol test)' },
-  fecl3: { label: 'Neutral FeCl₃', target: 'phenol', positive: 'Violet / blue-black colouration' },
-  tollens: { label: "Tollens' reagent", target: 'aldehyde', positive: 'Bright silver mirror forms on the tube wall' },
-  fehling: { label: "Fehling's solution", target: 'aldehyde', positive: 'Blue solution gives a brick-red precipitate of Cu₂O on warming' },
-  dnp: { label: '2,4-DNP reagent', target: 'carbonyl', positive: 'Yellow/orange precipitate forms (positive for BOTH aldehyde and ketone)' },
-  iodoform: { label: 'Iodoform test', target: 'methylKetone', positive: 'Yellow precipitate of iodoform (CHI₃) with a characteristic smell' },
-  nahco3: { label: 'Sodium bicarbonate', target: 'carboxylic', positive: 'Brisk effervescence of CO₂' },
-  diazotisation: { label: 'Diazotisation + β-naphthol', target: 'amine', positive: 'Orange-red azo dye forms' },
+  bromineWater: { label: 'Bromine water', target: 'unsaturation', positive: 'Decolourises the orange bromine water instantly (addition across the C=C)', colour: '#f2eede' /* the orange bromine water is DECOLOURISED */ },
+  baeyer: { label: "Baeyer's test (cold dil. KMnO₄)", target: 'unsaturation', positive: 'Purple colour discharged, brown MnO₂ precipitate forms', colour: '#6b4a2f' /* purple discharged, brown MnO₂ */ },
+  ceric: { label: 'Ceric ammonium nitrate', target: 'alcohol', positive: 'Red colour forms (a cerium-alkoxide complex)', colour: '#c0242b' /* red cerium-alkoxide complex */ },
+  lucas: { label: "Lucas' reagent", target: 'alcohol', positive: 'Turbidity/oily layer (rate distinguishes 1°/2°/3°, but this is a general alcohol test)', colour: '#e8e4dc' /* a cloudy oily layer */ },
+  fecl3: { label: 'Neutral FeCl₃', target: 'phenol', positive: 'Violet / blue-black colouration', colour: '#3b2a6b' /* violet / blue-black */ },
+  tollens: { label: "Tollens' reagent", target: 'aldehyde', positive: 'Bright silver mirror forms on the tube wall', colour: '#c9ccd2' /* a silver mirror */ },
+  fehling: { label: "Fehling's solution", target: 'aldehyde', positive: 'Blue solution gives a brick-red precipitate of Cu₂O on warming', colour: '#b2401b' /* brick-red Cu₂O */ },
+  dnp: { label: '2,4-DNP reagent', target: 'carbonyl', positive: 'Yellow/orange precipitate forms (positive for BOTH aldehyde and ketone)', colour: '#f0c419' /* yellow-orange precipitate */ },
+  iodoform: { label: 'Iodoform test', target: 'methylKetone', positive: 'Yellow precipitate of iodoform (CHI₃) with a characteristic smell', colour: '#f2df5a' /* yellow iodoform */ },
+  nahco3: { label: 'Sodium bicarbonate', target: 'carboxylic', positive: 'Brisk effervescence of CO₂', colour: '#eef3f8' /* colourless CO₂ fizz */ },
+  diazotisation: { label: 'Diazotisation + β-naphthol', target: 'amine', positive: 'Orange-red azo dye forms', colour: '#e2561f' /* orange-red azo dye */ },
 };
 
 export const defaults = { compound: 'ethanol', test: 'ceric' };
@@ -69,7 +69,18 @@ export function observation(inputs) {
 }
 
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0, elapsed: 0, development: 0, complete: false }; }
+/*
+ * What the renderer needs, in words.
+ *
+ * Renderers never import models, so the bench could only print the raw keys
+ * from the pickers: "Reagent: ceric" over a tube labelled "ethanol", on a
+ * practical whose entire content is which reagent was added to which
+ * compound and what was SEEN. The observation is the answer a student writes
+ * in the table, and it was nowhere on the bench.
+ */
+export function init(inputs = defaults) {
+  return { t: 0, elapsed: 0, development: 0, complete: false, compoundLabel: compoundOf(inputs).label, testLabel: testOf(inputs).label, observationText: observation(inputs), positive: isPositive(inputs), positiveColour: testOf(inputs).colour || '#e07a1f' };
+}
 
 /**
  * A wet test is not instantaneous. Warm the tube and the colour or the
@@ -85,6 +96,13 @@ export function step(state, inputs, dt) {
   const target = positive ? 1 : 0;
   s.development += (target - s.development) * Math.min(1, dt * 0.55);
   s.complete = positive ? s.development > 0.96 : s.elapsed > 6;
+  s.compoundLabel = compoundOf(inputs).label;
+  s.testLabel = testOf(inputs).label;
+  s.observationText = observation(inputs);
+  /* The colour the observation NAMES, so the tube turns the colour the
+     sentence beside it describes rather than a single all-purpose orange. */
+  s.positiveColour = testOf(inputs).colour || '#e07a1f';
+  s.positive = positive;
   return s;
 }
 

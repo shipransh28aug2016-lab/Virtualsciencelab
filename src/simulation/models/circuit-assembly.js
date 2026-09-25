@@ -152,6 +152,26 @@ export function loadVoltageV(inputs) {
   return circuitCurrentA(inputs) * load.ohm;
 }
 
+/**
+ * What this one fault would do, with everything else connected properly.
+ *
+ * A fault's consequence has to be computed in isolation, because that is what
+ * the sentence describing it claims. With the voltmeter also mis-wired into
+ * the path, the current is a few microampere no matter where the ammeter is —
+ * so the warning about the ammeter read "very nearly a short circuit — about
+ * 0.00 A would flow", which is the opposite of what a short circuit does. A
+ * student who makes two mistakes at once was told something false about each.
+ */
+const WIRED_RIGHT = {
+  ammeterMode: 'series', voltmeterMode: 'parallel',
+  polarity: 'correct', rheostatMode: 'variable',
+};
+function currentWithOnly(inputs, fault) {
+  // The student's own cell, load and rheostat setting; only the OTHER faults
+  // put right, so the number describes this fault on this bench.
+  return circuitCurrentA({ ...inputs, ...WIRED_RIGHT, ...fault });
+}
+
 /** Is every connection right? */
 export function isCorrect(inputs) {
   return (AMMETER_MODE[inputs.ammeterMode] || {}).correct === true
@@ -162,7 +182,9 @@ export function isCorrect(inputs) {
 
 /** Would the ammeter be damaged by this arrangement? */
 export function ammeterAtRisk(inputs) {
-  return inputs.ammeterMode === 'parallel' && circuitCurrentA(inputs) > 1.5;
+  // Judged on what the ammeter alone would carry, with the rest wired right.
+  return inputs.ammeterMode === 'parallel'
+    && currentWithOnly(inputs, { ammeterMode: 'parallel' }) > 1.5;
 }
 
 export function validate(inputs) {
@@ -173,7 +195,7 @@ export function validate(inputs) {
     errors.push({
       field: 'ammeterMode',
       code: 'AMMETER_IN_PARALLEL',
-      message: `The ammeter is across the load, which is very nearly a short circuit — about ${circuitCurrentA(inputs).toFixed(2)} A would flow.`,
+      message: `The ammeter is across the load, which is very nearly a short circuit — about ${currentWithOnly(inputs, { ammeterMode: 'parallel' }).toFixed(2)} A would flow.`,
       why: 'An ammeter is built with a very LOW resistance so that inserting it does not change the current it is measuring. Placed across the load, that low resistance carries almost all the current and bypasses the component entirely. The meter is not rated for this and would be damaged.',
       fix: 'Break the circuit and put the ammeter IN the path, in series with the load.',
     });
@@ -183,7 +205,7 @@ export function validate(inputs) {
     errors.push({
       field: 'voltmeterMode',
       code: 'VOLTMETER_IN_SERIES',
-      message: `The voltmeter is in the path, so only about ${(circuitCurrentA(inputs) * 1e6).toFixed(0)} µA flows and nothing works.`,
+      message: `The voltmeter is in the path, so only about ${(currentWithOnly(inputs, { voltmeterMode: 'series' }) * 1e6).toFixed(0)} µA flows and nothing works.`,
       why: 'A voltmeter is built with a very HIGH resistance so that it draws almost no current from the circuit it examines. Put in series, that high resistance chokes the current to nearly nothing, and almost the whole supply voltage appears across the meter instead of across the load.',
       fix: 'Connect the voltmeter ACROSS the load, in parallel with it.',
     });
@@ -246,7 +268,16 @@ export function init(inputs = defaults) {
 
 export function step(state, inputs, dt) {
   const s = { ...state };
-  if (s.finishedAt) return s;
+  /*
+   * The meters go on following the circuit.
+   *
+   * `if (s.finishedAt) return s;` froze the whole bench half a second after
+   * it opened: the needles stopped tracking, and a student who then changed
+   * the board, moved the slider or corrected the wiring saw two meters
+   * showing the previous circuit's readings for ever. A meter settles — it
+   * does not stop working. So the needles keep following, and "settled" is
+   * what it means on a real instrument: the needle has stopped moving.
+   */
   s.t += dt;
 
   // Nothing flows until the key is closed for the reading.
@@ -255,10 +286,10 @@ export function step(state, inputs, dt) {
   s.voltageV += (loadVoltageV(inputs) - s.voltageV) * Math.min(1, dt * 8);
   s.needleBackwards = inputs.polarity === 'reversed';
 
-  if (!s.settled && s.t > 0.5) {
-    s.settled = true;
-    s.finishedAt = s.t;
-  }
+  /* Settled means the needles have stopped moving. */
+  const moving = Math.abs(target - s.currentA) > Math.max(1e-4, Math.abs(target) * 0.005);
+  s.settled = !moving && s.t > 0.2;
+  if (s.settled && !s.finishedAt) s.finishedAt = s.t;
   return s;
 }
 
@@ -268,8 +299,23 @@ export function step(state, inputs, dt) {
  * pretending otherwise would teach the opposite of the lesson.
  */
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!validate(inputs).ok) return null;
-  if (!state || !state.settled) return null;
+  const check = validate(inputs);
+  if (!check.ok) {
+    /* The model already wrote the explanation, for the feedback panel; say
+       the same thing here rather than refusing in silence. */
+    const w = check.errors[0] || check.warnings[0];
+    return { v: null, reason: w ? [w.message, w.fix || w.why].filter(Boolean).join(' ') : 'The apparatus is not set up for a reading yet.' };
+  }
+  /*
+   * A bench that will not take a reading has to say why.
+   *
+   * These returned a bare null, which reached the student as "Nothing to
+   * measure here — no reading recorded": true of a mirror forming no image,
+   * and useless on a bench where the apparatus is simply not ready yet. The
+   * student has pressed the right button at the wrong moment, and the bench
+   * knows exactly which moment it is waiting for.
+   */
+  if (!state || !state.settled) return { v: null, reason: 'The meters have not settled. Close the key and let both needles come to rest before reading them.' };
 
   const rng = makeRng(seed + trial * 73);
   const i = circuitCurrentA(inputs);

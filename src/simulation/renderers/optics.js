@@ -2,7 +2,7 @@
  * Apparatus renderers — ray optics.
  */
 import {
-  label, drawOpticalBench, drawUpright, drawConvexLens, drawConcaveLens, drawConcaveMirror, drawConvexMirror, drawScreen, drawCandle, drawPrism, drawSlab, drawDial, theme, drawRayDiagram, drawImageOnScreen, dashedLine, brushedMetal, chrome, contactShadow, noteBounds, drawDigitalReadout, drawResistor, drawWireRect, drawCell,
+  label, drawOpticalBench, drawUpright, drawConvexLens, drawConcaveLens, drawConcaveMirror, drawConvexMirror, drawScreen, drawCandle, drawPrism, drawSlab, drawDial, theme, drawRayDiagram, drawImageOnScreen, dashedLine, brushedMetal, chrome, contactShadow, noteBounds, drawDigitalReadout, drawResistor, drawWireRect, drawCell, drawRuler,
 } from './apparatus.js';
 import { clock, rgba, shade, mixColor, clamp, lerp, bloom } from './realism.js';
 
@@ -531,17 +531,31 @@ export function lateralDeviation(ctx, w, h, state, inputs) {
     `i = ${(inputs?.incidenceDeg ?? 40).toFixed(0)}° · r = ${(r * 180 / Math.PI).toFixed(1)}° — the emergent ray is parallel to the incident ray`,
     { anchor: 'above', bold: true });
 }
+/*
+ * The sources this bench offers, by name, wavelength and the colour they
+ * actually are. The bench drew every one of them in the same red and
+ * labelled it "red" — the key from the picker, where a student expects a
+ * lamp and the wavelength the whole calculation turns on.
+ */
+const SLIT_SOURCES = {
+  red: { label: 'Red laser', nm: 650, colour: '#ff3a2f' },
+  green: { label: 'Green laser', nm: 532, colour: '#2fd14f' },
+  blue: { label: 'Blue laser', nm: 450, colour: '#3f6dff' },
+  sodium: { label: 'Sodium lamp (filtered)', nm: 589, colour: '#ffb43a' },
+};
+
 export function singleSlitDiffraction(ctx, w, h, state, inputs) {
   const th = theme();
   const slitX = 220, screenX = 700, axisY = 250;
+  const src = SLIT_SOURCES[inputs?.source] || SLIT_SOURCES.red;
 
   // Source and slit.
   ctx.save();
-  ctx.fillStyle = '#c02626';
+  ctx.fillStyle = src.colour;
   ctx.beginPath(); ctx.arc(90, axisY, 8, 0, Math.PI * 2); ctx.fill();
   ctx.restore();
   bloomAt(ctx, 90, axisY);
-  label(ctx, 90, axisY - 12, inputs?.source || 'Monochromatic source', { anchor: 'above' });
+  label(ctx, 90, axisY - 12, `${src.label} \u00b7 \u03bb = ${src.nm} nm`, { anchor: 'above' });
 
   const slitGap = clamp(30 - (inputs?.slitMm ?? 0.2) * 40, 5, 26);
   ctx.save();
@@ -558,6 +572,26 @@ export function singleSlitDiffraction(ctx, w, h, state, inputs) {
   ctx.restore();
   label(ctx, screenX, axisY + 176, 'Screen', { anchor: 'below' });
 
+  /*
+   * The scale the width is READ off.
+   *
+   * This experiment's measurement is a length — the width of the central
+   * maximum — and the bench offered a choice of scale with a 1 mm, 0.5 mm or
+   * 0.2 mm least count that changed nothing on the screen. A width has to be
+   * measured against something, so the scale stands beside the screen,
+   * divided as the chosen one is, with the central maximum marked off on it.
+   */
+  const SCREEN_LC = { s1: 1, s05: 0.5, s02: 0.2 };
+  const lc = SCREEN_LC[inputs?.scale] || 0.5;
+  const scaleLen = 340;
+  const mmPerPx = 40 / scaleLen;                       // the scale spans 40 mm
+  drawRuler(ctx, screenX + 42, axisY - scaleLen / 2, scaleLen, {
+    vertical: true,
+    divisions: Math.min(80, Math.round(40 / lc)),
+    scaleMax: 40,
+    label: `L.C. ${lc} mm`,
+  });
+
   /* The pattern: a broad central maximum with much fainter minima either
      side, its width INVERSELY proportional to the slit width. That inverse
      relation is the whole experiment, so it is computed from the model's
@@ -568,17 +602,29 @@ export function singleSlitDiffraction(ctx, w, h, state, inputs) {
     const beta = (dy / cw) * Math.PI * 2;
     const I = beta === 0 ? 1 : (Math.sin(beta) / beta) ** 2;
     if (I < 0.004) continue;
-    ctx.fillStyle = rgba('#ff3a2f', Math.min(1, I * 1.15));
-    ctx.fillRect(screenX - 5, axisY + dy, 10, 2);
+    ctx.fillStyle = rgba(src.colour, Math.min(1, I * 1.15));
+    ctx.fillRect(screenX - 6, axisY + dy, 12, 2.2);
     // The pattern spilling into the space in front of the screen.
-    ctx.fillStyle = rgba('#ff3a2f', Math.min(0.5, I * 0.35));
+    ctx.fillStyle = rgba(src.colour, Math.min(0.5, I * 0.35));
     ctx.fillRect(screenX - 26, axisY + dy, 20, 2);
   }
   ctx.restore();
 
+  /* And the width itself, marked off against that scale. */
+  const halfPx = clamp((state?.width ?? 4) / 2 / mmPerPx, 4, scaleLen / 2);
+  ctx.save();
+  /* Marked on the beam side of the screen, where nothing else is drawn. */
+  ctx.strokeStyle = '#0d7a52'; ctx.lineWidth = 1.8;
+  ctx.beginPath();
+  ctx.moveTo(screenX - 34, axisY - halfPx); ctx.lineTo(screenX - 8, axisY - halfPx);
+  ctx.moveTo(screenX - 34, axisY + halfPx); ctx.lineTo(screenX - 8, axisY + halfPx);
+  ctx.moveTo(screenX - 21, axisY - halfPx); ctx.lineTo(screenX - 21, axisY + halfPx);
+  ctx.stroke();
+  ctx.restore();
+
   // Envelope of the beam from slit to screen.
   ctx.save();
-  ctx.fillStyle = rgba('#ff6a4a', 0.1);
+  ctx.fillStyle = rgba(src.colour, 0.1);
   ctx.beginPath();
   ctx.moveTo(slitX + 6, axisY - slitGap / 2);
   ctx.lineTo(screenX - 6, axisY - cw);

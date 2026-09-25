@@ -5,6 +5,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { fitThroughOrigin, sigFig } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-B05',
@@ -109,7 +110,7 @@ export function measure(state, inputs, seed = 1, trial = 1) {
    */
   const vFree = vObs * wallFactor(inputs);
   return {
-    trial, ball: ballOf(inputs).label, ballRho: ballOf(inputs).rho, radiusMm: r, radiusSq: Number((r * r).toFixed(3)),
+    trial, liquid: liquidOf(inputs).label, ball: ballOf(inputs).label, ballRho: ballOf(inputs).rho, radiusMm: r, radiusSq: Number((r * r).toFixed(3)),
     distanceCm: inputs.fallDistanceCm, timeS, velocity: Number((vObs * 100).toFixed(3)),
     etaPas: sigFig((2 * (r / 1000) ** 2 * (ballOf(inputs).rho - liquidOf(inputs).rho) * G) / (9 * vFree), 4),
     _turbulent: turbulent(inputs),
@@ -117,6 +118,9 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'liquid', 'liquids');
+  if (mixed) return mixed;
+
   const usable = rows.filter((r) => !r._turbulent);
   if (usable.length < 4) return { ok: false, reason: 'Record the terminal velocity for at least four spheres, all in streamline flow.' };
   const l = liquidOf(inputs);

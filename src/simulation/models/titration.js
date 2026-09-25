@@ -80,6 +80,10 @@ export const INDICATORS = {
   phenolphthalein: { label: 'Phenolphthalein', below: 'colourless', above: 'pink', range: [8.2, 10] },
   methylOrange: { label: 'Methyl orange', below: 'pink', above: 'yellow', range: [3.1, 4.4] },
   universal: { label: 'Universal indicator', below: 'red-orange', above: 'violet', range: [7, 7] },
+  /* Permanganate is its own indicator, and the observation table has to say so
+     in words. Without an entry here the raw picker key leaked into the
+     student's own table, which read "self" in the indicator column. */
+  self: { label: 'None — the permanganate is its own indicator', below: 'colourless', above: 'pale pink', range: [7, 7] },
 };
 
 export const defaults = { system: 'naoh_oxalic', titrantConc: 0.1, analyteVolume: 20, indicator: 'phenolphthalein', buretteVolume: 0 };
@@ -206,8 +210,17 @@ export function endPointVolume(inputs) {
 
 /** One drop from a burette, mL — the finest step a titration can resolve. */
 export const DROP_ML = 0.05;
-/** Past this much excess the colour is unmistakably too deep: an overshoot. */
-export const OVERSHOOT_ML = 0.5;
+/**
+ * Past this much excess the colour is unmistakably too deep: an overshoot.
+ *
+ * Half a millilitre is ten drops, and a window ten drops wide makes
+ * concordance impossible by construction: three titres taken correctly could
+ * land 0.5 mL apart and the bench would then refuse them for not agreeing
+ * within 0.2 mL. A student is taught to stop at the FIRST permanent colour,
+ * which is one drop past the equivalence — so two drops past it is where the
+ * pink has gone too deep.
+ */
+export const OVERSHOOT_ML = 0.1;
 
 export function colourAt(inputs, delivered) {
   const s = systemOf(inputs);
@@ -251,7 +264,7 @@ export function validate(inputs) {
 export function init(inputs = defaults) {
   const sys = systemOf(inputs);
   return {
-    t: 0, delivered: 0, flowRate: 0, pH: 7, colour: 'colourless', flowing: false, atEndPoint: false, overshot: false, noEndPoint: false, finishedAt: null,
+    t: 0, delivered: 0, flowRate: 0, pH: 7, colour: 'colourless', flowing: false, atEndPoint: false, overshot: false, noEndPoint: false, windingBack: false, finishedAt: null,
     analyteName: sys.analyte, titrantName: sys.titrant, titrantIsPermanganate: sys.titrant === 'Potassium permanganate',
   };
 }
@@ -301,9 +314,21 @@ export function step(state, inputs, dt) {
      * lagging one. The reading a student takes must be the volume the burette
      * has actually delivered, so the last fraction of a drop is snapped home.
      */
-    const target = Math.max(0, Math.min(50, inputs.buretteVolume));
+    /*
+     * A BURETTE DOES NOT RUN BACKWARDS.
+     *
+     * Titrant that has been let into the flask is in the flask. The model used
+     * to follow the slider down as readily as up, so a student who ran past
+     * the end point could wind the level back and find it again by feel — and
+     * the bench's own advice, "you overshot the end point, refill the burette
+     * and repeat", described something the bench did not do. Delivery is now
+     * one way; Refill is what puts the burette back, which is what it is for.
+     */
+    const asked = Math.max(0, Math.min(50, inputs.buretteVolume));
+    const target = Math.max(s.delivered, asked);
     const gap = target - s.delivered;
     s.delivered = Math.abs(gap) <= DROP_ML ? target : s.delivered + gap * Math.min(1, dt * 18);
+    s.windingBack = asked < s.delivered - DROP_ML;
     s.flowing = false;
   }
   s.pH = pHAt(inputs, s.delivered);
@@ -349,6 +374,9 @@ export function measure(state, inputs, seed = 1, trial = 1) {
    * plenty to measure, the colour simply has not changed yet.
    */
   if (!state) return null;
+  if (state.windingBack) {
+    return { v: null, reason: `The burette has already delivered ${state.delivered.toFixed(1)} mL, and titrant that has been run into the flask cannot go back up the burette. Press Refill burette to start this titration again, and run the last millilitre in drop by drop.` };
+  }
   if (state.noEndPoint) {
     return { v: null, reason: `${(INDICATORS[inputs.indicator] || {}).label || 'This indicator'} does not change colour anywhere in this titration — its transition pH lies outside the whole pH range of the curve. Choose an indicator that turns near pH ${systemOf(inputs).equivalencePH}.` };
   }
@@ -369,24 +397,110 @@ export function measure(state, inputs, seed = 1, trial = 1) {
    * student is taught to repeat until readings are concordant, and readings
    * that cannot disagree teach nothing about concordance.
    */
-  const finalReading = toLeastCount(state.delivered + jitter(rng, 0.09), 0.1);
+  /* Half a graduation of reading scatter — the meniscus, the light, the eye.
+     Any more and titres taken by one careful worker cannot agree to the two
+     graduations that "concordant" means. */
+  const finalReading = toLeastCount(state.delivered + jitter(rng, 0.05), 0.1);
   return {
-    trial, initialReading: initial, finalReading, volumeUsed: Number((finalReading - initial).toFixed(1)),
+    trial,
+    /* Which indicator the end point was judged by. Phenolphthalein turns at
+       pH 8.2 and methyl orange at 4.4, so the same flask has two different
+       end points — twelve millilitres apart on a weak acid — and a set that
+       mixes them is two titrations averaged together. */
+    indicator: (INDICATORS[inputs.indicator] || {}).label || String(inputs.indicator || ''),
+    initialReading: initial, finalReading, volumeUsed: Number((finalReading - initial).toFixed(1)),
+    /* The two numbers the strength is worked out FROM, recorded with the titre
+       they belong to. They were read off the live sliders at calculation time,
+       so a student who pipetted 20 mL, titrated it, and then moved the pipette
+       slider to 25 mL had their good titre divided by a volume they never
+       used. */
+    titrantConc: Number(inputs.titrantConc), analyteVolume: Number(inputs.analyteVolume),
     pHAtStop: Number(state.pH.toFixed(2)), _overshot: state.overshot,
   };
 }
 
+/**
+ * How close two titres must be to count as concordant. A burette is read to
+ * its 0.1 mL graduation, so two readings that agree to within two graduations
+ * are the same measurement made twice; anything wider is a different one.
+ */
+export const CONCORDANCE_ML = 0.2;
+
+/**
+ * The concordant titres, out of everything recorded.
+ *
+ * "Mean of 2 concordant titres: 21.3 mL (readings are not concordant)" is not
+ * a sentence a laboratory can produce. The mean was being taken over every
+ * titre that had not overshot, concordant or not, and then LABELLED as a mean
+ * of concordant ones with a warning beside it saying the opposite — and the
+ * strength carried to the result panel was the mean of readings the panel
+ * itself had just rejected. The three numbers that were meant to agree, and
+ * did not, were averaged anyway.
+ *
+ * A titration is finished when readings agree. So this finds the widest run of
+ * titres that lie within one concordance window of each other, which is what a
+ * student does when they look down the column and take the three that agree.
+ */
+export function concordantSet(vols) {
+  const sorted = [...vols].sort((a, b) => a - b);
+  let best = { from: 0, to: 0 };
+  for (let i = 0; i < sorted.length; i += 1) {
+    let j = i;
+    while (j + 1 < sorted.length && sorted[j + 1] - sorted[i] <= CONCORDANCE_ML + 1e-9) j += 1;
+    const span = j - i;
+    const bestSpan = best.to - best.from;
+    if (span > bestSpan
+      || (span === bestSpan && sorted[j] - sorted[i] < sorted[best.to] - sorted[best.from])) {
+      best = { from: i, to: j };
+    }
+  }
+  return sorted.slice(best.from, best.to + 1);
+}
+
 export function derive(rows, inputs = defaults) {
+  const indicators = [...new Set(rows.map((r) => r.indicator).filter(Boolean))];
+  if (indicators.length > 1) {
+    return {
+      ok: false,
+      reason: `These titres were judged by ${indicators.length} different indicators (${indicators.join(', ')}). Each changes colour at its own pH, so they mark different end points in the same flask — choose the one that suits this titration and use it for the whole set.`,
+    };
+  }
+
   const usable = rows.filter((r) => !r._overshot);
-  if (usable.length < 2) return { ok: false, reason: 'Record at least two concordant titres (within 0.2 mL of each other).' };
-  const vols = usable.map((r) => Number(r.volumeUsed));
+  if (usable.length < 2) return { ok: false, reason: `Record at least two concordant titres (within ${CONCORDANCE_ML} mL of each other).` };
+  const allVols = usable.map((r) => Number(r.volumeUsed));
+  const vols = concordantSet(allVols);
+  if (vols.length < 2) {
+    return {
+      ok: false,
+      reason: `No two titres agree to within ${CONCORDANCE_ML} mL — the readings are ${allVols.map((v) => v.toFixed(1)).join(', ')} mL. Run the titration again until two agree, and average only those.`,
+    };
+  }
+  /* One pipette, one standard. A set taken partly at 20 mL and partly at
+     25 mL is two titrations, and averaging their titres is averaging two
+     different measurements. */
+  const pipetted = [...new Set(usable.map((r) => Number(r.analyteVolume)).filter(Number.isFinite))];
+  const standards = [...new Set(usable.map((r) => Number(r.titrantConc)).filter(Number.isFinite))];
+  if (pipetted.length > 1 || standards.length > 1) {
+    return {
+      ok: false,
+      reason: pipetted.length > 1
+        ? `These titres were taken on ${pipetted.length} different pipetted volumes (${pipetted.join(', ')} mL). Concordant titres are repeats of the SAME titration — pipette the same volume each time, and clear the table before changing it.`
+        : `These titres were run with ${standards.length} different strengths of standard solution (${standards.join(', ')} N). The standard is made up once and used throughout — clear the table before changing it.`,
+    };
+  }
+
   const meanTitre = mean(vols);
   const s = systemOf(inputs);
+  /* From the conditions the READINGS were taken under, not from wherever the
+     sliders happen to stand now. */
+  const conc = standards.length === 1 ? standards[0] : Number(inputs.titrantConc);
+  const pipette = pipetted.length === 1 ? pipetted[0] : Number(inputs.analyteVolume);
   let normality;
   if (s.unknownSide === 'titrant') {
-    normality = (inputs.titrantConc * inputs.analyteVolume) / meanTitre;
+    normality = (conc * pipette) / meanTitre;
   } else {
-    normality = (inputs.titrantConc * meanTitre) / inputs.analyteVolume;
+    normality = (conc * meanTitre) / pipette;
   }
   /*
    * Report the molarity as well wherever the redox system declares its
@@ -397,10 +511,16 @@ export function derive(rows, inputs = defaults) {
   const molarity = s.nFactor ? normality / s.nFactor : null;
   return {
     ok: true, meanTitre: sigFig(meanTitre, 4), normality: sigFig(normality, 3),
-    strength: sigFig(normality * s.eqMassUnknown, 3), concordant: Math.max(...vols) - Math.min(...vols) <= 0.3,
+    strength: sigFig(normality * s.eqMassUnknown, 3),
+    /* Three concordant titres is what the practical asks for; two is enough
+       to calculate with, and the panel says which of the two it had. */
+    concordant: vols.length >= 3,
+    concordantCount: vols.length,
+    discarded: allVols.length - vols.length,
+    titreSpread: sigFig(Math.max(...vols) - Math.min(...vols), 2),
     molarity: molarity == null ? null : sigFig(molarity, 3),
     nFactor: s.nFactor || null,
-    n: usable.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.volumeUsed) })),
+    n: vols.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.volumeUsed) })),
   };
 }
 

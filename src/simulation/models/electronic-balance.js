@@ -9,6 +9,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, mean, sigFig } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-CHE-E01',
@@ -82,7 +83,7 @@ export function validate(inputs) {
   }
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0, displayG: 0, settled: false }; }
+export function init(inputs = defaults) { return { objectLabel: objectOf(inputs).label, t: 0, displayG: 0, settled: false }; }
 /**
  * A top-pan balance settling. The display hunts in its last digit while
  * the pan is still moving and only then stabilises -- which is why a mass
@@ -90,6 +91,7 @@ export function init() { return { t: 0, displayG: 0, settled: false }; }
  */
 export function step(state, inputs, dt) {
   const s = { ...state };
+  s.objectLabel = objectOf(inputs).label;
   s.t += dt;
   const target = grossMassG(inputs);
   s.displayG = (s.displayG ?? 0) + (target - (s.displayG ?? 0)) * Math.min(1, dt * 2.2);
@@ -104,18 +106,45 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!state || !state.settled) return null;
+  /*
+   * A bench that will not take a reading has to say why.
+   *
+   * These returned a bare null, which reached the student as "Nothing to
+   * measure here — no reading recorded": true of a mirror forming no image,
+   * and useless on a bench where the apparatus is simply not ready yet. The
+   * student has pressed the right button at the wrong moment, and the bench
+   * knows exactly which moment it is waiting for.
+   */
+  if (!state || !state.settled) return { v: null, reason: 'The display is still settling. Wait for the reading to stop changing before writing it down — a balance is read only when its last digit is steady.' };
   const rng = makeRng(seed + trial * 307);
   const lc = balanceOf(inputs).lc;
   const reading = toLeastCount(netMassG(inputs) + jitter(rng, lc * 0.6), lc);
-  return { trial, object: objectOf(inputs).label, balance: balanceOf(inputs).label, tared: inputs.tared, reading: Number(reading.toFixed(4)) };
+  /* In words, because this column is read by a student and compared
+     between rows: a weighing made with the container tared and one made
+     without it are not two readings of the same mass. */
+  return { trial, object: objectOf(inputs).label, balance: balanceOf(inputs).label, tared: inputs.tared ? 'tared' : 'container not tared', reading: Number(reading.toFixed(4)) };
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'object', 'objects')
+    || mixedSetRefusal(rows, 'tared', 'ways of weighing',
+      'tare the balance with the container on the pan, then weigh the sample into it, and take the whole set that way.');
+  if (mixed) return mixed;
+
   const vals = rows.map((r) => Number(r.reading)).filter(Number.isFinite);
   if (vals.length < 2) return { ok: false, reason: 'Weigh the sample at least twice to check repeatability.' };
   const m = mean(vals);
-  return { ok: true, meanMass: sigFig(m, 5), accepted: sigFig(netMassG(inputs), 5), spread: Number((Math.max(...vals) - Math.min(...vals)).toFixed(4)), n: vals.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.reading) })) };
+  return { ok: true, meanMass: sigFig(m, 5), /* The accepted mass belongs to the object WEIGHED, not to whatever is on
+       the pan when Calculate is pressed. */
+    /* The bench's own settings, with only the object and the taring taken
+       from the READINGS — the container mass the tare subtracts lives in
+       inputs too, and dropping it made a tared weighing report its gross
+       mass as the accepted value. */
+    accepted: sigFig(netMassG({
+      ...inputs,
+      object: Object.keys(OBJECTS).find((k) => OBJECTS[k].label === rows[0]?.object) || inputs.object,
+      tared: rows[0]?.tared !== 'container not tared',
+    }), 5), spread: Number((Math.max(...vals) - Math.min(...vals)).toFixed(4)), n: vals.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.reading) })) };
 }
 
 export default { meta, defaults, OBJECTS, BALANCES, init, step, measure, derive, validate, objectOf, balanceOf, grossMassG, netMassG };

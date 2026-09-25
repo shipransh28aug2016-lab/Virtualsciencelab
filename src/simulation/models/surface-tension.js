@@ -64,7 +64,13 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 83);
   const r = tubeOf(inputs).radiusCm;
   const h = riseCm(inputs) + jitter(rng, 0.015);
-  return { trial, tube: tubeOf(inputs).label, radiusCm: r, invRadius: sigFig(1 / r, 4), riseCm: Number(h.toFixed(3)), product: sigFig(r * h, 4), tempC: inputs.tempC, liquid: inputs.liquid };
+  return { trial, tube: tubeOf(inputs).label,
+    /* Whether the tube was clean. A greasy tube raises the contact angle and
+       the liquid climbs about 60% as far, so a set that mixes clean tubes
+       with greasy ones has no constant r×h at all — which is the quantity
+       the whole experiment is there to show is constant. */
+    tubeState: inputs.cleanTube ? 'clean' : 'greasy',
+    radiusCm: r, invRadius: sigFig(1 / r, 4), riseCm: Number(h.toFixed(3)), product: sigFig(r * h, 4), tempC: inputs.tempC, liquid: inputs.liquid };
 }
 
 export function derive(rows, inputs = defaults) {
@@ -74,12 +80,44 @@ export function derive(rows, inputs = defaults) {
      two different constants. */
   const liquids = [...new Set((rows || []).map((r) => r.liquid).filter(Boolean))];
   if (liquids.length > 1) {
-    return { ok: false, reason: `These readings are of ${liquids.length} different liquids. Surface tension is a property of the liquid, so one liquid per set of tubes.` };
+    // Name them. "2 different liquids" tells a student to look for the
+    // mistake; naming them shows where it is.
+    const names = liquids.map((k) => (LIQUIDS[k] || {}).label || k);
+    return { ok: false, reason: `These readings are of ${liquids.length} different liquids (${names.join(', ')}). Surface tension is a property of the liquid, so one liquid per set of tubes.` };
   }
+  /*
+   * The temperature is not allowed to differ either, and only the liquid was
+   * being checked — a comment two lines above said so and the code did not.
+   * Surface tension falls by about 0.15 mN/m for every degree, so a set taken
+   * at 20 °C and 45 °C is two different constants fitted with one line: the
+   * points scattered to r² = 0.45 and the answer came out 32% from the
+   * accepted value, from seven perfectly good readings.
+   */
+  const states = [...new Set((rows || []).map((r) => r.tubeState).filter(Boolean))];
+  if (states.length > 1) {
+    /* Phrased like every other mixed-set refusal on these benches, so that a
+       student — and anything else reading the bench — recognises it as the
+       same objection: one specimen, one condition, one set. */
+    return {
+      ok: false,
+      reason: `These readings are of ${states.length} different tube conditions (${states.join(', ')}). Grease raises the contact angle, so the liquid climbs about 60% as far and r×h cannot be constant across the set. Clean every tube and take the whole set that way.`,
+    };
+  }
+
+  const temps = [...new Set((rows || []).map((r) => Number(r.tempC)).filter(Number.isFinite))];
+  if (temps.length > 1) {
+    return {
+      ok: false,
+      reason: `These readings were taken at ${temps.length} different temperatures (${temps.map((t) => `${t} °C`).join(', ')}). Surface tension falls as the liquid warms, so a set spanning two temperatures has no single value — hold the bath steady and take the whole set of tubes at one temperature.`,
+    };
+  }
+
   const pts = rows.map((r) => ({ x: Number(r.invRadius), y: Number(r.riseCm) }));
   if (pts.length < 3) return { ok: false, reason: 'Record the rise in at least three different tubes.' };
   const fit = fitThroughOrigin(pts);
   const l = liquidOf(inputs);
+  /* Both the liquid and the temperature come from the READINGS. */
+  const atTemp = { ...inputs, liquid: liquids[0] ?? inputs.liquid, tempC: temps[0] ?? inputs.tempC };
   // slope = 2T/(ρg), with r,h in cm -> convert to SI: slope(cm²) * 1e-4 m² / cm²... slope units cm since y=h(cm), x=1/r(1/cm) => slope has units cm².
   const slopeM2 = fit.slope * 1e-4;
   const T = (slopeM2 * l.rho * G) / 2;
@@ -87,7 +125,9 @@ export function derive(rows, inputs = defaults) {
   const meanProduct = products.reduce((a, b) => a + b, 0) / products.length;
   return {
     ok: true, surfaceTension: sigFig(T, 4), tFromGraph: sigFig(T, 4), productConstant: sigFig(meanProduct, 4),
-    accepted: sigFig(surfaceTensionAt(inputs), 4),
+    accepted: sigFig(surfaceTensionAt(atTemp) * (states[0] === 'greasy' ? 0.6 : 1), 4),
+    tubeState: states[0] || (inputs.cleanTube ? 'clean' : 'greasy'),
+    tempC: atTemp.tempC, liquid: (LIQUIDS[atTemp.liquid] || l).label,
     r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts,
   };
 }

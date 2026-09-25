@@ -6,6 +6,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { fitThroughOrigin, sigFig } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-B02',
@@ -43,19 +44,38 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!state || !state.settled) return null;
+  /*
+   * A bench that will not take a reading has to say why.
+   *
+   * These returned a bare null, which reached the student as "Nothing to
+   * measure here — no reading recorded": true of a mirror forming no image,
+   * and useless on a bench where the apparatus is simply not ready yet. The
+   * student has pressed the right button at the wrong moment, and the bench
+   * knows exactly which moment it is waiting for.
+   */
+  if (!state || !state.settled) return { v: null, reason: 'The spring is still moving. Wait until it hangs still before reading the pointer — an extension read while it is bobbing is a reading of the swing, not of the load.' };
   const rng = makeRng(seed + trial * 79);
   const trueX = extensionM(inputs);
   const xM = trueX + jitter(rng, 0.0006);
-  return { trial, loadG: inputs.loadG, loadN: sigFig((inputs.loadG / 1000) * G, 4), extensionCm: Number((xM * 100).toFixed(2)), extensionM: Number(xM.toFixed(4)) };
+  return { trial, springType: (SPRINGS[inputs.springType] || {}).label, loadG: inputs.loadG, loadN: sigFig((inputs.loadG / 1000) * G, 4), extensionCm: Number((xM * 100).toFixed(2)), extensionM: Number(xM.toFixed(4)) };
 }
 
 export function derive(rows) {
+  const mixed = mixedSetRefusal(rows, 'springType', 'springs');
+  if (mixed) return mixed;
+
   const pts = rows.map((r) => ({ x: Number(r.extensionM), y: Number(r.loadN) })).filter((p) => p.x > 0);
   if (pts.length < 4) return { ok: false, reason: 'Record at least four different loads.' };
   const fit = fitThroughOrigin(pts);
   if (!fit) return { ok: false, reason: 'Vary the load between readings.' };
-  return { ok: true, k: sigFig(fit.slope, 4), r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts };
+  /* Three springs are on the bench and each has its own force constant, so
+     the slope is marked against the spring the readings were taken on rather
+     than against the steel one the experiment happens to name. */
+  const spring = specimenOfRows(SPRINGS, rows, 'springType', SPRINGS.steel);
+  return {
+    ok: true, k: sigFig(fit.slope, 4), accepted: sigFig(spring.k, 4), spring: spring.label,
+    r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts,
+  };
 }
 
 export default { meta, defaults, SPRINGS, G, init, step, measure, derive, validate, springOf, extensionM };

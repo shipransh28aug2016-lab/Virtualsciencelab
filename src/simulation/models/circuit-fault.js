@@ -238,6 +238,7 @@ export function init(inputs = defaults) {
   return {
     t: 0,
     running: true,
+    boardLabel: (BOARDS[inputs.board] || BOARDS.board1).label,
     currentA: 0,
     voltageV: 0,
     backwards: r.backwards,
@@ -249,7 +250,17 @@ export function init(inputs = defaults) {
 
 export function step(state, inputs, dt) {
   const s = { ...state };
-  if (s.finishedAt) return s;
+  s.boardLabel = (BOARDS[inputs.board] || BOARDS.board1).label;
+  /*
+   * The meters go on following the circuit.
+   *
+   * `if (s.finishedAt) return s;` froze the whole bench half a second after
+   * it opened: the needles stopped tracking, and a student who then changed
+   * the board, moved the slider or corrected the wiring saw two meters
+   * showing the previous circuit's readings for ever. A meter settles — it
+   * does not stop working. So the needles keep following, and "settled" is
+   * what it means on a real instrument: the needle has stopped moving.
+   */
   s.t += dt;
 
   const r = meterReadings(inputs);
@@ -258,10 +269,12 @@ export function step(state, inputs, dt) {
   s.backwards = r.backwards;
   s.live = r.live;
 
-  if (!s.settled && s.t > 0.5) {
-    s.settled = true;
-    s.finishedAt = s.t;
-  }
+  /* Settled means the needles have stopped moving, not that half a second
+     has gone by since the bench opened. */
+  const moving = Math.abs(r.currentA - s.currentA) > Math.max(1e-4, Math.abs(r.currentA) * 0.005)
+    || Math.abs(r.voltageV - s.voltageV) > Math.max(1e-3, Math.abs(r.voltageV) * 0.005);
+  s.settled = !moving && s.t > 0.2;
+  if (s.settled && !s.finishedAt) s.finishedAt = s.t;
   return s;
 }
 
@@ -270,8 +283,23 @@ export function step(state, inputs, dt) {
  * records a judgement, and "I have not decided" is not one.
  */
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!validate(inputs).ok) return null;
-  if (!state || !state.settled) return null;
+  const check = validate(inputs);
+  if (!check.ok) {
+    /* The model already wrote the explanation, for the feedback panel; say
+       the same thing here rather than refusing in silence. */
+    const w = check.errors[0] || check.warnings[0];
+    return { v: null, reason: w ? [w.message, w.fix || w.why].filter(Boolean).join(' ') : 'The apparatus is not set up for a reading yet.' };
+  }
+  /*
+   * A bench that will not take a reading has to say why.
+   *
+   * These returned a bare null, which reached the student as "Nothing to
+   * measure here — no reading recorded": true of a mirror forming no image,
+   * and useless on a bench where the apparatus is simply not ready yet. The
+   * student has pressed the right button at the wrong moment, and the bench
+   * knows exactly which moment it is waiting for.
+   */
+  if (!state || !state.settled) return { v: null, reason: 'The test is not finished. Make the connection, let the meter settle, and then record what it shows.' };
   if (inputs.diagnosis === 'none') return { v: null, reason: 'Read the meters, decide what is wrong with this board, and select that diagnosis before recording it.' };
 
   const fault = activeFault(inputs);

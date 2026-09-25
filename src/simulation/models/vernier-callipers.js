@@ -71,8 +71,8 @@ export function nullIndicator(inputs) {
     current: inputs.jawOpening,
     target: trueDimension(inputs),
     tolerance: Math.max(0.02, leastCount(inputs) * 3),
-    increase: 'The jaws are still clear of the object — close them further.',
-    decrease: 'The jaws are pressing into the object — open them a little.',
+    increase: 'The jaws are pressing into the object — open them a little.',
+    decrease: 'The jaws are still clear of the object — close them further.',
     atNullText: 'just gripping the object',
     awayFrom: 'not gripping',
   });

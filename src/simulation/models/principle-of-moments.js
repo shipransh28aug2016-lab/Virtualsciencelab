@@ -6,6 +6,7 @@
 import { makeRng, jitter } from '../../utils/rng.js';
 import { mean, sigFig } from '../../utils/measure.js';
 import { nullPoint, nullRefusal } from '../null-point.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-ACT-A2',
@@ -88,10 +89,13 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const D1 = d1(inputs) + jitter(rng, 0.1);
   const D2 = d2(inputs) + jitter(rng, 0.1);
   const K = knownG(inputs);
-  return { trial, knownMassG: K, d1: Number(D1.toFixed(2)), d2: Number(D2.toFixed(2)), momentUnknown: sigFig(D1, 4), momentKnown: sigFig(K * D2, 4), mass: sigFig((K * D2) / D1, 4) };
+  return { trial, body: bodyOf(inputs).label, knownMassG: K, d1: Number(D1.toFixed(2)), d2: Number(D2.toFixed(2)), momentUnknown: sigFig(D1, 4), momentKnown: sigFig(K * D2, 4), mass: sigFig((K * D2) / D1, 4) };
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'body', 'bodies');
+  if (mixed) return mixed;
+
   const vals = rows.map((r) => Number(r.mass)).filter(Number.isFinite);
   if (vals.length < 3) return { ok: false, reason: 'Balance the scale for at least three different settings.' };
   /* The known mass of the body, how far the balancing came out from it, and

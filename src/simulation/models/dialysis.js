@@ -6,6 +6,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { linearFit, sigFig, percentError } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XII-CHE-A02',
@@ -77,10 +78,14 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const lc = SCALES[inputs.scale] || 0.05;
   const t = (trial - 1) * (inputs.timeMin || 20);
   const c = Math.max(0.01, concentrationAt(inputs, t) + jitter(rng, lc * 3));
-  return { trial, timeMin: t, insideMm: sigFig(c, 4), lnC: Number(Math.log(c).toFixed(4)), removedPct: sigFig((1 - c / C0) * 100, 4) };
+  return { trial, membrane: membraneOf(inputs).label, bag: `${inputs.bag} bag`, timeMin: t, insideMm: sigFig(c, 4), lnC: Number(Math.log(c).toFixed(4)), removedPct: sigFig((1 - c / C0) * 100, 4) };
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'membrane', 'membranes')
+    || mixedSetRefusal(rows, 'bag', 'bags');
+  if (mixed) return mixed;
+
   if (rows.length < 4) return { ok: false, reason: 'Record the inside concentration at at least four different times.' };
   const pts = rows.map((r) => ({ x: Number(r.timeMin), y: Number(r.lnC) }));
   const fit = linearFit(pts);

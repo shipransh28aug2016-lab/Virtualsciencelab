@@ -353,44 +353,95 @@ function I_apparatus(cx, cy) {
   noteBounds(cx - 170, cy - 46, 340, 92);
 }
 
+/*
+ * The dial positions of a real multimeter, in the order they are engraved
+ * round the switch. A position is a FUNCTION AND A RANGE together, because
+ * that is what one click of the switch selects: there is no separate range
+ * knob on the bench, and there was none in the room this models.
+ *
+ * The previous version listed five functions that did not exist in the model
+ * — 'dcv', 'acv', 'dca', 'diode' — so `indexOf(inputs.func)` returned -1 for
+ * every voltage and current function and the arrow was clamped to the first
+ * position. The dial pointed at OHM while the student measured a 6 V supply,
+ * and the display's unit, chosen by the same wrong names, read milliamps.
+ * Three of the six controls on this bench changed nothing that could be seen.
+ */
+const DMM_DIAL = [
+  { func: 'vdc', range: 'r250', engraved: '250', band: 'V\u23bc' },
+  { func: 'vdc', range: 'r20', engraved: '20', band: 'V\u23bc' },
+  { func: 'vdc', range: 'r2', engraved: '2', band: 'V\u23bc' },
+  { func: 'vac', range: 'r250', engraved: '250', band: 'V~' },
+  { func: 'vac', range: 'r20', engraved: '20', band: 'V~' },
+  { func: 'vac', range: 'r2', engraved: '2', band: 'V~' },
+  { func: 'cont', range: null, engraved: '\u2022)))', band: '' },
+  { func: 'ohm', range: 'r2k', engraved: '2k', band: '\u03a9' },
+  { func: 'ohm', range: 'r200k', engraved: '200k', band: '\u03a9' },
+  { func: 'aac', range: 'r02', engraved: '0.2', band: 'A~' },
+  { func: 'aac', range: 'r10', engraved: '10', band: 'A~' },
+];
+const DMM_UNIT = { vdc: ' V', vac: ' V', aac: ' A', ohm: ' \u03a9', cont: ' \u03a9' };
+
+/** Which range switch this function is driven by, so the dial can read it. */
+const DMM_RANGE_INPUT = {
+  vdc: 'voltageRange', vac: 'voltageRange', aac: 'currentRange', ohm: 'resistanceRange',
+};
+
 export function multimeter(ctx, w, h, state, inputs) {
   const th = theme();
   const cx = 380, cy = 250;
   contactShadow(ctx, cx, cy + 150, 300, { strength: 0.7 });
   plastic(ctx, cx - 130, cy - 130, 260, 280, '#2f3a4e', 12);
 
-  const correct = !!state?.correct;
-  const val = state?.reading ?? 0;
-  const unit = /ohm/i.test(String(inputs?.func)) ? ' Ω' : /volt|dcv|acv/i.test(String(inputs?.func)) ? ' V' : ' mA';
-  drawDigitalReadout(ctx, cx - 100, cy - 108, 200, 62,
-    correct ? val.toFixed(val < 10 ? 3 : 1) + unit : 'Err',
-    { size: 24, color: correct ? '#7CFC9A' : '#ff9b9b' });
+  const func = String(inputs?.func || 'ohm');
+  const rangeKey = inputs?.[DMM_RANGE_INPUT[func]] || null;
+  const at = Math.max(0, DMM_DIAL.findIndex((p) => p.func === func && (p.range === null || p.range === rangeKey)));
+  const here = DMM_DIAL[at];
 
-  /* The rotary switch actually points at the function selected. Reading a
-     resistance on a current range is the mistake this exercise exists to
-     catch, so the selector must be visibly wrong when it is wrong. */
-  const funcs = ['ohm', 'dcv', 'acv', 'dca', 'diode'];
-  const idx = Math.max(0, funcs.indexOf(String(inputs?.func || 'ohm')));
-  const ang = -Math.PI * 0.75 + (idx / (funcs.length - 1)) * Math.PI * 1.5;
+  const correct = !!state?.correct;
+  const over = !!state?.overRange;
+  const val = state?.reading ?? 0;
+  const unit = DMM_UNIT[func] || '';
+  /* The number of decimals a digital meter shows is set by the range, so the
+     display changes when the switch is turned even though the quantity has
+     not: 12.06 V on the 20 V range, 12.1 V on the 250 V range. That is the
+     whole of the last step of this activity. */
+  const dp = { r2: 3, r20: 2, r250: 1, r02: 4, r10: 3, r2k: 0, r200k: 0 }[rangeKey] ?? 2;
+  drawDigitalReadout(ctx, cx - 100, cy - 108, 200, 62,
+    over ? 'OL' : correct ? val.toFixed(dp) + unit : 'Err',
+    { size: 24, color: correct ? '#7CFC9A' : over ? '#ffd27d' : '#ff9b9b' });
+
+  /* The rotary switch actually points at the position selected — function AND
+     range. Reading a resistance on a current range, or 12 volts on the 2 volt
+     range, are the mistakes this exercise exists to catch, so the selector
+     must be visibly wrong when it is wrong. */
+  const angleAt = (i) => -Math.PI * 0.75 + (i / (DMM_DIAL.length - 1)) * Math.PI * 1.5;
   ctx.save();
   ctx.fillStyle = '#1d2635';
   ctx.beginPath(); ctx.arc(cx, cy + 30, 52, 0, Math.PI * 2); ctx.fill();
   chrome(ctx, cx - 30, cy + 24, 60, 12, 6);
-  ctx.translate(cx, cy + 30); ctx.rotate(ang);
+  ctx.translate(cx, cy + 30); ctx.rotate(angleAt(at));
   ctx.fillStyle = '#f4f7fb';
   ctx.beginPath(); ctx.moveTo(-6, 0); ctx.lineTo(6, 0); ctx.lineTo(0, -46); ctx.closePath(); ctx.fill();
   ctx.restore();
+
   ctx.save();
-  ctx.font = '600 9px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  funcs.forEach((f, i) => {
-    const a = -Math.PI * 0.75 + (i / (funcs.length - 1)) * Math.PI * 1.5;
-    ctx.fillStyle = i === idx ? '#7CFC9A' : 'rgba(210,225,245,0.65)';
-    ctx.fillText(f.toUpperCase(), cx + Math.cos(a - Math.PI / 2) * 68, cy + 30 + Math.sin(a - Math.PI / 2) * 68);
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  DMM_DIAL.forEach((p, i) => {
+    const a = angleAt(i) - Math.PI / 2;
+    const on = i === at;
+    ctx.fillStyle = on ? '#7CFC9A' : 'rgba(210,225,245,0.6)';
+    ctx.font = `${on ? 700 : 600} ${on ? 10.5 : 9}px system-ui, sans-serif`;
+    ctx.fillText(p.engraved, cx + Math.cos(a) * 66, cy + 30 + Math.sin(a) * 66);
+    if (p.band) {
+      ctx.font = '600 7.5px system-ui, sans-serif';
+      ctx.fillStyle = on ? 'rgba(124,252,154,0.85)' : 'rgba(210,225,245,0.42)';
+      ctx.fillText(p.band, cx + Math.cos(a) * 84, cy + 30 + Math.sin(a) * 84);
+    }
   });
   ctx.restore();
 
   // Leads, in the sockets they are actually in.
-  for (const [dx, col, txt] of [[-46, '#1a1a1a', 'COM'], [46, '#c02626', 'VΩmA']]) {
+  for (const [dx, col, txt] of [[-46, '#1a1a1a', 'COM'], [46, '#c02626', 'V\u03a9mA']]) {
     ctx.save();
     ctx.fillStyle = '#0f141d';
     ctx.beginPath(); ctx.arc(cx + dx, cy + 120, 9, 0, Math.PI * 2); ctx.fill();
@@ -403,68 +454,206 @@ export function multimeter(ctx, w, h, state, inputs) {
     label(ctx, cx + dx, cy + 132, txt, { anchor: 'below', size: 9 });
   }
 
+  const rangeWord = here.range ? `${here.engraved} ${here.band.replace('~', ' AC').replace('\u23bc', ' DC')} range` : 'continuity';
   label(ctx, cx, cy - 140,
-    correct ? `Reading ${val.toFixed(2)}${unit}${state?.settling ? ' (settling)' : ''}`
-      : 'Wrong function or wrong leads — the meter cannot read this',
-    { anchor: 'above', bold: true, color: correct ? '#0d7a52' : '#c02626' });
-  label(ctx, cx, cy + 230, `Target: ${inputs?.target || 'circuit'} · ${inputs?.connection || ''}`, { anchor: 'below' });
+    over ? `Over range \u2014 ${rangeWord} is too small for this`
+      : correct ? `Reading ${val.toFixed(dp)}${unit} on the ${rangeWord}${state?.settling ? ' (settling)' : ''}`
+        : 'Wrong function or wrong leads \u2014 the meter cannot read this',
+    { anchor: 'above', bold: true, color: correct ? '#0d7a52' : over ? '#a06000' : '#c02626' });
+  label(ctx, cx, cy + 230, `Testing the ${state?.targetLabel || 'circuit'} \u00b7 probes in ${inputs?.connection || ''}`, { anchor: 'below' });
+}
+
+/**
+ * A domestic lighting circuit, drawn as it was actually wired.
+ *
+ * Everything this activity examines lives in the WIRING, and the bench drew
+ * one fixed picture: three lamps in parallel, a fuse in the live line, no
+ * earth wire anywhere. A student who put the fuse in the neutral, left the
+ * circuit unearthed, or wired the lamps in series saw the correct answer
+ * drawn back at them while the table beside it recorded their mistake — and
+ * the caption announced "lamps in series" under three parallel branches.
+ *
+ * The four unsafe choices now look unsafe:
+ *
+ *   fuse in the neutral   the cartridge moves to the black rail and the live
+ *                         rail runs unbroken past it
+ *   no fuse               a bare link where the cartridge should be
+ *   switch in the neutral the break appears below the lamp, and the holder
+ *                         above it is marked as staying live
+ *   unearthed             the green-and-yellow rail and its stubs are gone
+ *
+ * and series wiring is drawn as a series circuit: one path through all three
+ * lamps, each at a third of the supply and visibly dim.
+ */
+const EARTH_GREEN = '#1f8a4c';
+const EARTH_YELLOW = '#e3c11a';
+
+/** A fuse cartridge; `intact` false draws the blown element. */
+function fuseCartridge(ctx, x, y, intact) {
+  plastic(ctx, x - 30, y - 12, 60, 24, '#d8dfe9', 4);
+  ctx.save();
+  ctx.strokeStyle = intact ? '#8a93a3' : '#c02626';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  if (intact) { ctx.moveTo(x - 22, y); ctx.lineTo(x + 22, y); }
+  else { ctx.moveTo(x - 22, y); ctx.lineTo(x - 8, y - 6); ctx.moveTo(x + 8, y + 6); ctx.lineTo(x + 22, y); }
+  ctx.stroke();
+  ctx.restore();
+}
+
+/** A break in a wire: the two contacts and the blade, open or closed. */
+function switchGap(ctx, x, y, closed, vertical) {
+  ctx.save();
+  ctx.strokeStyle = theme().ink; ctx.lineWidth = 1.6; ctx.lineCap = 'round';
+  ctx.beginPath();
+  if (vertical) {
+    ctx.moveTo(x, y - 11);
+    if (closed) ctx.lineTo(x, y + 11); else ctx.lineTo(x + 11, y + 7);
+  } else {
+    ctx.moveTo(x - 11, y);
+    if (closed) ctx.lineTo(x + 11, y); else ctx.lineTo(x + 7, y - 11);
+  }
+  ctx.stroke();
+  ctx.fillStyle = theme().ink;
+  for (const [dx, dy] of vertical ? [[0, -11], [0, 11]] : [[-11, 0], [11, 0]]) {
+    ctx.beginPath(); ctx.arc(x + dx, y + dy, 2.2, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.restore();
+}
+
+/** One lamp symbol, lit or not. */
+function lampSymbol(ctx, x, y, r, lit, glow) {
+  const th = theme();
+  ctx.save();
+  ctx.strokeStyle = th.ink; ctx.lineWidth = 1.8;
+  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.stroke();
+  const d = r * 0.68;
+  ctx.beginPath();
+  ctx.moveTo(x - d, y - d); ctx.lineTo(x + d, y + d);
+  ctx.moveTo(x + d, y - d); ctx.lineTo(x - d, y + d);
+  ctx.stroke();
+  ctx.restore();
+  if (lit) incandescence(ctx, x, y, r * 1.36, 0.85, { intensity: glow });
 }
 
 export function householdCircuit(ctx, w, h, state, inputs) {
   const th = theme();
-  const y = 250, x0 = 70, x1 = 700;
-  const live = y - 90, neutral = y + 110;
+  const y = 250, x0 = 70, x1 = 668;
+  const live = y - 90, neutral = y + 110, earth = y + 158;
 
+  const series = inputs?.wiring === 'series';
+  const fuseAt = inputs?.fuse || 'live';
+  const switches = inputs?.switches || 'eachLive';
+  const earthed = (inputs?.earthing || 'earthed') === 'earthed';
+  const blown = !!state?.fuseBlown;
+
+  /* Series starves every lamp to a ninth of its rated power, so the glow is
+     driven by the model's own voltage rather than a fixed brightness. */
+  const glow = series ? 0.18 : 1;
+
+  // ── the two mains rails ──────────────────────────────────────────────
   ctx.save();
-  ctx.strokeStyle = '#c02626'; ctx.lineWidth = 2.4;
+  ctx.lineWidth = 2.4;
+  ctx.strokeStyle = '#c02626';
   ctx.beginPath(); ctx.moveTo(x0, live); ctx.lineTo(x1, live); ctx.stroke();
-  ctx.strokeStyle = '#1a2333'; ctx.lineWidth = 2.4;
+  ctx.strokeStyle = '#1a2333';
   ctx.beginPath(); ctx.moveTo(x0, neutral); ctx.lineTo(x1, neutral); ctx.stroke();
   ctx.restore();
   label(ctx, x0 - 4, live, 'Live', { anchor: 'left', color: '#c02626' });
   label(ctx, x0 - 4, neutral, 'Neutral', { anchor: 'left' });
 
-  // Fuse in the LIVE line — where it must be, and it blows if overloaded.
-  const blown = !!state?.fuseBlown;
-  ctx.save();
-  plastic(ctx, x0 + 40, live - 12, 60, 24, '#d8dfe9', 4);
-  ctx.strokeStyle = blown ? '#c02626' : '#8a93a3';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  if (blown) { ctx.moveTo(x0 + 48, live); ctx.lineTo(x0 + 62, live - 6); ctx.moveTo(x0 + 78, live + 6); ctx.lineTo(x0 + 92, live); }
-  else { ctx.moveTo(x0 + 48, live); ctx.lineTo(x0 + 92, live); }
-  ctx.stroke();
-  ctx.restore();
-  label(ctx, x0 + 70, live - 14, blown ? 'FUSE BLOWN' : 'Fuse (in the live line)',
-    { anchor: 'above', bold: blown, color: blown ? '#c02626' : undefined });
+  // ── the earth, present only when the student fitted one ──────────────
+  if (earthed) {
+    ctx.save();
+    ctx.lineWidth = 2.6; ctx.lineCap = 'butt';
+    ctx.strokeStyle = EARTH_GREEN;
+    ctx.beginPath(); ctx.moveTo(x0, earth); ctx.lineTo(x1, earth); ctx.stroke();
+    ctx.strokeStyle = EARTH_YELLOW; ctx.setLineDash([7, 7]);
+    ctx.beginPath(); ctx.moveTo(x0, earth); ctx.lineTo(x1, earth); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+    label(ctx, x0 - 4, earth, 'Earth', { anchor: 'left', color: EARTH_GREEN });
+  } else {
+    label(ctx, x0 - 4, earth, 'No earth wire', { anchor: 'left', color: '#c02626' });
+  }
 
-  /* Lamps in PARALLEL each draw their own current from the same supply,
-     which is why one can be switched off without the others going out --
-     and why the total current, not the voltage, is what rises. */
-  const n = 3;
-  const on = Math.round(clamp(state?.lamps ?? 0, 0, n));
-  for (let i = 0; i < n; i++) {
-    const lx = x0 + 200 + i * 160;
-    const lit = i < on && !blown;
+  // ── the fuse, on the rail the student put it on ──────────────────────
+  const fuseX = x0 + 78;
+  if (fuseAt === 'none') {
+    label(ctx, fuseX, live - 14, 'No fuse fitted', { anchor: 'above', bold: true, color: '#c02626' });
+  } else {
+    const onLive = fuseAt === 'live';
+    fuseCartridge(ctx, fuseX, onLive ? live : neutral, !blown);
+    label(ctx, fuseX, (onLive ? live : neutral) - 14,
+      blown ? 'FUSE BLOWN' : onLive ? 'Fuse in the live line' : 'Fuse in the neutral',
+      { anchor: 'above', bold: blown || !onLive, color: blown || !onLive ? '#c02626' : undefined });
+  }
+
+  // ── one common switch, before everything ─────────────────────────────
+  const common = switches === 'oneCommon';
+  const lampsOn = Math.round(clamp(state?.lamps ?? 0, 0, 3));
+  if (common) {
+    switchGap(ctx, x0 + 150, live, lampsOn > 0, false);
+    label(ctx, x0 + 150, live - 14, 'One switch for all three', { anchor: 'above', size: 11 });
+  }
+
+  const lampR = 22;
+  const dead = blown || (common && lampsOn === 0);
+
+  if (!series) {
+    // ── three parallel branches ────────────────────────────────────────
+    for (let i = 0; i < 3; i += 1) {
+      const lx = x0 + 190 + i * 148;
+      const lit = i < lampsOn && !dead;
+      const inLive = switches === 'eachLive';
+      ctx.save();
+      ctx.strokeStyle = th.ink; ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.moveTo(lx, live); ctx.lineTo(lx, y - lampR - 2);
+      ctx.moveTo(lx, y + lampR + 2); ctx.lineTo(lx, neutral);
+      ctx.stroke();
+      ctx.restore();
+      if (!common) switchGap(ctx, lx, inLive ? live + 34 : neutral - 34, lit, true);
+      lampSymbol(ctx, lx, y, lampR, lit, glow);
+      if (earthed) {
+        ctx.save();
+        ctx.strokeStyle = EARTH_GREEN; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(lx + lampR, y + 6); ctx.lineTo(lx + 40, y + 6); ctx.lineTo(lx + 40, earth); ctx.stroke();
+        ctx.restore();
+      }
+      label(ctx, lx, y + lampR + 4, lit ? `Lamp ${i + 1} — on` : `Lamp ${i + 1} — off`, { anchor: 'below', size: 11 });
+      if (!common && switches === 'eachNeutral') {
+        label(ctx, lx, neutral - 46, 'holder stays live', { anchor: 'above', size: 10, color: '#c02626' });
+      }
+    }
+  } else {
+    // ── one path through all three ─────────────────────────────────────
+    const chainY = y;
+    const first = x0 + 190, gap = 148;
+    const lit = lampsOn > 0 && !dead;
     ctx.save();
     ctx.strokeStyle = th.ink; ctx.lineWidth = 1.6;
-    ctx.beginPath(); ctx.moveTo(lx, live); ctx.lineTo(lx, y - 24); ctx.moveTo(lx, y + 24); ctx.lineTo(lx, neutral); ctx.stroke();
-    // Switch, in the live side.
-    ctx.beginPath(); ctx.moveTo(lx, live); ctx.lineTo(lit ? lx : lx + 12, live + (lit ? 22 : 16)); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(first, live); ctx.lineTo(first, chainY - lampR - 2);
+    ctx.moveTo(first + 2 * gap, chainY + lampR + 2); ctx.lineTo(first + 2 * gap, neutral);
+    ctx.stroke();
+    // the links between consecutive lamps, which is what makes it a series circuit
+    for (let i = 0; i < 2; i += 1) {
+      const a = first + i * gap + lampR, b = first + (i + 1) * gap - lampR;
+      ctx.beginPath(); ctx.moveTo(a, chainY); ctx.lineTo(b, chainY); ctx.stroke();
+    }
     ctx.restore();
-    // Lamp.
-    ctx.save();
-    ctx.strokeStyle = th.ink; ctx.lineWidth = 1.8;
-    ctx.beginPath(); ctx.arc(lx, y, 22, 0, Math.PI * 2); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(lx - 15, y - 15); ctx.lineTo(lx + 15, y + 15);
-    ctx.moveTo(lx + 15, y - 15); ctx.lineTo(lx - 15, y + 15); ctx.stroke();
-    ctx.restore();
-    if (lit) incandescence(ctx, lx, y, 30, 0.85, { intensity: 1 });
-    label(ctx, lx, y + 26, lit ? `Lamp ${i + 1} — on` : `Lamp ${i + 1} — off`, { anchor: 'below', size: 11 });
+    if (!common) switchGap(ctx, first, switches === 'eachLive' ? live + 34 : neutral - 34, lit, true);
+    for (let i = 0; i < 3; i += 1) {
+      const lx = first + i * gap;
+      lampSymbol(ctx, lx, chainY, lampR, lit, glow);
+      label(ctx, lx, chainY + lampR + 4, lit ? `Lamp ${i + 1} — dim` : `Lamp ${i + 1} — off`, { anchor: 'below', size: 11 });
+    }
+    label(ctx, first + gap, chainY - lampR - 12, 'One path — every lamp carries the same current', { anchor: 'above', size: 11 });
   }
 
   // Current flowing in the mains, animated along the live line.
-  if (!blown && (state?.current ?? 0) > 0.001) {
+  if (!dead && (state?.current ?? 0) > 0.001) {
     ctx.save();
     ctx.fillStyle = rgba('#c02626', 0.8);
     const per = x1 - x0;
@@ -477,7 +666,7 @@ export function householdCircuit(ctx, w, h, state, inputs) {
 
   label(ctx, (x0 + x1) / 2, live - 60,
     blown ? `Fuse blew at ${(inputs?.fuseRatingA ?? 5)} A — too many lamps on this circuit`
-      : `Total current ${(state?.current ?? 0).toFixed(2)} A · lamps in ${inputs?.wiring || 'parallel'}`,
+      : `Total current ${(state?.current ?? 0).toFixed(2)} A · lamps in ${series ? 'series' : 'parallel'}`,
     { anchor: 'above', bold: true, color: blown ? '#c02626' : undefined });
 }
 
@@ -511,14 +700,29 @@ export function potentialDrop(ctx, w, h, state, inputs) {
   ctx.restore();
   label(ctx, x1, y - 152, 'Potential gradient (V per metre)', { anchor: 'right', size: 11, color: th.accent });
 
+  /* The voltmeter on the bench is the one the student chose: its scale is
+     divided by its own least count, and it is read to that division and no
+     finer. Printing 1.284 V off a meter graduated in 0.1 V is three digits
+     the instrument cannot give. */
   const vmax = 3;
-  drawDial(ctx, tapX, y - 150, 38, clamp((state?.voltage ?? 0) / vmax, 0, 1), { label: 'Voltmeter', unit: 'V' });
-  drawCell(ctx, x0 - 30, y - 80, { label: 'Driver cell' });
+  const vLc = { v01: 0.1, v005: 0.05, v002: 0.02 }[inputs?.voltmeter] || 0.05;
+  const vRead = Math.round((state?.voltage ?? 0) / vLc) * vLc;
+  drawDial(ctx, tapX, y - 150, 38, clamp(vRead / vmax, 0, 1),
+    { label: 'Voltmeter', unit: 'V', leastCount: vLc, fullScale: vmax });
+  /* The driver is drawn as what it is — one cell, or a battery of them —
+     and named with its emf. Labelled 'Driver cell' whichever was chosen, the
+     three supplies on this bench looked identical while the potential
+     gradient they set up differed fourfold. */
+  const driver = { cell15: { n: 1, label: '1.5 V cell' }, cell30: { n: 2, label: '3 V battery' }, cell60: { n: 4, label: '6 V battery' } }[inputs?.driver]
+    || { n: 2, label: '3 V battery' };
+  for (let i = 0; i < driver.n; i += 1) {
+    drawCell(ctx, x0 - 30 + i * 26, y - 80, { label: i === driver.n - 1 ? driver.label : '' });
+  }
   drawResistor(ctx, x0 + 90, y - 120, 60, { label: 'Rheostat' });
   drawKey(ctx, x0 + 220, y - 120, true);
 
   label(ctx, (x0 + x1) / 2, y - 210,
-    `V at the tapping point = ${(state?.voltage ?? 0).toFixed(3)} V`,
+    `V at the tapping point = ${vRead.toFixed(vLc < 0.05 ? 2 : vLc < 0.1 ? 2 : 1)} V`,
     { anchor: 'above', bold: true });
 }
 
@@ -583,7 +787,7 @@ export function ldrIntensity(ctx, w, h, state, inputs) {
   ctx.beginPath(); ctx.arc(lampX, y, 40 + bright * 30, 0, Math.PI * 2); ctx.fill();
   ctx.restore();
   brushedMetal(ctx, lampX - 6, y + 12, 12, 48, { axis: 'v' });
-  label(ctx, lampX, y - 46, `Lamp (${inputs?.lamp || 'source'})`, { anchor: 'above' });
+  label(ctx, lampX, y - 46, state?.lampLabel || 'Lamp', { anchor: 'above' });
 
   // The cone of light reaching the cell.
   ctx.save();
@@ -734,7 +938,7 @@ export function circuitFault(ctx, w, h, state, inputs) {
   drawResistor(ctx, w / 2, y - 50, 60, { label: 'Rheostat' });
   drawDial(ctx, w - 90, y - 50, 26, (state?.currentA ?? 0) / 0.15, { label: 'Ammeter', zeroCentre: state?.backwards });
   drawDial(ctx, w - 90, y + 20, 26, (state?.voltageV ?? 0) / 3, { label: 'Voltmeter', zeroCentre: state?.backwards });
-  label(ctx, w / 2, y + 50, `Board: ${inputs?.board || '—'}`, { anchor: 'below' });
+  label(ctx, w / 2, y + 50, state?.boardLabel || 'Circuit board', { anchor: 'below' });
 }
 
 export const RENDERERS = {

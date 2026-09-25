@@ -6,6 +6,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, linearFit, sigFig } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-ACT-B5',
@@ -49,9 +50,9 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const temp = toLeastCount(trueTemp + jitter(rng, 0.3), 0.5);
   const excess = temp - inputs.roomTempC;
   return {
-    trial, timeS: t, tempC: Number(temp.toFixed(1)), excessC: Number(excess.toFixed(1)),
+    trial, liquid: (LIQUIDS[inputs.liquid] || LIQUIDS.water).label, timeS: t, tempC: Number(temp.toFixed(1)), excessC: Number(excess.toFixed(1)),
     lnExcess: excess > 0 ? Number(Math.log(excess).toFixed(4)) : null,
-    surface: inputs.surface, cover: inputs.cover, volumeCm3: inputs.volumeCm3,
+    surface: (SURFACES[inputs.surface] || SURFACES.dullBlack).label, cover: (COVERS[inputs.cover] || COVERS.open).label, volumeCm3: inputs.volumeCm3,
   };
 }
 
@@ -90,6 +91,11 @@ function checkByFactor(usableRows, keyFn, labelFn) {
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'liquid', 'liquids')
+    || mixedSetRefusal(rows, 'surface', 'vessels')
+    || mixedSetRefusal(rows, 'cover', 'arrangements');
+  if (mixed) return mixed;
+
   const usable = rows.filter((r) => Number(r.excessC) > 0.5);
   if (usable.length < 4) return { ok: false, reason: 'Record at least four readings while the liquid is still noticeably warmer than the room.' };
   const pts = usable.map((r) => ({ x: Number(r.timeS), y: Number(r.lnExcess) }));

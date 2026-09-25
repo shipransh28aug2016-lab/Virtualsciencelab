@@ -298,6 +298,22 @@ for (const entry of targets) {
         const snapped = Math.min(independent.max, Math.max(independent.min, Math.round(raw / step) * step));
         inputs[independent.id] = Number(snapped.toFixed(6));
       }
+      /*
+       * Make up to the fixed total, as the bench does.
+       *
+       * Where a control declares `makeUp`, moving it moves its partner so
+       * that the two always come to the same volume — thiosulphate and water
+       * to 50 mL. Sweeping one and leaving the other behind is the mistake
+       * the bench now prevents, so a sweep that did it here would be testing
+       * a bench that no longer exists.
+       */
+      for (const c of exp.simulation?.controls || []) {
+        if (!c.makeUp || !(c.var in inputs)) continue;
+        const other = vars.find((v) => v.id === c.makeUp.with);
+        if (!other) continue;
+        const want = c.makeUp.total - Number(inputs[c.var]);
+        inputs[c.makeUp.with] = Math.min(other.max ?? want, Math.max(other.min ?? want, want));
+      }
       /* Then bring the instrument to its null, if it has one. Every numeric
          control is tried, coarse first and then fine, KEEPING each
          adjustment — a beam balance is brought on scale with gram weights and
@@ -553,6 +569,108 @@ for (const entry of targets) {
   if (blank.length) {
     failures.push({ id: entry.id, kind: 'panel-fields',
       msg: `the result panel prints ${blank.map((k) => `"${k}"`).join(', ')}, which derive() does not return` });
+  }
+
+  /*
+   * Does the model's OWN accepted value agree with the experiment's?
+   *
+   * Many models report `accepted` for the specimen actually on the bench —
+   * the resistor in the gap, the range the galvanometer is being converted
+   * to, the surface under the spherometer. The experiment file, by contrast,
+   * carries ONE accepted value, the one belonging to the default specimen.
+   * The two must coincide when the default specimen is in use, or the panel
+   * is quoting two different accepted values in the same breath, as the
+   * surface-tension bench did: "accepted T = 0.0667" beside "differs from the
+   * accepted 0.0727". Checking it here is also what makes the per-specimen
+   * value safe to compare against elsewhere: it proves the model's `accepted`
+   * is the same quantity, in the same unit, as the value the panel reports.
+   */
+  if (Number.isFinite(derived.accepted) && !/working through/.test(best.how || '')) {
+    const gap = Math.abs(derived.accepted - expected.value);
+    const room = Math.max(Number(expected.tolerance) || 0, Math.abs(expected.value) * 0.02);
+    if (gap > room) {
+      failures.push({ id: entry.id, kind: 'two-accepteds',
+        msg: `the model reports an accepted ${derived.accepted} for the apparatus in use while the experiment declares ${expected.value} ${expected.unit || ''}` });
+    }
+  }
+
+  /*
+   * IS A SET TAKEN ACROSS TWO SPECIMENS REFUSED?
+   *
+   * Half the wrong answers in the student-journey sweep had the same shape.
+   * Two mirrors whose focal lengths differ by ten centimetres, three
+   * galvanometers with different resistances, three diodes with different
+   * knees, four surfaces with different radii: a set taken across them was
+   * averaged into one number belonging to none of them, and the accepted
+   * value quoted beside it was whichever specimen happened to be selected
+   * when Calculate was pressed. A mean is a measurement only when every
+   * reading is of the same thing, and the benches that knew this said so
+   * while the rest said nothing.
+   *
+   * The test is the model's own: if the accepted value DIFFERS between the
+   * settings of an apparatus group, then a set mixing them cannot have a
+   * result, and derive() must refuse it. Where the accepted value is the
+   * same for every setting — four tuning forks verifying f×l, four capillary
+   * tubes verifying r×h — the set across them IS the procedure, and nothing
+   * is flagged.
+   */
+  for (const oc of optionControls.slice(0, 3)) {
+    if (oc.options.length < 2) continue;
+    const acceptedPer = [];
+    for (const o of oc.options) {
+      const saved = base[oc.id];
+      base[oc.id] = o;
+      let per = null;
+      try {
+        const out = collect({ name: 'per-option', at: null }, want);
+        per = out.rows.length >= 2 ? model.derive(out.rows, { ...base }) : null;
+      } catch { per = null; }
+      base[oc.id] = saved;
+      /*
+       * The model's own accepted value where it has one, and otherwise the
+       * RESULT it reports. A model that never names an accepted value was
+       * invisible to this check: the convex-lens bench offers three lenses of
+       * 10, 15 and 20 cm, reported none of them, and so was never asked
+       * whether a set taken across two of them is refused. It was not.
+       */
+      if (!per?.ok) continue;
+      const ownKey = [expected.key, ...(exp.calculations?.resultKeys || [])]
+        .find((k) => k && Number.isFinite(per[k]));
+      const value = Number.isFinite(per.accepted) ? per.accepted : (ownKey ? per[ownKey] : null);
+      if (Number.isFinite(value)) acceptedPer.push(value);
+    }
+    if (acceptedPer.length < 2) continue;
+    const lo = Math.min(...acceptedPer);
+    const hi = Math.max(...acceptedPer);
+    const differs = hi - lo > Math.max(Number(expected.tolerance) || 0, Math.abs(hi) * 0.02);
+    if (!differs) continue;
+
+    let mixed = null;
+    try {
+      const out = collect({ name: 'mixed', at: null, cycle: oc }, Math.max(want, oc.options.length));
+      mixed = out.rows.length >= 2 ? model.derive(out.rows, { ...base }) : null;
+    } catch { mixed = null; }
+
+    /*
+     * Not every practical that works through a tray is averaging across it.
+     * Measuring twelve solutions' pH, or plotting four given datasets, gives
+     * a different answer for each and is MEANT to: the table holds one row
+     * per specimen and the result belongs to the one in hand. What is wrong
+     * is a result that lands BETWEEN two specimens' values, because the only
+     * way to get there is to have averaged them.
+     */
+    if (mixed?.ok && !Number.isFinite(derived.accepted)) {
+      const mixedKey = [expected.key, ...(exp.calculations?.resultKeys || [])]
+        .find((k) => k && Number.isFinite(mixed[k]));
+      const mv = mixedKey ? mixed[mixedKey] : null;
+      const margin = (hi - lo) * 0.05;
+      const between = Number.isFinite(mv) && mv > lo + margin && mv < hi - margin;
+      if (!between) continue;
+    }
+    if (mixed?.ok) {
+      failures.push({ id: entry.id, kind: 'mixed-set',
+        msg: `a set taken across the ${oc.options.length} settings of "${oc.id}" is averaged into one result, though their accepted values run from ${lo} to ${hi}` });
+    }
   }
 
   const value = derived[key];

@@ -141,13 +141,59 @@ export function checkResult(experiment, derived) {
    * only be a defect — but the panel stated it with the same confidence it
    * states everything else.
    */
+  /*
+   * And when the experiment names its field, that field is the ONLY one that
+   * may be graded. The fallback list is for the few experiments that name
+   * none; letting it run after a declared key came back empty graded the
+   * wrong quantity again by a different route. The iodine-clock lab reports
+   * `order: null` when the rate plot is too scattered to establish an order,
+   * and the search then picked up its activation energy — 42 kJ/mol against an
+   * accepted order of 1 — and told the student they were 4100% out.
+   */
   const declared = exp.key;
-  const candidates = [declared, exp.symbol, ...(experiment.calculations?.resultKeys || [])];
+  const candidates = declared ? [declared] : [exp.symbol, ...(experiment.calculations?.resultKeys || [])];
   const key = candidates.find((k) => k && Number.isFinite(derived[k]));
   if (!key) return null;
 
   const value = derived[key];
-  const within = Math.abs(value - exp.value) <= exp.tolerance;
-  const errPct = exp.value === 0 ? 0 : ((value - exp.value) / exp.value) * 100;
-  return { value, expected: exp.value, unit: exp.unit, within, errPct, symbol: exp.symbol, key };
+
+  /*
+   * THE ACCEPTED VALUE BELONGS TO THE APPARATUS, NOT TO THE EXPERIMENT.
+   *
+   * `expectedResult.value` is one number: the accepted value for the DEFAULT
+   * specimen. Most of these benches carry several. Put the 4.7 Ω resistor in
+   * the metre bridge's gap instead of the 12.9 Ω one and the student measures
+   * 4.713 Ω — a good measurement, correct to a quarter of a percent — and was
+   * told it differed from the accepted value by 63.5%. Convert the
+   * galvanometer to a 9.3 A ammeter rather than the default range and the
+   * shunt is necessarily a different resistance, so a right answer was marked
+   * 89% wrong. The panel had the right number in its own hands the whole time:
+   * models report `accepted` for the apparatus actually in use, and printed it
+   * two lines above the verdict that contradicted it.
+   *
+   * So the model's own accepted value wins where it offers one. The golden
+   * audit holds it to this: at the prescribed settings a model's `accepted`
+   * must agree with the experiment's declared value, which is what makes the
+   * two comparable at every other setting. The tolerance travels with it in
+   * proportion, because a tolerance of ±1.5 cm on a 22.5 cm radius is a
+   * statement about 6.7%, not about centimetres.
+   */
+  const perApparatus = Number.isFinite(derived.accepted) ? derived.accepted : null;
+  const expected = perApparatus ?? exp.value;
+  const scale = perApparatus !== null && exp.value !== 0
+    ? Math.abs(perApparatus / exp.value) : 1;
+  /*
+   * The tolerance travels with the accepted value, but only upwards. A
+   * measurement of twice the size deserves twice the slack; a measurement of
+   * half the size does not deserve half of it, because not every uncertainty
+   * is proportional. A knee voltage found by extrapolating a curve back to
+   * zero is uncertain by so many millivolts whether the diode is silicon at
+   * 0.7 V or germanium at 0.3 V — the germanium one is if anything the harder
+   * reading, since its knee is the softer.
+   */
+  const tolerance = Math.max(exp.tolerance, exp.tolerance * (Number.isFinite(scale) && scale > 0 ? scale : 1));
+
+  const within = Math.abs(value - expected) <= tolerance;
+  const errPct = expected === 0 ? 0 : ((value - expected) / expected) * 100;
+  return { value, expected, unit: exp.unit, within, errPct, symbol: exp.symbol, key, perApparatus: perApparatus !== null };
 }

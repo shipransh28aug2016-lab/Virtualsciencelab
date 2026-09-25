@@ -7,6 +7,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { linearFit, sigFig } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-ACT-A7',
@@ -62,10 +63,14 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const t = (trial - 1) * periodOf(inputs) * 4; // sample every four periods
   const amp = amplitudeAt(inputs, t) + jitter(rng, 0.06);
   const ampSq = Math.max(0.0001, amp * amp);
-  return { trial, timeS: Number(t.toFixed(1)), amplitude: Number(amp.toFixed(2)), amplitudeSq: Number(ampSq.toFixed(3)), lnAmpSq: Number(Math.log(ampSq).toFixed(4)), energyMJ: sigFig(ampSq * 0.05, 4) };
+  return { trial, bob: bobOf(inputs).label, medium: (MEDIA[inputs.medium] || MEDIA.air).label, timeS: Number(t.toFixed(1)), amplitude: Number(amp.toFixed(2)), amplitudeSq: Number(ampSq.toFixed(3)), lnAmpSq: Number(Math.log(ampSq).toFixed(4)), energyMJ: sigFig(ampSq * 0.05, 4) };
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'bob', 'bobs')
+    || mixedSetRefusal(rows, 'medium', 'media');
+  if (mixed) return mixed;
+
   if (rows.length < 4) return { ok: false, reason: 'Record the amplitude at at least four different times.' };
   const pts = rows.map((r) => ({ x: Number(r.timeS), y: Number(r.lnAmpSq) }));
   const fit = linearFit(pts);

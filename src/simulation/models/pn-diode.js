@@ -149,20 +149,82 @@ export function measure(state, inputs, seed = 1, trial = 1) {
     bias: inputs.bias,
     voltage: toLeastCount(Vd + jitter(rng, 0.006), 0.01),
     current: toLeastCount(noisyMA, lcI),
-    diode: inputs.diode,
+    /* The name of the device, not its key: this column is read by a student,
+       and the calculation matches on it to tell one diode from another. */
+    diode: diodeOf(inputs).label,
   };
 }
 
 export function derive(rows, inputs = defaults) {
+  /*
+   * One characteristic, one diode. Three are on the bench and nothing said
+   * they could not be mixed, so a set taken across silicon, germanium and an
+   * LED was fitted as a single curve: the straight part of the LED's branch
+   * extrapolated back through the germanium's, and the knee came out at
+   * 2.2 V against a nominal 0.3 V, stated to three figures.
+   */
+  const usedDiodes = [...new Set(rows.map((r) => r.diode).filter(Boolean))];
+  if (usedDiodes.length > 1) {
+    return { ok: false, reason: `These readings are of ${usedDiodes.length} different diodes (${usedDiodes.join(', ')}). A characteristic belongs to one diode — clear the table and take the forward and reverse sets on the same one.` };
+  }
+  const device = Object.values(DIODES).find((d) => d.label === usedDiodes[0]) || diodeOf(inputs);
+
   const fwd = rows.filter((r) => r.bias === 'forward' && Number(r.current) > 0.5);
   if (fwd.length < 4) return { ok: false, reason: 'Record at least four forward-bias readings with a measurable current (above the knee).' };
   const sorted = [...fwd].sort((a, b) => Number(a.voltage) - Number(b.voltage));
   const pts = sorted.map((r) => ({ x: Number(r.voltage), y: Number(r.current) }));
-  const fit = linearFit(pts.slice(-Math.max(2, Math.floor(pts.length / 2))));
-  const kneeVoltage = fit && fit.slope !== 0 ? -fit.intercept / fit.slope : diodeOf(inputs).kneeV;
+  /*
+   * The straight part of the curve is where the diode is CONDUCTING, which
+   * is not the same as the top half of the readings. A silicon junction
+   * gains about 60 mV per decade of current, so past the knee the voltages
+   * crowd together: taking the last half of six readings gave two points at
+   * the same 0.74 V, the fit through them was undefined, and the bench fell
+   * back to printing the diode's nominal knee — the textbook answer, handed
+   * back as though it had been measured.
+   *
+   * Everything carrying at least a fifth of the largest current is on the
+   * straight part and is used, which keeps the span of voltage the fit needs.
+   */
+  const maxI = Math.max(...pts.map((p) => p.y));
+  const conducting = pts.filter((p) => p.y >= Math.max(0.5, maxI * 0.2));
+  const distinctV = new Set(conducting.map((p) => p.x)).size;
+  const fit = conducting.length >= 3 && distinctV >= 2 ? linearFit(conducting) : null;
+
+  /*
+   * A knee cannot be found from readings that do not cross it.
+   *
+   * Six readings taken at nearly one supply voltage differ only by the
+   * scatter of the meters: the "straight part" through them is flat, and
+   * extrapolating a flat line back to zero current puts the knee wherever
+   * the noise points. The bench reported −31.3 V, to three figures, with a
+   * dynamic resistance of 2500 Ω beside it. Both are what a fit through
+   * six copies of one point looks like, and neither is a measurement.
+   */
+  const vSpan = Math.max(...conducting.map((p) => p.x)) - Math.min(...conducting.map((p) => p.x));
+  const iRatio = Math.max(...conducting.map((p) => p.y)) / Math.max(1e-9, Math.min(...conducting.map((p) => p.y)));
+  const maxV = Math.max(...pts.map((p) => p.x));
+  const kneeRaw = fit && fit.slope > 0 ? -fit.intercept / fit.slope : null;
+  const usableFit = fit && fit.slope > 0 && vSpan >= 0.02 && iRatio >= 2
+    && kneeRaw !== null && kneeRaw >= 0 && kneeRaw <= maxV;
+  if (!usableFit) {
+    return {
+      ok: false,
+      reason: `These readings are all from one part of the curve (${vSpan.toFixed(2)} V of it, with the current changing by a factor of ${iRatio.toFixed(1)}). Vary the supply so the forward current climbs from about a milliampere to tens of milliamperes — the knee is found by extrapolating THAT rise back to zero current, and a straight line through readings that barely differ points anywhere at all.`,
+    };
+  }
+  const kneeVoltage = kneeRaw;
+
+  /*
+   * Dynamic resistance is the slope of the conducting part of the curve,
+   * ΔV/ΔI — so it comes from the same fit as the knee, in ohm.
+   *
+   * Taken from the last two points alone it inherited every accident of those
+   * two readings: two points a least count apart, or in the wrong order after
+   * a diode swap, gave −27 Ω. A resistance cannot be negative, and a panel
+   * that prints one has stopped measuring anything.
+   */
+  const dynamicResistance = usableFit ? 1000 / fit.slope : null;
   const last = sorted[sorted.length - 1];
-  const prev = sorted[sorted.length - 2];
-  const dynamicResistance = prev ? (Number(last.voltage) - Number(prev.voltage)) / ((Number(last.current) - Number(prev.current)) / 1000) : null;
   const staticResistance = Number(last.voltage) / (Number(last.current) / 1000);
   /*
    * The result panel prints how the knee was found, the nominal value for the
@@ -179,11 +241,11 @@ export function derive(rows, inputs = defaults) {
   return {
     ok: true,
     kneeVoltage: sigFig(kneeVoltage, 3),
-    kneeMethod: fit && fit.slope !== 0
-      ? 'extrapolating the straight part of the curve back to zero current'
-      : `the nominal value for a ${diodeOf(inputs).label.toLowerCase()}`,
-    acceptedKnee: diodeOf(inputs).kneeV,
-    diode: diodeOf(inputs).label,
+    kneeMethod: 'extrapolating the straight part of the curve back to zero current',
+    /* The knee belongs to the diode the readings were taken on. */
+    accepted: device.kneeV,
+    acceptedKnee: device.kneeV,
+    diode: device.label,
     reverseCount: reverse.length,
     maxReverseCurrent: maxReverseMicroA,
     dynamicResistance: dynamicResistance !== null ? sigFig(dynamicResistance, 4) : null,

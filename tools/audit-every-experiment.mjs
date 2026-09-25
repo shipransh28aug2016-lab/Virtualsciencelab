@@ -63,7 +63,31 @@ for (const entry of published) {
 
     // Measurement and derivation are allowed to return null/unsuccessful results
     // before a student reaches an endpoint; they must still be callable.
-    model.measure(state, inputs, 1, 1);
+    const row = model.measure(state, inputs, 1, 1);
+    /*
+     * NOTHING IN THE OBSERVATION TABLE MAY BE AN IDENTIFIER.
+     *
+     * Every string a row carries is printed in the student's own table, so it
+     * has to be the name of a thing — "Flint glass slab", "Methyl orange" —
+     * and not the key the code looks that thing up by. The permanganate
+     * titrations recorded their indicator as "self", because the lookup table
+     * had no entry for the self-indicating case and the model fell back to the
+     * raw picker key; a student's table then had a column headed Indicator
+     * with the word "self" in it.
+     */
+    /* Only what the table actually SHOWS: a row may carry internal fields for
+       the calculation, and those are never printed. */
+    const shown = new Set((experiment.observationModel?.columns || []).map((c) => c.key));
+    for (const [key, value] of Object.entries(row || {})) {
+      if (!shown.has(key) || typeof value !== 'string' || !value) continue;
+      /* A key is short, has no space in it, and is either camelCase or carries
+         a digit against a letter (s8f, vc10, L20). Prose is none of those. */
+      const identifierish = !/\s/.test(value)
+        && (/[a-z][A-Z]/.test(value) || /[A-Za-z]\d|\d[A-Za-z]/.test(value))
+        && value.length <= 24;
+      assert.ok(!identifierish,
+        `measure() records ${key} = "${value}", which is an identifier rather than a name — the observation table prints it to the student as it stands`);
+    }
     model.derive([], inputs);
   } catch (error) {
     failures.push(`${label}: ${error?.stack || error}`);

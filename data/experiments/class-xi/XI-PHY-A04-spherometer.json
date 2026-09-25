@@ -234,6 +234,12 @@
         "decimals": 0
       },
       {
+        "key": "surface",
+        "label": "Surface",
+        "unit": "",
+        "decimals": 0
+      },
+      {
         "key": "legMm",
         "label": "Leg sep. l",
         "unit": "mm",

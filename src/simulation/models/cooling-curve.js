@@ -9,6 +9,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, linearFit, sigFig } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-B06',
@@ -166,6 +167,12 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 
   return {
     trial,
+    vessel: (VESSELS[inputs.vessel] || VESSELS.polished).label,
+    liquid: (LIQUIDS[inputs.liquid] || LIQUIDS.water).label,
+    /* The lid and the mass of liquid change the cooling constant as much as
+       the vessel does, so a set has to hold them fixed too. */
+    lid: inputs.lidOn ? 'lid on' : 'open',
+    massG: inputs.massG,
     timeS: Math.round(t),
     timeMin: Number((t / 60).toFixed(2)),
     tempC: Number(reading.toFixed(1)),
@@ -182,19 +189,110 @@ export function measure(state, inputs, seed = 1, trial = 1) {
  *      quantitative verification of Newton's law
  */
 export function derive(rows, inputs = defaults) {
+  /* A cooling curve is ONE liquid in ONE vessel: the constant being measured
+     is a property of that pair, and a set taken across two of them has no
+     single k at all. */
+  const mixed = mixedSetRefusal(rows, 'vessel', 'vessels')
+    || mixedSetRefusal(rows, 'liquid', 'liquids')
+    || mixedSetRefusal(rows, 'lid', 'arrangements',
+      'a lid cuts the evaporation loss by nearly a third, so leave it on or off for the whole run.')
+    || mixedSetRefusal(rows, 'roomTempC', 'room temperatures',
+      'the excess temperature is measured from the room, so a room that changed between readings means ln(θ − θ₀) was taken from two different baselines — settle the room temperature first and leave it alone.')
+    || mixedSetRefusal(rows, 'massG', 'masses of liquid',
+      'the cooling constant goes as 1/mass, so weigh out one mass and let that one run cool.');
+  if (mixed) return mixed;
+
   const usable = rows.filter((r) => Number(r.excess) > 0.6 && Number.isFinite(Number(r.lnExcess)));
   if (usable.length < 4) {
     return { ok: false, reason: 'Record at least four readings while the liquid is still well above room temperature.' };
   }
 
+  /*
+   * A SLOPE IS ONLY A SLOPE IF THE QUANTITY ACTUALLY FELL.
+   *
+   * Newton's law is read off the gradient of ln(excess) against time, and the
+   * gradient is worth having only when the excess falls by a useful factor
+   * across the set and every reading is several thermometer divisions clear of
+   * room temperature. A set taken entirely in the tail — 3.0 °C falling to
+   * 2.0 °C on a thermometer reading to 0.5 °C — is four divisions of
+   * rounding, and fitting it returned a confident cooling constant half as
+   * large as the true one with an r² that looked perfectly respectable. So
+   * the bench says which part of the curve the readings are on, rather than
+   * reporting the rounding as a measurement.
+   */
+  const excesses = usable.map((r) => Number(r.excess));
+  const hottest = Math.max(...excesses);
+  const coolest = Math.min(...excesses);
+  const lc = Number(inputs.thermoLC) || 0.5;
+  if (coolest < lc * 4) {
+    return {
+      ok: false,
+      reason: `The coolest of these readings is only ${coolest.toFixed(1)} °C above the room, which is ${Math.round(coolest / lc)} division${Math.round(coolest / lc) === 1 ? '' : 's'} on a thermometer reading to ${lc} °C. Readings that close to room temperature are mostly rounding, so the gradient of ln(θ − θ₀) cannot be trusted. Take the set higher up the curve, while the liquid is still well above the room, and stop before the last few degrees.`,
+    };
+  }
+  if (hottest / coolest < 1.5) {
+    return {
+      ok: false,
+      reason: `Across these readings the excess temperature fell only from ${hottest.toFixed(1)} °C to ${coolest.toFixed(1)} °C — a factor of ${(hottest / coolest).toFixed(2)}. The gradient of ln(θ − θ₀) against time is not fixed by so short a fall. Follow the cooling until the excess has at least halved, which takes about a ln 2 ÷ k of it: several minutes for water in a calorimeter.`,
+    };
+  }
+
   const logPts = usable.map((r) => ({ x: Number(r.timeS), y: Number(r.lnExcess) }));
+
+  /*
+   * Say what is wrong with the set, not that the arithmetic gave up.
+   *
+   * "Could not fit the logarithmic plot" is what a student sees after
+   * recording eight readings without the clock running: every one is at the
+   * same instant, the line through them is vertical, and the message names
+   * the failure of the fit rather than the thing they did. A cooling curve is
+   * a set of temperatures at DIFFERENT times, and that is the sentence to
+   * say.
+   */
+  const times = logPts.map((p) => p.x);
+  const span = Math.max(...times) - Math.min(...times);
+  if (span < 1) {
+    return {
+      ok: false,
+      reason: `All ${usable.length} readings were taken at the same instant (t = ${Math.round(times[0])} s). A cooling curve is a temperature at each of several TIMES: start the clock, let the liquid cool, and record again every half minute or so as it falls.`,
+    };
+  }
+  if (span < 30) {
+    return {
+      ok: false,
+      reason: `These readings span only ${Math.round(span)} s of cooling. Over so short a stretch the fall is smaller than the thermometer can resolve, so the plot has nothing to fit. Let it cool for several minutes, recording as you go.`,
+    };
+  }
+
   const fit = linearFit(logPts);
   if (!fit) return { ok: false, reason: 'Could not fit the logarithmic plot.' };
 
   const k = -fit.slope;
-  const accepted = coolingConstant(inputs);
+  if (!(k > 0)) {
+    /*
+     * A negative cooling constant is a liquid that got hotter, which is not
+     * what these readings are of. It happened when the set was taken over so
+     * short a stretch that the thermometer's own least count outweighed the
+     * fall, and the panel then printed "half-life null s" beside it — the
+     * word null, in the line that is supposed to be the answer.
+     */
+    return {
+      ok: false,
+      reason: `Over these readings the excess temperature does not fall — the fitted line has the wrong sign. Let the liquid cool further between readings, or take them over a longer stretch, so that the fall is larger than the thermometer can resolve.`,
+    };
+  }
+  const vessel = specimenOfRows(VESSELS, rows, 'vessel', VESSELS[inputs.vessel] || VESSELS.polished);
+  const liquid = specimenOfRows(LIQUIDS, rows, 'liquid', LIQUIDS[inputs.liquid] || LIQUIDS.water);
+  /* k belongs to the vessel and liquid the READINGS were taken on. */
+  const accepted = coolingConstant({
+    ...inputs,
+    lidOn: rows[0]?.lid === 'lid on',
+    massG: Number(rows[0]?.massG) || inputs.massG,
+    vessel: Object.keys(VESSELS).find((key) => VESSELS[key].label === vessel.label) || inputs.vessel,
+    liquid: Object.keys(LIQUIDS).find((key) => LIQUIDS[key].label === liquid.label) || inputs.liquid,
+  });
   // Time to fall to half the initial excess follows directly from k.
-  const halfLife = k > 0 ? Math.log(2) / k : null;
+  const halfLife = Math.log(2) / k;
 
   return {
     ok: true,
@@ -202,10 +300,11 @@ export function derive(rows, inputs = defaults) {
     accepted: sigFig(accepted, 4),
     slope: sigFig(fit.slope, 4),
     r2: Number(fit.r2.toFixed(4)),
-    halfLifeS: halfLife ? sigFig(halfLife, 3) : null,
-    halfLifeMin: halfLife ? sigFig(halfLife / 60, 3) : null,
+    halfLifeS: sigFig(halfLife, 3),
+    halfLifeMin: sigFig(halfLife / 60, 3),
     roomTempC: inputs.roomTempC,
-    vessel: (VESSELS[inputs.vessel] || VESSELS.polished).label,
+    vessel: vessel.label,
+    liquid: liquid.label,
     n: usable.length,
     // the plotted curve is temperature against time; the fit is on the log plot
     points: rows.map((r) => ({ x: Number(r.timeS), y: Number(r.tempC) })),

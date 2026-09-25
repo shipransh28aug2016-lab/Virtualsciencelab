@@ -65,7 +65,18 @@ export function observation(inputs) {
 }
 
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0, elapsed: 0, development: 0, complete: false }; }
+/*
+ * What the renderer needs, in words.
+ *
+ * Renderers never import models, so the bench could only print the raw keys
+ * from the pickers: "Reagent: ceric" over a tube labelled "ethanol", on a
+ * practical whose entire content is which reagent was added to which
+ * compound and what was SEEN. The observation is the answer a student writes
+ * in the table, and it was nowhere on the bench.
+ */
+export function init(inputs = defaults) {
+  return { t: 0, elapsed: 0, development: 0, complete: false, sampleLabel: sampleOf(inputs).label, testLabel: testOf(inputs).label, observationText: observation(inputs), positive: isPositive(inputs) };
+}
 
 /**
  * A wet test is not instantaneous. Warm the tube and the colour or the
@@ -81,6 +92,10 @@ export function step(state, inputs, dt) {
   const target = positive ? 1 : 0;
   s.development += (target - s.development) * Math.min(1, dt * 0.55);
   s.complete = positive ? s.development > 0.96 : s.elapsed > 6;
+  s.sampleLabel = sampleOf(inputs).label;
+  s.testLabel = testOf(inputs).label;
+  s.observationText = observation(inputs);
+  s.positive = positive;
   return s;
 }
 

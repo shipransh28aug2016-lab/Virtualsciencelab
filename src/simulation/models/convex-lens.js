@@ -11,6 +11,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, linearFit, sigFig, mean } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XII-PHY-B03',
@@ -105,7 +106,7 @@ export function step(state, inputs, dt) {
   return s;
 }
 
-export function measure(state, inputs, seed = 1) {
+export function measure(state, inputs, seed = 1, trial = 1) {
   const lens = LENSES[inputs.lens] || LENSES.L15;
   const rng = makeRng(seed + Math.round(inputs.objectDistanceCm * 3));
   const vTrue = imageDistance(inputs.objectDistanceCm, lens.f);
@@ -114,6 +115,10 @@ export function measure(state, inputs, seed = 1) {
   const uRead = toLeastCount(inputs.objectDistanceCm + jitter(rng, 0.15), inputs.benchLC);
   const m = finite ? -vRead / uRead : null;
   return {
+    /* Every observation table is keyed by its reading number, and this one
+       left it out — so a reading here could not be told from a refusal. */
+    trial,
+    lens: lens.label,
     u: Number(uRead.toFixed(1)),
     v: finite ? Number(vRead.toFixed(1)) : null,
     invU: Number((1 / uRead).toFixed(5)),
@@ -130,7 +135,14 @@ export function measure(state, inputs, seed = 1) {
  *  (a) mean of f = uv/(u+v) for each row
  *  (b) the 1/u–1/v straight line: intercepts are 1/f
  */
-export function derive(rows) {
+export function derive(rows, inputs = defaults) {
+  /* Three lenses on the bench, 10, 15 and 20 cm. A set taken across two of
+     them fits one 1/u–1/v line through two different focal lengths and
+     averages to one that belongs to neither. */
+  const mixed = mixedSetRefusal(rows, 'lens', 'lenses');
+  if (mixed) return mixed;
+  const lens = specimenOfRows(LENSES, rows, 'lens', LENSES[inputs.lens] || LENSES.L15);
+
   const usable = rows.filter((r) => Number.isFinite(Number(r.v)) && Number(r.v) > 0 && Number(r.u) > 0);
   if (usable.length < 2) return { ok: false, reason: 'Record at least two rows that produced a real image.' };
 
@@ -146,6 +158,8 @@ export function derive(rows) {
   return {
     ok: true,
     fMean: sigFig(fMean, 4),
+    /* f belongs to the lens the readings were taken with. */
+    accepted: lens.f, lens: lens.label,
     fFromGraph: fFromGraph ? sigFig(fFromGraph, 4) : null,
     slope: fit ? sigFig(fit.slope, 3) : null,
     r2: fit ? Number(fit.r2.toFixed(4)) : null,

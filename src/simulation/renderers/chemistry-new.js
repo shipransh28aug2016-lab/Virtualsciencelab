@@ -57,7 +57,7 @@ export function equilibriumShift(ctx, w, h, state, inputs) {
   label(ctx, cx, 22, state?.equationFull || (cocl ? '[Co(H₂O)₆]²⁺ + 4Cl⁻ ⇌ [CoCl₄]²⁻ + 6H₂O' : 'Fe³⁺ + SCN⁻ ⇌ [FeSCN]²⁺'),
     { anchor: 'below', bold: true, size: 13 });
   label(ctx, cx, 48,
-    state?.shifting ? `Shifting ${pos > 0.5 ? 'forward' : 'backward'} — ${inputs?.reagent || 'reagent'} added`
+    state?.shifting ? `Shifting ${pos > 0.5 ? 'forward' : 'backward'} — ${state?.reagentLabel || 'reagent'} added`
       : 'At equilibrium', { anchor: 'below', bold: true, color: state?.shifting ? '#8a5a00' : '#0d7a52' });
 
   drawRack(ctx, cx, BENCH_Y, 1, 120);
@@ -131,7 +131,7 @@ export function electronicBalance(ctx, w, h, state, inputs) {
   if (ctx.roundRect) ctx.roundRect(cx - 34, cy - 58, 68, 32, 4); else ctx.rect(cx - 34, cy - 58, 68, 32);
   ctx.fill();
   ctx.restore();
-  label(ctx, cx, cy - 60, inputs?.object || 'Sample in a watch glass', { anchor: 'above' });
+  label(ctx, cx, cy - 60, state?.objectLabel || 'Sample in a watch glass', { anchor: 'above' });
 
   /* A real balance does not settle instantly, and its last digit hunts
      while it does. Showing "----" until it is stable is the habit the
@@ -285,16 +285,49 @@ export function functionalGroupTest(ctx, w, h, state, inputs) {
   const cx = 360;
   // Most functional-group tests announce themselves in colour.
   const { dev } = developingTube(ctx, cx, state, inputs, {
-    label: inputs?.compound || 'Compound under test',
-    baseColour: '#f2eede', positiveColour: '#e07a1f',
+    label: state?.compoundLabel || 'Compound under test',
+    baseColour: '#f2eede', positiveColour: state?.positiveColour || '#e07a1f',
     precipitate: /dnp|tollens|fehling|iodoform/i.test(String(inputs?.test)),
     precipitateColour: /tollens/i.test(String(inputs?.test)) ? '#c9ccd2' : '#f0c419',
   });
-  label(ctx, cx, BENCH_Y - 268, `Reagent: ${inputs?.test || '—'}`, { anchor: 'above', bold: true });
-  label(ctx, cx + 150, BENCH_Y - 190,
-    state?.complete ? (dev > 0.5 ? 'POSITIVE — characteristic change' : 'Negative — no change')
-      : 'Warming the tube…',
-    { anchor: 'right', bold: true, color: state?.complete ? (dev > 0.5 ? '#0d7a52' : '#8a5a00') : undefined });
+  label(ctx, cx, BENCH_Y - 268, `Reagent: ${state?.testLabel || '—'}`, { anchor: 'above', bold: true });
+  /*
+   * And what was SEEN, which is the answer the student writes down. The
+   * bench said "POSITIVE — characteristic change", which names the verdict
+   * and withholds the observation it rests on.
+   */
+  observationNote(ctx, cx, state, dev, 'Warming the tube…');
+}
+
+/**
+ * The line a qualitative test exists to produce: what happened in the tube,
+ * in the words a student would write in the observation column.
+ */
+function observationNote(ctx, cx, state, dev, waiting) {
+  const x = cx + 210;
+  if (!state?.complete) {
+    label(ctx, x, BENCH_Y - 210, waiting, { anchor: 'right', bold: true });
+    return;
+  }
+  const good = dev > 0.5;
+  label(ctx, x, BENCH_Y - 210, good ? 'POSITIVE' : 'Negative',
+    { anchor: 'right', bold: true, color: good ? '#0d7a52' : '#8a5a00' });
+  if (state?.observationText) {
+    /* Wrapped, because these are sentences: "Blue solution gives a brick-red
+       precipitate of Cu2O on warming" does not fit on one line beside a
+       test tube. */
+    const words = String(state.observationText).split(' ');
+    const lines = [];
+    let line = '';
+    for (const word of words) {
+      if ((line + ' ' + word).trim().length > 28) { lines.push(line.trim()); line = word; }
+      else line = `${line} ${word}`;
+    }
+    if (line.trim()) lines.push(line.trim());
+    lines.slice(0, 4).forEach((ln, i) => {
+      label(ctx, x, BENCH_Y - 186 + i * 18, ln, { anchor: 'right', size: 12 });
+    });
+  }
 }
 
 export function biomoleculeTest(ctx, w, h, state, inputs) {
@@ -306,15 +339,13 @@ export function biomoleculeTest(ctx, w, h, state, inputs) {
     : /fehling|benedict/i.test(t) ? '#b2401b'
       : /iodine|starch/i.test(t) ? '#1c2b52' : '#3fae5a';
   const { dev } = developingTube(ctx, cx, state, inputs, {
-    label: inputs?.sample || 'Sample',
+    label: state?.sampleLabel || 'Sample',
     baseColour: '#f4ecd0', positiveColour: positive,
     precipitate: /fehling|benedict/i.test(t),
     precipitateColour: '#b2401b',
   });
-  label(ctx, cx, BENCH_Y - 268, `Reagent: ${t || '—'}`, { anchor: 'above', bold: true });
-  label(ctx, cx + 150, BENCH_Y - 190,
-    state?.complete ? (dev > 0.5 ? 'POSITIVE' : 'Negative — no colour developed') : 'Developing…',
-    { anchor: 'right', bold: true, color: state?.complete ? (dev > 0.5 ? '#0d7a52' : '#8a5a00') : undefined });
+  label(ctx, cx, BENCH_Y - 268, `Reagent: ${state?.testLabel || '—'}`, { anchor: 'above', bold: true });
+  observationNote(ctx, cx, state, dev, 'Developing…');
 }
 
 export function lassaigneTest(ctx, w, h, state, inputs) {

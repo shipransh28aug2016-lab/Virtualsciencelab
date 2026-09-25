@@ -6,6 +6,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { fitThroughOrigin, linearFit, sigFig } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XII-PHY-ACT-A5',
@@ -59,10 +60,14 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 227);
   const lc = VOLTMETERS[inputs.voltmeter] || 0.05;
   const v = voltageAt(inputs, inputs.tapLengthCm) + jitter(rng, lc * 0.6);
-  return { trial, lengthCm: inputs.tapLengthCm, voltageV: Number(v.toFixed(3)), ratioVPerM: sigFig(v / (inputs.tapLengthCm / 100), 4) };
+  return { trial, wire: wireOf(inputs).label, driver: (DRIVERS[inputs.driver] || DRIVERS.cell30).label, lengthCm: inputs.tapLengthCm, voltageV: Number(v.toFixed(3)), ratioVPerM: sigFig(v / (inputs.tapLengthCm / 100), 4) };
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'wire', 'wires')
+    || mixedSetRefusal(rows, 'driver', 'supplies');
+  if (mixed) return mixed;
+
   const pts = rows.map((r) => ({ x: Number(r.lengthCm), y: Number(r.voltageV) }));
   if (pts.length < 4) return { ok: false, reason: 'Record the potential drop for at least four different lengths.' };
   const fit = fitThroughOrigin(pts);

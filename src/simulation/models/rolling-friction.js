@@ -6,6 +6,7 @@
 import { makeRng, jitter } from '../../utils/rng.js';
 import { fitThroughOrigin, sigFig } from '../../utils/measure.js';
 import { nullPoint, nullRefusal } from '../null-point.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-ACT-A4',
@@ -142,6 +143,10 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'surface', 'surfaces')
+    || mixedSetRefusal(rows, 'roller', 'rollers');
+  if (mixed) return mixed;
+
   const pts = rows.map((r) => ({ x: Number(r.normalReaction), y: Number(r.rollingFriction) }));
   if (pts.length < 4) return { ok: false, reason: 'Record at least four different loads.' };
   const fit = fitThroughOrigin(pts);

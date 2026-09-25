@@ -21,6 +21,7 @@
 import { makeRng, jitter } from '../../utils/rng.js';
 import { mean, sigFig } from '../../utils/measure.js';
 import { nullPoint, nullRefusal } from '../null-point.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-A05',
@@ -155,6 +156,23 @@ export function restingFromTurningPoints(tps) {
  */
 export function nullIndicator(inputs) {
   const bal = BALANCES[inputs.balance] || BALANCES.standard;
+  /* An empty pan is not a balance that needs adjusting; it is a balance with
+     nothing to weigh. The indicator says so rather than pointing the student
+     at a weight box that cannot help. */
+  if (!inputs.bodyOnPan) {
+    return {
+      label: 'Pointer',
+      atNull: false,
+      direction: null,
+      closeness: 'far',
+      strength: 4,
+      /* Not the at-null dot and not an arrow: there is no direction to point
+         in. A student who is shown an arrow will move the weights, and no
+         weight balances an empty pan. */
+      reading: '\u2715 nothing on the left pan',
+      hint: 'There is no body on the left pan, so there is nothing for the weights to balance. Put the body on the pan first.',
+    };
+  }
   const excess = excessMg(inputs);          // > 0: body side heavier, needs more weights
   return nullPoint({
     label: 'Pointer',
@@ -186,7 +204,20 @@ export function validate(inputs) {
   const errors = [], warnings = [];
   const bal = BALANCES[inputs.balance] || BALANCES.standard;
 
-  if (!onScale(inputs)) {
+  /* Say the obvious thing first. With nothing in the left pan the pointer is
+     of course hard over, and "add or remove weights until it swings about the
+     centre" is advice that cannot be followed — the only way to bring an
+     empty pan to balance is to take every weight off, which weighs nothing.
+     A student who has not put the body on has to be told that. */
+  if (!inputs.bodyOnPan && !onScale(inputs)) {
+    errors.push({
+      field: 'bodyOnPan',
+      code: 'NO_BODY_OFF_SCALE',
+      message: 'There is nothing in the left pan, so the weights in the right one carry the beam hard over.',
+      why: 'A balance compares two pans. With one of them empty there is nothing to compare the weights against, and no setting of the weight box will bring the pointer back onto the scale.',
+      fix: 'Put the body on the left pan, then add weights until the pointer swings about the centre.',
+    });
+  } else if (!onScale(inputs)) {
     errors.push({
       field: 'weightsG',
       code: 'OFF_SCALE',
@@ -271,6 +302,9 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 
 /** Mean mass over the trials. */
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'body', 'bodies');
+  if (mixed) return mixed;
+
   const ms = rows.map((r) => Number(r.mass)).filter(Number.isFinite);
   if (ms.length < 3) return { ok: false, reason: 'Complete at least three weighings.' };
 

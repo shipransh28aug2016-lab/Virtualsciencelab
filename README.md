@@ -150,8 +150,8 @@ compiles.
 npm run audit          # everything below, in order
 ```
 
-Two of these ask questions the others do not, and both were written after the ones above them
-had been passing for some time while labs were still unusable.
+Three of these ask questions the others do not, and all three were written after the ones above
+them had been passing for some time while labs were still unusable.
 
 **`npm run audit:golden` — does each experiment reproduce its own accepted value?**
 
@@ -168,6 +168,22 @@ compared a resistance in ohms against a resistivity in Ω·m and told the studen
 by 798 571 328.6%; the sonometer silently switched a Class XI law-of-length practical into a
 Class XII AC-mains one when the student varied the length; and the diode solver diverged to
 1002 A. All 89 pass now.
+
+**`npm run audit:scene` — does the bench show what the table says?**
+
+A renderer is handed `state` and `inputs` and may read the wrong field, or none at all, without
+anything failing — so a bench can draw a brass wire while the table records a steel one, and
+every other check will pass. This sets each option group to each of its settings and asks two
+things of the drawing that comes back: does the picture move at all, or is the stream of drawing
+calls byte-identical for every setting; and does the picture print the name of a setting other
+than the one being recorded? Both questions are put to the model's own output.
+
+First run: 217 option groups across 87 labs, and **28 groups where the apparatus was identical
+whichever setting was chosen** — among them the multimeter's three range switches (whose dial
+pointed at OHM whatever function was selected, because its list of functions used names the
+model has never had), the fuse position and the earthing in the household-circuit activity,
+four solids in the specific-heat calorimeter, and the dilution test of the emulsion practical,
+which is half that experiment and changed nothing on the bench at all. All of them now redraw.
 
 **`npm run audit:journey` — can a student get from opening a lab to a result?**
 
@@ -192,6 +208,7 @@ broken.
 | `audit:renderers` | every experiment resolves to a real renderer and it draws cleanly, both themes |
 | `audit:models` | which benches evolve in time, which are correctly still, which respond to nothing |
 | `audit:scientific` | balanced equations, titration direction, and every titration performable on its own burette, with no volume that is neither before, at, nor past its end point; every null indicator held to saying "take the reading now" only where a reading can be taken |
+| (inside `audit:golden`) | **one specimen per set** — for every option group on every bench, if the accepted value moves with the setting then a set mixing them cannot have a result, and the calculation must refuse it. This found 43 groups across 35 experiments averaging two mirrors, three galvanometers or five liquids into one number belonging to none of them |
 | `audit:liveness` | the canvas actually changes, in a browser |
 | `audit:recovery` | a failing simulation is contained rather than freezing the bench |
 

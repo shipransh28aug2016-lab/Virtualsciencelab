@@ -6,6 +6,7 @@
 import { makeRng, jitter } from '../../utils/rng.js';
 import { fitThroughOrigin, sigFig, linearFit} from '../../utils/measure.js';
 import { nullPoint, nullRefusal } from '../null-point.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-A10',
@@ -92,10 +93,13 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 71);
   const trueF = requiredForceGwt(inputs);
   const F = Number((trueF + jitter(rng, Math.max(1, trueF * 0.02))).toFixed(1));
-  return { trial, angleDeg: inputs.angleDeg, sinTheta: Number(sinTheta(inputs).toFixed(4)), panGwt: F, forceN: sigFig((F / 1000) * G, 4), body: inputs.body };
+  return { trial, roller: (ROLLERS[inputs.roller] || BLOCK).label, angleDeg: inputs.angleDeg, sinTheta: Number(sinTheta(inputs).toFixed(4)), panGwt: F, forceN: sigFig((F / 1000) * G, 4), body: inputs.body };
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'roller', 'bodies');
+  if (mixed) return mixed;
+
   const pts = rows.map((r) => ({ x: Number(r.sinTheta), y: Number(r.panGwt) }));
   if (pts.length < 4) return { ok: false, reason: 'Record the balancing force for at least four different angles.' };
   const through = fitThroughOrigin(pts);

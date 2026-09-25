@@ -60,7 +60,11 @@ export function validate(inputs) {
   if (coagulationValueMm(inputs) === null && s.type === 'lyophobic') warnings.push({ field: 'electrolyte', code: 'WRONG_SIGN_ION', message: 'This electrolyte\'s active ion carries the same sign as the sol.', why: 'By the Hardy-Schulze rule only the ion of charge OPPOSITE to the sol\'s own does the coagulating; the same-signed ion is a spectator.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0, elapsed: 0, coagulation: 0, tyndall: 1, settled: 0 }; }
+  /* Renderers cannot import models, so the NAMES they print come over on
+     the state: these benches were announcing the picker's keys.  */
+export function init(inputs = defaults) {
+  return { t: 0, elapsed: 0, coagulation: 0, tyndall: 1, settled: 0, electrolyteLabel: electrolyteOf(inputs).label };
+}
 
 /**
  * A sol under an electrolyte. Above the coagulation value the double
@@ -71,6 +75,7 @@ export function init() { return { t: 0, elapsed: 0, coagulation: 0, tyndall: 1, 
  */
 export function step(state, inputs, dt) {
   const s = { ...state };
+  s.electrolyteLabel = electrolyteOf(inputs).label;
   s.t += dt;
   s.elapsed += dt;
   if (!coagulates(inputs)) {

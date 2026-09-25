@@ -46,6 +46,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { sigFig, percentError, toLeastCount } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XII-CHE-E01',
@@ -349,8 +350,23 @@ export function step(state, inputs, dt) {
 }
 
 export function measure(state, inputs, seed = 1, trial = 1) {
-  if (!validate(inputs).ok) return null;
-  if (!state || !state.settled) return null;
+  const check = validate(inputs);
+  if (!check.ok) {
+    /* The model already wrote the explanation, for the feedback panel; say
+       the same thing here rather than refusing in silence. */
+    const w = check.errors[0] || check.warnings[0];
+    return { v: null, reason: w ? [w.message, w.fix || w.why].filter(Boolean).join(' ') : 'The apparatus is not set up for a reading yet.' };
+  }
+  /*
+   * A bench that will not take a reading has to say why.
+   *
+   * These returned a bare null, which reached the student as "Nothing to
+   * measure here — no reading recorded": true of a mirror forming no image,
+   * and useless on a bench where the apparatus is simply not ready yet. The
+   * student has pressed the right button at the wrong moment, and the bench
+   * knows exactly which moment it is waiting for.
+   */
+  if (!state || !state.settled) return { v: null, reason: 'The solvent front has not finished rising. Let the chromatogram run until the front is near the top of the paper, then take it out, mark the front, and measure the spots.' };
 
   const spots = spotPositions(inputs);
   if (!spots.length) return null;
@@ -372,7 +388,7 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const fastest = rows[0];
 
   return {
-    trial,
+    trial, solvent: (SOLVENTS[inputs.solvent] || {}).label,
     sample: sampleOf(inputs).label,
     frontCm: sigFig(front, 3),
     spots: rows.length,
@@ -388,6 +404,9 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'solvent', 'solvents');
+  if (mixed) return mixed;
+
   if (!rows || rows.length < 2) {
     return {
       ok: false,

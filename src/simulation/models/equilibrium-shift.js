@@ -133,7 +133,7 @@ export function validate(inputs) {
   if (inputs.concentrationMm === 0 && (inputs.temperatureC ?? ROOM_TEMP_C) === ROOM_TEMP_C) warnings.push({ field: 'concentrationMm', code: 'NO_STRESS_YET', message: 'No reagent has been added and the temperature is still at room temperature.', why: 'Add the chosen reagent, change the temperature, or both, to see which way the equilibrium colour shifts.' });
   return { ok: true, errors: [], warnings };
 }
-export function init(inputs = defaults) { return { t: 0, position: 0.5, shifting: false, settled: true, equationFull: systemOf(inputs).equation, tempC: inputs.temperatureC ?? ROOM_TEMP_C, tempEffectNote: systemOf(inputs).enthalpyNote, tempEffectShort: systemOf(inputs).tempEffectShort }; }
+export function init(inputs = defaults) { return { t: 0, position: 0.5, shifting: false, settled: true, reagentLabel: reagentOf(inputs).label, equationFull: systemOf(inputs).equation, tempC: inputs.temperatureC ?? ROOM_TEMP_C, tempEffectNote: systemOf(inputs).enthalpyNote, tempEffectShort: systemOf(inputs).tempEffectShort }; }
 /**
  * Le Chatelier in progress.
  *
@@ -157,6 +157,10 @@ export function step(state, inputs, dt) {
   s.tempC = inputs.temperatureC ?? ROOM_TEMP_C;
   s.tempEffectNote = systemOf(inputs).enthalpyNote;
   s.tempEffectShort = systemOf(inputs).tempEffectShort;
+  /* The reagent by its NAME. The bench printed the picker's key — "Shifting
+     forward — fecl3 added" — on a chemistry bench whose whole subject is
+     which ion was added. */
+  s.reagentLabel = reagentOf(inputs).label;
   return s;
 }
 

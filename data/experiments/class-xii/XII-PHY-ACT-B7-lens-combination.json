@@ -270,13 +270,13 @@
         "decimals": 0
       },
       {
-        "key": "lensA",
+        "key": "lensALabel",
         "label": "First lens",
         "unit": "",
         "decimals": 0
       },
       {
-        "key": "lensB",
+        "key": "lensBLabel",
         "label": "Second lens",
         "unit": "",
         "decimals": 0

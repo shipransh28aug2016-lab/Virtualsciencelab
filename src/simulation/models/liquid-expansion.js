@@ -7,6 +7,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { fitThroughOrigin, sigFig, sciText } from '../../utils/measure.js';
+import { mixedSetRefusal, specimenOfRows } from '../one-specimen.js';
 
 export const meta = {
   id: 'XI-PHY-ACT-B3',
@@ -81,10 +82,13 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 149);
   const rise = levelRiseMm(inputs) + jitter(rng, 0.3);
   const dV = inputs.volumeCm3 * gammaApparent(inputs) * inputs.deltaTempC;
-  return { trial, deltaTempC: inputs.deltaTempC, volumeCm3: inputs.volumeCm3, levelRiseMm: Number(rise.toFixed(2)), volumeChangeCm3: sigFig(dV, 4) };
+  return { trial, liquid: liquidOf(inputs).label, deltaTempC: inputs.deltaTempC, volumeCm3: inputs.volumeCm3, levelRiseMm: Number(rise.toFixed(2)), volumeChangeCm3: sigFig(dV, 4) };
 }
 
 export function derive(rows, inputs = defaults) {
+  const mixed = mixedSetRefusal(rows, 'liquid', 'liquids');
+  if (mixed) return mixed;
+
   const pts = rows.map((r) => ({ x: Number(r.deltaTempC), y: Number(r.levelRiseMm) }));
   if (pts.length < 4) return { ok: false, reason: 'Record the rise for at least four different temperature rises.' };
   const fit = fitThroughOrigin(pts);

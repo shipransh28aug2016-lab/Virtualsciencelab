@@ -98,7 +98,32 @@ export function measure(state, inputs, seed = 1, trial = 1) {
 export function derive(rows, inputs = defaults) {
   const first = rows.find((r) => r.resonanceNumber === 1);
   const second = rows.find((r) => r.resonanceNumber === 2);
-  if (!first || !second) return { ok: false, reason: 'Record both the first and second resonance positions.' };
+  if (!first || !second) {
+    /*
+     * Say which one is missing and where to look for it.
+     *
+     * "Record both the first and second resonance positions" is true and
+     * unusable: a student standing at the first one has no way of knowing
+     * that the next is near three times that length, and a student with
+     * neither does not know the tube resonates twice. The three-to-one
+     * relation between l₁ and l₂ is the thing this practical is teaching, so
+     * naming it is teaching rather than answering — the length itself still
+     * has to be found by ear.
+     */
+    if (first) {
+      return {
+        ok: false,
+        reason: `The first resonance is recorded at ${Number(first.airColumnCm).toFixed(1)} cm. Now lower the water level further, past the quiet stretch, until the note is loud again — the second resonance is near three times the first.`,
+      };
+    }
+    if (second) {
+      return {
+        ok: false,
+        reason: `The second resonance is recorded at ${Number(second.airColumnCm).toFixed(1)} cm. Raise the water level back up until the note is loud again — the first resonance is near a third of the second.`,
+      };
+    }
+    return { ok: false, reason: 'Move the water level until the note from the fork is loudest, and record that air column. The tube resonates twice over its length: record the first and the second.' };
+  }
   /*
    * Both resonances must belong to the SAME fork.
    *
@@ -116,12 +141,22 @@ export function derive(rows, inputs = defaults) {
       reason: `The first resonance was found with the ${first.frequency} Hz fork and the second with the ${second.frequency} Hz fork. Both positions belong to one standing wave, so they must be found with the same fork — find l₁ and l₂ for one fork before changing it.`,
     };
   }
+  /* And at the same room temperature, for the same reason: the speed of
+     sound rises by about 0.6 m/s per degree, so two positions found in
+     different rooms are two different wavelengths. */
+  if (Number(first.tempC) !== Number(second.tempC)) {
+    return {
+      ok: false,
+      reason: `The first resonance was found at ${first.tempC} °C and the second at ${second.tempC} °C. The speed of sound changes by about 0.6 m·s⁻¹ for every degree, so both positions must be found in the same room — read the thermometer once, at the start, and leave it.`,
+    };
+  }
   const l1 = Number(first.airColumnCm);
   const l2 = Number(second.airColumnCm);
   const f = Number(first.frequency);
   const speed = 2 * f * (l2 - l1) / 100;
   const e = (l2 - 3 * l1) / 2;
-  const accepted = speedOfSoundAt(inputs.tempC);
+  /* Against the speed of sound in the room the READINGS were taken in. */
+  const accepted = speedOfSoundAt(Number(first.tempC));
   /*
    * The panel shows the working: l₁ and l₂ themselves, the fork, the
    * temperature, and what the end correction should come to for a tube of

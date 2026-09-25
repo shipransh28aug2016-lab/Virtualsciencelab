@@ -43,6 +43,7 @@
  */
 import { makeRng, jitter } from '../../utils/rng.js';
 import { toLeastCount, mean, sigFig } from '../../utils/measure.js';
+import { nullPoint, nullRefusal } from '../null-point.js';
 
 export const meta = {
   id: 'auxiliary-lens',
@@ -150,6 +151,70 @@ export function focalFromReadings(u, v) {
   return (u * v) / (u - v);
 }
 
+/**
+ * Whether the element is at its null position.
+ *
+ * Both auxiliary-lens methods are null hunts and neither said so. The convex
+ * mirror has to stand exactly one radius short of I₁ so the converging beam
+ * strikes it normally and retraces its own path; the concave lens has to
+ * intercept that beam where a real final image can still be caught. Off that
+ * position the model correctly refused a reading and gave no hint which way
+ * to slide the element, on a bench where the window is a couple of
+ * centimetres in a metre of optical bench.
+ */
+export function nullIndicator(inputs = defaults) {
+  const el = ELEMENTS[inputs.element] || ELEMENTS.cl15;
+
+  if (el.kind === 'lens') {
+    /*
+     * Concave lens: the element has to intercept the converging beam BEFORE
+     * it reaches I₁ — that is what makes I₁ a virtual object — and it must
+     * not be so close that the beam is still diverging when it leaves, or no
+     * real final image can be caught. The window between those two is what
+     * the student is hunting for, and it moves with the object distance.
+     */
+    const v1 = firstImageCm(inputs);
+    if (v1 === null) return null;
+    /*
+     * The window is wide; the part of it worth reading is not.
+     *
+     * Anywhere between I₁ minus one focal length and I₁ gives SOME real
+     * image, and the tolerance was that whole window — so the bench said
+     * "take the reading now" at its far end, where the virtual object is a
+     * few millimetres from the lens, f = uv/(u − v) is on a knife edge and
+     * the answer came out −9.45 cm for a −15 cm lens. Half a focal length
+     * short of I₁ is where the method is well conditioned; a fifth of a
+     * focal length either side of that still is.
+     */
+    const usable = v1 - Math.abs(el.focal);     // nearest position giving a real image
+    const mid = (usable + v1) / 2;              // middle of the usable window
+    const half = Math.max(0.8, Math.abs(el.focal) * 0.18);
+    return nullPoint({
+      label: 'Screen',
+      current: Number(inputs.elementPositionCm),
+      target: mid,
+      tolerance: half,
+      increase: 'No image can be caught — slide the concave lens further from the convex one, towards where I₁ would form.',
+      decrease: 'The lens is past I₁, so there is no virtual object — slide it back towards the convex lens.',
+      atNullText: 'a real image forms on the screen',
+      awayFrom: 'no image on the screen',
+    });
+  }
+
+  const target = nullPositionCm(inputs);
+  if (target === null) return null;
+  return nullPoint({
+    label: 'Retrace',
+    current: Number(inputs.elementPositionCm),
+    target,
+    tolerance: 1.6,
+    increase: 'The reflected image does not retrace — slide the element further from the lens.',
+    decrease: 'The reflected image does not retrace — slide the element back towards the lens.',
+    atNullText: 'the image retraces its own path onto the object',
+    awayFrom: 'not retracing',
+  });
+}
+
 export function validate(inputs = defaults) {
   const errors = [];
   const warnings = [];
@@ -178,7 +243,16 @@ export function validate(inputs = defaults) {
         code: 'MIRROR_CANNOT_REACH',
         message: 'The radius of curvature is larger than the distance to I₁.',
         why: `The mirror must stand between the lens and I₁ at a distance R from I₁, but R = ${2 * el.focal} cm is more than the ${v1.toFixed(1)} cm to I₁, so there is no room.`,
-        fix: 'Move the object closer to the lens so I₁ forms further away, or use a mirror of smaller radius.',
+        /*
+         * Name the range, not just the direction.
+         *
+         * I₁ must form further from the lens than R, so u f/(u − f) > R, which
+         * holds for u below R f/(R − f) — and above f, or the lens makes no
+         * real image at all. "Move the object closer" left a student to find
+         * both ends of that window by trial, on a bench where two thirds of
+         * the slider's travel cannot be used with this mirror.
+         */
+        fix: `Keep the object between ${(lens.focal + 1).toFixed(0)} cm and under about ${((2 * el.focal * lens.focal) / (2 * el.focal - lens.focal)).toFixed(0)} cm from the lens for this mirror, or use a mirror of smaller radius.`,
       });
     }
   } else if (v1 !== null) {
@@ -251,7 +325,7 @@ export function measure(state, inputs = defaults, seed = 1, trial = 1) {
   const lc = inputs.benchLC ?? 0.1;
 
   if (el.kind === 'mirror') {
-    if (retraceQuality(inputs) < 0.5) return null;      // not at the null position
+    if (retraceQuality(inputs) < 0.5) return { v: null, reason: nullRefusal(nullIndicator(inputs)) };
     const pos = toLeastCount(Number(inputs.elementPositionCm) + jitter(rng, lc * 0.9), lc);
     const i1 = toLeastCount(v1 + jitter(rng, lc * 0.9), lc);
     const R = i1 - pos;
@@ -285,13 +359,40 @@ export function measure(state, inputs = defaults, seed = 1, trial = 1) {
 }
 
 export function derive(rows, inputs = defaults) {
-  const el = ELEMENTS[inputs.element] || ELEMENTS.cm25;
   const usable = rows.filter((r) => Number.isFinite(Number(r.focalCm)));
   if (usable.length < 2) return { ok: false, reason: 'Record at least two settings.' };
+
+  /*
+   * Two mirrors and two lenses sit on this bench, and their focal lengths
+   * differ by ten centimetres. A set taken across two of them averaged to
+   * something belonging to neither: 19.5 cm from a 25 cm mirror and a 15 cm
+   * one, with the accepted value quoted for whichever happened to be
+   * selected when Calculate was pressed, and a spread of 9.6 cm printed
+   * beside it as though that were the scatter of a measurement.
+   */
+  const elements = [...new Set(usable.map((r) => r.element).filter(Boolean))];
+  if (elements.length > 1) {
+    return { ok: false, reason: `These readings are of ${elements.length} different elements (${elements.join(', ')}). Each has its own focal length — clear the table and locate the null for one of them.` };
+  }
+  const el = Object.values(ELEMENTS).find((x) => x.label === elements[0])
+    || ELEMENTS[inputs.element] || ELEMENTS.cm25;
 
   const fs = usable.map((r) => Number(r.focalCm));
   const fMean = mean(fs);
   const spread = Math.max(...fs) - Math.min(...fs);
+
+  /*
+   * And a mean is only a measurement while the readings agree. The null is
+   * 1.6 cm wide, so two settings of the same element cannot honestly differ
+   * by more than a few centimetres of focal length; beyond that the set is
+   * telling the student to go back and find the null again.
+   */
+  if (spread > Math.max(3, Math.abs(el.focal) * 0.2)) {
+    return {
+      ok: false,
+      reason: `These settings give focal lengths ${spread.toFixed(1)} cm apart (${fs.map((f) => f.toFixed(1)).join(', ')} cm). They are readings of one element, so they should agree to within a centimetre or two — locate the null more carefully at each object distance and take the set again.`,
+    };
+  }
 
   if (el.kind === 'mirror') {
     const Rs = usable.map((r) => Number(r.radiusCm));
@@ -326,5 +427,4 @@ export function derive(rows, inputs = defaults) {
 export default {
   meta, defaults, LENSES, ELEMENTS,
   init, step, measure, derive, validate,
-  firstImageCm, nullPositionCm, retraceQuality, finalImageCm, virtualObjectCm, focalFromReadings,
-};
+  firstImageCm, nullPositionCm, retraceQuality, finalImageCm, virtualObjectCm, focalFromReadings, nullIndicator};
