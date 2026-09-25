@@ -1173,7 +1173,11 @@ async function runLane(lane, queue, reports, onDone) {
               await wait(200);
               t = await takeReading();
             }
-            if (!t.ok) t = await huntForReading(nControls, 5, k, labDeadline, mixingRefused && !traySetNeeded);
+            /* On a titration the hunt may move the burette and nothing else.
+               Swapping the flask or the standard while looking for a reading
+               is a different titration, and the two titres that came back —
+               20.6 mL and 14.1 mL — were of two different ones. */
+            if (!t.ok) t = await huntForReading(nControls, 5, k, labDeadline, isTitration || (mixingRefused && !traySetNeeded));
             if (t.ok) hunted += 1; else refusals.push(firstRefusal);
           }
           if (t.ok) got = t.rows;
