@@ -428,7 +428,7 @@ export function sonometer(ctx, w, h, state, inputs) {
   ctx.moveTo(fx, boxY - 40); ctx.lineTo(fx, boxY - 12);
   ctx.stroke();
   ctx.restore();
-  label(ctx, fx, boxY - 114, `Tuning fork ${inputs.forkHz ?? inputs.fork ?? ''} Hz`, { anchor: 'above' });
+  label(ctx, fx, boxY - 114, `Tuning fork ${state?.forkHz ?? inputs.forkHz ?? ''} Hz`, { anchor: 'above' });
   drawWeight(ctx, x1 - 4, boxY + 70, { label: `Tension load ${(inputs.loadKg ?? 1).toFixed(2)} kg` });
 
   label(ctx, (x0 + x1) / 2, boxY - 150,

@@ -127,7 +127,10 @@ export function validate(inputs) {
   if (correctFunc(inputs) && !correctConnection(inputs)) warnings.push({ field: 'connection', code: 'WRONG_CONNECTION', message: 'An ammeter must be in series; a voltmeter in parallel.', why: 'Connecting an ammeter in parallel effectively short-circuits the source through the meter\'s low resistance.' });
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0, reading: 0, settling: 0, correct: false }; }
+  /* The NAMES the bench prints, since a renderer cannot import this model. */
+export function init(inputs = defaults) {
+  return { t: 0, reading: 0, settling: 0, correct: false, targetLabel: targetOf(inputs).label };
+}
 /**
  * A digital multimeter. It does not answer instantly: the display settles
  * over a moment, and if the function switch or the leads are wrong it
@@ -136,6 +139,7 @@ export function init() { return { t: 0, reading: 0, settling: 0, correct: false 
  */
 export function step(state, inputs, dt) {
   const s = { ...state };
+  s.targetLabel = targetOf(inputs).label;
   s.t += dt;
   const ok = correctFunc(inputs) && correctConnection(inputs) && !overRange(inputs);
   s.correct = ok;

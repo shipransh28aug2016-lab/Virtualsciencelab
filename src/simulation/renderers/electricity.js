@@ -460,7 +460,7 @@ export function multimeter(ctx, w, h, state, inputs) {
       : correct ? `Reading ${val.toFixed(dp)}${unit} on the ${rangeWord}${state?.settling ? ' (settling)' : ''}`
         : 'Wrong function or wrong leads \u2014 the meter cannot read this',
     { anchor: 'above', bold: true, color: correct ? '#0d7a52' : over ? '#a06000' : '#c02626' });
-  label(ctx, cx, cy + 230, `Target: ${inputs?.target || 'circuit'} \u00b7 probes in ${inputs?.connection || ''}`, { anchor: 'below' });
+  label(ctx, cx, cy + 230, `Testing the ${state?.targetLabel || 'circuit'} \u00b7 probes in ${inputs?.connection || ''}`, { anchor: 'below' });
 }
 
 /**
@@ -787,7 +787,7 @@ export function ldrIntensity(ctx, w, h, state, inputs) {
   ctx.beginPath(); ctx.arc(lampX, y, 40 + bright * 30, 0, Math.PI * 2); ctx.fill();
   ctx.restore();
   brushedMetal(ctx, lampX - 6, y + 12, 12, 48, { axis: 'v' });
-  label(ctx, lampX, y - 46, `Lamp (${inputs?.lamp || 'source'})`, { anchor: 'above' });
+  label(ctx, lampX, y - 46, state?.lampLabel || 'Lamp', { anchor: 'above' });
 
   // The cone of light reaching the cell.
   ctx.save();
@@ -938,7 +938,7 @@ export function circuitFault(ctx, w, h, state, inputs) {
   drawResistor(ctx, w / 2, y - 50, 60, { label: 'Rheostat' });
   drawDial(ctx, w - 90, y - 50, 26, (state?.currentA ?? 0) / 0.15, { label: 'Ammeter', zeroCentre: state?.backwards });
   drawDial(ctx, w - 90, y + 20, 26, (state?.voltageV ?? 0) / 3, { label: 'Voltmeter', zeroCentre: state?.backwards });
-  label(ctx, w / 2, y + 50, `Board: ${inputs?.board || '—'}`, { anchor: 'below' });
+  label(ctx, w / 2, y + 50, state?.boardLabel || 'Circuit board', { anchor: 'below' });
 }
 
 export const RENDERERS = {

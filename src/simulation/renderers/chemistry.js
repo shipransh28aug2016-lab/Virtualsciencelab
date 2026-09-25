@@ -174,7 +174,7 @@ export function phDetermination(ctx, w, h, state, inputs) {
   const colour = colourFor(shown);
 
   drawBeaker(ctx, cx, BENCH_Y - 150, 160, 150, 0.62, colour, {
-    label: inputs?.sample || 'Sample solution', graduations: false,
+    label: state?.sampleLabel || 'Sample solution', graduations: false,
   });
 
   // Electrode (or the paper strip) dipping into it.
@@ -339,7 +339,7 @@ export function solPreparation(ctx, w, h, state, inputs) {
       : 'Sol is stable — the beam shows a clear Tyndall cone',
     { anchor: 'above', bold: true, color: state?.coagulation > 0.05 ? '#8a5a00' : '#0d7a52' });
   label(ctx, cx, B.bot + 28,
-    `${inputs?.electrolyte || 'Electrolyte'} at ${(inputs?.concentrationMm ?? 0).toFixed(1)} mmol/L`,
+    `${state?.electrolyteLabel || 'Electrolyte'} at ${(inputs?.concentrationMm ?? 0).toFixed(1)} mmol/L`,
     { anchor: 'below', size: 11 });
 }
 export function dialysis(ctx, w, h, state, inputs) {

@@ -237,6 +237,37 @@ for (const meta of targets) {
       }
     }
 
+    /*
+     * 3 · DOES THE PICTURE PRINT THE PICKER'S KEY?
+     *
+     * `lamp40`, `fecl3`, `ceric`, `gl5528` are identifiers, not names. A
+     * renderer that cannot import its model has only `inputs` to hand, and
+     * `inputs.lamp` is the key — so benches announced "Lamp (lamp40)" and
+     * "Reagent: ceric" to a student who has never seen those words. The
+     * model must hand the NAME over on the state, as several already do.
+     */
+    for (const t of trials) {
+      const key = String(t.o);
+      /*
+       * Only IDENTIFIERS. "lamp", "open", "reverse", "series" are keys that
+       * are also the English a student expects, and a bench drawing "6 V
+       * lamp" is not leaking anything. What gives the picker away is a digit
+       * or an internal capital: `lamp40`, `supplyDc`, `board3`, `brokenWire`.
+       */
+      const identifier = key.length >= 3 && (/\d/.test(key) || /[a-z][A-Z]/.test(key));
+      if (!identifier) continue;
+      const printed = t.text.filter((x) => new RegExp(`(^|[^A-Za-z0-9])${key}([^A-Za-z0-9]|$)`).test(x));
+      /* A key that is ALSO how a person would say it ("water", "series",
+         "slow") is not a leak; only flag one the row itself never uses. */
+      const rowSays = Object.values(t.row || {}).some((v) => typeof v === 'string' && v === key);
+      if (printed.length && !rowSays) {
+        problems.push({
+          id: meta.id, kind: 'raw-key',
+          msg: `with "${g.label || g.id}" set to ${key}, the bench prints the picker's key: ${printed.slice(0, 2).map((x) => `"${x}"`).join(', ')}`,
+        });
+      }
+    }
+
     if (only.length) {
       console.log(`  ${meta.id} · ${g.label || g.id}: ${hashes.size}/${g.options.length} distinct pictures`);
       for (const t of trials) console.log(`      ${t.o.padEnd(16)} ${t.text.slice(0, 6).join(' | ')}`);
@@ -252,10 +283,10 @@ if (!problems.length) {
   console.log('Every bench redraws for every choice, and none names a setting other than the one being recorded.');
   process.exit(0);
 }
-for (const kind of ['renderer', 'draw', 'contradiction', 'static']) {
+for (const kind of ['renderer', 'draw', 'contradiction', 'raw-key', 'static']) {
   const of = problems.filter((p) => p.kind === kind);
   if (!of.length) continue;
-  const title = { renderer: 'NO RENDERER', draw: 'THREW WHILE DRAWING', contradiction: 'SCENE CONTRADICTS THE TABLE', static: 'SCENE IGNORES THE CHOICE' }[kind];
+  const title = { renderer: 'NO RENDERER', draw: 'THREW WHILE DRAWING', contradiction: 'SCENE CONTRADICTS THE TABLE', 'raw-key': "SCENE PRINTS THE PICKER'S KEY", static: 'SCENE IGNORES THE CHOICE' }[kind];
   console.log(`\n── ${title} · ${of.length} ──`);
   for (const p of of) console.log(`   ${p.id.padEnd(22)} ${p.msg}`);
 }

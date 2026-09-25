@@ -83,7 +83,7 @@ export function validate(inputs) {
   }
   return { ok: true, errors: [], warnings };
 }
-export function init() { return { t: 0, displayG: 0, settled: false }; }
+export function init(inputs = defaults) { return { objectLabel: objectOf(inputs).label, t: 0, displayG: 0, settled: false }; }
 /**
  * A top-pan balance settling. The display hunts in its last digit while
  * the pan is still moving and only then stabilises -- which is why a mass
@@ -91,6 +91,7 @@ export function init() { return { t: 0, displayG: 0, settled: false }; }
  */
 export function step(state, inputs, dt) {
   const s = { ...state };
+  s.objectLabel = objectOf(inputs).label;
   s.t += dt;
   const target = grossMassG(inputs);
   s.displayG = (s.displayG ?? 0) + (target - (s.displayG ?? 0)) * Math.min(1, dt * 2.2);

@@ -32,7 +32,15 @@ export function illuminance(inputs) {
 export function resistanceOhm(inputs) { const c = cellOf(inputs); return c.A * illuminance(inputs) ** -c.gamma; }
 
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0, resistance: 0, lux: 0, settled: false }; }
+export function init(inputs = defaults) {
+  /* The renderer cannot import this module, so the names it prints come over
+     on the state: the bench was announcing "Lamp (lamp40)" and "cadmium
+     sulphide cell" from the picker's keys. */
+  return { t: 0, resistance: 0, lux: 0, settled: false,
+    lampLabel: (LAMPS[inputs.lamp] || LAMPS.lamp40).label,
+    cellLabel: cellOf(inputs).label,
+    roomLabel: (ROOMS[inputs.room] || ROOMS.dark).label };
+}
 /**
  * An LDR is slow. Its resistance falls as carriers are photo-generated and
  * recovers much more slowly in the dark -- so it lags behind a change in
@@ -40,6 +48,9 @@ export function init() { return { t: 0, resistance: 0, lux: 0, settled: false };
  */
 export function step(state, inputs, dt) {
   const s = { ...state };
+  s.lampLabel = (LAMPS[inputs.lamp] || LAMPS.lamp40).label;
+  s.cellLabel = cellOf(inputs).label;
+  s.roomLabel = (ROOMS[inputs.room] || ROOMS.dark).label;
   s.t += dt;
   const targetLux = illuminance(inputs);
   const targetR = resistanceOhm(inputs);

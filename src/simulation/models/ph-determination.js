@@ -92,9 +92,14 @@ export function degreeOfDissociation(inputs) {
 }
 
 export function validate() { return { ok: true, errors: [], warnings: [] }; }
-export function init() { return { t: 0, pH: 7, reading: 7, settled: false, dipped: false }; }
+  /* Renderers cannot import models, so the NAMES they print come over on
+     the state: these benches were announcing the picker's keys.  */
+export function init(inputs = defaults) {
+  return { t: 0, pH: 7, reading: 7, settled: false, dipped: false, sampleLabel: sampleOf(inputs).label };
+}
 export function step(state, inputs, dt) {
   const s = { ...state };
+  s.sampleLabel = sampleOf(inputs).label;
   s.t += dt;
   const target = pHTrue(inputs);
   s.pH = target;

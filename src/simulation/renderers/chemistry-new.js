@@ -131,7 +131,7 @@ export function electronicBalance(ctx, w, h, state, inputs) {
   if (ctx.roundRect) ctx.roundRect(cx - 34, cy - 58, 68, 32, 4); else ctx.rect(cx - 34, cy - 58, 68, 32);
   ctx.fill();
   ctx.restore();
-  label(ctx, cx, cy - 60, inputs?.object || 'Sample in a watch glass', { anchor: 'above' });
+  label(ctx, cx, cy - 60, state?.objectLabel || 'Sample in a watch glass', { anchor: 'above' });
 
   /* A real balance does not settle instantly, and its last digit hunts
      while it does. Showing "----" until it is stable is the habit the

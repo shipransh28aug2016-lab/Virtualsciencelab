@@ -238,6 +238,7 @@ export function init(inputs = defaults) {
   return {
     t: 0,
     running: true,
+    boardLabel: (BOARDS[inputs.board] || BOARDS.board1).label,
     currentA: 0,
     voltageV: 0,
     backwards: r.backwards,
@@ -249,6 +250,7 @@ export function init(inputs = defaults) {
 
 export function step(state, inputs, dt) {
   const s = { ...state };
+  s.boardLabel = (BOARDS[inputs.board] || BOARDS.board1).label;
   /*
    * The meters go on following the circuit.
    *
