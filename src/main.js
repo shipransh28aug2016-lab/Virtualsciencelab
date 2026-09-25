@@ -854,6 +854,17 @@ function syncToolbar() {
     rec.title = done ? `Record this run — the cross went at ${app.state.finishedAt.toFixed(1)} s`
       : 'Add the acid and wait until the cross disappears';
   }
+  if (model === 'clock-reaction' && rec) {
+    /* The reading IS the clock time, so there is nothing to record until the
+       flask has gone blue-black. The bench had no gate at all here, so a
+       student could press Record while the solution was still colourless and
+       be given a time the clock had not measured. */
+    const done = Number.isFinite(app.state?.finishedAt);
+    rec.disabled = !done;
+    rec.classList.toggle('primary', done);
+    rec.title = done ? `Record this run — the flask went blue-black at ${app.state.finishedAt.toFixed(1)} s`
+      : 'Add the peroxide and wait until the flask turns blue-black';
+  }
   if (model === 'boiling-point' && rec) {
     /*
      * A boiling point by the Siwoloboff method is read as the bubbling STOPS
@@ -1035,6 +1046,10 @@ function record() {
        was permanently disabled. Both now read `finishedAt`, the moment the
        cross actually went. */
     toast('Wait until the cross has completely disappeared', 'bad');
+    return;
+  }
+  if (app.exp.simulation.model === 'clock-reaction' && !Number.isFinite(app.state.finishedAt)) {
+    toast('Wait until the flask turns blue-black', 'bad');
     return;
   }
   if (app.exp.simulation.model === 'titration' && app.state.overshot) {

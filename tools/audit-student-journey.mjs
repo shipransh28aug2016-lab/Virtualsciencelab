@@ -386,9 +386,17 @@ async function runLane(lane, queue, reports, onDone) {
       await frame();
       let last = read();
       let same = 0;
+      if (last && last.atNull) return last;
       while (Date.now() - t0 < cap) {
         await frame();
         const now = read();
+        /* At the null there is nothing left to settle. The beam balance's
+           pointer SWINGS, so its reading text kept changing and every read
+           ran to the full cap — twelve of them per hunt, once per reading,
+           which is what put this bench over its time budget. A student
+           watching a swinging pointer come to rest about the zero calls that
+           balanced, and so does this. */
+        if (now && now.atNull) return now;
         /* Two agreeing reads, each a frame apart, is the model having settled
            rather than the probe having been quick. */
         if (now && last && now.text === last.text) {
@@ -1252,7 +1260,8 @@ async function runLane(lane, queue, reports, onDone) {
                poor yield, and this bench says which step cost what — that is
                the whole point of the practical, and marking it as a wrong
                answer would be marking the experiment for working. */
-            const explained = /rapid cooling|not acidified|trap mother liquor|stays dissolved|left in the light|hydrolysed|was not (?:washed|dried)/i.test(flat);
+            const explained = /rapid cooling|not acidified|trap mother liquor|stays dissolved|left in the light|hydrolysed|was not (?:washed|dried)/i.test(flat)
+              || /than the calculation asks for|only standard if the mass is right|was not transferred|not made up to the mark/i.test(flat);
             if (pct > 25 && !explained) fail('accuracy', `result is ${pct.toFixed(0)}% away from the accepted value`);
             else if (pct > 25) rep.stages.accuracy = `off by ${pct.toFixed(0)}%, and the bench says which step cost it`;
             else rep.stages.accuracy = `off by ${pct.toFixed(1)}%`;

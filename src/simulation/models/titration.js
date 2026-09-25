@@ -405,6 +405,12 @@ export function measure(state, inputs, seed = 1, trial = 1) {
        mixes them is two titrations averaged together. */
     indicator: (INDICATORS[inputs.indicator] || {}).label || String(inputs.indicator || ''),
     initialReading: initial, finalReading, volumeUsed: Number((finalReading - initial).toFixed(1)),
+    /* The two numbers the strength is worked out FROM, recorded with the titre
+       they belong to. They were read off the live sliders at calculation time,
+       so a student who pipetted 20 mL, titrated it, and then moved the pipette
+       slider to 25 mL had their good titre divided by a volume they never
+       used. */
+    titrantConc: Number(inputs.titrantConc), analyteVolume: Number(inputs.analyteVolume),
     pHAtStop: Number(state.pH.toFixed(2)), _overshot: state.overshot,
   };
 }
@@ -466,13 +472,31 @@ export function derive(rows, inputs = defaults) {
       reason: `No two titres agree to within ${CONCORDANCE_ML} mL — the readings are ${allVols.map((v) => v.toFixed(1)).join(', ')} mL. Run the titration again until two agree, and average only those.`,
     };
   }
+  /* One pipette, one standard. A set taken partly at 20 mL and partly at
+     25 mL is two titrations, and averaging their titres is averaging two
+     different measurements. */
+  const pipetted = [...new Set(usable.map((r) => Number(r.analyteVolume)).filter(Number.isFinite))];
+  const standards = [...new Set(usable.map((r) => Number(r.titrantConc)).filter(Number.isFinite))];
+  if (pipetted.length > 1 || standards.length > 1) {
+    return {
+      ok: false,
+      reason: pipetted.length > 1
+        ? `These titres were taken on ${pipetted.length} different pipetted volumes (${pipetted.join(', ')} mL). Concordant titres are repeats of the SAME titration — pipette the same volume each time, and clear the table before changing it.`
+        : `These titres were run with ${standards.length} different strengths of standard solution (${standards.join(', ')} N). The standard is made up once and used throughout — clear the table before changing it.`,
+    };
+  }
+
   const meanTitre = mean(vols);
   const s = systemOf(inputs);
+  /* From the conditions the READINGS were taken under, not from wherever the
+     sliders happen to stand now. */
+  const conc = standards.length === 1 ? standards[0] : Number(inputs.titrantConc);
+  const pipette = pipetted.length === 1 ? pipetted[0] : Number(inputs.analyteVolume);
   let normality;
   if (s.unknownSide === 'titrant') {
-    normality = (inputs.titrantConc * inputs.analyteVolume) / meanTitre;
+    normality = (conc * pipette) / meanTitre;
   } else {
-    normality = (inputs.titrantConc * meanTitre) / inputs.analyteVolume;
+    normality = (conc * meanTitre) / pipette;
   }
   /*
    * Report the molarity as well wherever the redox system declares its
