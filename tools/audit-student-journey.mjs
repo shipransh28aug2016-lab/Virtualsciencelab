@@ -780,6 +780,18 @@ async function runLane(lane, queue, reports, onDone) {
                the word "meter", which matched the circuit-assembly bench's
                "Meter polarity" picker and turned the meters round — the probe
                answering a complaint about settling by miswiring the circuit. */
+            /* The BEST-named control, not the first one whose label happens
+               to share a word. "There is nothing in the left pan, so the
+               weights in the right one carry the beam hard over. A balance
+               compares two pans… put the body on the pan" names the body
+               switch; it also contains the word "balance", which is the label
+               of the balance-type picker, and that picker came first in the
+               panel. So the probe answered "put the body back" by swapping
+               the balance. Candidates are scored by how much of their name
+               the bench actually said, and a switch wins a tie, because a
+               state the bench describes is a switch far more often than it is
+               a choice of apparatus. */
+            const candidates = [];
             for (const ctl of document.querySelectorAll('#controls .ctl:not([data-group="setup"])')) {
               const name = (ctl.querySelector('label')?.textContent || '').trim();
               /* Match on any substantial word of the control's name, not the
@@ -791,7 +803,13 @@ async function runLane(lane, queue, reports, onDone) {
               const floor = ctl.querySelector('.sw') ? 4 : 5;
               const words = name.toLowerCase().replace(/\(.*\)/, '')
                 .split(/[^a-z\u00e9]+/).filter((x) => x.length >= floor);
-              if (!words.length || !words.some((x) => lower.includes(x))) continue;
+              const hits = words.filter((x) => lower.includes(x)).length;
+              if (!hits) continue;
+              candidates.push({ ctl, hits, isSwitch: Boolean(ctl.querySelector('.sw')) });
+            }
+            candidates.sort((a, b) => (b.hits - a.hits) || (Number(b.isSwitch) - Number(a.isSwitch)));
+
+            for (const { ctl } of candidates) {
               /* A named SWITCH is answered by throwing it. "There is no body
                  on the left pan, so there is nothing for the weights to
                  balance — put the body on the pan first" names the switch
