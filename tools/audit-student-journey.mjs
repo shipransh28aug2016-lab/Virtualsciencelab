@@ -315,6 +315,26 @@ async function runLane(lane, queue, reports, onDone) {
       sl.dispatchEvent(new Event('input', { bubbles: true }));
       return Number(sl.value);
     }, v);
+    /* Read the flag only once the burette has actually POURED what it was
+       told to. `settle` gives up after its cap, and under four lanes that can
+       happen while the tap is still running — the flag is then read for a
+       volume the flask has not received, the loop steps on, and the next step
+       lands past the end point. The control prints its own delivered volume
+       beside its label, so the probe waits for that to say what it set. */
+    const pouredTo = (v) => page.evaluate(async (want) => {
+      const frame = () => new Promise((r) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => r()));
+      });
+      const el = document.querySelector('#c_buretteVolume_v');
+      const t0 = Date.now();
+      while (Date.now() - t0 < 1500) {
+        await frame();
+        const now = Number((el?.textContent || '').replace(/[^\d.]/g, ''));
+        if (Number.isFinite(now) && Math.abs(now - want) < 0.051) return true;
+      }
+      return false;
+    }, v).catch(() => false);
+
     const flag = () => page.evaluate(READY_PROBE);
 
     /* Run in coarsely until the colour first holds. The tap is given time to
@@ -324,6 +344,7 @@ async function runLane(lane, queue, reports, onDone) {
     let hit = null;
     for (let v = range.min; v <= range.max && !spent(); v += 1) {
       await setBurette(Number(v.toFixed(2)));
+      await pouredTo(Number(v.toFixed(2)));
       await settle(900);            // the tap must finish pouring, whatever the load
       const f = await flag();
       if (f.flagged || /overshot/i.test(f.title)) { hit = v; break; }
@@ -341,6 +362,7 @@ async function runLane(lane, queue, reports, onDone) {
     await settle(900);
     for (let v = Math.max(range.min, hit - 1.5); v <= hit + 0.2 && !spent(); v += Math.max(range.step, 0.05)) {
       await setBurette(Number(v.toFixed(2)));
+      await pouredTo(Number(v.toFixed(2)));
       await settle(900);
       const f = await flag();
       if (f.flagged && !/overshot/i.test(f.title)) break;
