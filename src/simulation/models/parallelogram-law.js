@@ -124,7 +124,9 @@ export function derive(rows, inputs = defaults) {
   const distinctSettings = new Set(rows.map((r) => `${r.pGwt},${r.qGwt}`)).size;
   const settingsVaried = distinctSettings >= vals.length - 1;
   const m = mean(vals);
-  const acceptedGwt = bodyOf(inputs).trueGwt;
+  /* The weight of the body the READINGS are of, not of whatever the tray is
+     showing now. */
+  const acceptedGwt = specimenOfRows(BODIES, rows, 'body', bodyOf(inputs)).trueGwt;
   return {
     ok: true, meanResultant: sigFig(m, 4), weightN: sigFig((m / 1000) * G, 4),
     meanAngle: sigFig(mean(rows.map((r) => Number(r.thetaDeg))), 4),

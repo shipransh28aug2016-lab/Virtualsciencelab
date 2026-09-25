@@ -265,8 +265,31 @@ async function runLane(lane, queue, reports, onDone) {
    * as the practical demands. Running the tap wide open to the end point is a
    * procedural error, and the model is right to call it an overshoot.
    */
-  async function titrateToEndPoint(deadline = Infinity) {
+  async function titrateToEndPoint(deadline = Infinity, bench = null) {
     const t0 = Date.now();
+    /* One titration at a time, on ONE bench. Every titre of a set is the same
+       titration repeated: the same pipetted volume, the same standard, the
+       same indicator. Several mechanisms can move those between titres — the
+       sweep, the hunt, a stated limit, a named control — and closing them one
+       at a time traded one non-concordant pair for another. The apparatus is
+       simply put back the way the lab opened before each titration, and only
+       the burette moves. */
+    if (bench) {
+      await page.evaluate(({ choice, sliders }) => {
+        [...document.querySelectorAll('#controls .seg, #controls .wiring')].forEach((g, i) => {
+          const btns = [...g.querySelectorAll('button')];
+          if (!(choice[i] >= 0) || !btns[choice[i]]) return;
+          if (btns[choice[i]].getAttribute('aria-pressed') !== 'true') btns[choice[i]].click();
+        });
+        [...document.querySelectorAll('#controls input[type=range]')].forEach((el, i) => {
+          if (sliders[i] === undefined || el.id === 'c_buretteVolume') return;
+          if (el.value === String(sliders[i])) return;
+          el.value = sliders[i];
+          el.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+      }, bench).catch(() => {});
+      await settle(600);
+    }
     /* A titration must not outlast the lab. Running the burette in from zero
        in millilitre steps, waiting for the tap each time, costs the best part
        of a minute; doing it for every titre of every set, with nothing
@@ -292,6 +315,26 @@ async function runLane(lane, queue, reports, onDone) {
       sl.dispatchEvent(new Event('input', { bubbles: true }));
       return Number(sl.value);
     }, v);
+    /* Read the flag only once the burette has actually POURED what it was
+       told to. `settle` gives up after its cap, and under four lanes that can
+       happen while the tap is still running — the flag is then read for a
+       volume the flask has not received, the loop steps on, and the next step
+       lands past the end point. The control prints its own delivered volume
+       beside its label, so the probe waits for that to say what it set. */
+    const pouredTo = (v) => page.evaluate(async (want) => {
+      const frame = () => new Promise((r) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => r()));
+      });
+      const el = document.querySelector('#c_buretteVolume_v');
+      const t0 = Date.now();
+      while (Date.now() - t0 < 1500) {
+        await frame();
+        const now = Number((el?.textContent || '').replace(/[^\d.]/g, ''));
+        if (Number.isFinite(now) && Math.abs(now - want) < 0.051) return true;
+      }
+      return false;
+    }, v).catch(() => false);
+
     const flag = () => page.evaluate(READY_PROBE);
 
     /* Run in coarsely until the colour first holds. The tap is given time to
@@ -301,6 +344,7 @@ async function runLane(lane, queue, reports, onDone) {
     let hit = null;
     for (let v = range.min; v <= range.max && !spent(); v += 1) {
       await setBurette(Number(v.toFixed(2)));
+      await pouredTo(Number(v.toFixed(2)));
       await settle(900);            // the tap must finish pouring, whatever the load
       const f = await flag();
       if (f.flagged || /overshot/i.test(f.title)) { hit = v; break; }
@@ -318,6 +362,7 @@ async function runLane(lane, queue, reports, onDone) {
     await settle(900);
     for (let v = Math.max(range.min, hit - 1.5); v <= hit + 0.2 && !spent(); v += Math.max(range.step, 0.05)) {
       await setBurette(Number(v.toFixed(2)));
+      await pouredTo(Number(v.toFixed(2)));
       await settle(900);
       const f = await flag();
       if (f.flagged && !/overshot/i.test(f.title)) break;
@@ -790,6 +835,44 @@ async function runLane(lane, queue, reports, onDone) {
            two nulls has to be able to say which one is still missing, and the
            hunt has to be told, or it bisects its way back to the one already
            recorded. */
+        /* WHAT the bench wants more of, and nothing else of the sentence.
+           "Record the resonant length for at least three different tuning
+           forks, at fixed tension" asks for three FORKS; testing the whole
+           sentence against the slider labels found "length" and "tension" and
+           concluded it was asking for slider settings, so the fork tray never
+           advanced. */
+        const wantedMoreOf = (text) => {
+          const m = String(text || '').match(/(?:only \d+|at least (?:two|three|four|five|\d+)|\d+ or more|four or more) different ([a-z\u00e9 ]{3,40})/i);
+          return m ? m[1].trim() : '';
+        };
+
+        /* Does the bench's phrase name one of the PICKERS on this bench?
+           "at least three different tuning forks" does; "three different
+           pairs of P and Q" does not — those are slider settings, and reading
+           them as a request for three different bodies put the tray back into
+           use and gave the bench a mean of three different objects. Asking
+           which control is named is the question; "not a slider" was a guess
+           at it that got both of these wrong in turn. */
+        const namesAPicker = (text) => {
+          if (!text) return false;
+          return page.evaluate((said) => {
+            const lower = said.toLowerCase();
+            for (const ctl of document.querySelectorAll('#controls .ctl:not([data-group="setup"])')) {
+              if (ctl.querySelectorAll('button').length < 2) continue;
+              const words = (ctl.querySelector('label')?.textContent || '').toLowerCase()
+                .replace(/\(.*\)/, '').split(/[^a-z\u00e9]+/).filter((x) => x.length >= 4);
+              if (words.some((x) => lower.includes(x))) return true;
+              /* Or the name of one of its own options: the picker is labelled
+                 "Fork" and the bench says "three different tuning forks". */
+              for (const b of ctl.querySelectorAll('button')) {
+                const opt = b.textContent.toLowerCase().split(/[^a-z\u00e9]+/).filter((x) => x.length >= 5);
+                if (opt.some((x) => lower.includes(x))) return true;
+              }
+            }
+            return false;
+          }, text);
+        };
+
         const windowFrom = (text) => {
           const m = String(text || '').match(/recorded at\s+([\d.]+)\s*(?:cm|mm)\b[\s\S]*?near (three times|a third)/i);
           if (!m) return null;
@@ -1090,7 +1173,29 @@ async function runLane(lane, queue, reports, onDone) {
               return false;
             }, { f: frac, cap: sliderCeiling, out: sweepOutward, skip: nulledControl });
             if (railed) sweepOutward = null;
-            await wait(220);
+            /* Wait for the BENCH to show the new setting, not for a fixed
+               fifth of a second. The control prints its own live value beside
+               its label, and under four lanes that redraw can land after the
+               pause — so Record was pressed while the bench still held the
+               previous load, two readings came out identical, and the bench
+               asked, rightly, for readings that differ. These labs passed one
+               at a time and failed in a sweep. */
+            await page.evaluate(async () => {
+              const frame = () => new Promise((r) => {
+                requestAnimationFrame(() => requestAnimationFrame(() => r()));
+              });
+              const sliders = [...document.querySelectorAll('#controls .ctl:not([data-group="setup"]) input[type=range]')];
+              const shown = () => sliders.map((el) => (document.getElementById(`${el.id}_v`)?.textContent || '').trim()).join('|');
+              const t0 = Date.now();
+              let last = null;
+              while (Date.now() - t0 < 900) {
+                await frame();
+                const now = shown();
+                if (now === last) return;
+                last = now;
+              }
+            }).catch(() => {});
+            await wait(120);
           }
           if (paceBetweenReadings) await wait(paceBetweenReadings);
           if (TRACE) {
@@ -1104,7 +1209,7 @@ async function runLane(lane, queue, reports, onDone) {
            * back to zero — which the bench now says out loud — and turns a
            * cooling curve into eight readings at the same instant.
            */
-          const run = isTitration ? await titrateToEndPoint(labDeadline)
+          const run = isTitration ? await titrateToEndPoint(labDeadline, { choice: openingChoice, sliders: openingSliders })
             : (timeAxis && k > 0) ? { started: 'already running', waitedMs: 0 }
               : await runProcessAndWait(Math.max(2000, Math.min(34000, labDeadline - Date.now())));
           slowestWait = Math.max(slowestWait, run.waitedMs || 0);
@@ -1151,7 +1256,11 @@ async function runLane(lane, queue, reports, onDone) {
               await wait(200);
               t = await takeReading();
             }
-            if (!t.ok) t = await huntForReading(nControls, 5, k, labDeadline, mixingRefused && !traySetNeeded);
+            /* On a titration the hunt may move the burette and nothing else.
+               Swapping the flask or the standard while looking for a reading
+               is a different titration, and the two titres that came back —
+               20.6 mL and 14.1 mL — were of two different ones. */
+            if (!t.ok) t = await huntForReading(nControls, 5, k, labDeadline, isTitration || (mixingRefused && !traySetNeeded));
             if (t.ok) hunted += 1; else refusals.push(firstRefusal);
           }
           if (t.ok) got = t.rows;
@@ -1238,7 +1347,7 @@ async function runLane(lane, queue, reports, onDone) {
                      to the one that froze the sliders — and it can arrive in
                      the same breath as a complaint about something else. */
                   || (/only \d+ different|at least (?:two|three|four|\d+) different|four or more/i.test(asking)
-                      && await namesASlider(asking)))) {
+                      && await namesASlider(wantedMoreOf(asking) || asking)))) {
             freezeSliders = false;
             budget = Math.min(16, budget + 2);
           }
@@ -1271,7 +1380,7 @@ async function runLane(lane, queue, reports, onDone) {
                changed the spring between every load, the bench rightly
                refused the mixed set, and the table was cleared down to a
                couple of readings of the same thing. */
-            && !(await namesASlider(asking));
+            && await namesAPicker(wantedMoreOf(asking) || asking);
           /* And when what it wants more of IS slider-driven — "record at least
              four different loads" — the specimen stays put while the slider
              does the work. The tray cycles by default, so without this the
@@ -1279,7 +1388,7 @@ async function runLane(lane, queue, reports, onDone) {
              different spring. */
           if (!holdTray
               && /only \d+ different|at least (?:two|three|four|\d+) different|four or more|record at least/i.test(asking)
-              && await namesASlider(asking)) {
+              && await namesASlider(wantedMoreOf(asking) || asking)) {
             holdTray = true;
           }
           if (traySetNeeded && asksForASetNow) {
