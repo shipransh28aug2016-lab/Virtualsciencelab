@@ -742,6 +742,9 @@ async function runLane(lane, queue, reports, onDone) {
         let freezeSliders = false;
         /* Whether the second mixing complaint has already been acted on. */
         let blamedTwice = false;
+        /* Set when the bench has asked for more values of a slider-driven
+           quantity: the specimen then stays as it is. */
+        let holdTray = false;
         /* The reading number the current set started at, and whether the set
            has already been started again once. Clearing the table is a thing
            a student does at most a couple of times in one practical; a probe
@@ -1032,7 +1035,7 @@ async function runLane(lane, queue, reports, onDone) {
                  contents: cycling the analyte and titrant pickers between
                  titres gave 20.6 mL and 14.1 mL and a bench that rightly
                  said they do not agree. */
-            }, { idx: k, stop: isTitration || (mixingRefused && !traySetNeeded), stopSwitches: isTitration || switchesSettled || (mixingRefused && !switchSetNeeded), objected: mixedWhat });
+            }, { idx: k, stop: isTitration || holdTray || (mixingRefused && !traySetNeeded), stopSwitches: isTitration || switchesSettled || (mixingRefused && !switchSetNeeded), objected: mixedWhat });
             /* Then move a SLIDER — never another button, because the
                buttons are the specimen tray and pressing one of those would
                put the specimen just chosen straight back. */
@@ -1269,6 +1272,16 @@ async function runLane(lane, queue, reports, onDone) {
                refused the mixed set, and the table was cleared down to a
                couple of readings of the same thing. */
             && !(await namesASlider(asking));
+          /* And when what it wants more of IS slider-driven — "record at least
+             four different loads" — the specimen stays put while the slider
+             does the work. The tray cycles by default, so without this the
+             probe answered a request for four loads by putting each one on a
+             different spring. */
+          if (!holdTray
+              && /only \d+ different|at least (?:two|three|four|\d+) different|four or more|record at least/i.test(asking)
+              && await namesASlider(asking)) {
+            holdTray = true;
+          }
           if (traySetNeeded && asksForASetNow) {
             /* Still asking. "Only 2 different boards examined, work through at
                least three of them" needs the BOARD picker advanced again, and
