@@ -175,9 +175,20 @@ export function nullIndicator(inputs = defaults) {
      */
     const v1 = firstImageCm(inputs);
     if (v1 === null) return null;
+    /*
+     * The window is wide; the part of it worth reading is not.
+     *
+     * Anywhere between I₁ minus one focal length and I₁ gives SOME real
+     * image, and the tolerance was that whole window — so the bench said
+     * "take the reading now" at its far end, where the virtual object is a
+     * few millimetres from the lens, f = uv/(u − v) is on a knife edge and
+     * the answer came out −9.45 cm for a −15 cm lens. Half a focal length
+     * short of I₁ is where the method is well conditioned; a fifth of a
+     * focal length either side of that still is.
+     */
     const usable = v1 - Math.abs(el.focal);     // nearest position giving a real image
     const mid = (usable + v1) / 2;              // middle of the usable window
-    const half = Math.max(0.8, (v1 - usable) / 2);
+    const half = Math.max(0.8, Math.abs(el.focal) * 0.18);
     return nullPoint({
       label: 'Screen',
       current: Number(inputs.elementPositionCm),
