@@ -64,6 +64,22 @@ if (shotDir) await mkdir(shotDir, { recursive: true });
 
 const browser = await chromium.launch({
   executablePath: process.env.VLAB_CHROME || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
+  /*
+   * Every lane's page must keep animating.
+   *
+   * Only one page in a browser is "visible"; Chromium throttles the rest,
+   * cutting requestAnimationFrame to about one a second and freezing the
+   * timers with it. The models are stepped on an animation frame, so a
+   * throttled lane runs its bench in slow motion — which is both why readings
+   * used to be taken before the apparatus had responded, and why waiting
+   * properly for frames made a four-lane sweep five times slower than a
+   * single one.
+   */
+  args: [
+    '--disable-backgrounding-occluded-windows',
+    '--disable-renderer-backgrounding',
+    '--disable-background-timer-throttling',
+  ],
 });
 const LANES = Number(process.env.VLAB_LANES || 4);
 /* VLAB_TRACE=1 prints where each reading was taken and what the bench said
@@ -715,8 +731,13 @@ async function runLane(lane, queue, reports, onDone) {
         let freezeSliders = false;
         /* Whether the second mixing complaint has already been acted on. */
         let blamedTwice = false;
-        /* The reading number the current set started at. */
+        /* The reading number the current set started at, and whether the set
+           has already been started again once. Clearing the table is a thing
+           a student does at most a couple of times in one practical; a probe
+           that does it on every objection sweeps the same corner of the range
+           over and over and records the same reading four times. */
         let sweptFrom = 0;
+        let restarts = 0;
         /* A value the bench asked the student to stay under, in the units of
            whichever slider it belongs to. */
         let sliderCeiling = null;
@@ -1266,7 +1287,7 @@ async function runLane(lane, queue, reports, onDone) {
                 blamedTwice = true;
                 budget = Math.min(16, budget + want);
                 await page.evaluate(() => document.querySelector('#clearBtn')?.click());
-                sweptFrom = k + 1;
+                if (restarts < 2) { restarts += 1; sweptFrom = k + 1; }
                 await wait(200);
                 continue;
               }
@@ -1282,7 +1303,7 @@ async function runLane(lane, queue, reports, onDone) {
               });
               document.querySelector('#clearBtn')?.click();
             }, openingSliders);
-            sweptFrom = k + 1;
+            if (restarts < 2) { restarts += 1; sweptFrom = k + 1; }
             await wait(200);
             continue;
           }
@@ -1326,7 +1347,7 @@ async function runLane(lane, queue, reports, onDone) {
               });
               document.querySelector('#clearBtn')?.click();
             }, { choice: openingChoice, sliders: openingSliders });
-            sweptFrom = k + 1;
+            if (restarts < 2) { restarts += 1; sweptFrom = k + 1; }
             await wait(200);
             got = 0;
             budget = Math.min(14, budget + want);
