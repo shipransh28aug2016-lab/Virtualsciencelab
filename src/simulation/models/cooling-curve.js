@@ -169,6 +169,10 @@ export function measure(state, inputs, seed = 1, trial = 1) {
     trial,
     vessel: (VESSELS[inputs.vessel] || VESSELS.polished).label,
     liquid: (LIQUIDS[inputs.liquid] || LIQUIDS.water).label,
+    /* The lid and the mass of liquid change the cooling constant as much as
+       the vessel does, so a set has to hold them fixed too. */
+    lid: inputs.lidOn ? 'lid on' : 'open',
+    massG: inputs.massG,
     timeS: Math.round(t),
     timeMin: Number((t / 60).toFixed(2)),
     tempC: Number(reading.toFixed(1)),
@@ -189,7 +193,11 @@ export function derive(rows, inputs = defaults) {
      is a property of that pair, and a set taken across two of them has no
      single k at all. */
   const mixed = mixedSetRefusal(rows, 'vessel', 'vessels')
-    || mixedSetRefusal(rows, 'liquid', 'liquids');
+    || mixedSetRefusal(rows, 'liquid', 'liquids')
+    || mixedSetRefusal(rows, 'lid', 'arrangements',
+      'a lid cuts the evaporation loss by nearly a third, so leave it on or off for the whole run.')
+    || mixedSetRefusal(rows, 'massG', 'masses of liquid',
+      'the cooling constant goes as 1/mass, so weigh out one mass and let that one run cool.');
   if (mixed) return mixed;
 
   const usable = rows.filter((r) => Number(r.excess) > 0.6 && Number.isFinite(Number(r.lnExcess)));
@@ -246,6 +254,8 @@ export function derive(rows, inputs = defaults) {
   /* k belongs to the vessel and liquid the READINGS were taken on. */
   const accepted = coolingConstant({
     ...inputs,
+    lidOn: rows[0]?.lid === 'lid on',
+    massG: Number(rows[0]?.massG) || inputs.massG,
     vessel: Object.keys(VESSELS).find((key) => VESSELS[key].label === vessel.label) || inputs.vessel,
     liquid: Object.keys(LIQUIDS).find((key) => LIQUIDS[key].label === liquid.label) || inputs.liquid,
   });

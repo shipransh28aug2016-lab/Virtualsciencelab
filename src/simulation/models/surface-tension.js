@@ -64,7 +64,13 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 83);
   const r = tubeOf(inputs).radiusCm;
   const h = riseCm(inputs) + jitter(rng, 0.015);
-  return { trial, tube: tubeOf(inputs).label, radiusCm: r, invRadius: sigFig(1 / r, 4), riseCm: Number(h.toFixed(3)), product: sigFig(r * h, 4), tempC: inputs.tempC, liquid: inputs.liquid };
+  return { trial, tube: tubeOf(inputs).label,
+    /* Whether the tube was clean. A greasy tube raises the contact angle and
+       the liquid climbs about 60% as far, so a set that mixes clean tubes
+       with greasy ones has no constant r×h at all — which is the quantity
+       the whole experiment is there to show is constant. */
+    tubeState: inputs.cleanTube ? 'clean' : 'greasy',
+    radiusCm: r, invRadius: sigFig(1 / r, 4), riseCm: Number(h.toFixed(3)), product: sigFig(r * h, 4), tempC: inputs.tempC, liquid: inputs.liquid };
 }
 
 export function derive(rows, inputs = defaults) {
@@ -87,6 +93,17 @@ export function derive(rows, inputs = defaults) {
    * points scattered to r² = 0.45 and the answer came out 32% from the
    * accepted value, from seven perfectly good readings.
    */
+  const states = [...new Set((rows || []).map((r) => r.tubeState).filter(Boolean))];
+  if (states.length > 1) {
+    /* Phrased like every other mixed-set refusal on these benches, so that a
+       student — and anything else reading the bench — recognises it as the
+       same objection: one specimen, one condition, one set. */
+    return {
+      ok: false,
+      reason: `These readings are of ${states.length} different tube conditions (${states.join(', ')}). Grease raises the contact angle, so the liquid climbs about 60% as far and r×h cannot be constant across the set. Clean every tube and take the whole set that way.`,
+    };
+  }
+
   const temps = [...new Set((rows || []).map((r) => Number(r.tempC)).filter(Number.isFinite))];
   if (temps.length > 1) {
     return {
@@ -108,7 +125,8 @@ export function derive(rows, inputs = defaults) {
   const meanProduct = products.reduce((a, b) => a + b, 0) / products.length;
   return {
     ok: true, surfaceTension: sigFig(T, 4), tFromGraph: sigFig(T, 4), productConstant: sigFig(meanProduct, 4),
-    accepted: sigFig(surfaceTensionAt(atTemp), 4),
+    accepted: sigFig(surfaceTensionAt(atTemp) * (states[0] === 'greasy' ? 0.6 : 1), 4),
+    tubeState: states[0] || (inputs.cleanTube ? 'clean' : 'greasy'),
     tempC: atTemp.tempC, liquid: (LIQUIDS[atTemp.liquid] || l).label,
     r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts,
   };

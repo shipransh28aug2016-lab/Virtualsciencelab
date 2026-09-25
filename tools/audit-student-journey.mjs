@@ -594,6 +594,10 @@ async function runLane(lane, queue, reports, onDone) {
            taken across two wires demands a set taken across several forks.
            The tray goes back into use when it is asked for. */
         let traySetNeeded = false;
+        /* And the opposite of stopSwitches: some procedures need BOTH
+           positions of a two-position setting — the shunt out and then in —
+           and say so. That request is about the switch itself. */
+        let switchSetNeeded = false;
         /* What the bench objected to, verbatim. It names the thing that must
            stay fixed — "3 different wires (Steel wire (thin), Brass wire…)" —
            so the group holding those names is the one NOT to cycle when a set
@@ -726,7 +730,7 @@ async function runLane(lane, queue, reports, onDone) {
              * on the bench, and nudging the first slider four times takes one
              * reading four times over.
              */
-            await page.evaluate(({ idx, stop, objected }) => {
+            await page.evaluate(({ idx, stop, stopSwitches, objected }) => {
               // The tray, not the first switch on the panel: take the group
               // with the most choices in it, which is the specimen selector.
               let groups = [...document.querySelectorAll('#controls .ctl:not([data-group="setup"]) .seg, #controls .ctl:not([data-group="setup"]) .wiring')]
@@ -744,7 +748,17 @@ async function runLane(lane, queue, reports, onDone) {
               /* A switch is a two-position setting like any other — the shunt
                  in or out, the balance tared or not — and half-deflection
                  needs a reading in each position. */
-              if (!stop) {
+              /*
+               * A request for a SET is about specimens, not conditions.
+               *
+               * "Record the rise in at least three different tubes" puts the
+               * tray back into use — and had been putting the switches back
+               * into use with it, so the capillary bench went on alternating
+               * clean and greasy tubes after being told that a set cannot mix
+               * them. Once a mixed set has been refused the switches stay
+               * where they are, whatever else is asked for.
+               */
+              if (!stopSwitches) {
                 for (const sw of document.querySelectorAll('#controls .ctl:not([data-group="setup"]) .sw')) {
                   const on = sw.getAttribute('aria-checked') === 'true';
                   if (on !== (idx % 2 === 1)) sw.click();
@@ -769,7 +783,7 @@ async function runLane(lane, queue, reports, onDone) {
                  them. */
               const last = groups[groups.length - 1];
               if (last && last !== groups[0] && !stop) last[idx % last.length].click();
-            }, { idx: k, stop: mixingRefused && !traySetNeeded, objected: mixedWhat });
+            }, { idx: k, stop: mixingRefused && !traySetNeeded, stopSwitches: mixingRefused && !switchSetNeeded, objected: mixedWhat });
             /* Then move a SLIDER — never another button, because the
                buttons are the specimen tray and pressing one of those would
                put the specimen just chosen straight back. */
@@ -872,6 +886,14 @@ async function runLane(lane, queue, reports, onDone) {
            * them" is that request, and it was only listened to after a mixing
            * refusal had first frozen the tray.
            */
+          /* A request that names the two positions of a switch un-freezes
+             that switch, and only that: "record the deflection with the shunt
+             disconnected first" is half of the half-deflection method. */
+          if (!switchSetNeeded
+              && /with and without|in each position|shunt (dis)?connected|both positions|first without/i.test(asking)) {
+            switchSetNeeded = true;
+            budget = Math.min(16, budget + 2);
+          }
           if (!traySetNeeded
               && /different (tuning forks|tubes|salts|boards|components|specimens|solutions|arrangements)|work through at least|both direction|with and without|in each position/i.test(asking)) {
             // Now it wants a set after all: put the tray back into use, and

@@ -90,7 +90,12 @@ export function step(state, inputs, dt) {
 export function measure(state, inputs, seed = 1, trial = 1) {
   const rng = makeRng(seed + trial * 317);
   const y = Math.max(0, yieldG(inputs) + jitter(rng, 0.15));
-  return { trial, product: productOf(inputs).label, limitingReagentG: inputs.limitingReagentG, crystalMassG: sigFig(y, 4), percentYield: sigFig((y / (productOf(inputs).theoreticalG * (inputs.limitingReagentG / 7))) * 100, 4), colour: productOf(inputs).colour };
+  /* How the preparation was actually done, so the result can say why the
+     yield came out where it did rather than leaving the student to guess. */
+  return { trial, product: productOf(inputs).label,
+    acidified: inputs.acidified ? 'acidified' : 'not acidified',
+    cooling: (COOLING[inputs.cooling] || COOLING.slow).label,
+    litProtected: inputs.litProtected ? 'kept dark' : 'left in the light', limitingReagentG: inputs.limitingReagentG, crystalMassG: sigFig(y, 4), percentYield: sigFig((y / (productOf(inputs).theoreticalG * (inputs.limitingReagentG / 7))) * 100, 4), colour: productOf(inputs).colour };
 }
 
 export function derive(rows, inputs = defaults) {
@@ -100,6 +105,26 @@ export function derive(rows, inputs = defaults) {
 
   const p = specimenOfRows(PRODUCTS, rows, 'product', productOf(inputs));
   const yields = rows.map((r) => Number(r.percentYield));
+
+  /*
+   * Name what the yield was lost to.
+   *
+   * A preparation that comes out at 39% instead of 62% has not failed
+   * mysteriously: something in the method took it there, and the bench knows
+   * which. Leaving the student with "your value differs by 36%" turns a
+   * teaching moment into a mark.
+   */
+  const last = rows[rows.length - 1];
+  const lost = [];
+  if (last.acidified === 'not acidified' && p.needsAcid) {
+    lost.push('the solution was not acidified, so some of the iron(II) hydrolysed before it could crystallise');
+  }
+  if (/rapid/i.test(String(last.cooling))) {
+    lost.push('rapid cooling gives many small crystals that trap mother liquor, and less product on the filter');
+  }
+  if (last.litProtected === 'left in the light' && p.label.includes('oxalate')) {
+    lost.push('the complex was left in the light, and light reduces Fe(III) in it to Fe(II)');
+  }
   return {
     ok: true,
     crystalMass: sigFig(mean(rows.map((r) => Number(r.crystalMassG))), 4),
@@ -108,6 +133,8 @@ export function derive(rows, inputs = defaults) {
        mother liquor and on the glass. */
     accepted: sigFig((p.recovery ?? 0.62) * 100, 3),
     product: p.label, colour: p.colour,
+    lostTo: lost.length ? lost.join('; ') : null,
+    method: `${last.cooling}, ${last.acidified}${p.label.includes('oxalate') ? `, ${last.litProtected}` : ''}`,
     n: rows.length, points: [],
   };
 }

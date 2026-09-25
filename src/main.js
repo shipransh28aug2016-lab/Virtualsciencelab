@@ -2127,6 +2127,15 @@ function renderResult(d) {
     html = `<b>Resistance from V–I slope:</b> ${d.resistance} Ω &nbsp;(r² = ${d.r2})
       <span class="big">ρ = ${d.rhoText}</span>
       Standard value for ${esc(app.rows[0].wire)}: ${d.acceptedText || '—'}`;
+  } else if (m === 'salt-preparation') {
+    /* A yield that comes out low has not failed mysteriously: something in
+       the method took it there, and the bench knows which. */
+    html = `<b>${esc(d.product)}</b>
+      <span class="big">${d.percentYield} % yield</span>
+      ${d.crystalMass} g of ${esc(d.colour)} crystals &nbsp;·&nbsp; a careful preparation gives about ${d.accepted} %
+      <div style="font-size:12px;margin-top:4px;color:var(--muted)">${esc(d.method)}.${d.lostTo
+        ? ` ${esc(d.lostTo[0].toUpperCase() + d.lostTo.slice(1))}.`
+        : ' What is missing from 100% stays dissolved in the mother liquor and on the glass — that loss is not a mistake.'}</div>`;
   } else if (m === 'standard-solution') {
     /* The practical is "prepare 250 mL of M/20": the mass to weigh is the
        first calculation a student does, and the bench never named either the
