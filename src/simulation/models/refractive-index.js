@@ -141,7 +141,14 @@ export function derive(rows, inputs = defaults) {
   const mus = rows.map((r) => Number(r.mu)).filter(Number.isFinite);
   if (mus.length < 2) return { ok: false, reason: 'Take at least two readings.' };
   const m = mean(mus);
-  const accepted = inputs.method === 'slab' ? slabOf(inputs).mu : liquidOf(inputs).mu;
+  /* Against the accepted value of the specimen the READINGS are of, not of
+     whatever the picker happens to be showing now: a set taken on the crown
+     slab and then left with the flint slab selected was being marked against
+     1.62, so a correct measurement came back 7% wrong. */
+  const specimen = inputs.method === 'slab'
+    ? specimenOfRows(SLABS, rows, 'specimen', slabOf(inputs))
+    : specimenOfRows(LIQUIDS, rows, 'specimen', liquidOf(inputs));
+  const accepted = specimen.mu;
   const last = rows[rows.length - 1];
   const extra = inputs.method === 'liquidLens'
     ? { lensFocalCm: Number(last.lensFocalCm), combinationFocalCm: Number(last.combinationFocalCm), liquidLensFocalCm: Number(last.liquidLensFocalCm) }
@@ -151,7 +158,7 @@ export function derive(rows, inputs = defaults) {
   return {
     ok: true, refractiveIndex: sigFig(m, 4), accepted: sigFig(accepted, 4), percentError: sigFig(percentError(m, accepted), 3),
     mode: inputs.method, methodLabel: METHOD_LABELS[inputs.method] || METHOD_LABELS.slab,
-    sample: inputs.method === 'slab' ? slabOf(inputs).label : liquidOf(inputs).label,
+    sample: specimen.label,
     spread: sigFig(Math.max(...mus) - Math.min(...mus), 4), plausible: m >= 1,
     ...extra, n: mus.length, points: rows.map((r, i) => ({ x: i + 1, y: Number(r.mu) })),
   };

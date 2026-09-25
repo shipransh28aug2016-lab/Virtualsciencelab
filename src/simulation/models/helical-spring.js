@@ -68,7 +68,14 @@ export function derive(rows) {
   if (pts.length < 4) return { ok: false, reason: 'Record at least four different loads.' };
   const fit = fitThroughOrigin(pts);
   if (!fit) return { ok: false, reason: 'Vary the load between readings.' };
-  return { ok: true, k: sigFig(fit.slope, 4), r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts };
+  /* Three springs are on the bench and each has its own force constant, so
+     the slope is marked against the spring the readings were taken on rather
+     than against the steel one the experiment happens to name. */
+  const spring = specimenOfRows(SPRINGS, rows, 'springType', SPRINGS.steel);
+  return {
+    ok: true, k: sigFig(fit.slope, 4), accepted: sigFig(spring.k, 4), spring: spring.label,
+    r2: Number(fit.r2.toFixed(4)), n: pts.length, points: pts,
+  };
 }
 
 export default { meta, defaults, SPRINGS, G, init, step, measure, derive, validate, springOf, extensionM };

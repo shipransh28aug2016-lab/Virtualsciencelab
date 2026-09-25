@@ -141,8 +141,17 @@ export function checkResult(experiment, derived) {
    * only be a defect — but the panel stated it with the same confidence it
    * states everything else.
    */
+  /*
+   * And when the experiment names its field, that field is the ONLY one that
+   * may be graded. The fallback list is for the few experiments that name
+   * none; letting it run after a declared key came back empty graded the
+   * wrong quantity again by a different route. The iodine-clock lab reports
+   * `order: null` when the rate plot is too scattered to establish an order,
+   * and the search then picked up its activation energy — 42 kJ/mol against an
+   * accepted order of 1 — and told the student they were 4100% out.
+   */
   const declared = exp.key;
-  const candidates = [declared, exp.symbol, ...(experiment.calculations?.resultKeys || [])];
+  const candidates = declared ? [declared] : [exp.symbol, ...(experiment.calculations?.resultKeys || [])];
   const key = candidates.find((k) => k && Number.isFinite(derived[k]));
   if (!key) return null;
 

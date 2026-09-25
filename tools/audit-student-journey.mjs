@@ -66,6 +66,10 @@ const browser = await chromium.launch({
   executablePath: process.env.VLAB_CHROME || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
 });
 const LANES = Number(process.env.VLAB_LANES || 4);
+/* VLAB_TRACE=1 prints where each reading was taken and what the bench said
+   back. A refusal names a setting; without this the only way to see whether
+   the probe acted on it was to reason about the sweep arithmetic. */
+const TRACE = process.env.VLAB_TRACE === '1';
 /* No single bench may hold the sweep hostage. A lab that cannot be finished
    inside this is reported as such, which is itself the finding. */
 const LAB_BUDGET_MS = Number(process.env.VLAB_LAB_BUDGET_MS || 150000);
@@ -375,7 +379,13 @@ async function runLane(lane, queue, reports, onDone) {
   async function homeInOnNull(nControls, capMs = 20000) {
     const t0 = Date.now();
     if (!(await page.evaluate(NULL_PROBE))) return false;
-    const SEL = '#controls input[type=range], #controls .seg button, #controls .wiring button, #controls .sw, #controls select, #controls input[type=checkbox]';
+    /* The SAME widget list the rest of the probe counts and drives. This
+       selector used to include the setup controls, so its indices ran over a
+       longer list than `nControls` described: on a bench with a setup slider
+       ahead of the instrument's own, the loop stopped before it ever reached
+       the control that moves the null, and the hunt reported that following
+       the indicator does not work when it had never followed it. */
+    const SEL = VARIABLE_WIDGETS;
 
     for (let i = 0; i < nControls && Date.now() - t0 < capMs; i += 1) {
       const range = await page.evaluate(({ sel, idx }) => {
@@ -611,6 +621,11 @@ async function runLane(lane, queue, reports, onDone) {
         /* A value the bench asked the student to stay under, in the units of
            whichever slider it belongs to. */
         let sliderCeiling = null;
+        /* Set when the bench says the set stopped before the turning point
+           was passed, and which way to go on looking for it: the i-delta
+           curve of a prism has to be walked past its minimum on both sides
+           before a minimum-deviation reading exists at all. */
+        let sweepOutward = null;
 
         /**
          * Do what the bench just told you, wherever it said it.
@@ -634,6 +649,12 @@ async function runLane(lane, queue, reports, onDone) {
          */
         const answerNamedControl = async (text) => {
           if (!text) return false;
+          /* Never in answer to a complaint ABOUT a control. "These readings
+             are of 3 different specimens (Crown glass slab, Flint glass
+             slab…)" contains the word "specimens", which matched the specimen
+             picker's own label — so the probe answered "stop changing the
+             specimen" by changing the specimen. */
+          if (/\d+ different |cannot be averaged|one .* at a time|its own set/i.test(text)) return false;
           return page.evaluate((said) => {
             const lower = said.toLowerCase();
             /* Never an ASSEMBLY control. "The meters have not settled" contains
@@ -660,6 +681,35 @@ async function runLane(lane, queue, reports, onDone) {
                 next.click();
                 return true;
               }
+            }
+            return false;
+          }, text);
+        };
+
+        /**
+         * Is the thing the bench is complaining about a SLIDER?
+         *
+         * A second mixing refusal was read as "the slider is the problem",
+         * but the prism bench objects twice about two different PICKERS —
+         * three prisms, then three lines of the spectrum — and freezing the
+         * sliders there pinned the angle of incidence, so no set ever
+         * straddled the minimum and the minimum-deviation reading could not
+         * be taken at all. Only a complaint that names a slider's own
+         * quantity is about a slider.
+         */
+        const namesASlider = async (text) => {
+          if (!text) return false;
+          /* Said in so many words, whatever the bench happens to call the
+             slider: "the legs were set to three different separations". */
+          if (/\bdifferent (?:settings|separations|positions|distances|lengths|loads|volumes|temperatures|currents|voltages)\b/i
+            .test(text)) return true;
+          return page.evaluate((said) => {
+            const lower = said.toLowerCase();
+            for (const ctl of document.querySelectorAll('#controls .ctl:not([data-group="setup"])')) {
+              if (!ctl.querySelector('input[type=range]')) continue;
+              const words = (ctl.querySelector('label')?.textContent || '').toLowerCase()
+                .replace(/\(.*\)/, '').split(/[^a-z\u00e9]+/).filter((x) => x.length >= 5);
+              if (words.some((x) => lower.includes(x))) return true;
             }
             return false;
           }, text);
@@ -788,11 +838,28 @@ async function runLane(lane, queue, reports, onDone) {
                buttons are the specimen tray and pressing one of those would
                put the specimen just chosen straight back. */
             const frac = 0.15 + (0.7 * k) / want;
-            if (k > 0 && !freezeSliders) await page.evaluate(({ f, cap }) => {
+            if (sweepOutward) sweepOutward.n += 1;
+            const railed = k > 0 && !freezeSliders && await page.evaluate(({ f, cap, out }) => {
               const sliders = [...document.querySelectorAll('#controls .ctl:not([data-group="setup"]) input[type=range]')];
               const el = sliders[0];
               if (!el) return;
               const min = Number(el.min); const step = Number(el.step) || 1;
+              /* Walking past the turning point: step away from the edge the
+                 bench named, in strides big enough to leave the ground the
+                 set already covers. */
+              if (out) {
+                const span = Number(el.max) - min;
+                const base = Number.isFinite(out.from) && out.from !== null ? out.from : Number(el.value);
+                const stride = Math.max(step, Math.round((span * 0.09) / step) * step);
+                const to = Math.min(Number(el.max), Math.max(min, base + out.dir * stride * out.n));
+                const settled = Math.round((to - min) / step) * step + min;
+                const stuck = Number(el.value) === settled;
+                el.value = String(settled);
+                el.dispatchEvent(new Event('input', { bubbles: true }));
+                /* The end of the travel: walking further is the same reading
+                   again, so say so and let the ordinary sweep take over. */
+                return stuck;
+              }
               /* A bench that names a ceiling is obeyed. "Keep the load under
                  about 5.6 kg for this wire" is the whole instruction, and a
                  sweep that runs the slider to 10 kg regardless throws seven
@@ -802,10 +869,17 @@ async function runLane(lane, queue, reports, onDone) {
               const want2 = min + (ceiling - min) * f;
               el.value = String(Math.round((want2 - min) / step) * step + min);
               el.dispatchEvent(new Event('input', { bubbles: true }));
-            }, { f: frac, cap: sliderCeiling });
+              return false;
+            }, { f: frac, cap: sliderCeiling, out: sweepOutward });
+            if (railed) sweepOutward = null;
             await wait(220);
           }
           if (paceBetweenReadings) await wait(paceBetweenReadings);
+          if (TRACE) {
+            const at = await page.evaluate(() => [...document.querySelectorAll('#controls .ctl:not([data-group="setup"]) input[type=range]')]
+              .map((x) => x.value).join('/'));
+            console.log(`   [${exp.id}] reading ${k + 1}/${budget} sliders=${at}`);
+          }
           /*
            * On a timed experiment the clock is started ONCE and the readings
            * are taken as it runs. Pressing Start before every reading puts it
@@ -822,8 +896,11 @@ async function runLane(lane, queue, reports, onDone) {
           let t = await takeReading();
           if (!t.ok) {
             const firstRefusal = t.why;
+            if (TRACE) console.log(`      refused: ${String(t.why || '').slice(0, 150)}`);
             // First do what the instrument itself tells you to do.
-            if (await homeInOnNull(nControls, Math.max(1000, Math.min(20000, labDeadline - Date.now())))) { nulled += 1; t = await takeReading(); }
+            const homed = await homeInOnNull(nControls, Math.max(1000, Math.min(20000, labDeadline - Date.now())));
+            if (TRACE) console.log(`      homeInOnNull -> ${homed}; indicator now "${(await page.evaluate(NULL_PROBE))?.text || 'none'}"`);
+            if (homed) { nulled += 1; t = await takeReading(); }
             /*
              * Then act on what the refusal SAYS — a limit with a number in
              * it, or a control it names. This has to come after the null
@@ -873,6 +950,26 @@ async function runLane(lane, queue, reports, onDone) {
              the bench states is part of the method, so it is read off the
              refusal and applied to the slider it fits. */
           await obeyStatedLimits(asking);
+          /* "The smallest deviation in this set is at the very first angle of
+             incidence (49 deg), so the readings do not straddle the minimum
+             ... take more readings at smaller angles until the deviation is
+             seen to rise again on both sides." That is a direction, not a
+             limit, and the sweep has to leave the range it has been covering
+             rather than divide it more finely. */
+          const straddle = /do not straddle|straddle the (?:minimum|maximum)|rise again on both sides|still falling when they stop/i.test(asking)
+            && asking.match(/\bat (smaller|larger) (?:angles|values|settings)/i);
+          if (straddle) {
+            const edge = asking.match(/\(([\d.]+)\s*(?:\u00b0|deg)/);
+            sweepOutward = {
+              dir: straddle[1].toLowerCase() === 'smaller' ? -1 : 1,
+              from: edge ? Number(edge[1]) : null,
+              n: 0,
+            };
+            budget = Math.min(16, budget + want);
+            /* The readings already taken are on the right side of the turning
+               point and are worth keeping; only the sweep changes. */
+            continue;
+          }
 
           /* And the bench may ask for a RANGE after the set has been made
              consistent — "vary the supply so the current climbs" — which is
@@ -924,7 +1021,18 @@ async function runLane(lane, queue, reports, onDone) {
              different galvanometers (…)" — so match the shape rather than
              keeping a list of nouns that is one experiment out of date. */
           if (mixingRefused && mixedSetAgain && !freezeSliders) {
-            // Objected to twice: the quantity being swept is the problem.
+            // Objected to twice. If the second objection names a PICKER the
+            // first one did not, that picker is the problem and the sliders
+            // are not: add it to the list of groups left alone and start the
+            // set again.
+            if (!(await namesASlider(asking))) {
+              mixedWhat = `${mixedWhat}\n${asking}`;
+              budget = Math.min(16, budget + want);
+              await page.evaluate(() => document.querySelector('#clearBtn')?.click());
+              await wait(200);
+              continue;
+            }
+            // The quantity being swept is the problem.
             freezeSliders = true;
             budget = Math.min(16, budget + want);
             await page.evaluate((sliders) => {

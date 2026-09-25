@@ -82,19 +82,75 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   return { trial, iodideConc: sigFig(iodideConc(inputs), 4), peroxideConc: sigFig(peroxideConc(inputs), 4), tempC: inputs.tempC, time, rate: sigFig(1 / time, 6) };
 }
 
+/**
+ * ONE VARIABLE PER SET.
+ *
+ * Two quantities can be found from this bench — the order in iodide and the
+ * activation energy — and each is found by holding everything else still. The
+ * model used to take whatever rows it was given: a set in which both the
+ * temperature and the KI volume had moved was fitted as an Arrhenius plot,
+ * `order` was asserted to be 1 without anything having measured it, and where
+ * the rate plot was too scattered to give an order at all the field came back
+ * null while the panel went on reporting an activation energy in its place.
+ * So the design of the set decides which quantity is reported, and a set that
+ * changes two things at once is refused with the reason.
+ */
 export function derive(rows) {
-  const temps = new Set(rows.map((r) => r.tempC));
-  if (temps.size >= 3) {
+  const temps = [...new Set(rows.map((r) => Number(r.tempC)).filter(Number.isFinite))];
+  const iodides = [...new Set(rows.map((r) => Number(r.iodideConc)).filter(Number.isFinite))];
+  const peroxides = [...new Set(rows.map((r) => Number(r.peroxideConc)).filter(Number.isFinite))];
+
+  if (temps.length > 1 && iodides.length > 1) {
+    return {
+      ok: false,
+      reason: `This set changes two things at once — the temperature (${temps.join(', ')} °C) and the iodide concentration (${iodides.join(', ')} M). A rate is measured by moving one of them and holding the other still. Clear the table and either keep the temperature fixed and vary the KI volume, which gives the order in iodide, or keep every volume fixed and vary the temperature, which gives the activation energy.`,
+    };
+  }
+
+  if (temps.length >= 3) {
     const pts = rows.map((r) => ({ x: 1 / (Number(r.tempC) + 273.15), y: Math.log(Number(r.rate)) }));
     const fit = linearFit(pts);
     if (!fit) return { ok: false, reason: 'Vary the temperature between readings.' };
     const Ea = -fit.slope * R_GAS / 1000;
-    return { ok: true, order: 1, activationEnergy: sigFig(Ea, 4), slope: sigFig(fit.slope, 4), r2: Number(fit.r2.toFixed(4)), n: rows.length, points: rows.map((r) => ({ x: Number(r.iodideConc), y: Number(r.rate) })) };
+    return {
+      ok: true, mode: 'arrhenius', activationEnergy: sigFig(Ea, 4), acceptedEa: sigFig(EA_JMOL / 1000, 4),
+      slope: sigFig(fit.slope, 4), r2: Number(fit.r2.toFixed(4)), n: rows.length,
+      points: pts.map((p) => ({ x: Number(p.x.toFixed(6)), y: Number(p.y.toFixed(4)) })),
+    };
   }
+  if (temps.length > 1) {
+    return { ok: false, reason: `Only ${temps.length} temperatures were used. An Arrhenius plot of ln(1/t) against 1/T needs at least three, well spread apart — 10 °C between them is about right.` };
+  }
+
+  /* The order in iodide, which is only the order in iodide if the peroxide
+     concentration held still. Adding KI without taking water out changes the
+     total volume, so it dilutes the peroxide at the same time. */
+  if (peroxides.length > 1) {
+    return {
+      ok: false,
+      reason: `The peroxide concentration changed between runs (${peroxides.join(', ')} M), so 1/t was not responding to the iodide alone. Top up with water so that KI + water + H₂O₂ comes to the same total volume every time; then [H₂O₂] is fixed and the rate depends only on [I⁻].`,
+    };
+  }
+  if (iodides.length < 4) {
+    return { ok: false, reason: `Only ${iodides.length} different iodide concentration${iodides.length === 1 ? '' : 's'} in the table. Time the clock at four or more, keeping the total volume and the temperature the same, or vary the temperature instead for the activation energy.` };
+  }
+
+  /* The ORDER is measured, from the slope of ln(rate) against ln[I⁻], and the
+     rate-against-concentration line is fitted as well because that is the
+     graph the practical asks for. */
+  const logFit = linearFit(rows.map((r) => ({ x: Math.log(Number(r.iodideConc)), y: Math.log(Number(r.rate)) })));
   const pts = rows.map((r) => ({ x: Number(r.iodideConc), y: Number(r.rate) }));
-  if (pts.length < 4) return { ok: false, reason: 'Record the clock time for at least four different iodide concentrations (or vary temperature).' };
   const fit = linearFit(pts);
-  return { ok: true, order: fit && fit.r2 > 0.85 ? 1 : null, activationEnergy: sigFig(EA_JMOL / 1000, 4), slope: fit ? sigFig(fit.slope, 4) : null, r2: fit ? Number(fit.r2.toFixed(4)) : null, n: pts.length, points: pts };
+  if (!logFit || !fit) return { ok: false, reason: 'Vary the KI volume between readings.' };
+  if (logFit.r2 < 0.9) {
+    return { ok: false, reason: `The rates do not lie on a line on a log–log plot (r² = ${logFit.r2.toFixed(3)}), so no order can be read from them. Check that every run was timed to the same first appearance of the blue-black colour, at the same temperature and the same total volume.` };
+  }
+  return {
+    ok: true, mode: 'concentration', order: sigFig(logFit.slope, 3), orderRounded: Math.round(logFit.slope),
+    accepted: 1, logSlope: sigFig(logFit.slope, 4), logR2: Number(logFit.r2.toFixed(4)),
+    activationEnergy: sigFig(EA_JMOL / 1000, 4), slope: sigFig(fit.slope, 4), r2: Number(fit.r2.toFixed(4)),
+    n: pts.length, points: pts,
+  };
 }
 
 export default { meta, defaults, STOCK_KI_M, STOCK_H2O2_M, THIO_MM, R_GAS, EA_JMOL, init, step, measure, derive, validate, iodideConc, peroxideConc, rateConstant, clockTimeS };

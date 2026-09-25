@@ -48,8 +48,8 @@ export function nullIndicator(inputs) {
     current: inputs.thimble,
     target: laminaOf(inputs).thicknessMm,
     tolerance: Math.max(0.03, leastCount(inputs) * 3),
-    increase: 'The faces are still clear of the sheet — close the thimble further.',
-    decrease: 'The sheet is being compressed — open the thimble a little.',
+    increase: 'The sheet is being compressed — open the thimble a little.',
+    decrease: 'The faces are still clear of the sheet — close the thimble further.',
     atNullText: 'the ratchet just slips — the faces are gripping',
     awayFrom: 'not gripping',
   });

@@ -114,6 +114,46 @@ assert.ok(Math.abs(phEnd - moEnd) > 0.5,
  * between 0.96 and 1.00 of the limiting value.
  * ────────────────────────────────────────────────────────────────────────── */
 const { pathToFileURL } = await import('node:url');
+
+/*
+ * And the WORDS beside the arrow have to point the same way as the arrow.
+ *
+ * nullPoint shows its `increase` sentence when the control is BELOW the null,
+ * next to a ▸. Three instruments had the two sentences the wrong way round —
+ * a vernier whose jaws were narrower than the object said "the jaws are still
+ * clear of the object, close them further", which is the opposite of both the
+ * arrow and the physics — so a student reading the sentence walked away from
+ * the null while the arrow told them to walk towards it, and the instrument
+ * could not be brought to grip at all.
+ *
+ * The check reads the hint on each side of the null and asks which of a pair
+ * of opposite apparatus actions it names. The families are tried in order,
+ * because one sentence can hold words from two of them ("close them further"
+ * is a closing, not a going-further), and the first family that tells the two
+ * sentences apart decides.
+ */
+const DIRECTION_FAMILIES = [
+  ['lengthen|lower the water', 'shorten|raise the water'],
+  ['\\bopen\\b', '\\bclose\\b|closing'],
+  ['\\badd\\b', '\\btake\\b[^.]*\\boff\\b|remove'],
+  ['\\bdown\\b', '\\bup\\b'],
+  ['further|farther|\\bfar\\b|away from', '\\bback\\b|in towards|closer|nearer|near \\('],
+];
+
+function directionOfHints(upHint, downHint) {
+  for (const [plus, minus] of DIRECTION_FAMILIES) {
+    const rePlus = new RegExp(plus, 'i');
+    const reMinus = new RegExp(minus, 'i');
+    const upIsPlus = rePlus.test(upHint) && !reMinus.test(upHint);
+    const upIsMinus = reMinus.test(upHint) && !rePlus.test(upHint);
+    const downIsPlus = rePlus.test(downHint) && !reMinus.test(downHint);
+    const downIsMinus = reMinus.test(downHint) && !rePlus.test(downHint);
+    if (upIsPlus && downIsMinus) return 'agree';
+    if (upIsMinus && downIsPlus) return 'inverted';
+  }
+  return 'unreadable';
+}
+
 let indicatorsChecked = 0;
 const indicatorModels = new Set();
 
@@ -135,6 +175,8 @@ for (const entry of tindex.experiments.filter((e) => e.contentStatus === 'publis
     v.type !== 'dependent' && Number.isFinite(v.min) && Number.isFinite(v.max) && v.max > v.min);
 
   const offenders = [];
+  let upHint = '';
+  let downHint = '';
   let everNulled = false;
   let everOffered = false;    // did the indicator apply to this experiment at all?
   for (const v of controls) {
@@ -144,6 +186,10 @@ for (const entry of tindex.experiments.filter((e) => e.contentStatus === 'publis
       let ind;
       try { ind = model.nullIndicator(probe); } catch { break; }
       if (ind) everOffered = true;
+      if (ind && !ind.atNull && ind.hint) {
+        if (ind.direction === 'up' && !upHint) upHint = String(ind.hint);
+        if (ind.direction === 'down' && !downHint) downHint = String(ind.hint);
+      }
       if (!ind?.atNull) continue;
       everNulled = true;
       let state = model.init(probe);
@@ -178,6 +224,14 @@ for (const entry of tindex.experiments.filter((e) => e.contentStatus === 'publis
      indicator that is OFFERED and can never be satisfied. */
   assert.ok(!everOffered || everNulled,
     `${entry.id} [${modelName}]: the null indicator never reports a null anywhere in the ranges this experiment declares — check that it is reading a control that exists`);
+
+  if (upHint && downHint) {
+    const sense = directionOfHints(upHint, downHint);
+    assert.notEqual(sense, 'inverted',
+      `${entry.id} [${modelName}]: the null indicator's words contradict its arrow. Below the null it shows \u25b8 beside "${upHint}" and above it \u25c2 beside "${downHint}" — the two sentences are the wrong way round, so a student who reads them moves away from the null`);
+    assert.notEqual(sense, 'unreadable',
+      `${entry.id} [${modelName}]: the null indicator's two sentences name no opposite pair of actions ("${upHint}" / "${downHint}"), so nothing can check that they point the way the arrow does. Phrase them as one of: open/close, add/take off, further/back, lengthen/shorten, down/up`);
+  }
 }
 assert.ok(indicatorModels.size >= 8,
   `only ${indicatorModels.size} models carry a null indicator — expected the whole family`);

@@ -60,8 +60,8 @@ export function nullIndicator(inputs) {
     current: inputs.thimble,
     target: specimenOf(inputs).trueMm,
     tolerance: Math.max(0.03, leastCount(inputs) * 3),
-    increase: 'The faces are still clear of the specimen — close the thimble further.',
-    decrease: 'The specimen is being compressed — open the thimble a little.',
+    increase: 'The specimen is being compressed — open the thimble a little.',
+    decrease: 'The faces are still clear of the specimen — close the thimble further.',
     atNullText: 'the ratchet just slips — the faces are gripping',
     awayFrom: 'not gripping',
   });

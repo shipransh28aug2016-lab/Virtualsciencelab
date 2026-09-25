@@ -2187,6 +2187,17 @@ function renderResult(d) {
         <span class="big">Order = ${d.orderRounded ?? d.order} in S₂O₃²⁻</span>
         Log-log slope = ${d.order} &nbsp;·&nbsp; a straight line through the origin means first order`;
     }
+  } else if (m === 'clock-reaction') {
+    /* Which quantity this set measured is the model's decision, not the
+       panel's: a set taken at one temperature gives the order in iodide, a set
+       taken at one concentration gives the activation energy. */
+    html = d.mode === 'arrhenius'
+      ? `<b>Arrhenius plot</b> ln(1/t) against 1/T over ${d.n} temperatures &nbsp;(r&sup2; = ${d.r2})
+        <span class="big">Eₐ = ${d.activationEnergy} kJ/mol</span>
+        Slope = ${d.slope} K &nbsp;·&nbsp; accepted ≈ ${d.acceptedEa} kJ/mol`
+      : `<b>1/t against [I⁻]</b> over ${d.n} concentrations &nbsp;(r&sup2; = ${d.r2})
+        <span class="big">Order in I⁻ = ${d.orderRounded} &nbsp;(log–log slope ${d.logSlope})</span>
+        A straight line through the origin is what first order looks like &nbsp;·&nbsp; log–log r&sup2; = ${d.logR2}`;
   } else if (m === 'convex-lens') {
     html = `<b>Mean of f = uv/(u+v):</b> ${d.fMean} cm &nbsp; <b>From 1/u–1/v intercept:</b> ${d.fFromGraph} cm
       <span class="big">f = ${d.fMean} cm &nbsp;·&nbsp; P = ${d.power} D</span>

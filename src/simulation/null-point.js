@@ -76,6 +76,19 @@ export function nullPoint(spec) {
     awayFrom = 'deflecting',
   } = spec;
 
+  /*
+   * THE CONVENTION, once, in the one place every instrument reads it from.
+   *
+   * `increase` is the sentence shown when the control is set BELOW the null
+   * and has to be turned UP, and it is shown beside a ▸. `decrease` is the
+   * other way round, beside a ◂. Three instruments had the two sentences the
+   * wrong way round, so a vernier whose jaws were narrower than the object
+   * said "the jaws are still clear of the object — close them further" — the
+   * opposite of both the arrow beside it and the physics — and a student
+   * following the words walked away from the null while the arrow told them
+   * to walk towards it. Write each sentence from the control's value, not
+   * from the feeling of the apparatus: BELOW the null goes in `increase`.
+   */
   const tol = Math.max(Math.abs(tolerance) || 0, 1e-9);
   const off = Number(current) - Number(target);
   const ratio = Math.abs(off) / tol;
