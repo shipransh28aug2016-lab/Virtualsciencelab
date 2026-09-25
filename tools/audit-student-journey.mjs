@@ -251,6 +251,13 @@ async function runLane(lane, queue, reports, onDone) {
    */
   async function titrateToEndPoint() {
     const t0 = Date.now();
+    /* Every titration starts from a full burette. A student refills before
+       each one, and now that titrant cannot be taken back out of the flask
+       the probe has to do the same — otherwise a burette left part-way down
+       the scale by the previous titre is already past the end point of this
+       one, and the flask never changes colour however long it waits. */
+    await page.evaluate(() => document.querySelector('#aReset')?.click());
+    await settle(600);
     const range = await page.evaluate(() => {
       const sl = document.querySelector('#c_buretteVolume');
       return sl ? { min: Number(sl.min), max: Number(sl.max), step: Number(sl.step) || 0.1 } : null;
@@ -358,62 +365,56 @@ async function runLane(lane, queue, reports, onDone) {
    * jockey and a metre of wire has no better information than this probe does.
    */
   /**
-   * Read the indicator once it has stopped moving.
+   * Read the indicator once it has stopped moving, in one round trip.
    *
-   * A fixed pause after setting a control is enough on an idle machine and
-   * not enough on a loaded one: with four lanes sharing the CPU the model had
-   * often not been stepped yet, so the probe read the PREVIOUS indicator and
-   * searched in the wrong direction. These labs passed one at a time and
-   * failed in a sweep, which is the signature of a timing assumption rather
-   * than a defect.
+   * The indicator is redrawn from the model and the model is stepped on an
+   * animation frame, so the probe has to wait for frames rather than for
+   * milliseconds: a fixed pause is enough on an idle machine and not enough
+   * on a loaded one, and the same labs passed one at a time and failed in a
+   * four-lane sweep. Waiting a frame at a time from Node cost a round trip
+   * per frame and ran the slowest benches out of their budget, so the loop
+   * was moved across.
    */
-  /* Wait for FRAMES, not for milliseconds.
-   *
-   * The indicator is redrawn from the model, and the model is stepped on an
-   * animation frame. A fixed pause is enough on an idle machine and not
-   * enough on a loaded one, so with four lanes sharing the CPU the probe kept
-   * reading the PREVIOUS indicator and bisecting away from the null: the same
-   * labs passed one at a time and failed in a sweep. Waiting on
-   * requestAnimationFrame waits on the thing that actually has to happen,
-   * however long the machine takes to get to it. */
-  const twoFrames = () => page.evaluate(() => new Promise((r) => {
-    requestAnimationFrame(() => requestAnimationFrame(() => r(true)));
-  })).catch(() => false);
-
   async function readIndicator(capMs = 1600) {
-    await twoFrames();
-    const t0 = Date.now();
-    let last = await page.evaluate(NULL_PROBE);
-    let same = 0;
-    while (Date.now() - t0 < capMs) {
-      await twoFrames();
-      const now = await page.evaluate(NULL_PROBE);
-      if (now && last && now.text === last.text) {
-        same += 1;
-        // Two agreeing reads, each a frame apart, is the model having settled
-        // rather than the probe having been quick.
-        if (same >= 2) return now;
-      } else {
-        same = 0;
+    return page.evaluate(async ({ cap, src }) => {
+      // eslint-disable-next-line no-new-func
+      const read = new Function(`return (${src})`)();
+      const frame = () => new Promise((r) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => r()));
+      });
+      const t0 = Date.now();
+      await frame();
+      let last = read();
+      let same = 0;
+      while (Date.now() - t0 < cap) {
+        await frame();
+        const now = read();
+        /* Two agreeing reads, each a frame apart, is the model having settled
+           rather than the probe having been quick. */
+        if (now && last && now.text === last.text) {
+          same += 1;
+          if (same >= 2) return now;
+        } else {
+          same = 0;
+        }
+        last = now;
       }
-      last = now;
-    }
-    return last;
+      return last;
+    }, { cap: capMs, src: NULL_PROBE.toString() }).catch(() => null);
   }
 
-  /**
-   * @param {{lo:number, hi:number}|null} window Search only this part of the
-   *   first slider's travel. A tube resonates twice over its length and a
-   *   bridge wire balances at one point only: where there is more than one
-   *   null, a bisection of the whole range keeps finding the same one, and the
-   *   bench that asked for the OTHER one has to be able to say where to look.
-   */
   /* Which control the last successful hunt nulled. On a null bench the
      reading is taken AT the null, so that control is not the one to vary
      between readings — the student changes the resistance in the box, or the
      load, or the specimen, and brings the jockey back to balance. Sweeping it
      instead gave one reading and then three refusals. */
   let nulledControl = null;
+  /* The same control in the probe's own widget numbering, so the next hunt can
+     start with the one that worked last time instead of driving every control
+     to both ends of its travel again. On a bench whose null is on the third
+     control that is most of the hunt's cost, and these hunts run once per
+     reading. */
+  let nulledWidget = null;
 
   async function homeInOnNull(nControls, capMs = 20000, window = null) {
     const t0 = Date.now();
@@ -426,7 +427,13 @@ async function runLane(lane, queue, reports, onDone) {
        the indicator does not work when it had never followed it. */
     const SEL = VARIABLE_WIDGETS;
 
-    for (let i = 0; i < nControls && Date.now() - t0 < capMs; i += 1) {
+    const order = [...Array(nControls).keys()];
+    if (nulledWidget !== null && nulledWidget < nControls) {
+      order.splice(order.indexOf(nulledWidget), 1);
+      order.unshift(nulledWidget);
+    }
+    for (const i of order) {
+      if (Date.now() - t0 >= capMs) break;
       const range = await page.evaluate(({ sel, idx }) => {
         const el = document.querySelectorAll(sel)[idx];
         if (!el || el.type !== 'range') return null;
@@ -469,14 +476,14 @@ async function runLane(lane, queue, reports, onDone) {
       }, { sel: SEL, idx: i });
       const restore = async () => { if (before !== null) await setAt(before); };
 
-      if ((await readIndicator())?.atNull) { nulledControl = await asSliderIndex(); return true; }
+      if ((await readIndicator())?.atNull) { nulledWidget = i; nulledControl = await asSliderIndex(); return true; }
       await setAt(range.min);
       const low = await readIndicator();
       await setAt(range.max);
       const high = await readIndicator();
       if (!low || !high) { await restore(); continue; }
-      if (low.atNull) { await setAt(range.min); nulledControl = await asSliderIndex(); return true; }
-      if (high.atNull) { nulledControl = await asSliderIndex(); return true; }
+      if (low.atNull) { await setAt(range.min); nulledWidget = i; nulledControl = await asSliderIndex(); return true; }
+      if (high.atNull) { nulledWidget = i; nulledControl = await asSliderIndex(); return true; }
       if (low.up === high.up) { await restore(); continue; }   // the null is not inside this range
 
       // Bisect on the direction the indicator points.
@@ -487,11 +494,11 @@ async function runLane(lane, queue, reports, onDone) {
         await setAt(Number(mid.toFixed(6)));
         const now = await readIndicator(1200);
         if (!now) break;
-        if (now.atNull) { nulledControl = await asSliderIndex(); return true; }
+        if (now.atNull) { nulledWidget = i; nulledControl = await asSliderIndex(); return true; }
         if (hi - lo <= range.step * 1.01) break;
         if (now.up) lo = mid; else hi = mid;
       }
-      if ((await readIndicator())?.atNull) { nulledControl = await asSliderIndex(); return true; }
+      if ((await readIndicator())?.atNull) { nulledWidget = i; nulledControl = await asSliderIndex(); return true; }
       // The bisection leaves the control at its best value, which is an
       // improvement even when it did not reach the null — so it is kept.
     }
@@ -509,8 +516,17 @@ async function runLane(lane, queue, reports, onDone) {
       return 'clicked';
     });
     if (clicked !== 'clicked') return { ok: false, why: clicked };
-    await wait(150);
-    const after = await probeRead();
+    /* Wait for the TABLE, not for a fixed moment. The row is added and the
+       table redrawn in the click handler, but under four lanes that work can
+       land after a 150 ms pause — and the probe then read a table that had not
+       been redrawn yet, reported a refusal with no reason at all, and pressed
+       on. A refusal with nothing said is the one thing this audit exists to
+       catch, so it must not be able to invent one. */
+    let after = await probeRead();
+    for (let i = 0; i < 12 && after.rows <= before; i += 1) {
+      await wait(110);
+      after = await probeRead();
+    }
     if (after.rows > before) return { ok: true, rows: after.rows };
     /*
      * Read the FEEDBACK PANEL, not the toast.
@@ -821,8 +837,9 @@ async function runLane(lane, queue, reports, onDone) {
         let paceBetweenReadings = timeAxis ? 2500 : 0;
         let slowestWait = 0;
         let hunted = 0;
-    let nulled = 0;
+        let nulled = 0;
         nulledControl = null;
+        nulledWidget = null;
         let budget = want;
         const isTitration = exp.simulation?.model === 'titration';
         for (let k = 0; k < budget && !outOfTime(); k += 1) {
@@ -896,7 +913,12 @@ async function runLane(lane, queue, reports, onDone) {
                put the specimen just chosen straight back. */
             const frac = 0.15 + (0.7 * k) / want;
             if (sweepOutward) sweepOutward.n += 1;
-            const railed = k > 0 && !freezeSliders && await page.evaluate(({ f, cap, out, skip }) => {
+            /* A titration is repeated under the SAME conditions until two
+               titres agree — that is what concordance means. Varying the
+               pipetted volume or the standard's strength between titres does
+               not give a better mean, it gives three measurements of three
+               different things. */
+            const railed = k > 0 && !freezeSliders && !isTitration && await page.evaluate(({ f, cap, out, skip }) => {
               const sliders = [...document.querySelectorAll('#controls .ctl:not([data-group="setup"]) input[type=range]')];
               /* Never the control that holds the null. The reading is taken AT
                  the balance point, so on these benches the student varies
