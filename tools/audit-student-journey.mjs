@@ -265,8 +265,31 @@ async function runLane(lane, queue, reports, onDone) {
    * as the practical demands. Running the tap wide open to the end point is a
    * procedural error, and the model is right to call it an overshoot.
    */
-  async function titrateToEndPoint(deadline = Infinity) {
+  async function titrateToEndPoint(deadline = Infinity, bench = null) {
     const t0 = Date.now();
+    /* One titration at a time, on ONE bench. Every titre of a set is the same
+       titration repeated: the same pipetted volume, the same standard, the
+       same indicator. Several mechanisms can move those between titres — the
+       sweep, the hunt, a stated limit, a named control — and closing them one
+       at a time traded one non-concordant pair for another. The apparatus is
+       simply put back the way the lab opened before each titration, and only
+       the burette moves. */
+    if (bench) {
+      await page.evaluate(({ choice, sliders }) => {
+        [...document.querySelectorAll('#controls .seg, #controls .wiring')].forEach((g, i) => {
+          const btns = [...g.querySelectorAll('button')];
+          if (!(choice[i] >= 0) || !btns[choice[i]]) return;
+          if (btns[choice[i]].getAttribute('aria-pressed') !== 'true') btns[choice[i]].click();
+        });
+        [...document.querySelectorAll('#controls input[type=range]')].forEach((el, i) => {
+          if (sliders[i] === undefined || el.id === 'c_buretteVolume') return;
+          if (el.value === String(sliders[i])) return;
+          el.value = sliders[i];
+          el.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+      }, bench).catch(() => {});
+      await settle(600);
+    }
     /* A titration must not outlast the lab. Running the burette in from zero
        in millilitre steps, waiting for the tap each time, costs the best part
        of a minute; doing it for every titre of every set, with nothing
@@ -1164,7 +1187,7 @@ async function runLane(lane, queue, reports, onDone) {
            * back to zero — which the bench now says out loud — and turns a
            * cooling curve into eight readings at the same instant.
            */
-          const run = isTitration ? await titrateToEndPoint(labDeadline)
+          const run = isTitration ? await titrateToEndPoint(labDeadline, { choice: openingChoice, sliders: openingSliders })
             : (timeAxis && k > 0) ? { started: 'already running', waitedMs: 0 }
               : await runProcessAndWait(Math.max(2000, Math.min(34000, labDeadline - Date.now())));
           slowestWait = Math.max(slowestWait, run.waitedMs || 0);
