@@ -31,17 +31,48 @@ export function boylesLaw(ctx, w, h, state, inputs) {
     ctx.fillRect(x - 14, fillTop, 28, fillBot - fillTop);
     ctx.beginPath(); ctx.ellipse(x, fillTop, 14, 5, 0, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
-    label(ctx, x, topY + tubeH + 6, name, { anchor: 'below' });
+    label(ctx, x, topY + tubeH - 34, name, { anchor: 'below', size: 11 });
   };
 
+  /*
+   * `levelDifferenceCm` is the OPEN arm's level minus the closed arm's, and
+   * the pressure of the trapped air is atmospheric PLUS that difference. So
+   * a positive difference puts the open limb's mercury HIGHER — the extra
+   * column is what presses on the trapped air. Drawn the other way round,
+   * the bench showed a compressed gas with the mercury standing lower on the
+   * side doing the compressing.
+   */
   const closedTopMerc = topY + colPx;
   limb(cx - 70, closedTopMerc, topY + tubeH, 'Closed limb');
-  limb(cx + 70, closedTopMerc + diff, topY + tubeH, 'Open limb');
-  // Connecting tube at the base.
+  limb(cx + 70, closedTopMerc - diff, topY + tubeH, 'Open limb');
+  /*
+   * The limbs are JOINED, and the closed one is CLOSED.
+   *
+   * A single stroke along the bench between two open tubes read as two
+   * separate tubes standing side by side; nothing showed that the mercury
+   * in one is what holds the air in the other, and the closed limb was drawn
+   * open at the top on a bench whose whole subject is a sealed column of air.
+   */
   ctx.save();
   ctx.strokeStyle = th.glassStroke; ctx.lineWidth = 1.8;
-  ctx.beginPath(); ctx.moveTo(cx - 70, topY + tubeH); ctx.lineTo(cx + 70, topY + tubeH); ctx.stroke();
+  ctx.fillStyle = rgba(th.glass, 0.6);
+  const baseY = topY + tubeH;
+  ctx.beginPath(); ctx.rect(cx - 70, baseY, 140, 26); ctx.fill(); ctx.stroke();
+  const gMerc = ctx.createLinearGradient(0, baseY, 0, baseY + 26);
+  gMerc.addColorStop(0, '#98a1af'); gMerc.addColorStop(1, '#454c59');
+  ctx.fillStyle = gMerc;
+  ctx.fillRect(cx - 69, baseY + 1, 138, 24);
   ctx.restore();
+  label(ctx, cx, baseY + 28, 'Mercury joins the two limbs', { anchor: 'below', size: 11 });
+
+  // The seal on the closed limb.
+  ctx.save();
+  ctx.fillStyle = shade(th.metal, -0.2);
+  ctx.beginPath();
+  if (ctx.roundRect) ctx.roundRect(cx - 85, topY - 10, 30, 12, 3); else ctx.rect(cx - 85, topY - 10, 30, 12);
+  ctx.fill();
+  ctx.restore();
+  label(ctx, cx - 70, topY - 12, 'sealed', { anchor: 'above', size: 10 });
 
   // The trapped air, which is the thing being measured.
   ctx.save();
@@ -55,8 +86,32 @@ export function boylesLaw(ctx, w, h, state, inputs) {
   label(ctx, cx - 104, (topY + closedTopMerc) / 2, `Trapped air ${colCm.toFixed(1)} cm`,
     { anchor: 'left', bold: true, color: '#c02626' });
 
-  label(ctx, cx, topY - 8,
-    `p = ${(state?.pressure ?? 76).toFixed(1)} cm Hg · pV = ${((state?.pressure ?? 76) * colCm).toFixed(0)}`,
+  /*
+   * The difference in the two mercury levels, marked between them: that
+   * difference IS the pressure the atmosphere is helped or opposed by, and
+   * it was the one quantity on the bench with nothing to read it against.
+   */
+  const openTopMerc = closedTopMerc - diff;
+  if (Math.abs(diff) > 3) {
+    ctx.save();
+    ctx.strokeStyle = '#0d7a52'; ctx.lineWidth = 1.6;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(cx - 55, closedTopMerc); ctx.lineTo(cx + 92, closedTopMerc);
+    ctx.moveTo(cx + 55, openTopMerc); ctx.lineTo(cx + 92, openTopMerc);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(cx + 88, closedTopMerc); ctx.lineTo(cx + 88, openTopMerc);
+    ctx.stroke();
+    ctx.restore();
+    label(ctx, cx + 94, (closedTopMerc + openTopMerc) / 2,
+      `h = ${Math.abs(inputs.levelDifferenceCm ?? 0).toFixed(1)} cm`,
+      { anchor: 'right', bold: true, color: '#0d7a52' });
+  }
+
+  label(ctx, cx, topY - 26,
+    `p = ${(state?.pressure ?? 76).toFixed(1)} cm Hg · pV = ${((state?.pressure ?? 76) * colCm).toFixed(0)} cm³·cm Hg`,
     { anchor: 'above', bold: true });
 }
 
