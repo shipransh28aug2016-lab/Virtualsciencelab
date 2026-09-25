@@ -383,7 +383,13 @@ export function measure(state, inputs, seed = 1, trial = 1) {
      graduations that "concordant" means. */
   const finalReading = toLeastCount(state.delivered + jitter(rng, 0.05), 0.1);
   return {
-    trial, initialReading: initial, finalReading, volumeUsed: Number((finalReading - initial).toFixed(1)),
+    trial,
+    /* Which indicator the end point was judged by. Phenolphthalein turns at
+       pH 8.2 and methyl orange at 4.4, so the same flask has two different
+       end points — twelve millilitres apart on a weak acid — and a set that
+       mixes them is two titrations averaged together. */
+    indicator: (INDICATORS[inputs.indicator] || {}).label || String(inputs.indicator || ''),
+    initialReading: initial, finalReading, volumeUsed: Number((finalReading - initial).toFixed(1)),
     pHAtStop: Number(state.pH.toFixed(2)), _overshot: state.overshot,
   };
 }
@@ -427,6 +433,14 @@ export function concordantSet(vols) {
 }
 
 export function derive(rows, inputs = defaults) {
+  const indicators = [...new Set(rows.map((r) => r.indicator).filter(Boolean))];
+  if (indicators.length > 1) {
+    return {
+      ok: false,
+      reason: `These titres were judged by ${indicators.length} different indicators (${indicators.join(', ')}). Each changes colour at its own pH, so they mark different end points in the same flask — choose the one that suits this titration and use it for the whole set.`,
+    };
+  }
+
   const usable = rows.filter((r) => !r._overshot);
   if (usable.length < 2) return { ok: false, reason: `Record at least two concordant titres (within ${CONCORDANCE_ML} mL of each other).` };
   const allVols = usable.map((r) => Number(r.volumeUsed));
