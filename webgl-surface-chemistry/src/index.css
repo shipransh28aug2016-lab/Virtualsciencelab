@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+html, body, #root { height: 100%; margin: 0; background: #070b14; }
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, sans-serif;
+  color: #e2e8f0;
+  -webkit-font-smoothing: antialiased;
+}
+/* The observation table scrolls; the page never does. */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.28); border-radius: 999px; }
