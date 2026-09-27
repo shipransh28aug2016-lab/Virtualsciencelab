@@ -1,14 +1,16 @@
 {
-  "name": "webgl-surface-chemistry",
+  "name": "virtual-science-lab-webgl",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "CBSE Class XII Surface Chemistry: a physics-driven WebGL colloid bench (Hardy-Schulze coagulation, Tyndall scattering, gravity settling).",
+  "description": "CBSE virtual science laboratory: physics-driven WebGL benches (melting point, surface chemistry).",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "verify": "node verify-physics.mjs"
+    "verify": "node verify-physics.mjs && node verify-melting-point.mjs",
+    "verify:mp": "node verify-melting-point.mjs",
+    "verify:sc": "node verify-physics.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.114.0",

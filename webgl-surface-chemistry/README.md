@@ -1,3 +1,90 @@
+# Virtual Science Laboratory — WebGL benches
+
+Physics-driven simulations for the CBSE practical syllabus. Each bench solves
+its governing law every frame; none of them looks an answer up from a table.
+
+Open `index.html` and pick a bench, or go straight to one:
+
+| Route | Experiment | The law doing the work |
+| --- | --- | --- |
+| `#/XI-CHE-B01` | Determination of the melting point of an organic compound | Schröder–van Laar liquidus, binary eutectics, the lever rule |
+| `#/XII-CHE-A01` | Coagulation of colloids and the Tyndall effect | Hardy–Schulze, DLVO, Smoluchowski, Rayleigh–Mie, Stokes |
+
+---
+
+# XI-CHE-B01 · Melting point of an organic compound
+
+One equation carries the whole experiment:
+
+```
+ln x_A = −(ΔH_fus,A / R) · (1/T − 1/T_A)
+```
+
+Everything a Class XI student is asked to observe is a consequence of it, and
+none of it is stored anywhere as a fact:
+
+* **Depression.** Differentiating at x → 1 gives back the textbook cryoscopic
+  constant, K_f = RT²M/1000ΔH. The engine never uses it; it reproduces it —
+  naphthalene 6.98 against a measured 6.94 K kg mol⁻¹.
+* **Range.** Melting *begins* at the eutectic, found by intersecting the two
+  liquidus branches. Naphthalene (80.3 °C) and biphenyl (69.2 °C) come out
+  liquid together at 40.9 °C and 56 mol%, against a measured 39.4 °C at 55 mol%
+  — from the pure-component data alone.
+* **Sharpness.** A pure sample has no second branch to meet, so its range
+  collapses. Sharpness is an output, not a flag.
+* **Mixed melting point.** The same equation with the second component named by
+  the student: benzoic acid + benzoic acid melts unchanged, benzoic acid +
+  salicylic acid is depressed 26 °C.
+
+## What a student can do, including get it wrong
+
+| Action | What the bench does |
+| --- | --- |
+| Recrystallised naphthalene at 2 °C/min | Melts 80–81 °C within a degree. Sharp. |
+| The crude sample | Sinters from 41 °C — its eutectic — wets at 71 °C, clears at 78 °C. Lower *and* wider, from one equation. |
+| Heat at 12 °C/min | The range smears by √(2τΛr) ≈ 4 °C and the clear point rides 2 °C high. Latent heat, not carelessness. |
+| Benzoic acid in a water bath | Never melts. The bath stops at 100 °C and says so. |
+| Read it on a 1 °C thermometer | A tenth-degree sharpness is invisible. The instrument decides what can be seen. |
+| Re-melt a urea capillary | Clears 7 °C lower: some of it is biuret now. |
+| Leave naphthalene hot | It sublimes out of the capillary. The reading is unaffected — what is left is still pure. |
+| Shut the air hole | A luminous, sooty, cooler flame. |
+
+## Files
+
+| File | What it owns |
+| --- | --- |
+| `src/experiments/XI/Chemistry/XI-CHE-B01/engine/compounds.js` | Measured data: melting points, enthalpies of fusion, molar masses, specific heats. |
+| `.../engine/thermochemistry.js` | The liquidus, the eutectic, the lever rule, the heat balance. No React, no three. |
+| `.../engine/useMeltingPointEngine.js` | Zustand. Setup and bench memory kept apart. |
+| `.../three/BathShaderMaterial.jsx` | Paraffin: Beer–Lambert tint, schlieren tied to dT/dy, convection, smoke point. |
+| `.../three/CapillaryShaderMaterial.jsx` | The 3 mm that matter: packed powder → sintering → rising meniscus → clear. |
+| `.../three/FlameShaderMaterial.jsx` | The burner: height from gas flow, colour from the air hole. |
+| `.../three/ThieleTubeSimulation.jsx` | The apparatus. Owns the only render loop. |
+| `.../ui/MeltingPointHUD.jsx` | Controls, instruments, observation table. |
+
+```bash
+npm run verify        # 37 engine checks across both benches, no browser
+npm run verify:mp     # 15 thermochemistry checks
+CHROME_PATH=/path/to/chrome node verify-render-melting-point.mjs   # 23 checks in a real GL context
+CHROME_PATH=/path/to/chrome node verify-render.mjs                 # 24 checks for XII-CHE-A01
+```
+
+Three defects the verification caught in this bench, none of them visible by eye:
+
+* the melted fraction was read out of a selector that built a fresh object each
+  call, so `useSyncExternalStore` saw the store change during rendering and
+  React gave up with "maximum update depth exceeded". The bench rendered
+  nothing at all;
+* the render probe scraped rendered text for "Last crystal", which also appears
+  in the status sentence and as a column heading, and silently read the wrong
+  one. The HUD now carries stable hooks for it;
+* `integrate()` was stepped explicitly, so the ×300 clock handed it fifteen
+  simulated seconds against a one-and-a-half second time constant. It now
+  sub-steps internally, and a bench cannot be made to boil by changing the
+  clock.
+
+---
+
 # Coagulation of Colloids & the Tyndall Effect
 
 A WebGL bench for the CBSE Class XII Surface Chemistry practical. Choose a sol,

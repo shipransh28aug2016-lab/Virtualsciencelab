@@ -136,7 +136,7 @@ const noise = [];
 page.on('console', (m) => { if (m.type() === 'error') noise.push(m.text()); });
 page.on('pageerror', (e) => noise.push(`pageerror: ${e.message}`));
 
-await page.goto(BASE, { waitUntil: 'networkidle' });
+await page.goto(`${BASE}#/XII-CHE-A01`, { waitUntil: 'networkidle' });
 await page.waitForSelector('canvas', { timeout: 20000 });
 await page.waitForTimeout(2500);
 
