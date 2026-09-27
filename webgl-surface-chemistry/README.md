@@ -8,7 +8,54 @@ Open `index.html` and pick a bench, or go straight to one:
 | Route | Experiment | The law doing the work |
 | --- | --- | --- |
 | `#/XI-CHE-B01` | Determination of the melting point of an organic compound | Schröder–van Laar liquidus, binary eutectics, the lever rule |
+| `#/XI-CHE-B02` | Determination of the boiling point of an organic compound | Antoine vapour pressure, Raoult's law, Trouton's rule |
 | `#/XII-CHE-A01` | Coagulation of colloids and the Tyndall effect | Hardy–Schulze, DLVO, Smoluchowski, Rayleigh–Mie, Stokes |
+
+---
+
+# XI-CHE-B02 · Boiling point of an organic compound
+
+Siwoloboff's method, and two statements carry it:
+
+```
+ANTOINE   log₁₀ P°(t) = A − B / (C + t)
+RAOULT    the liquid boils where  Σ xᵢ P°ᵢ(T) = P_atm
+```
+
+* **The pressure in the room is half the measurement.** Ethanol boils at
+  78.3 °C at 760 mm Hg and 72.5 °C at 600. A boiling point quoted without a
+  pressure is not a measurement.
+* **ΔH_vap is in the same curve.** From the Antoine derivative:
+  water 41.5 (lit. 40.65), benzene 32.0 (lit. 30.8) kJ/mol. Divide by T_b and
+  you have **Trouton's constant** — benzene 90, obeying the rule; water 111 and
+  ethanol 116, breaking it because they are hydrogen bonded. That verdict then
+  chooses the constant in the Sidgwick pressure correction. The chain closes
+  with nothing looked up.
+* **K_b comes back out** though the engine never uses it: water 0.50
+  (lit. 0.512), benzene 2.54 (lit. 2.53).
+* **An involatile impurity RAISES a boiling point** — the opposite of what it
+  does to a melting point, and the thing this experiment is most often got
+  wrong. It falls out of Raoult's law without a second formula.
+* **The reading is the last bubble on cooling**, where the vapour pressure
+  falls back through atmospheric. The rapid stream on the way up is the signal
+  to stop heating, not the reading.
+
+## What a student can do, including get it wrong
+
+| Action | What the bench does |
+| --- | --- |
+| Heat ethanol at 2 °C/min, flame away at the rapid stream | Reads 78.5 °C. Stream-start and stream-stop agree, which is why you slow down. |
+| Heat at 12 °C/min | The stream appears at 79.8 °C and ceases at 78.6 °C. The manual reads it on the way down for this reason. |
+| Drop the pressure to 640 mm Hg | Boils at 74.5 °C. Sidgwick corrects it back to 79.5 °C. |
+| Use the crude sample | Boils **higher**, 81 °C. Involatile material raises a boiling point. |
+| Aniline in a water bath | Never boils. The bath stops at 100 °C and says so. |
+| Take the capillary away | No bubbles at all — then the tube superheats past its boiling point in silence and bumps. The notebook records "bumped — discard". |
+| Add benzene to toluene | Boils at 92.1 °C, between the two, and the vapour is 71 mol% benzene. Keep boiling and the temperature climbs as the benzene leaves — the boiling **range**. |
+
+```bash
+npm run verify:bp     # 16 thermodynamics checks, no browser
+CHROME_PATH=/path/to/chrome node verify-render-boiling-point.mjs   # 23 checks in a real GL context
+```
 
 ---
 
@@ -63,7 +110,7 @@ none of it is stored anywhere as a fact:
 | `.../ui/MeltingPointHUD.jsx` | Controls, instruments, observation table. |
 
 ```bash
-npm run verify        # 37 engine checks across both benches, no browser
+npm run verify        # 53 engine checks across all three benches, no browser
 npm run verify:mp     # 15 thermochemistry checks
 CHROME_PATH=/path/to/chrome node verify-render-melting-point.mjs   # 23 checks in a real GL context
 CHROME_PATH=/path/to/chrome node verify-render.mjs                 # 24 checks for XII-CHE-A01

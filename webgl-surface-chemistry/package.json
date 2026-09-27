@@ -3,14 +3,15 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "CBSE virtual science laboratory: physics-driven WebGL benches (melting point, surface chemistry).",
+  "description": "CBSE virtual science laboratory: physics-driven WebGL benches (melting point, boiling point, surface chemistry).",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "verify": "node verify-physics.mjs && node verify-melting-point.mjs",
+    "verify": "node verify-physics.mjs && node verify-melting-point.mjs && node verify-boiling-point.mjs",
     "verify:mp": "node verify-melting-point.mjs",
-    "verify:sc": "node verify-physics.mjs"
+    "verify:sc": "node verify-physics.mjs",
+    "verify:bp": "node verify-boiling-point.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.114.0",

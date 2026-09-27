@@ -30,9 +30,9 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { Environment, Lightformer, ContactShadows } from '@react-three/drei';
 import { useMeltingPointEngine } from '../engine/useMeltingPointEngine.js';
 import { BATHS, THERMOMETERS } from '../engine/thermochemistry.js';
-import { BathShaderMaterial } from './BathShaderMaterial.jsx';
+import { BathShaderMaterial } from '../../../../../shared/three/BathShaderMaterial.jsx';
 import { CapillaryShaderMaterial } from './CapillaryShaderMaterial.jsx';
-import { FlameShaderMaterial } from './FlameShaderMaterial.jsx';
+import { FlameShaderMaterial } from '../../../../../shared/three/FlameShaderMaterial.jsx';
 
 void BathShaderMaterial; void CapillaryShaderMaterial; void FlameShaderMaterial;
 

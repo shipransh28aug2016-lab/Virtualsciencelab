@@ -21,6 +21,14 @@ const LABS = [
     load: () => import('./experiments/XI/Chemistry/XI-CHE-B01/index.jsx'),
   },
   {
+    code: 'XI-CHE-B02',
+    title: 'Determination of the boiling point of an organic compound',
+    blurb: 'Siwoloboff\u2019s capillary, Antoine vapour pressure and Raoult\u2019s law. The reading is the last bubble on cooling, and the pressure in the room is half the measurement.',
+    meta: 'Class XI · Chemistry · Unit 12',
+    accent: 'from-emerald-400/20 to-sky-500/10',
+    load: () => import('./experiments/XI/Chemistry/XI-CHE-B02/index.jsx'),
+  },
+  {
     code: 'XII-CHE-A01',
     title: 'Coagulation of colloids and the Tyndall effect',
     blurb: 'Hardy–Schulze by counter-ion sign and charge, Smoluchowski aggregation, Rayleigh–Mie scattering and Stokes settling on fractal flocs.',
