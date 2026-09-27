@@ -5,8 +5,13 @@
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { ACESFilmicToneMapping, SRGBColorSpace } from 'three';
+import { exposeForProbe } from '../../../../shared/probe.js';
+import { useBoilingPointEngine } from './engine/useBoilingPointEngine.js';
 import { SiwoloboffSimulation } from './three/SiwoloboffSimulation.jsx';
 import { BoilingPointHUD } from './ui/BoilingPointHUD.jsx';
+
+/* Opt-in only: /?probe=1#/XI-CHE-B02 */
+exposeForProbe('XI-CHE-B02', useBoilingPointEngine);
 
 export default function BoilingPointLab() {
   return (

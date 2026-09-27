@@ -5,8 +5,13 @@
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { ACESFilmicToneMapping, SRGBColorSpace } from 'three';
+import { exposeForProbe } from '../../../../shared/probe.js';
+import { useMeltingPointEngine } from './engine/useMeltingPointEngine.js';
 import { ThieleTubeSimulation } from './three/ThieleTubeSimulation.jsx';
 import { MeltingPointHUD } from './ui/MeltingPointHUD.jsx';
+
+/* Opt-in only: /?probe=1#/XI-CHE-B01 */
+exposeForProbe('XI-CHE-B01', useMeltingPointEngine);
 
 export default function MeltingPointLab() {
   return (

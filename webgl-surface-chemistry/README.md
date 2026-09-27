@@ -9,7 +9,60 @@ Open `index.html` and pick a bench, or go straight to one:
 | --- | --- | --- |
 | `#/XI-CHE-B01` | Determination of the melting point of an organic compound | Schröder–van Laar liquidus, binary eutectics, the lever rule |
 | `#/XI-CHE-B02` | Determination of the boiling point of an organic compound | Antoine vapour pressure, Raoult's law, Trouton's rule |
+| `#/XI-CHE-B03` | Crystallisation of an impure sample | Measured solubility, an exact hydrate mass balance, classical nucleation |
 | `#/XII-CHE-A01` | Coagulation of colloids and the Tyndall effect | Hardy–Schulze, DLVO, Smoluchowski, Rayleigh–Mie, Stokes |
+
+---
+
+# XI-CHE-B03 · Crystallisation of an impure sample
+
+Measured solubility, interpolated in (1/T, ln s) so the curve between the data
+points is van 't Hoff's shape rather than a spline; and a mass balance that is
+exact because it counts the water of crystallisation:
+
+```
+A − x = (s/100)(W − x(r−1))     ⟹     x = (A − sW/100) / (1 − (s/100)(r−1))
+```
+
+Eight grams of CuSO₄·5H₂O is **5.11 g of salt and 2.89 g of its own water** —
+a third of the solvent in a typical determination arrives with the sample.
+
+**This bench found a defect in the published experiment.** `XI-CHE-B03` gave
+copper sulphate's solubility at the boil as 32 g/100 mL and its default solvent
+volume as 26 mL "the minimum". The handbook figure is 75.4 g of anhydrous salt
+per 100 g of water at 100 °C; the true minimum for 8 g is **3.5 mL**, and the
+published 26 mL yields **nothing at all** at 20 °C. The JSON has been corrected.
+
+* **Recovery is arithmetic.** 4 mL → 79% · 6 mL → 69% · 10 mL → 48% · 16 mL → 0%.
+* **Cooling rate is a purity control, not a patience control.** Nucleation is
+  integrated, not triggered — J = J₀e^(−B/ln²S) accumulates from the moment the
+  solution passes saturation — so a slow cool nucleates early at low
+  supersaturation and makes a few large crystals, and a quench nucleates late at
+  high supersaturation and makes a shower of small ones. Nývlt's metastable zone
+  emerges rather than being written down. 1.0 mm at 99.8% pure against 0.24 mm
+  at 99.0%, with the yield barely moving.
+* **Purity is measured, not claimed.** The product is handed to the
+  XI-CHE-B01 liquidus: the carefully handled benzoic acid melts at 122.3 °C over
+  0.2 °C, the badly handled one at 113.7 °C over 27.8 °C.
+* **A pentahydrate does not melt.** It is reported as losing its water of
+  crystallisation at 110 °C, and alum as melting in its own at 92.5 °C.
+
+## What a student can do, including get it wrong
+
+| Action | What the bench does |
+| --- | --- |
+| Use 26 mL "because the book said so" | No crystals at all, and the bench says the minimum is 3.5 mL. |
+| Squeeze into 3 mL and quench | 86% recovery — and 0.85 g of iron(II) sulphate comes down with the product. |
+| Skip the hot filtration | The balance reads *higher* and the purity falls to 86.7%: the extra weight is sand. |
+| Wash with ice-cold solvent | Purity 98.1 → 99.6%, mass 3.83 → 3.67 g. The bench charges for it. |
+| Try ethanol on copper sulphate | 7.0 g never dissolves. It is not a poor recrystallisation, it is a suspension. |
+| Try ethanol on benzoic acid | It dissolves — and 47% is recovered against 94% from water, because ethanol's curve is 2.0× where water's is 19×. |
+| Filter after it has cooled | Too late. The action is not offered, because it is not possible. |
+
+```bash
+npm run verify:cr     # 18 checks, including a control-response matrix
+CHROME_PATH=/path/to/chrome node verify-render-crystallisation.mjs   # 20 checks in a real GL context
+```
 
 ---
 
@@ -110,7 +163,7 @@ none of it is stored anywhere as a fact:
 | `.../ui/MeltingPointHUD.jsx` | Controls, instruments, observation table. |
 
 ```bash
-npm run verify        # 53 engine checks across all three benches, no browser
+npm run verify        # 71 engine checks across all four benches, no browser
 npm run verify:mp     # 15 thermochemistry checks
 CHROME_PATH=/path/to/chrome node verify-render-melting-point.mjs   # 23 checks in a real GL context
 CHROME_PATH=/path/to/chrome node verify-render.mjs                 # 24 checks for XII-CHE-A01

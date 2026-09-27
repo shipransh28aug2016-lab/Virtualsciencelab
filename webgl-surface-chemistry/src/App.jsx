@@ -29,6 +29,14 @@ const LABS = [
     load: () => import('./experiments/XI/Chemistry/XI-CHE-B02/index.jsx'),
   },
   {
+    code: 'XI-CHE-B03',
+    title: 'Crystallisation of an impure sample',
+    blurb: 'Measured solubility curves, an exact mass balance that counts water of crystallisation, and a nucleation rate that makes cooling speed decide crystal size and purity.',
+    meta: 'Class XI · Chemistry · Unit 12',
+    accent: 'from-sky-400/20 to-violet-500/10',
+    load: () => import('./experiments/XI/Chemistry/XI-CHE-B03/index.jsx'),
+  },
+  {
     code: 'XII-CHE-A01',
     title: 'Coagulation of colloids and the Tyndall effect',
     blurb: 'Hardy–Schulze by counter-ion sign and charge, Smoluchowski aggregation, Rayleigh–Mie scattering and Stokes settling on fractal flocs.',

@@ -10,7 +10,7 @@
  * Nothing here computes chemistry. Every value shown is read from the store.
  */
 import { memo, useMemo } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { SOLS, ELECTROLYTES } from '../engine/chemistry-data.js';
 import {
   useChemistryEngine, selectDerived, selectLog, selectStatus, selectRunning,
@@ -92,7 +92,7 @@ function Controls() {
   const step = max / 500;
 
   return (
-    <div className={`${GLASS} w-[22rem] shrink-0 p-4`}>
+    <div className={`${GLASS} w-full max-w-[22rem] shrink-0 p-4`}>
       <div className="mb-3 flex items-baseline justify-between">
         <h2 className="text-sm font-semibold tracking-tight text-slate-100">Bench</h2>
         <span className="text-[10px] uppercase tracking-widest text-slate-500">Surface chemistry</span>
@@ -215,20 +215,26 @@ function Instruments() {
   const tone = TONE[status.key] ?? TONE.stable;
 
   return (
-    <div className={`${GLASS} w-[22rem] shrink-0 p-4`}>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={status.key}
+    <div className={`${GLASS} w-full max-w-[22rem] shrink-0 p-4`}>
+      {/* Replaced outright rather than wrapped in <AnimatePresence mode="wait">.
+          An exit animation keeps the OLD card mounted until it finishes, and
+          framer-motion drives that off requestAnimationFrame — which on a slow
+          machine is already being spent on the scene. The bench would then be
+          displaying a stale statement about the experiment for as long as the
+          frames took to arrive, which is precisely the kind of disagreement
+          between the interface and the simulation this project exists to
+          prevent. Changing the key replaces the element, so the text on screen
+          is always the text the engine just produced. */}
+      <motion.div
+        key={status.key}
           initial={{ opacity: 0, y: -6 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 6 }}
-          transition={{ duration: 0.18 }}
-          className={`mb-3 rounded-xl border px-3 py-2 ${tone}`}
-        >
-          <div className="text-sm font-semibold">{status.title}</div>
-          <div className="mt-0.5 text-[11px] leading-snug opacity-80">{status.detail}</div>
-        </motion.div>
-      </AnimatePresence>
+        transition={{ duration: 0.18 }}
+        className={`mb-3 rounded-xl border px-3 py-2 ${tone}`}
+      >
+        <div className="text-sm font-semibold">{status.title}</div>
+        <div className="mt-0.5 text-[11px] leading-snug opacity-80">{status.detail}</div>
+      </motion.div>
 
       {/* Hardy–Schulze, made visible. The counter-ion is chosen by sign and then
           ranked by charge, and the CCC beside it is what that charge buys. */}
@@ -380,8 +386,12 @@ export function LabHUD() {
   return (
     /* pointer-events-none on the frame, re-enabled on each panel, so the space
        between the panels is still the beaker and can be orbited. */
-    <div className="pointer-events-none absolute inset-0 flex flex-col justify-between p-4 md:p-6">
-      <div className="flex items-start justify-between gap-4">
+    /* Stacked below xl: two 23rem panels side by side need 46rem of width, and
+       on anything narrower they used to overlap and COVER each other's controls.
+       A control you cannot reach is a control that does not exist. Below the
+       breakpoint the column scrolls instead. */
+    <div className="pointer-events-none absolute inset-0 flex flex-col justify-between gap-4 overflow-y-auto p-4 md:p-6">
+      <div className="flex flex-col items-start gap-4 xl:flex-row xl:justify-between">
         <div className="pointer-events-auto"><Controls /></div>
         <header className="pointer-events-none hidden select-none text-right lg:block">
           <h1 className="text-lg font-semibold tracking-tight text-slate-100">
