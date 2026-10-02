@@ -151,10 +151,10 @@
       "symbol": "",
       "unit": "mL",
       "type": "independent",
-      "min": 10,
+      "min": 1,
       "max": 150,
       "step": 2,
-      "default": 26
+      "default": 6
     },
     {
       "id": "crystallisationTempC",
@@ -359,16 +359,16 @@
   "expectedResult": {
     "quantity": "Percentage recovery from the minimum volume of hot solvent",
     "symbol": "",
-    "value": 45,
-    "tolerance": 10,
+    "value": 69,
+    "tolerance": 12,
     "unit": "%",
     "secondary": {
-      "quantity": "Melting point of the purified product",
+      "quantity": "Temperature at which the purified product loses its water of crystallisation",
       "value": 110,
       "tolerance": 3,
       "unit": "°C"
     },
-    "statement": "For the default 8 g of moderately impure copper sulphate, the minimum hot solvent that just dissolves it is about 25 mL (8 g ÷ 32 g per 100 mL solubility at the boil); even at that true minimum, copper sulphate's own cold-water solubility (14 g per 100 mL) is still such a large fraction of its hot solubility that a sizeable share of the compound must stay dissolved in the mother liquor, capping the achievable recovery at about 45 per cent — this is a genuine property of the compound, not a fault of technique. Alum and benzoic acid, whose cold solubility is much smaller relative to their hot solubility, recover far better (roughly 70 per cent and 80+ per cent respectively) from their own minimum volumes. The product melts close to the accepted value, showing the impurity has been left behind in the mother liquor. Using more solvent than the minimum lowers the recovery further; crash-cooling raises the yield but lowers the purity.",
+    "statement": "Copper(II) sulphate dissolves 75.4 g of the anhydrous salt per 100 g of water at 100 °C and only 20.7 g at 20 °C, so most of what dissolves in boiling water must come back out on cooling. Eight grams of the pentahydrate is 5.1 g of salt and 2.9 g of its own water of crystallisation, which counts towards the solvent — so the minimum volume of boiling water that just dissolves it is only about 3.5 mL, and 6 mL returns about 69 per cent. Every millilitre beyond the minimum keeps more of the compound dissolved for good: at 14 mL nothing crystallises at 20 °C at all. The recovery is arithmetic, not technique. Purity is a separate question decided by the cooling: crystals grown slowly are large and carry almost no mother liquor, while a quench gives a shower of small ones with liquor trapped through them.",
     "key": "recovery"
   },
   "safety": [

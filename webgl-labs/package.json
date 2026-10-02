@@ -1,0 +1,32 @@
+{
+  "name": "virtual-science-lab-webgl",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "CBSE virtual science laboratory: physics-driven WebGL benches (melting point, boiling point, surface chemistry).",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "verify": "node tools/verify-all.mjs",
+    "lint": "node tools/lint.mjs",
+    "test": "npm run lint && npm run verify",
+    "probe": "node tools/probe-lab.mjs"
+  },
+  "dependencies": {
+    "@react-three/drei": "^9.114.0",
+    "@react-three/fiber": "^8.17.10",
+    "framer-motion": "^11.11.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.169.0",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "@vitejs/plugin-react": "^4.3.3",
+    "playwright": "1.62.1",
+    "tailwindcss": "^4.0.0",
+    "vite": "^5.4.10"
+  }
+}
