@@ -75,7 +75,7 @@ export function ElectronicBalance({ useStore }) {
     if (shieldGroup.current) shieldGroup.current.visible = sp.shield;
     anim.door += ((s.bals[s.balanceId].shield === 'closed' ? 1 : 0) - anim.door) * (1 - Math.exp(-dt * 6));
     if (door.current) door.current.position.x = lerp(0.62, 0, anim.door);
-    if (bubble.current) bubble.current.position.x = Math.max(-0.032, Math.min(0.032, Math.sign(s.feet[s.balanceId]) * s.display.bal.tilt * 0.03));
+    if (bubble.current) bubble.current.position.x = Math.max(-0.032, Math.min(0.032, Math.sign(s.feet?.[s.balanceId] ?? 1) * s.display.bal.tilt * 0.03));
     if (led.current) led.current.material.emissiveIntensity = r.stable ? 2.2 : 0.1;
   });
 
@@ -230,10 +230,10 @@ function Shape({ shape, objRef }) {
 }
 
 /** One object: on the tray until it is on the pan; a heap of sample inside if it holds any. */
-function LabObject({ id, useStore, panAnchor }) {
+function LabObject({ id, useStore, panAnchor, slots }) {
   const group = useRef(); const heap = useRef(); const ring = useRef();
   const extras = useMemo(() => ({ lid: null, hot: null }), []);
-  const pos = useMemo(() => ({ x: TRAY[id]?.[0] ?? 0, y: 0, z: TRAY[id]?.[1] ?? 0 }), [id]);
+  const pos = useMemo(() => ({ x: slots[id]?.[0] ?? 0, y: 0, z: slots[id]?.[1] ?? 0 }), [id, slots]);
   const shape = useStore.getState().objects[id].shape;
   const containerShape = shape === 'watchglass' ? 0.02 : 0.02;
   useFrame((_, dtRaw) => {
@@ -242,7 +242,7 @@ function LabObject({ id, useStore, panAnchor }) {
     const g = group.current; if (!g) return;
     g.visible = !o.hidden;
     const onPan = s.pan.includes(id);
-    const want = onPan ? panAnchor(s) : { x: TRAY[id][0], y: 0, z: TRAY[id][1] };
+    const want = onPan ? panAnchor(s) : { x: slots[id][0], y: 0, z: slots[id][1] };
     const k = 1 - Math.exp(-dt * 7);
     pos.x += (want.x - pos.x) * k; pos.y += (want.y - pos.y) * k; pos.z += (want.z - pos.z) * k;
     g.position.set(pos.x, pos.y + (onPan ? 0.02 : 0), pos.z);
@@ -258,7 +258,7 @@ function LabObject({ id, useStore, panAnchor }) {
   const sampleColour = id === 'cuso4' ? '#f4f6f4' : id === 'naoh' ? '#e8eef2' : SAMPLE_COLOUR.sample;
   const heapY = shape === 'bottle' ? 0.03 : shape === 'beaker' ? 0.03 : 0.03;
   return (
-    <group ref={group} position={[TRAY[id][0], 0, TRAY[id][1]]} onClick={(e) => { e.stopPropagation(); useStore.getState().pick(id); }}>
+    <group ref={group} position={[slots[id][0], 0, slots[id][1]]} onClick={(e) => { e.stopPropagation(); useStore.getState().pick(id); }}>
       <Shape shape={shape} objRef={extras} />
       <mesh ref={heap} position={[0, heapY + containerShape * 0, 0]} visible={false}><sphereGeometry args={[1, 16, 10]} /><meshStandardMaterial color={sampleColour} roughness={0.9} /></mesh>
       <mesh ref={ring} rotation-x={-Math.PI / 2} position={[0, 0.004, 0]} visible={false}><ringGeometry args={[0.26, 0.29, 40]} /><meshBasicMaterial color="#38bdf8" transparent opacity={0.85} /></mesh>
@@ -267,16 +267,16 @@ function LabObject({ id, useStore, panAnchor }) {
 }
 
 /** Everything: both balances and every object the store knows about. */
-export function BalanceBench({ useStore, ids }) {
+export function BalanceBench({ useStore, ids, slots = TRAY, beam = true }) {
   const panAnchor = (s) => (s.balanceId === 'beam'
     ? { x: BEAM_X + BEAM_PAN.x, y: BEAM_PAN.rest - 0.75 * Math.sin((Math.max(-9, Math.min(9, s.beam.theta)) * 0.5 * Math.PI) / 180) + 0.01, z: 0 }
     : { x: BALANCE_X, y: PAN_Y, z: 0 });
-  const list = ids ?? Object.keys(TRAY);
+  const list = ids ?? Object.keys(slots);
   return (
     <group>
       <ElectronicBalance useStore={useStore} />
-      <BeamBalance useStore={useStore} />
-      {list.map((id) => <LabObject key={id} id={id} useStore={useStore} panAnchor={panAnchor} />)}
+      {beam ? <BeamBalance useStore={useStore} /> : null}
+      {list.map((id) => <LabObject key={id} id={id} useStore={useStore} panAnchor={panAnchor} slots={slots} />)}
     </group>
   );
 }

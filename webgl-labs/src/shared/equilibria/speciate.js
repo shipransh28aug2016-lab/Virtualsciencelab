@@ -77,7 +77,9 @@ export function speciate({
   const components = allComponents.filter((c) => c.fixed !== undefined || c.id === charge || (totals[c.id] ?? 0) > 1e-15);
   const have = new Set(components.map((c) => c.id));
   const species = allSpecies.filter((s) => Object.keys(s.nu).every((j) => have.has(j)));
-  const solidDefs = allSolids.filter((s) => Object.keys(s.nu).every((j) => have.has(j) && totals[j] !== undefined));
+  /* A hydroxide or a gas is written with H⁺ in it (Cu(OH)₂ + 2H⁺ → Cu²⁺ + 2H₂O); the charge component has no total, and its
+     amount is whatever electroneutrality says — so it neither limits a solid nor has to be in `totals`. */
+  const solidDefs = allSolids.filter((s) => Object.keys(s.nu).every((j) => have.has(j) && (j === charge || totals[j] !== undefined)));
   const unknown = components.filter((c) => c.fixed === undefined);
   const nC = components.length; const nS = species.length; const nU = unknown.length;
 
@@ -92,7 +94,7 @@ export function speciate({
   const solNu = solidDefs.map((s) => Object.entries(s.nu).map(([j, n]) => [cIdx[j], n]));
   const lnKsp = solidDefs.map((s) => Math.log(kAt(s.logKsp, s.dH, T)));
   /* The most of a solid that could possibly form, from the component it runs out of first. */
-  const limit = solidDefs.map((s) => Math.min(...Object.entries(s.nu).map(([j, n]) => (totals[j] ?? Infinity) / n)));
+  const limit = solidDefs.map((s) => Math.min(...Object.entries(s.nu).filter(([j, n]) => j !== charge && n > 0).map(([j, n]) => totals[j] / n)));
   const chargeIdx = unknown.findIndex((c) => c.id === charge);
   const spectatorI = spectators.reduce((a, sp) => a + 0.5 * sp.z * sp.z * sp.c, 0);
   const spectatorPos = spectators.reduce((a, sp) => a + (sp.z > 0 ? sp.z * sp.c : 0), 0);

@@ -10,7 +10,10 @@
  * there into a display the way the hardware does; this file knows only what
  * the student has set in front of it, what they wrote down, and what that says.
  */
-import { BALANCES, stepItems } from '../../../../../shared/balance/balance.js';
+import { BALANCES } from '../../../../../shared/balance/balance.js';
+import {
+  freshObjects as buildObjects, massOf, sampleOf, panItems, stepObjects as stepAll, spatulaPortion, addSample,
+} from '../../../../../shared/balance/objects.js';
 import { mulberry32 } from '../../../../../shared/numerics.js';
 
 /* ── The things on the bench ─────────────────────────────────────────────────── */
@@ -41,47 +44,10 @@ export const CATALOGUE = {
 };
 export const OBJECT_ORDER = ['bottle', 'glass', 'salt', 'coin', 'cuso4', 'naoh', 'crucible', 'check', 'block', 'calweight'];
 
-export const freshObjects = () => Object.fromEntries(Object.entries(CATALOGUE).map(([id, o]) => [id, { ...o, parts: o.parts.map((p) => ({ ...p, gain: 0 })), dT: o.dT ?? 0, lidOn: Boolean(o.lid) && !o.startOpen, transferred: false }]));
-
-export const massOf = (o) => o.parts.reduce((a, p) => a + p.m, 0);
-export const sampleOf = (o) => o.parts.find((p) => p.id === 'sample')?.m ?? 0;
-
-/** The parts of what is on the pan, as the balance sees them. */
-export function panItems(objects, pan) {
-  return pan.flatMap((id) => {
-    const o = objects[id];
-    const sealed = o.lid && o.lidOn;
-    return o.parts.map((p) => ({ id: p.id === 'steel' && id === 'calweight' ? 'calweight' : `${id}:${p.id}`, m: p.m, rho: p.rho, dT: o.dT, gain: p.gain, hygro: p.hygro, exposed: !sealed }));
-  });
-}
-
-/** Everything on the bench moves on: samples take up water, warm things cool, on the pan or off it. */
-export function stepObjects(objects, pan, dt) {
-  const out = {};
-  for (const [id, o] of Object.entries(objects)) {
-    const sealed = o.lid && o.lidOn;
-    let dT = o.dT;
-    const parts = o.parts.map((p) => {
-      const item = { id: p.id, m: p.m, rho: p.rho, dT: o.dT, gain: p.gain, hygro: p.hygro, exposed: !sealed };
-      const next = stepItems([item], dt)[0];
-      dT = next.dT ?? dT;
-      return next === item ? p : { ...p, m: next.m, gain: next.gain ?? 0 };
-    });
-    out[id] = parts.some((p, i) => p !== o.parts[i]) || dT !== o.dT ? { ...o, parts, dT: o.parts.length ? dT : 0 } : o;
-  }
-  return out;
-}
-
-/** A spatula-full: the portion asked for, give or take what a hand does. */
-export function spatulaPortion(nominalG, seed, count) {
-  const u = mulberry32((seed * 7919 + count * 104729) >>> 0)();
-  return Math.max(0.001, Number((nominalG * (0.88 + 0.24 * u)).toFixed(4)));
-}
-export function addSample(o, g) {
-  const has = o.parts.some((p) => p.id === 'sample');
-  const parts = has ? o.parts.map((p) => (p.id === 'sample' ? { ...p, m: p.m + g } : p)) : [...o.parts, { id: 'sample', label: 'sodium chloride', m: g, rho: 2.16, gain: 0 }];
-  return { ...o, parts };
-}
+export const freshObjects = () => buildObjects(CATALOGUE);
+export { massOf, sampleOf, panItems, spatulaPortion, addSample };
+/** Everything on the bench moves on with the clock (the pan makes no difference to a crucible cooling). */
+export const stepObjects = (objects, pan, dt) => stepAll(objects, dt);
 
 /** Tip a bottle out into the beaker: most of it goes; a film stays behind. */
 export function tipOut(objects, fromId, seed, count) {
