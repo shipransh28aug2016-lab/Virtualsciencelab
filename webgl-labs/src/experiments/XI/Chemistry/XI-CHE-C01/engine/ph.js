@@ -23,7 +23,7 @@ import {
   universalColour, universalConcentrations, indicatorAdditive, buildChart, UNIVERSAL_STRENGTH,
 } from '../../../../../shared/chem/indicators.js';
 import { multiplyColour } from '../../../../../shared/chem/spectra.js';
-import { makeElectrode, electrodePotential, factoryMeter, calibrate, displayPH, slopePercent } from '../../../../../shared/chem/phMeter.js';
+import { makeElectrode, electrodePotential, factoryMeter, calibrate, displayPH, slopePercent, electrodeSettled } from '../../../../../shared/chem/phMeter.js';
 import { pKw } from '../../../../../shared/chem/constants.js';
 
 export const SAMPLE_ML = 25;        // what is in the beaker
@@ -168,7 +168,7 @@ export function meterReading(s) {
     mV: s.E_mV,
     /* Stable the way a meter decides it: the electrode has all but stopped
        drifting. Judged on the settling itself, not on the jitter riding on it. */
-    stable: Math.abs(s.world.targetE - s.Ed_mV) / electrodeFor(s).tau_s < 0.05,
+    stable: electrodeSettled(electrodeFor(s), s.Ed_mV, s.world.targetE),
     slope: meter.calibrated ? slopePercent(meter) : null,
   };
 }

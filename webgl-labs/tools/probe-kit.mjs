@@ -375,7 +375,13 @@ export class Kit {
       };
 
       const out = [];
-      for (const el of document.querySelectorAll('[data-control]')) {
+      /* By id, looked up afresh each time: sweeping one control (the method)
+         can unmount and remount others, and a node held from before is detached
+         — clicking it does nothing, which looks exactly like a dead control. */
+      const ids = [...new Set([...document.querySelectorAll('[data-control]')].map((e) => e.getAttribute('data-control')))];
+      for (const wanted of ids) {
+        const el = document.querySelector(`[data-control="${CSS.escape(wanted)}"]`);
+        if (!el) continue;                                        // hidden by the state the sweep left behind
         const holder = el.querySelector('[data-kind]');
         if (!holder) continue;                                    // an actions row or a group: not a setting
         const kind = holder.getAttribute('data-kind');

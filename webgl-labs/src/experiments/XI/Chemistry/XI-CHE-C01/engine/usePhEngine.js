@@ -13,8 +13,7 @@
  * reading has settled records a wrong point.
  */
 import { create } from 'zustand';
-import { mulberry32, gaussian } from '../../../../../shared/numerics.js';
-import { settle } from '../../../../../shared/chem/phMeter.js';
+import { stepElectrode } from '../../../../../shared/chem/phMeter.js';
 import { pKw } from '../../../../../shared/chem/constants.js';
 import {
   SHELF_BY_ID, FILM_ML, computeWorld, beakerSystem, bufferSystem, addSpoil, electrodeFor, addCalibrationPoint, meterReading,
@@ -58,11 +57,7 @@ export const usePhEngine = create((set, get) => ({
     if (s.method === 'meter' && s.world.targetE !== null) {
       /* The glass settles exactly (analytic in dt, so the clock speed and the
          frame rate change nothing); the display jitter rides on top of it. */
-      const el = electrodeFor(s);
-      const Ed = settle(el, s.Ed_mV, s.world.targetE, dt, null);
-      patch.Ed_mV = Ed;
-      patch.E_mV = Ed + gaussian(mulberry32(s.noiseSeed)) * el.noise_mV;
-      patch.noiseSeed = s.noiseSeed + 1;
+      Object.assign(patch, stepElectrode(electrodeFor(s), s, s.world.targetE, dt));
     }
     if (s.method === 'paper' && s.strip.dipped) patch.strip = { dipped: true, t: s.strip.t + dt };
     set(patch);

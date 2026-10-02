@@ -13,7 +13,7 @@ import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { Studio } from '../../../../../shared/three/Studio.jsx';
 import { Vessel } from '../../../../../shared/three/Vessel.jsx';
-import { GlassMaterial } from '../../../../../shared/three/Glass.jsx';
+import { Electrode, Strip } from '../../../../../shared/three/PhApparatus.jsx';
 import { setLiquid } from '../../../../../shared/three/LiquidMaterial.jsx';
 import { cylinderProfile, testTubeProfile, heightAtVolume } from '../../../../../shared/three/profiles.js';
 import { sceneAbsorption } from '../../../../../shared/chem/spectra.js';
@@ -95,36 +95,10 @@ export function PhBench() {
         <boxGeometry args={[0.5, 0.012, 0.3]} />
         <meshStandardMaterial color="#e8eaee" roughness={0.6} />
       </mesh>
-      <group position={[X.strip, 0.016, 0]} rotation-y={0.35}>
-        <mesh position={[0, 0, -0.07]}>
-          <boxGeometry args={[0.035, 0.004, 0.14]} />
-          <meshStandardMaterial color="#f3eee0" roughness={0.9} />
-        </mesh>
-        <mesh ref={stripTip} position={[0, 0.0005, 0.07]}>
-          <boxGeometry args={[0.035, 0.0045, 0.14]} />
-          <meshStandardMaterial color="#f3eee0" roughness={0.9} />
-        </mesh>
-      </group>
+      <Strip tipRef={stripTip} position={[X.strip, 0.016, 0]} rotation-y={0.35} />
 
       {/* The electrode, on its arm. */}
-      <group ref={electrode} position={[X.rinse, HOVER_Y, 0]}>
-        <mesh position={[0, 0.02, 0]}>
-          <sphereGeometry args={[0.034, 20, 14]} />
-          <GlassMaterial thickness={0.03} transmission={0.85} />
-        </mesh>
-        <mesh position={[0, 0.5, 0]}>
-          <cylinderGeometry args={[0.024, 0.024, 1.0, 20, 1, true]} />
-          <GlassMaterial thickness={0.03} transmission={0.9} />
-        </mesh>
-        <mesh position={[0, 1.04, 0]}>
-          <cylinderGeometry args={[0.034, 0.034, 0.14, 20]} />
-          <meshStandardMaterial color="#1b2230" roughness={0.45} metalness={0.5} />
-        </mesh>
-        <mesh position={[0, 1.4, 0]}>
-          <cylinderGeometry args={[0.006, 0.006, 0.6, 8]} />
-          <meshStandardMaterial color="#0c1018" roughness={0.7} />
-        </mesh>
-      </group>
+      <Electrode ref={electrode} position={[X.rinse, HOVER_Y, 0]} />
     </group>
   );
 }

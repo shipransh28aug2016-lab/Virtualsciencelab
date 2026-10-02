@@ -25,6 +25,7 @@
  */
 import { nernstSlope_mV } from './constants.js';
 import { mulberry32, gaussian, clamp } from '../numerics.js';
+import { certifiedPH } from './species.js';
 
 /** The potentiometric selectivity of the glass for Na⁺ over H⁺. 10⁻¹² is a
  *  good general-purpose electrode: at pH 13 in 0.1 M NaOH it reads about 0.25 low. */
@@ -74,6 +75,17 @@ export function calibrate(points, tC = 25) {
   return { offset_mV: intercept, slopeFraction: slope / S, points, calibrated: true };
 }
 
+/** A meter that was calibrated this morning on pH 4.01 and 9.18 at the
+ *  temperature of the day: what a bench shows when the calibration is not the
+ *  thing being taught. */
+export function calibratedMeter(el, tC = 25) {
+  const points = ['pH4', 'pH9'].map((id) => {
+    const pH = certifiedPH(id, tC);
+    return { buffer: id, pH, E_mV: electrodePotential(el, { pH, tC }) };
+  });
+  return { ...calibrate(points, tC), points };
+}
+
 /** What the meter displays for a given electrode potential. */
 export function displayPH(meter, E_mV, tC = 25) {
   const S = nernstSlope_mV(tC) * meter.slopeFraction;
@@ -90,8 +102,20 @@ export function settle(el, E_now, E_target, dt, rng) {
   return E_now + (E_target - E_now) * k + (rng ? gaussian(rng) * el.noise_mV * Math.sqrt(dt) : 0);
 }
 
-/** "Stable" the way a meter decides: the potential has stopped moving. */
-export const isStable = (dE_mV_per_s) => Math.abs(dE_mV_per_s) < 0.05;
+/**
+ * One frame of an electrode. The glass settles exactly towards what its
+ * solution demands — analytic in dt, so neither the clock speed nor the frame
+ * rate changes where it ends up — and the display jitter rides on top. The
+ * smooth part (`Ed_mV`) is what "stable" is judged on; the jittery one (`E_mV`)
+ * is what the meter shows and what a calibration button captures.
+ */
+export function stepElectrode(el, { Ed_mV, noiseSeed }, targetE, dt) {
+  const Ed = settle(el, Ed_mV, targetE, dt, null);
+  return { Ed_mV: Ed, E_mV: Ed + gaussian(mulberry32(noiseSeed)) * el.noise_mV, noiseSeed: noiseSeed + 1 };
+}
+
+/** A meter calls the reading stable when the glass has all but stopped drifting. */
+export const electrodeSettled = (el, Ed_mV, targetE) => Math.abs(targetE - Ed_mV) / el.tau_s < 0.05;
 
 /** Electrode health as a real meter reports it: slope as a percentage of ideal. */
 export const slopePercent = (meter) => clamp(meter.slopeFraction * 100, 0, 110);
