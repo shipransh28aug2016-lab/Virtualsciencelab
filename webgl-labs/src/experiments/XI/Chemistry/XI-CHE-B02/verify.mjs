@@ -12,7 +12,7 @@ import {
   isAssociated, ebullioscopicConstant, bubblePointC, totalVapourPressure,
   vapourComposition, makeCharge, correctToStandard, capillaryHeadMmHg,
   derive, integrate, STREAM_CONFIRM_SECONDS,
-} from './src/experiments/XI/Chemistry/XI-CHE-B02/engine/vapour.js';
+} from './engine/vapour.js';
 
 const ok = [];
 

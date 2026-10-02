@@ -8,13 +8,10 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "verify": "node verify-physics.mjs && node verify-melting-point.mjs && node verify-boiling-point.mjs && node verify-crystallisation.mjs",
-    "verify:mp": "node verify-melting-point.mjs",
-    "verify:sc": "node verify-physics.mjs",
-    "verify:bp": "node verify-boiling-point.mjs",
-    "verify:cr": "node verify-crystallisation.mjs",
+    "verify": "node tools/verify-all.mjs",
     "lint": "node tools/lint.mjs",
-    "test": "npm run lint && npm run verify"
+    "test": "npm run lint && npm run verify",
+    "probe": "node tools/probe-lab.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.114.0",

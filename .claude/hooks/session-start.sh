@@ -6,7 +6,7 @@
 #
 #   1. node_modules, for BOTH packages. They are gitignored, so a new container
 #      has none: the repo root (the 2D app, its audits, and Playwright) and
-#      webgl-surface-chemistry/ (the React-Three-Fiber benches, which also import
+#      webgl-labs/ (the React-Three-Fiber benches, which also import
 #      Playwright for their render checks).
 #
 #   2. A browser the render checks can drive. The container ships Chromium 141
@@ -42,7 +42,7 @@ install_deps() {
 }
 
 install_deps .
-install_deps webgl-surface-chemistry
+install_deps webgl-labs
 
 # ── Point Playwright at the Chromium that is installed ───────────────────────
 BROWSERS="${PLAYWRIGHT_BROWSERS_PATH:-/opt/pw-browsers}"
@@ -73,8 +73,8 @@ else
 fi
 
 # ── Fail loudly if the install did not produce a usable toolchain ────────────
-for required in node_modules/playwright webgl-surface-chemistry/node_modules/vite \
-  webgl-surface-chemistry/node_modules/three; do
+for required in node_modules/playwright webgl-labs/node_modules/vite \
+  webgl-labs/node_modules/three; do
   if [ ! -d "$required" ]; then
     echo "session-start: ERROR $required is missing after install" >&2
     exit 1

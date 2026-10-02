@@ -5,8 +5,13 @@
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { ACESFilmicToneMapping, SRGBColorSpace } from 'three';
-import { BeakerSimulation } from '../three/BeakerSimulation.jsx';
-import { LabHUD } from '../ui/LabHUD.jsx';
+import { BeakerSimulation } from './three/BeakerSimulation.jsx';
+import { LabHUD } from './ui/LabHUD.jsx';
+import { exposeForProbe } from '../../../../shared/probe.js';
+import { useChemistryEngine } from './engine/useChemistryEngine.js';
+
+/* Opt-in only: /?probe=1#/XII-CHE-A01 */
+exposeForProbe('XII-CHE-A01', useChemistryEngine);
 
 export default function SurfaceChemistryLab() {
   return (

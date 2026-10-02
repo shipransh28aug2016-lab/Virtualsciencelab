@@ -9,7 +9,7 @@ import assert from 'node:assert/strict';
 import {
   COMPOUNDS, derive, integrate, eutectic, liquidusK, cryoscopicConstant,
   rateBroadeningK, temperatureAtFraction, meltedFraction, AMBIENT_C, THERMOMETERS,
-} from './src/experiments/XI/Chemistry/XI-CHE-B01/engine/thermochemistry.js';
+} from './engine/thermochemistry.js';
 
 const ok = [];
 const K2C = (k) => k - 273.15;

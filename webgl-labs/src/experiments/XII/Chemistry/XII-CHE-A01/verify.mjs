@@ -6,13 +6,13 @@
  * Every assertion here is a statement a Class XII examiner would recognise.
  */
 import assert from 'node:assert/strict';
-import { SOLS, ELECTROLYTES } from './src/engine/chemistry-data.js';
+import { SOLS, ELECTROLYTES } from './engine/chemistry-data.js';
 import {
   activeCounterIon, criticalCoagulationConcentration_mM, coagulatingPower, isCoagulable,
   stabilityRatio, coagulationHalfTime_s, perikineticRate, orthokineticRate,
   scatteringCoefficientRGB, stokesVelocity_mps, diffusionCoefficient,
   maxStableFlocRadius, derive, integrate,
-} from './src/engine/physics.js';
+} from './engine/physics.js';
 
 const As = SOLS.arsenousSulphide, Fe = SOLS.ferricHydroxide;
 const { NaCl, BaCl2, AlCl3, K2SO4, K3FeCN6 } = ELECTROLYTES;

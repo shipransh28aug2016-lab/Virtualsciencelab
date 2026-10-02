@@ -13,9 +13,9 @@ import {
   solubility, enthalpyOfSolution, hydrateRatio, chargeFromCrude,
   anhydrousCrystallised, saturationTemperatureC, minimumSolventMl,
   meanCrystalSizeMm, product, derive, integrate, crystallisationComplete,
-} from './src/experiments/XI/Chemistry/XI-CHE-B03/engine/crystallisation.js';
-import { liquidusK } from './src/experiments/XI/Chemistry/XI-CHE-B01/engine/thermochemistry.js';
-import { COMPOUNDS } from './src/experiments/XI/Chemistry/XI-CHE-B01/engine/compounds.js';
+} from './engine/crystallisation.js';
+import { liquidusK } from '../XI-CHE-B01/engine/thermochemistry.js';
+import { COMPOUNDS } from '../XI-CHE-B01/engine/compounds.js';
 
 const ok = [];
 
