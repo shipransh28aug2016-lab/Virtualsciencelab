@@ -21,9 +21,7 @@
  */
 import { solveAqueous, systemFrom, activityCoefficient } from '../../../../../shared/chem/aqueous.js';
 import { WEAK, SOLIDS, SUBSTANCES } from '../../../../../shared/chem/species.js';
-import {
-  INDICATORS, universalConcentrations, indicatorColour, buildChart, UNIVERSAL_STRENGTH,
-} from '../../../../../shared/chem/indicators.js';
+import { vesselColour, buildChart, UNIVERSAL_STRENGTH } from '../../../../../shared/chem/indicators.js';
 import { makeElectrode, electrodePotential, calibratedMeter, displayPH, electrodeSettled, slopePercent } from '../../../../../shared/chem/phMeter.js';
 import { mulberry32 } from '../../../../../shared/numerics.js';
 import {
@@ -36,7 +34,7 @@ export const CHART = buildChart({ strength: UNIVERSAL_STRENGTH });
 /** What is really in the bottle marked "about 0.1 M NaOH": a little under,
  *  because sodium hydroxide takes up carbon dioxide and water from the air. */
 export const NAOH_M = 0.0978;
-export const FLASK_PATH_CM = 4;          // the depth of liquid a colour is judged through
+export const FLASK_PATH_CM = 3;          // the depth of liquid a colour is judged through
 
 const sys = (id, c, T) => systemFrom([{ recipe: SUBSTANCES[id], scale: c }], { T, WEAK, SOLIDS });
 export const analyteSystem = (s) => sys('naoh', NAOH_M, s.tempC);
@@ -44,31 +42,21 @@ export const titrantSystem = (s) => sys('hcl', s.titrantN, s.tempC);
 
 /* ── Indicators ───────────────────────────────────────────────────────────── */
 
-/** Bottle strengths in g/L, as made up for a school lab (phenolphthalein 0.5 % in
- *  ethanol, methyl orange 0.1 %, bromothymol blue 0.04 %). */
 export const INDICATOR_LIST = [
   { id: 'universal', label: 'Universal indicator' },
-  { id: 'phenolphthalein', label: 'Phenolphthalein', bottle: 5.0 },
-  { id: 'methylOrange', label: 'Methyl orange', bottle: 1.0 },
-  { id: 'bromothymolBlue', label: 'Bromothymol blue', bottle: 0.4 },
+  { id: 'phenolphthalein', label: 'Phenolphthalein' },
+  { id: 'methylOrange', label: 'Methyl orange' },
+  { id: 'bromothymolBlue', label: 'Bromothymol blue' },
   { id: 'none', label: 'No indicator' },
 ];
 export const INDICATOR_BY_ID = Object.fromEntries(INDICATOR_LIST.map((i) => [i.id, i]));
+/** How many drops a lab manual would say, for each. */
+export const RECOMMENDED_DROPS = { universal: 5, phenolphthalein: 2, methylOrange: 2, bromothymolBlue: 3, none: 0 };
 
-const CLEAR = { linear: [1, 1, 1], srgb: [1, 1, 1], hex: '#ffffff' };
-
-/** The colour a flask of pH `pH` and total volume `V` shows, through the flask. */
-export function flaskColour(s, pH, V, I) {
-  const gz = (z) => activityCoefficient(z, I, s.tempC);
-  if (s.indicator === 'none' || s.drops === 0) return CLEAR;
-  if (s.indicator === 'universal') {
-    const strength = UNIVERSAL_STRENGTH * (s.drops / 5) * (10 / V);
-    return indicatorColour(universalConcentrations(strength), pH, { pathCm: FLASK_PATH_CM, gz });
-  }
-  const ind = INDICATOR_BY_ID[s.indicator];
-  const conc = (ind.bottle / INDICATORS[s.indicator].MW) * ((s.drops * DROP_ML) / V);
-  return indicatorColour({ [s.indicator]: conc }, pH, { pathCm: FLASK_PATH_CM, gz });
-}
+/** The colour a flask of pH `pH`, ionic strength `I` and total volume `V` shows. */
+export const flaskColour = (s, pH, V, I) => vesselColour({
+  indicator: s.indicator, drops: s.drops, pH, I, tC: s.tempC, volumeMl: V, pathCm: FLASK_PATH_CM, dropMl: DROP_ML,
+});
 
 /** In words, as a student would write the colour into a notebook. */
 const PALETTE = [

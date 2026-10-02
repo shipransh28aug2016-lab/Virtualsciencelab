@@ -22,6 +22,7 @@
  */
 import { colourThrough, absorbancePerCm, srgbToLab, deltaE } from './spectra.js';
 import { gaussian } from '../numerics.js';
+import { activityCoefficient } from './aqueous.js';
 
 /* Each form: bands [{ l0, eps, sigma }]. z0 is the charge of the most protonated
    form; pKas are successive. */
@@ -44,7 +45,10 @@ export const INDICATORS = {
   phenolphthalein: {
     id: 'phenolphthalein', label: 'Phenolphthalein', z0: 0, pKas: [9.3], range: [8.2, 10.0], MW: 318.3,
     forms: [{ name: 'HIn', colour: 'colourless', bands: [] },
-            { name: 'In⁻', colour: 'pink', bands: [{ l0: 553, eps: 3.0e4, sigma: 33 }] }],
+            /* The dianion's band is not a single Gaussian: it is asymmetric, with a
+               shoulder near 515 nm and absorption tailing into the violet. A lone
+               553 nm band renders violet; the real solution is magenta-pink. */
+            { name: 'In⁻', colour: 'pink', bands: [{ l0: 553, eps: 3.0e4, sigma: 34 }, { l0: 515, eps: 0.5e4, sigma: 28 }, { l0: 410, eps: 1.0e4, sigma: 45 }] }],
   },
   thymolBlue: {
     id: 'thymolBlue', label: 'Thymol blue', z0: 0, pKas: [1.65, 8.9], range: [1.2, 2.8], MW: 466.6,
@@ -166,4 +170,23 @@ export function readChart(srgb, chart, { rng = null, noise = 0 } = {}) {
   let best = chart[0]; let bd = Infinity;
   for (const p of chart) { const d = deltaE(seen, p.lab); if (d < bd) { bd = d; best = p; } }
   return { pH: best.pH, deltaE: bd };
+}
+
+/**
+ * An indicator in a vessel: the colour a solution of pH `pH`, ionic strength
+ * `I` and total volume `volumeMl` shows after `drops` drops of the bottle. The
+ * dye is diluted by the volume it goes into, so the same drops are a paler
+ * colour in a bigger flask. Universal indicator is dosed like the tube it was
+ * made for — five drops in 10 mL is the reference strength.
+ */
+export const INDICATOR_BOTTLES = { phenolphthalein: 1.0, methylOrange: 1.0, bromothymolBlue: 0.4, methylRed: 0.2, thymolBlue: 0.4 };   // g/L
+const CLEAR = { linear: [1, 1, 1], srgb: [1, 1, 1], hex: '#ffffff' };
+export function vesselColour({ indicator, drops, pH, I = 0, tC = 25, volumeMl, pathCm = 3, dropMl = 0.05 }) {
+  if (!indicator || indicator === 'none' || drops <= 0) return CLEAR;
+  const gz = (z) => activityCoefficient(z, I, tC);
+  if (indicator === 'universal') {
+    return indicatorColour(universalConcentrations(UNIVERSAL_STRENGTH * (drops / 5) * (10 / volumeMl)), pH, { pathCm, gz });
+  }
+  const conc = (INDICATOR_BOTTLES[indicator] / INDICATORS[indicator].MW) * ((drops * dropMl) / volumeMl);
+  return indicatorColour({ [indicator]: conc }, pH, { pathCm, gz });
 }

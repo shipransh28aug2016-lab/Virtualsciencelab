@@ -332,7 +332,7 @@ export class Kit {
 
       const instruments = () => [...document.querySelectorAll('[data-probe]')]
         .filter((e) => e.getAttribute('data-probe') !== 'table')
-        .map((e) => `${e.getAttribute('data-probe')}=${e.textContent}`).join('|');
+        .map((e) => `${e.getAttribute('data-probe')}=${e.textContent}${e.getAttribute('data-hex') ?? ''}`).join('|');
 
       const picture = () => new Promise((resolve) => requestAnimationFrame(() => {
         const cv = document.querySelector('canvas');

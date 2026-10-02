@@ -439,7 +439,7 @@ export function BoilingPointHUD() {
       <div className="flex flex-col items-start gap-4 xl:flex-row xl:justify-between">
         <div className="pointer-events-auto"><Controls /></div>
         <header className="pointer-events-none hidden select-none text-right lg:block">
-          <h1 className="text-lg font-semibold tracking-tight text-slate-100">
+          <h1 className="ml-auto max-w-[34ch] text-balance text-lg font-semibold leading-snug tracking-tight text-slate-100">
             Determination of the boiling point of an organic compound
           </h1>
           <p className="text-[11px] text-slate-400">

@@ -15,7 +15,7 @@ import { stepElectrode, electrodePotential } from '../../../../../shared/chem/ph
 import { relaxUnmixed } from '../../../../../shared/titration/titration.js';
 import {
   computeWorld, initialReading, totalAdded, remaining, shownReading, started, agitationOf, meterReading, pHToRecord,
-  notesFor, analyse, colourName, electrodeFor, DROP_ML,
+  notesFor, analyse, colourName, electrodeFor, DROP_ML, RECOMMENDED_DROPS,
 } from './titrate.js';
 
 const SETUP = {
@@ -59,8 +59,11 @@ export const useTitrationEngine = create((set, get) => ({
     /* The stopcock is a hand on a tap: it runs on the clock the student lives in. */
     const s = s0.stopcock === 'open' ? deliver(s0, s0.flow * raw) : s0;
     const relaxed = relaxUnmixed(s.unmixed, dt, agitationOf(s));
-    const unmixed = relaxed < 1e-6 ? 0 : relaxed;
-    const moved = Math.abs(unmixed - s.unmixed) > 2e-4 || (s.unmixed > 0 && unmixed === 0);
+    const unmixed = relaxed < 1e-5 ? 0 : relaxed;
+    /* The solver is only re-run when the unmixed part has changed by a percent or
+       so of itself: at the end point 0.01 mL is the difference between pH 4 and
+       pH 10, so an absolute tolerance would leave the bulk stale exactly where it matters. */
+    const moved = Math.abs(unmixed - s.unmixed) > 0.01 * Math.max(s.unmixed, 1e-3) || (s.unmixed > 0 && unmixed === 0);
     let next = { ...s, elapsed: s.elapsed + dt, unmixed };
     if (moved) next = { ...next, world: computeWorld(next) };
     if (next.meter === 'in' && next.world.targetE !== null) next = { ...next, ...stepElectrode(electrodeFor(), next, next.world.targetE, dt) };
@@ -71,7 +74,8 @@ export const useTitrationEngine = create((set, get) => ({
 
   setTitrantN: (v) => set((s) => (started(s) ? s : refresh(s, { titrantN: Math.max(0.05, Math.min(0.2, Math.round(v * 100) / 100)) }))),
   setAnalyteMl: (v) => set((s) => (started(s) ? s : refresh(s, { analyteMl: Math.max(10, Math.min(25, Math.round(v))) }))),
-  setIndicator: (indicator) => set((s) => refresh(s, { indicator, pick: null })),
+  /* Each dye has its own sensible number of drops; the slider is there to depart from it. */
+  setIndicator: (indicator) => set((s) => refresh(s, { indicator, drops: RECOMMENDED_DROPS[indicator], pick: null })),
   setDrops: (drops) => set((s) => refresh(s, { drops: Math.max(0, Math.min(10, Math.round(drops))), pick: null })),
   setTemp: (tempC) => set((s) => refresh(s, { tempC: Math.max(15, Math.min(40, tempC)) })),
   setMeter: (meter) => set((s) => {
