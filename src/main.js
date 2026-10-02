@@ -2092,7 +2092,10 @@ function updateReadouts() {
       let shown;
       if (typeof raw === 'boolean') shown = raw ? 'On' : 'Off';
       else if (typeof raw === 'number') shown = raw.toFixed(v.step && v.step < 1 ? 2 : 0);
-      else shown = String(raw ?? '—');
+      /* Words, as the live-setup pills have them: a bare option id
+         ("permanentMagnet") is not a thing a student should read, and is
+         wider than a tile on a phone. */
+      else shown = raw === undefined || raw === null ? '—' : optLabel(v.id, raw);
       return [v.label, shown, v.unit || ''];
     });
     if (Number.isFinite(app.state?.t)) items.push(['Elapsed', app.state.t.toFixed(1), 's']);

@@ -388,10 +388,10 @@ canvas{display:block;width:100%;touch-action:none}
 .btn:disabled{opacity:.42;cursor:not-allowed}
 .btn.sm{padding:6px 11px;font-size:12px;min-height:32px}
 .readouts{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px;margin-top:11px}
-.ro{padding:9px 11px;border-radius:12px;background:var(--surface-2);border:1px solid var(--stroke-2);transition:transform .2s var(--ease-out),box-shadow .2s var(--ease)}
+.ro{min-width:0;padding:9px 11px;border-radius:12px;background:var(--surface-2);border:1px solid var(--stroke-2);transition:transform .2s var(--ease-out),box-shadow .2s var(--ease)}
 .ro:hover{transform:translateY(-1px);box-shadow:var(--shadow-xs)}
 .ro span{display:block;font-size:12px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
-.ro b{font-size:23px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.2px}
+.ro b{font-size:23px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.2px;overflow-wrap:anywhere}
 .ro b i{font-size:13px;color:var(--muted);font-style:normal;font-weight:400;margin-left:2px}
 
 /* ── live setup strip — reflects the current apparatus/chemical

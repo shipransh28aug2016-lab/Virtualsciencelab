@@ -79,26 +79,35 @@ for (const id of ids) {
       const vis = (el) => el && el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden';
       const box = (el) => { const b = el.getBoundingClientRect(); return { l: b.left, r: b.right, t: b.top, b: b.bottom, h: b.height, w: b.width }; };
 
-      /* Lines of the title, and the words on the last one. */
+      /* The title's lines: how many, how many words the last one has, and how
+         wide it is next to the widest. A short word alone on a line is the
+         defect; a long one ("p-Nitroacetanilide") that fills its line is not. */
       const title = $('#labTitle');
       const range = document.createRange();
-      const words = [];
+      const lineMap = new Map();
       const walker = document.createTreeWalker(title, NodeFilter.SHOW_TEXT);
       for (let n = walker.nextNode(); n; n = walker.nextNode()) {
         const re = /\S+/g; let m;
         while ((m = re.exec(n.textContent))) {
           range.setStart(n, m.index); range.setEnd(n, m.index + m[0].length);
           const rc = range.getBoundingClientRect();
-          words.push({ w: m[0], top: Math.round(rc.top) });
+          const key = Math.round(rc.top / 4);
+          const L = lineMap.get(key) || { l: rc.left, r: rc.right, n: 0, top: rc.top };
+          L.l = Math.min(L.l, rc.left); L.r = Math.max(L.r, rc.right); L.n += 1;
+          lineMap.set(key, L);
         }
       }
-      const tops = [...new Set(words.map((x) => x.top))].sort((a, b) => a - b);
-      const lastLine = words.filter((x) => Math.abs(x.top - tops[tops.length - 1]) < 3).length;
+      const rows = [...lineMap.values()].sort((a, b) => a.top - b.top);
+      const widest = Math.max(...rows.map((x) => x.r - x.l));
+      const last = rows[rows.length - 1];
+      const lines = rows.length;
+      const lastLine = last.n;
+      const lastShare = (last.r - last.l) / widest;
 
       const stage = $('.lab-stage'); const bench = $('#bench');
       const panels = ['#panelControls', '#panelTable', '#graphPanel'].map((s) => $(s));
       return {
-        lines: tops.length, lastLine, nWords: words.length,
+        lines, lastLine, lastShare,
         overflow: document.documentElement.scrollWidth - window.innerWidth,
         stage: box(stage), bench: box(bench),
         tabBar: vis($('#benchTabs')),
@@ -108,7 +117,7 @@ for (const id of ids) {
     });
 
     const tag = `${id} @${w}px`;
-    check(r.lines < 2 || r.lastLine >= 2, `${tag}: the title ends on a line of one word (${r.lines} lines, ${r.lastLine} on the last)`);
+    check(r.lines < 2 || r.lastLine >= 2 || r.lastShare >= 0.4, `${tag}: the title strands a short word on its last line (${r.lines} lines; the last is ${(r.lastShare * 100).toFixed(0)}% of the widest)`);
     check(r.overflow <= 1, `${tag}: the page overflows sideways by ${r.overflow}px`);
     if (w >= 641) {
       check(r.bench.l >= r.stage.r - 1 && Math.abs(r.bench.t - r.stage.t) < 3, `${tag}: the panel is not beside the apparatus (stage ${JSON.stringify(r.stage)}, panel ${JSON.stringify(r.bench)})`);

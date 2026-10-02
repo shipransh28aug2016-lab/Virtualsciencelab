@@ -185,6 +185,17 @@ model has never had), the fuse position and the earthing in the household-circui
 four solids in the specific-heat calorimeter, and the dilution test of the emulsion practical,
 which is half that experiment and changed nothing on the bench at all. All of them now redraw.
 
+**`npm run audit:layout` — does the lab page lay itself out like a lab?**
+
+Three promises, checked in a real browser at the widths people use. The title never strands a
+word on a line of its own (it did, at 640 px and from 1020 to 1160 px: "compound" alone, under
+the boiling-point title — the audit finds it again if the fix is switched off). From 641 px up
+the apparatus is on the left and one panel on the right — Controls, Table and Graph as its three
+tabs, exactly as tall as the apparatus and scrolling inside itself — and only a phone stacks, with
+the tab bar gone and every panel showing. Nothing overflows sideways at any of them. By default it
+takes the five longest titles and the boiling point at thirteen widths; `--all` takes every
+published lab at a phone, a tablet and a laptop.
+
 **`npm run audit:journey` — can a student get from opening a lab to a result?**
 
 This drives the real application in a real browser and walks the whole journey: open, see the
