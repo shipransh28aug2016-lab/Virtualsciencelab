@@ -27,9 +27,11 @@ const browser = await launch();
 try {
   const kit = await openLab({ url: app.url, code: code.toUpperCase(), browser, width: size[0], height: size[1] });
   if (hq) { await kit.page.goto(`${app.url}/#/${code.toUpperCase()}`, { waitUntil: 'networkidle' }); await kit.page.waitForTimeout(2500); }
-  if (steps) await (await import(pathToFileURL(resolve(steps)).href)).default(kit);
+  let failure = null;
+  if (steps) { try { await (await import(pathToFileURL(resolve(steps)).href)).default(kit); } catch (e) { failure = e; } }
   await kit.page.screenshot({ path: out });
-  if (kit.noise.length) console.log(`console noise:\n  ${kit.noise.slice(0, 5).join('\n  ')}`);
+  if (kit.noise.length) console.log(`console noise:\n  ${kit.noise.slice(0, 6).join('\n  ')}`);
+  if (failure) console.log(`the steps threw: ${String(failure.message).split('\n')[0]}`);
   console.log(`wrote ${out}`);
   await kit.close();
 } finally {

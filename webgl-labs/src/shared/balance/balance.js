@@ -71,7 +71,8 @@ export function rawSignal(b, items) {
   }
   const cos = Math.cos((b.tilt * Math.PI) / 180);
   const drift = sp.drift0 * sp.d * Math.exp(-b.t / sp.warmTau);
-  const elec = sp.sd * sp.d * noiseAt(b.seed, Math.floor(b.clock * 10));
+  /* `sd` is the scatter of the DISPLAYED reading; the load cell's own noise is larger, by what the response filters out of a 10 Hz sample stream. */
+  const elec = (sp.sd / Math.sqrt((sp.omega * 0.1) / 4)) * sp.d * noiseAt(b.seed, Math.floor(b.clock * 10));
   const dtShock = b.clock - b.shockAt;
   const shock = dtShock >= 0 && dtShock < 20 ? b.shockG * Math.exp(-dtShock / 1.2) * Math.cos(2 * Math.PI * 0.9 * dtShock) : 0;
   return (1 + b.calErr) * cos * load - lift + drift + airAt(b, sp) + elec + shock;
@@ -90,7 +91,7 @@ export function stepBalance(b0, items, dt) {
     b.v += (w * w * (raw - b.y) - 2 * w * b.v) * h;
     b.y += b.v * h;
     b.acc += h;
-    if (b.acc >= 0.1) { b.acc -= 0.1; b.hist.push(b.y); if (b.hist.length > 12) b.hist.shift(); }
+    if (b.acc >= 0.1) { b.acc -= 0.1; b.hist.push(b.y); if (b.hist.length > 24) b.hist.shift(); }
   }
   return b;
 }
@@ -111,9 +112,9 @@ export function stepItems(items, dt) {
 /** Is the display steady enough to be read? The way a balance decides to light its asterisk. */
 export function isStable(b) {
   const sp = BALANCES[b.kind];
-  if (b.hist.length < 10) return false;
-  const last = b.hist.slice(-10);
-  return Math.max(...last) - Math.min(...last) < 1.0 * sp.d;
+  if (b.hist.length < 20) return false;
+  const last = b.hist.slice(-20);
+  return Math.max(...last) - Math.min(...last) < 2.6 * sp.d;
 }
 
 /** The display: the reading rounded to the readability, with the tare off. */

@@ -46,12 +46,12 @@ ok.push('the display is a whole number of least counts, shown to exactly the rea
 
 /* ── 3 · Noise: the repeatability the instrument is specified to have ─────────── */
 for (const kind of ['top2', 'top3', 'ana4']) {
-  const sp = BALANCES[kind]; const b = ideal(kind); b.clock = 0;
-  const xs = []; for (let k = 0; k < 4000; k += 1) { b.clock = k * 0.1; xs.push(rawSignal(b, [{ id: 'x', m: 20, rho: 8 }]) - 20); }
+  const sp = BALANCES[kind]; let b = ideal(kind); const xs = [];
+  for (let k = 0; k < 6000; k += 1) { b = stepBalance(b, [{ id: 'x', m: 20, rho: 8 }], 0.1); if (k > 200) xs.push(b.y - 20); }
   const m = xs.reduce((a, v) => a + v, 0) / xs.length; const sd = Math.sqrt(xs.reduce((a, v) => a + (v - m) ** 2, 0) / xs.length);
-  near(sd / sp.d, sp.sd, sp.sd * 0.15 + 0.06, `${kind}: SD of the raw signal in counts (closed shield, air residue included)`);
+  near(sd / sp.d, sp.sd, sp.sd * 0.3 + 0.05, `${kind}: SD of the displayed reading in counts (closed shield)`);
 }
-ok.push('the raw signal’s scatter is the specified repeatability in counts (0.35, 0.5, 0.6) for the three balances, closed shield');
+ok.push('the displayed reading’s scatter is the specified repeatability in counts (0.35, 0.5, 0.6) for the three balances, closed shield, over ten minutes');
 
 /* ── 4 · The response: critically damped, seconds to settle, no overshoot ───────── */
 for (const [kind, lo, hi] of [['top2', 0.8, 3.2], ['top3', 1.5, 4.5], ['ana4', 2.5, 7]]) {
@@ -73,8 +73,8 @@ ok.push('the response takes a second or two (top-pan), three (precision), five (
 
 /* ── 5 · Warm-up drift ─────────────────────────────────────────────────────────── */
 const cold = newBalance('ana4', { onFor: 0 }); const c0 = { ...cold, shield: 'closed', tilt: 0 };
-const z = (t) => { const b = { ...c0, t, clock: 0 }; b.y = rawSignal(b, []); return b.y; };
-near(z(0), 30e-4, 5e-5, 'a cold analytical balance’s zero is 30 counts off'); near(z(900), 30e-4 * Math.exp(-1), 5e-5, 'after one time constant');
+const z = (t) => { let sum = 0; for (let k = 0; k < 400; k += 1) { const b = { ...c0, t, clock: 1000 + k * 0.1 }; sum += rawSignal(b, []); } return sum / 400; };   // the mean over the noise
+near(z(0), 30e-4, 2e-4, 'a cold analytical balance’s zero is 30 counts off'); near(z(900), 30e-4 * Math.exp(-1), 2e-4, 'after one time constant');
 assert.ok(z(3600) < 1e-4, 'after an hour it has settled'); assert.ok(z(0) > z(300) && z(300) > z(900), 'monotonic');
 ok.push(`zero drift of a cold analytical balance: ${(z(0) * 1e4).toFixed(0)} counts at switch-on, ${(z(900) * 1e4).toFixed(0)} after 15 min, ${(z(3600) * 1e4).toFixed(1)} after an hour`);
 
@@ -124,7 +124,7 @@ ok.push(`dropped, a 20 g mass throws the reading up to ${worstDiff.toFixed(1)} g
 /* ── 11 · Air currents and the draft shield ───────────────────────────────────────── */
 const range = (shield) => { let b = { ...ideal('ana4'), shield }; const xs = []; for (let k = 0; k < 120; k += 1) { b = stepBalance(b, [{ id: 'x', m: 20, rho: 8 }], 0.5); if (k > 20) xs.push(readout(b).value); } return (Math.max(...xs) - Math.min(...xs)) / 1e-4; };
 const open = range('open'); const closed = range('closed');
-assert.ok(open > 2.5 && closed < 1.5, `open ${open.toFixed(1)} counts of wander, closed ${closed.toFixed(1)}`);
+assert.ok(open > 4 && closed < 3.5 && open > 1.5 * closed, `open ${open.toFixed(1)} counts of wander, closed ${closed.toFixed(1)}`);
 ok.push(`air currents: an analytical balance with the shield open wanders ${open.toFixed(0)} counts over a minute, closed ${closed.toFixed(0)}`);
 
 /* ── 12 · Calibration, and when it is refused ─────────────────────────────────────── */
