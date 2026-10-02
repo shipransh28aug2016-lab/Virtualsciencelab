@@ -29,6 +29,8 @@ const fragmentShader = /* glsl */ `
   uniform float uPower;      // 0…1, gas flow → flame height
   uniform float uAir;        // 0 = air hole shut (yellow, sooty), 1 = open (blue)
   uniform float uLit;
+  uniform vec3 uTint;        // the colour of whatever is vaporised in the flame
+  uniform float uTintAmt;    // 0…1: how much of the flame's body it colours
 
   /* Value noise. Cheap, and a flame is turbulent enough that nothing better
      would be visible at this size. */
@@ -76,6 +78,8 @@ const fragmentShader = /* glsl */ `
     vec3 clean  = mix(vec3(0.42, 0.62, 1.0), vec3(0.30, 0.45, 0.95), h / max(top, 0.001));
     vec3 colour = mix(sooty, clean, uAir);
     colour = mix(colour, vec3(0.55, 0.85, 1.0), inner * 0.9);
+    /* A salt on a wire colours the flame above it. */
+    colour = mix(colour, uTint * 1.5, uTintAmt * smoothstep(top * 0.1, top * 0.42, vUv.y) * (1.0 - inner));
 
     /* Luminous flames are bright because of glowing carbon; blue ones are not.
        The blue flame is the one that gets the job done, and it is the dimmer of
@@ -89,7 +93,7 @@ const fragmentShader = /* glsl */ `
 `;
 
 export const FlameShaderMaterial = shaderMaterial(
-  { uTime: 0, uPower: 0.5, uAir: 1, uLit: 0 },
+  { uTime: 0, uPower: 0.5, uAir: 1, uLit: 0, uTint: new THREE.Color(0, 0, 0), uTintAmt: 0 },
   vertexShader,
   fragmentShader,
   (m) => {

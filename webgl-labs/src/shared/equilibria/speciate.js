@@ -218,15 +218,27 @@ export function speciate({
 
   /* Which solids are present: try, test, add, drop. */
   let active = guessSolids ? solidDefs.map((d, k) => k).filter((k) => guessSolids[solidDefs[k].id] > 0) : []; let best = null;
-  for (let round = 0; round < 6; round += 1) {
+  for (let round = 0; round < 14; round += 1) {
     best = solve(active);
     if (!solidDefs.length) break;
     lastI = 0.01;
     const { c, gam } = evalAt(best.x);
-    const over = solidDefs.map((_, k) => k).filter((k) => !active.includes(k) && lnIAP(k, c, gam) > lnKsp[k] + 1e-9);
+    const excess = (k) => lnIAP(k, c, gam) - lnKsp[k];
+    const over = solidDefs.map((_, k) => k).filter((k) => !active.includes(k) && excess(k) > 1e-9);
     const gone = active.filter((k, a) => Math.exp(best.x[nU + a]) < 1e-9 * limit[k]);
     if (!over.length && !gone.length) break;
-    active = active.filter((k) => !gone.includes(k)).concat(over);
+    /* One solid at a time, the most supersaturated first, when the state in hand is a good one: several at once
+       can be a stiff problem (iron hydroxide and Prussian blue together), one by one it is not. A state that did
+       not converge is no guide to what is over, and takes all of them. */
+    const take = best.f < 1e-16 ? over.sort((a, b) => excess(b) - excess(a)).slice(0, 1) : over;
+    active = active.filter((k) => !gone.includes(k)).concat(take);
+  }
+  /* The stiff cases (a solid with a 4:3 stoichiometry beside a hydroxide) can defeat Newton on everything at once. What always works
+     is to take one solid at a time and find, by bisection on how much of it there is, the amount that brings its ion product to its Ksp
+     in the solution that is left — each such solution being the plain aqueous problem. */
+  if (solidDefs.length && best.f >= 1e-16) {
+    const fb = sequentialSolids({ components: allComponents, species: allSpecies, solidDefs, totals, spectators, charge, T, activity, solNames: solidDefs.map((d) => d.id) });
+    if (fb) return fb;
   }
   lastI = 0.01;
   const { c, cs, I, gam } = evalAt(best.x);
@@ -239,6 +251,66 @@ export function speciate({
     free, species: speciesOut, solids: solidsOut, saturation, ionicStrength: I, gamma: gam, pH: aH ? -Math.log10(aH) : null,
     residual: Math.sqrt(best.f), converged: best.f < 1e-16,
   };
+}
+
+/** ln of the ion activity product of a solid in an aqueous result. */
+const lnIAPof = (d, res) => Object.entries(d.nu).reduce((a, [j, n]) => a + n * (Math.log(res.gamma(res.zOf[j])) + Math.log(Math.max(res.free[j] ?? 1e-300, 1e-300))), 0);
+
+/**
+ * Solids one at a time, by bisection on the amount of each (see the caller). Returns a result in the shape of speciate's, or
+ * null if even that fails.
+ */
+function sequentialSolids({ components, species, solidDefs, totals, spectators, charge, T, activity }) {
+  const zOf = Object.fromEntries(components.map((c) => [c.id, c.z]));
+  const lnK = (d) => Math.log(kAt(d.logKsp, d.dH, T));
+  const aq = (amounts) => {
+    const tt = { ...totals };
+    solidDefs.forEach((d, k) => { for (const [j, n] of Object.entries(d.nu)) if (j !== charge) tt[j] -= n * amounts[k]; });
+    for (const j of Object.keys(tt)) if (tt[j] < 0) tt[j] = 0;
+    const r = speciate({ components, species, solids: [], totals: tt, spectators, charge, T, activity });
+    r.zOf = zOf;
+    return r;
+  };
+  const room = (k, amounts) => Math.min(...Object.entries(solidDefs[k].nu).filter(([j, n]) => j !== charge && n > 0).map(([j, n]) => {
+    const used = solidDefs.reduce((a, d, q) => a + (q === k ? 0 : (d.nu[j] ?? 0) * amounts[q]), 0);
+    return (totals[j] - used) / n;
+  }));
+  const amounts = solidDefs.map(() => 0);
+  let res = aq(amounts);
+  for (let pass = 0; pass < 6; pass += 1) {
+    let changed = false;
+    /* Each solid in turn, the most supersaturated first. */
+    const order = solidDefs.map((_, k) => k).sort((a, b) => (lnIAPof(solidDefs[b], res) - lnK(solidDefs[b])) - (lnIAPof(solidDefs[a], res) - lnK(solidDefs[a])));
+    for (const k of order) {
+      const d = solidDefs[k];
+      const f = (p) => { const t = amounts.slice(); t[k] = p; const r = aq(t); return { v: lnIAPof(d, r) - lnK(d), r }; };
+      const base = amounts[k];
+      const here = f(base);
+      if (here.v > 1e-9 || base > 0) {
+        /* Bisect on p in [0, room): f falls as p grows. */
+        const hi0 = Math.max(room(k, amounts), 0);
+        if (hi0 <= 0) continue;
+        let lo = 0; let hi = hi0 * (1 - 1e-12);
+        if (f(0).v <= 0) { if (base !== 0) { amounts[k] = 0; changed = true; } continue; }
+        let mid = 0;
+        for (let it = 0; it < 90; it += 1) {
+          mid = 0.5 * (lo + hi);
+          const { v } = f(mid);
+          if (v > 0) lo = mid; else hi = mid;
+          if (hi - lo < 1e-14 * hi0) break;
+        }
+        if (Math.abs(mid - base) > 1e-9 * hi0) changed = true;
+        amounts[k] = mid;
+      }
+    }
+    res = aq(amounts);
+    if (!changed) break;
+  }
+  const worst = Math.max(...solidDefs.map((d, k) => (amounts[k] > 0 ? Math.abs(lnIAPof(d, res) - lnK(d)) : Math.max(0, lnIAPof(d, res) - lnK(d)))));
+  if (!(worst < 1e-5)) return null;
+  const solids = Object.fromEntries(solidDefs.map((d, k) => [d.id, amounts[k]]));
+  const saturation = Object.fromEntries(solidDefs.map((d) => [d.id, Math.exp(lnIAPof(d, res) - lnK(d))]));
+  return { ...res, solids, saturation, converged: true, residual: worst };
 }
 
 /** The reaction quotient of species `product` from its parts, in activities, for a solved state. */

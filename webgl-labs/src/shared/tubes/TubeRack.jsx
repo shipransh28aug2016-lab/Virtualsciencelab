@@ -102,12 +102,13 @@ export function TubeRack({ store, cfg }) {
       if (g) g.position.set(p.x, p.y, p.z);
       const ring = rings.current[i].current;
       if (ring) ring.material.emissiveIntensity = tube.id === s.active ? 1.4 : 0.12;
-      /* Gas: a few bubbles rising through the liquid, quicker with the rate. */
+      /* Gas: a few bubbles rising through the liquid, quicker with the rate, dying away as the gas that came out does. */
       const bg = bubbles.current[i].current;
+      const gas = (o.gas ?? 0) * Math.exp(-Math.max(0, s.elapsed - (tube.gasAt ?? tube.doseAt)) / (o.gasTau ?? 1e9));
       if (bg) {
-        bg.visible = (o.gas ?? 0) > 0.02;
+        bg.visible = gas > 0.02;
         if (bg.visible) bg.children.forEach((b, j) => {
-          const sd = seeds[j]; const ph = (t * (0.4 + 1.6 * o.gas) + sd.ph) % 1;
+          const sd = seeds[j]; const ph = (t * (0.4 + 1.6 * gas) + sd.ph) % 1;
           b.position.set(sd.x * 0.1, 0.06 + ph * Math.max(0.05, level - 0.08), 0);
           b.scale.setScalar(0.7 + 0.5 * Math.sin(ph * 3.14));
         });
@@ -186,9 +187,9 @@ export function TubeRack({ store, cfg }) {
       <group ref={steam}>{[0, 1, 2, 3, 4].map((j) => <mesh key={j} material={steamMat}><sphereGeometry args={[0.05, 10, 8]} /></mesh>)}</group>
 
       {/* The shelf of dropper bottles. */}
-      <mesh position={[0, SHELF_Y - 0.015, SHELF_Z]}><boxGeometry args={[(cfg.reagents.length) * 0.3 + 0.25, 0.03, 0.26]} /><meshStandardMaterial color="#b98e55" roughness={0.6} /></mesh>
+      <mesh position={[0, SHELF_Y - 0.015, SHELF_Z]}><boxGeometry args={[(cfg.reagents.length) * (cfg.shelfPitch ?? 0.3) + 0.25, 0.03, 0.26]} /><meshStandardMaterial color="#b98e55" roughness={0.6} /></mesh>
       {cfg.reagents.map((r, j) => {
-        const x = (j - (cfg.reagents.length - 1) / 2) * 0.3;
+        const x = (j - (cfg.reagents.length - 1) / 2) * (cfg.shelfPitch ?? 0.3);
         return (
           <group key={r.id} position={[x, SHELF_Y, SHELF_Z]}>
             <mesh position={[0, 0.15, 0]}><cylinderGeometry args={[0.08, 0.08, 0.3, 22]} /><meshStandardMaterial color={r.swatch ?? '#9fb6d9'} roughness={0.25} transparent opacity={0.78} /></mesh>

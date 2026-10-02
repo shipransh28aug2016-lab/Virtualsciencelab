@@ -21,6 +21,11 @@
  * A reagent is usually a dropper (0.05 mL a drop); `unit: 'pinch'` with `mlPer: 0` is a
  * solid, and `cfg.add` is told how many units were taken as `ctx.units`.
  *
+ *   settle(content, tempC, dt, obs, drift) → content   what time does to an open tube (a gas leaving it); must
+ *                                                         return the SAME object when nothing is worth re-solving, and
+ *                                                         may keep its running totals in `drift`, which is its own
+ *   initial(tubeDef, ctx)                                 `ctx` is the lab's free-form context (`setCtx`), e.g. which bottle
+ *
  * Instrument settings that are not part of a tube — a wavelength, a cell — are `cfg.options`:
  * `{ cell: { default: '1', values: ['1', '0.1'] } }` makes `s.opts.cell` and `setCell(v)`.
  *
@@ -36,12 +41,12 @@ export function createTubeStore(cfg) {
   const roomC = cfg.roomC ?? 25;
   const baths = cfg.baths ?? { air: { T: 'room', tau: 120 } };
 
-  const makeTube = (def) => {
-    const content = cfg.initial(def);
-    return { id: def.id, label: def.label, content, tempC: roomC, bath: 'air', doses: {}, last: null, doseAt: -1e6, obs: cfg.observe(content, roomC), obsT: roomC };
+  const makeTube = (def, ctx = cfg.ctx ?? {}) => {
+    const content = cfg.initial(def, ctx);
+    return { id: def.id, label: def.label, content, tempC: roomC, bath: 'air', doses: {}, last: null, doseAt: -1e6, gasAt: -1e6, drift: { CO2: 0, NH3: 0 }, obs: cfg.observe(content, roomC), obsT: roomC };
   };
-  const INITIAL = () => ({
-    tubes: cfg.tubes.map(makeTube), active: cfg.tubes[0].id, reagent: cfg.reagents[0].id, drops: 1, timeScale: 1, elapsed: 0, doseSeq: 0, lastDose: null, log: [],
+  const INITIAL = (ctx = cfg.ctx ?? {}) => ({
+    ctx, tubes: cfg.tubes.map((d) => makeTube(d, ctx)), active: cfg.tubes[0].id, reagent: cfg.reagents[0].id, drops: 1, timeScale: 1, elapsed: 0, doseSeq: 0, lastDose: null, log: [],
     opts: Object.fromEntries(Object.entries(cfg.options ?? {}).map(([k, o]) => [k, o.default])),
     analysis: cfg.analyse([], {}),
   });
@@ -56,15 +61,24 @@ export function createTubeStore(cfg) {
       const s = get();
       const dt = Math.min(dtRaw, 1 / 20) * s.timeScale;
       let moved = false;
-      const tubes = s.tubes.map((t) => {
+      const tubes = s.tubes.map((t0) => {
+        let t = t0;
         const target = bathT(t); const b = baths[t.bath] ?? baths.air;
-        if (t.tempC === target && t.obsT === target) return t;
-        moved = true;
-        const settling = Math.abs(target - t.tempC) < 0.02;
-        const tempC = settling ? target : t.tempC + (target - t.tempC) * (1 - Math.exp(-dt / b.tau));
-        /* The observation is only re-worked when the temperature has moved enough to matter — and once more, exactly, when it arrives. */
-        if (Math.abs(tempC - t.obsT) > 0.15 || (settling && tempC !== t.obsT)) return { ...t, tempC, obs: cfg.observe(t.content, tempC, t.obs), obsT: tempC };
-        return { ...t, tempC };
+        if (t.tempC !== target || t.obsT !== target) {
+          moved = true;
+          const settling = Math.abs(target - t.tempC) < 0.02;
+          const tempC = settling ? target : t.tempC + (target - t.tempC) * (1 - Math.exp(-dt / b.tau));
+          /* The observation is only re-worked when the temperature has moved enough to matter — and once more, exactly, when it arrives. */
+          t = Math.abs(tempC - t.obsT) > 0.15 || (settling && tempC !== t.obsT) ? { ...t, tempC, obs: cfg.observe(t.content, tempC, t.obs), obsT: tempC } : { ...t, tempC };
+        }
+        if (cfg.settle) {
+          const content = cfg.settle(t.content, t.tempC, dt, t.obs, t.drift);
+          if (content !== t.content) {
+            moved = true;
+            t = { ...t, content, obs: cfg.observe(content, t.tempC, t.obs), obsT: t.tempC, gasAt: s.elapsed };
+          }
+        }
+        return t;
       });
       set(moved ? { tubes, elapsed: s.elapsed + dt } : { elapsed: s.elapsed + dt });
     },
@@ -82,10 +96,10 @@ export function createTubeStore(cfg) {
       if (!reagent || drops <= 0) return s;
       const mL = drops * (reagent.mlPer ?? DROP_ML);
       const tubes = setTube(s, s.active, (t) => {
-        const content = cfg.add(t.content, reagent, mL, { tempC: t.tempC, obs: t.obs, units: drops });
+        const content = cfg.add(t.content, reagent, mL, { tempC: t.tempC, obs: t.obs, units: drops, lab: s.ctx });
         const info = cfg.instant ? cfg.instant({ content: t.content, obs: t.obs }, content, reagent, mL, t.tempC, drops) : null;
         return {
-          ...t, content, obs: cfg.observe(content, t.tempC, t.obs), obsT: t.tempC, doseAt: s.elapsed,
+          ...t, content, obs: cfg.observe(content, t.tempC, t.obs), obsT: t.tempC, doseAt: s.elapsed, gasAt: s.elapsed, drift: { CO2: 0, NH3: 0 },
           doses: { ...t.doses, [reagentId]: (t.doses[reagentId] ?? 0) + drops }, last: { reagent: reagentId, mL, units: drops, info },
         };
       });
@@ -97,7 +111,13 @@ export function createTubeStore(cfg) {
     /** A clean tube made up as it was at the start. */
     fresh: (id) => set((s) => {
       const def = cfg.tubes.find((t) => t.id === (id ?? s.active));
-      return def ? { tubes: s.tubes.map((t) => (t.id === def.id ? makeTube(def) : t)) } : s;
+      return def ? { tubes: s.tubes.map((t) => (t.id === def.id ? makeTube(def, s.ctx) : t)) } : s;
+    }),
+
+    /** Change what the lab's tubes start from (which unknown is on the bench): every tube is made up afresh. */
+    setCtx: (patch) => set((s) => {
+      const ctx = { ...s.ctx, ...patch };
+      return { ctx, tubes: cfg.tubes.map((d) => makeTube(d, ctx)), doseSeq: s.doseSeq + 1, lastDose: null };
     }),
 
     setTimeScaleStr: (v) => set({ timeScale: Number(v) }),
@@ -105,12 +125,12 @@ export function createTubeStore(cfg) {
 
     record: () => set((s) => {
       const tube = s.tubes.find((t) => t.id === s.active);
-      const row = { id: `${s.log.length}`, trial: s.log.length + 1, ...cfg.row({ tube, obs: tube.obs, ctx: { log: s.log, tubes: s.tubes, opts: s.opts } }) };
+      const row = { id: `${s.log.length}`, trial: s.log.length + 1, ...cfg.row({ tube, obs: tube.obs, ctx: { log: s.log, tubes: s.tubes, opts: s.opts, lab: s.ctx } }) };
       const log = [...s.log, row];
       return { log, analysis: cfg.analyse(log, { tubes: s.tubes, opts: s.opts }) };
     }),
     clearLog: () => set((s) => ({ log: [], analysis: cfg.analyse([], { tubes: s.tubes }) })),
-    reset: () => set((s) => ({ ...INITIAL(), log: s.log, analysis: s.analysis, timeScale: s.timeScale, opts: s.opts })),
+    reset: () => set((s) => ({ ...INITIAL(s.ctx), log: s.log, analysis: s.analysis, timeScale: s.timeScale, opts: s.opts })),
     ...Object.fromEntries(Object.entries(cfg.options ?? {}).map(([key, o]) => [
       `set${key[0].toUpperCase()}${key.slice(1)}`, (v) => set((s) => (o.values.includes(String(v)) ? { opts: { ...s.opts, [key]: String(v) } } : s)),
     ])),
