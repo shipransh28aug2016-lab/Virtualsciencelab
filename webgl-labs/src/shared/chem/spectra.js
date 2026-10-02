@@ -109,3 +109,25 @@ export function multiplyColour(a, b) {
   const enc = lin.map((v) => (v <= 0.0031308 ? 12.92 * v : 1.055 * v ** (1 / 2.4) - 0.055));
   return { linear: lin, srgb: enc, hex: `#${enc.map((v) => Math.round(Math.min(1, Math.max(0, v)) * 255).toString(16).padStart(2, '0')).join('')}` };
 }
+
+/**
+ * A colour in words, as a student would write it in a notebook: the nearest of
+ * a palette of names, in sRGB. Crude on purpose — it is what an observation
+ * column needs, not a colourimeter.
+ */
+const PALETTE = [
+  ['colourless', [0.97, 0.98, 0.99]], ['pale yellow', [0.99, 0.97, 0.78]], ['pale orange', [0.99, 0.85, 0.7]], ['pale pink', [0.99, 0.82, 0.88]],
+  ['pale green', [0.8, 0.92, 0.75]], ['pale blue', [0.78, 0.88, 0.97]], ['yellow', [0.96, 0.88, 0.2]], ['yellow-green', [0.7, 0.82, 0.2]],
+  ['yellow-brown', [0.78, 0.62, 0.2]], ['orange', [0.95, 0.5, 0.12]], ['orange-red', [0.93, 0.35, 0.15]], ['red', [0.85, 0.12, 0.12]],
+  ['blood red', [0.62, 0.05, 0.08]], ['brown', [0.55, 0.32, 0.15]], ['pink', [0.95, 0.35, 0.62]], ['magenta', [0.78, 0.12, 0.45]],
+  ['violet', [0.45, 0.2, 0.75]], ['purple', [0.55, 0.25, 0.65]], ['blue', [0.15, 0.3, 0.85]], ['deep blue', [0.05, 0.12, 0.55]],
+  ['blue-green', [0.1, 0.55, 0.55]], ['green', [0.2, 0.62, 0.3]],
+];
+export function colourName(srgb) {
+  let best = PALETTE[0]; let bd = Infinity;
+  for (const p of PALETTE) {
+    const d = (srgb[0] - p[1][0]) ** 2 + (srgb[1] - p[1][1]) ** 2 + (srgb[2] - p[1][2]) ** 2;
+    if (d < bd) { bd = d; best = p; }
+  }
+  return best[0];
+}

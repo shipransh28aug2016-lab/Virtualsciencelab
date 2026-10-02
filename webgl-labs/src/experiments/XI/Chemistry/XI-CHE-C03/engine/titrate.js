@@ -22,6 +22,7 @@
 import { solveAqueous, systemFrom, activityCoefficient } from '../../../../../shared/chem/aqueous.js';
 import { WEAK, SOLIDS, SUBSTANCES } from '../../../../../shared/chem/species.js';
 import { vesselColour, buildChart, UNIVERSAL_STRENGTH } from '../../../../../shared/chem/indicators.js';
+import { colourName } from '../../../../../shared/chem/spectra.js';
 import { makeElectrode, electrodePotential, calibratedMeter, displayPH, electrodeSettled, slopePercent } from '../../../../../shared/chem/phMeter.js';
 import { mulberry32 } from '../../../../../shared/numerics.js';
 import {
@@ -58,20 +59,7 @@ export const flaskColour = (s, pH, V, I) => vesselColour({
   indicator: s.indicator, drops: s.drops, pH, I, tC: s.tempC, volumeMl: V, pathCm: FLASK_PATH_CM, dropMl: DROP_ML,
 });
 
-/** In words, as a student would write the colour into a notebook. */
-const PALETTE = [
-  ['colourless', [0.97, 0.98, 0.99]], ['pale pink', [0.99, 0.82, 0.88]], ['pink', [0.95, 0.35, 0.62]], ['magenta', [0.78, 0.12, 0.45]],
-  ['red', [0.85, 0.12, 0.12]], ['orange', [0.95, 0.5, 0.12]], ['yellow', [0.96, 0.88, 0.2]], ['yellow-green', [0.7, 0.82, 0.2]],
-  ['green', [0.2, 0.62, 0.3]], ['blue-green', [0.1, 0.55, 0.55]], ['blue', [0.15, 0.3, 0.85]], ['violet', [0.45, 0.2, 0.75]],
-];
-export function colourName(srgb) {
-  let best = PALETTE[0]; let bd = Infinity;
-  for (const p of PALETTE) {
-    const d = (srgb[0] - p[1][0]) ** 2 + (srgb[1] - p[1][1]) ** 2 + (srgb[2] - p[1][2]) ** 2;
-    if (d < bd) { bd = d; best = p; }
-  }
-  return best[0];
-}
+export { colourName };
 
 /* ── The burette ──────────────────────────────────────────────────────────── */
 

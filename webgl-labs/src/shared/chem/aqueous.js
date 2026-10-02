@@ -43,6 +43,9 @@ function gammaOf(z, I, A) {
 /** γ for an ion of charge z at ionic strength I and temperature tC (Davies). */
 export const activityCoefficient = (z, I, tC = 25) => gammaOf(z, Math.min(I, DAVIES_LIMIT), daviesA(tC));
 
+/** The same γ(z, I) with the temperature fixed once — for solvers that ask for it thousands of times. */
+export const activityAt = (tC = 25) => { const A = daviesA(tC); return (z, I) => gammaOf(z, Math.min(I, DAVIES_LIMIT), A); };
+
 /**
  * Solve a system for pH.
  *
