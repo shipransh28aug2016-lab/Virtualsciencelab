@@ -40,6 +40,9 @@ function gammaOf(z, I, A) {
   return 10 ** (-A * z * z * (sq / (1 + sq) - 0.3 * I));
 }
 
+/** γ for an ion of charge z at ionic strength I and temperature tC (Davies). */
+export const activityCoefficient = (z, I, tC = 25) => gammaOf(z, Math.min(I, DAVIES_LIMIT), daviesA(tC));
+
 /**
  * Solve a system for pH.
  *
@@ -185,7 +188,7 @@ export function mix(parts) {
       const prev = weakTotals.get(w.id);
       weakTotals.set(w.id, { ...w, C: (prev?.C ?? 0) + w.C * f });
     }
-    for (const sol of system.solids ?? []) solids.push(sol);
+    for (const sol of system.solids ?? []) if (!solids.some((x) => x.id === sol.id)) solids.push(sol);
   }
   return { T, strong, weak: [...weakTotals.values()], solids };
 }

@@ -50,14 +50,27 @@ export function Segmented({ options, value, onChange, disabled }) {
           key={o.value} type="button" data-option={o.value} title={o.hint} disabled={disabled}
           aria-pressed={value === o.value}
           onClick={() => !disabled && onChange(o.value)}
+          style={o.swatch ? { backgroundColor: o.swatch, color: o.swatchText ?? '#0b1220' } : undefined}
           className={`min-w-[2.5rem] flex-1 rounded-lg px-2 py-1.5 text-xs transition ${
-            value === o.value ? 'bg-sky-400/20 text-sky-100' : 'text-slate-400 hover:bg-white/5'}`}
+            o.swatch
+              ? `font-semibold ${value === o.value ? 'ring-2 ring-white' : 'opacity-90 hover:opacity-100'}`
+              : value === o.value ? 'bg-sky-400/20 text-sky-100' : 'text-slate-400 hover:bg-white/5'}`}
         >
           {o.label}
         </button>
       ))}
     </div>
   );
+}
+
+/** Consecutive options sharing a `group` become one <optgroup>. */
+function groupOptions(options) {
+  const out = [];
+  for (const o of options) {
+    const last = out[out.length - 1];
+    if (last && last[0] === (o.group ?? '')) last[1].push(o); else out.push([o.group ?? '', [o]]);
+  }
+  return out;
 }
 
 export function Select({ options, value, onChange, disabled }) {
@@ -67,7 +80,9 @@ export function Select({ options, value, onChange, disabled }) {
       className={`w-full appearance-none rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-slate-100
                   outline-none transition focus:border-sky-400/60 focus:ring-2 focus:ring-sky-400/20 ${disabled ? 'opacity-40' : ''}`}
     >
-      {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+      {groupOptions(options).map(([group, items]) => (group ? (
+        <optgroup key={group} label={group}>{items.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</optgroup>
+      ) : items.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)))}
     </select>
   );
 }

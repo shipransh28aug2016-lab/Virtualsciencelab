@@ -84,6 +84,7 @@ export const SUBSTANCES = {
   naoh:  { id: 'naoh',  label: 'Sodium hydroxide',  formula: 'NaOH',   group: 'Bases', strong: [ion(+1, 1)] },
   koh:   { id: 'koh',   label: 'Potassium hydroxide', formula: 'KOH',  group: 'Bases', strong: [ion(+1, 1)] },
   /* Weak acids and bases */
+  citric:{ id: 'citricAcid', label: 'Citric acid', formula: 'C₆H₈O₇', group: 'Acids', weak: [{ id: 'citric', c: 1 }] },
   acetic:{ id: 'aceticAcid', label: 'Acetic acid',  formula: 'CH₃COOH', group: 'Acids', weak: [{ id: 'acetic', c: 1 }] },
   formic:{ id: 'formicAcid', label: 'Formic acid',  formula: 'HCOOH',   group: 'Acids', weak: [{ id: 'formic', c: 1 }] },
   oxalic:{ id: 'oxalicAcid', label: 'Oxalic acid',  formula: 'H₂C₂O₄',  group: 'Acids', weak: [{ id: 'oxalic', c: 1 }] },
@@ -150,6 +151,23 @@ export const FOODS = {
  * which is the strongest independent test the aqueous engine has. The meter is
  * calibrated against the certified number, as in a real laboratory.
  */
+/** The certified pH of each standard at 5 °C steps (NIST/IUPAC), which is what a
+ *  meter's temperature-compensated buffer recognition looks up. */
+const NIST_TABLE = {
+  pH4:  { 15: 3.999, 20: 4.002, 25: 4.005, 30: 4.011, 35: 4.018, 40: 4.027 },
+  pH7:  { 15: 6.900, 20: 6.881, 25: 6.865, 30: 6.853, 35: 6.844, 40: 6.838 },
+  pH9:  { 15: 9.276, 20: 9.225, 25: 9.180, 30: 9.139, 35: 9.102, 40: 9.068 },
+  pH10: { 15: 10.118, 20: 10.062, 25: 10.012, 30: 9.966, 35: 9.926, 40: 9.889 },
+};
+export function certifiedPH(bufferId, tC) {
+  const row = NIST_TABLE[bufferId];
+  const ts = Object.keys(row).map(Number);
+  const t = Math.min(ts[ts.length - 1], Math.max(ts[0], tC));
+  const lo = ts.filter((x) => x <= t).pop();
+  const hi = ts.find((x) => x >= t);
+  return lo === hi ? row[lo] : row[lo] + ((row[hi] - row[lo]) * (t - lo)) / (hi - lo);
+}
+
 export const BUFFERS = {
   pH4:  { id: 'pH4',  label: 'pH 4.01 buffer',  nist: 4.005,  note: '0.05 m potassium hydrogen phthalate',
           strong: [ion(+1, 0.05)], weak: [{ id: 'phthalic', c: 0.05 }] },

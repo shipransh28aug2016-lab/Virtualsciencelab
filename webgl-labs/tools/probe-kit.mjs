@@ -279,7 +279,43 @@ export class Kit {
     ok((await this.page.locator('[data-probe="table"]').count()) === 1, 'there is an observation table');
 
     await this.sweepControls();
+    await this.pressActions();
     return px;
+  }
+
+  /**
+   * Press every enabled button once, in the order a student meets them, and
+   * require that the bench is still standing afterwards. A crash on the
+   * pressing of a button (a reading that is null because nothing is dipped yet)
+   * is invisible to a control sweep and fatal to a lesson. The page is reloaded
+   * after, so the scenario that follows starts from a fresh bench.
+   */
+  async pressActions() {
+    const ids = await this.page.evaluate(() => [...document.querySelectorAll('[data-action]')].map((b) => b.getAttribute('data-action')));
+    const before = this.noise.length;
+    let pressed = 0; let broke = false;
+    for (const id of ids) {
+      const clicked = await this.page.evaluate((i) => {
+        const el = document.querySelector(`[data-action="${i}"]`);
+        if (!el || el.disabled) return false;
+        el.click(); return true;
+      }, id);
+      if (!clicked) continue;
+      pressed += 1;
+      await this.frames(3);
+      const alive = await this.page.evaluate(() => Boolean(document.querySelector('[data-probe="status"]')) && Boolean(document.querySelector('canvas')));
+      if (!alive || this.noise.length > before) {
+        this.check(false, `pressing "${id}" broke the bench${this.noise[before] ? `: ${this.noise[before].slice(0, 160)}` : ''}`);
+        broke = true; break;
+      }
+    }
+    if (!broke) this.check(true, `${pressed} buttons pressed in turn; the bench stays up`);
+    if (pressed) {
+      await this.page.reload({ waitUntil: 'networkidle' });
+      await this.page.waitForSelector('canvas', { timeout: 25000 });
+      await this.page.waitForTimeout(1500);
+      this.noise.length = 0;
+    }
   }
 
   /**

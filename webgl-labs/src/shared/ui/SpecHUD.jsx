@@ -29,13 +29,16 @@
  *                             tone?: primary|warn|good|ghost, title?, when?, disabled? }] }
  *   note          { text: (s) => str }
  *   group         { label, children: [ Control ] }
+ *   custom        { Component }   escape hatch: rendered with { useStore }
  *
  * ── Instrument ────────────────────────────────────────────────────────────────
  *   hero          { id, label, value: (s) => str, unit?, sub?: (s) => str }
+ *   swatch        { id, label, hex: (s) => '#rrggbb', sub?: (s) => str }   a colour you can see
  *   readouts      { items: [{ id, label, value: (s) => str | number, unit?, hint? }] }
  *   callout       { id, text: (s) => str, tone?: (s) => tone }
  *   plot          { id, title?, series: (s) => stable array, xLabel, yLabel, xDomain?, yDomain? }
  *   custom        { id, Component }
+ *   every instrument may carry  when?: (s) => bool
  *
  * Every getter must return a PRIMITIVE (or, for plot series, a reference the
  * store only replaces when the data changes). zustand reads through
@@ -160,9 +163,14 @@ function NoteControl({ c, useStore }) {
   return <NoteLine useStore={useStore} text={c.text} />;
 }
 
+function CustomControl({ c, useStore }) {
+  const visible = useVisible(useStore, c);
+  return visible ? <c.Component useStore={useStore} /> : null;
+}
+
 const CONTROLS = {
   segmented: SegmentedControl, select: SelectControl, slider: SliderControl,
-  actions: ActionsControl, group: GroupControl, note: NoteControl,
+  actions: ActionsControl, group: GroupControl, note: NoteControl, custom: CustomControl,
 };
 
 function Control({ c, useStore }) {
@@ -187,10 +195,25 @@ function Hero({ c, useStore }) {
   );
 }
 
+function Swatch({ c, useStore }) {
+  const hex = useValue(useStore, c.hex);
+  const sub = useValue(useStore, c.sub);
+  return (
+    <div className="mb-3 flex items-center gap-3 rounded-xl border border-white/5 bg-black/20 p-3">
+      <div className="h-12 w-12 shrink-0 rounded-lg border border-white/20" style={{ backgroundColor: hex }} data-probe={c.id} data-hex={hex} />
+      <div>
+        <div className="text-[10px] uppercase tracking-wider text-slate-500">{c.label}</div>
+        {sub ? <div className="text-[11px] leading-snug text-slate-300">{sub}</div> : null}
+      </div>
+    </div>
+  );
+}
+
 function ReadoutItem({ item, useStore }) {
   const raw = useStore((s) => resolve(item.value, s));
   const value = typeof raw === 'number' ? num(raw, item.dp ?? 2) : raw;
-  return <Readout probe={item.id} label={item.label} value={value} unit={item.unit} hint={item.hint} />;
+  const unit = useStore((s) => resolve(item.unit, s));
+  return <Readout probe={item.id} label={item.label} value={value} unit={unit} hint={item.hint} />;
 }
 
 function Readouts({ c, useStore }) {
@@ -228,9 +251,11 @@ function PlotInstrument({ c, useStore }) {
   );
 }
 
-const INSTRUMENTS = { hero: Hero, readouts: Readouts, callout: Callout, plot: PlotInstrument };
+const INSTRUMENTS = { hero: Hero, readouts: Readouts, callout: Callout, plot: PlotInstrument, swatch: Swatch };
 
 function Instrument({ c, useStore }) {
+  const visible = useStore((s) => (c.when ? Boolean(c.when(s)) : true));
+  if (!visible) return null;
   if (c.type === 'custom') return <c.Component useStore={useStore} />;
   const Impl = INSTRUMENTS[c.type];
   if (!Impl) throw new Error(`SpecHUD: unknown instrument type "${c.type}" (${c.id})`);

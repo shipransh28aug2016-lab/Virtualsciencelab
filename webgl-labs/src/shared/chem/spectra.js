@@ -98,3 +98,14 @@ export function hueOf([r, g2, b]) {
   const h = mx === r ? ((g2 - b) / d) % 6 : mx === g2 ? (b - r) / d + 2 : (r - g2) / d + 4;
   return (h * 60 + 360) % 360;
 }
+
+/**
+ * Two coloured media in series: their transmittances multiply per channel. A
+ * universal indicator in orange juice is the indicator's colour seen through the
+ * juice's own, which is why indicator colours are unreliable in coloured samples.
+ */
+export function multiplyColour(a, b) {
+  const lin = a.linear.map((v, i) => v * b[i]);
+  const enc = lin.map((v) => (v <= 0.0031308 ? 12.92 * v : 1.055 * v ** (1 / 2.4) - 0.055));
+  return { linear: lin, srgb: enc, hex: `#${enc.map((v) => Math.round(Math.min(1, Math.max(0, v)) * 255).toString(16).padStart(2, '0')).join('')}` };
+}
