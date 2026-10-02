@@ -255,21 +255,60 @@ select.chip option{background:var(--surface);color:var(--txt)}
 .sect-head:after{content:"";flex:1;height:1px;background:var(--stroke-2)}
 
 /* ── lab view ───────────────────────────────────────── */
-.labbar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:13px 16px;margin-bottom:14px}
-.labbar>div{min-width:min(100%,430px)!important;flex:1 1 430px!important}
-.labbar h2{margin:0;font-size:21px;font-weight:800;letter-spacing:-.2px}
-.labbar .sub{font-size:13.5px;color:var(--muted);margin-top:2px}
-.states{display:flex;gap:4px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.labbar{display:flex;gap:10px 16px;align-items:center;flex-wrap:wrap;padding:12px 18px;margin-bottom:14px}
+/* The heading takes whatever the buttons leave, and may be narrower than its
+   own text (min-width:0). A flex item otherwise refuses to shrink below its
+   longest unbreakable run, which is what used to force the title into a width
+   where its last word stood alone on a line. */
+.lab-heading{flex:1 1 21rem;min-width:0;order:2}
+.labbar #backBtn{order:1}
+.labbar #printBtn{order:3}
+.lab-eyebrow{margin:0 0 4px;font-size:11.5px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--accent-ink)}
+.lab-eyebrow:empty{display:none}
+/* balance spreads the words over the lines evenly instead of filling the first
+   line and leaving "compound" on the second; the script glues the last two
+   words together as well, for browsers that predate it. */
+.labbar h2{margin:0;font-size:clamp(1.18rem,1.02rem + .75vw,1.55rem);line-height:1.22;font-weight:800;letter-spacing:-.25px;
+  text-wrap:balance;max-width:40ch;hyphens:manual;overflow-wrap:normal}
+.nowrap{white-space:nowrap}
+.labbar .sub{margin-top:5px;font-size:13.5px;line-height:1.5;color:var(--muted);text-wrap:pretty;max-width:68ch}
+/* The stage rail has a row of its own beneath the heading, so the title is not
+   squeezed into whatever width eight pills leave it. */
+.states{display:flex;gap:4px;align-items:center;flex-wrap:wrap;justify-content:flex-start;order:4;flex:1 1 100%;
+  margin-top:0;padding-top:9px;border-top:1px solid var(--stroke-hair)}
 @media(max-width:1150px){.states{display:none}}
 .state-dot{font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:999px;background:var(--surface-2);color:var(--dim);border:1px solid transparent;transition:.25s var(--ease)}
 .state-dot.done{color:var(--good);border-color:rgba(37,192,139,.3);background:rgba(37,192,139,.1)}
 .state-dot.now{color:var(--on-accent);background:var(--accent);border-color:transparent;box-shadow:0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent)}
 
-.lab{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr);gap:14px;align-items:start}
-/* minmax(0,1fr), never plain 1fr: a grid item defaults to min-width:auto, so
-   the column refuses to shrink below the canvas's intrinsic width and the whole
+.lab{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(320px,1fr);gap:14px;align-items:start;
+  grid-template-areas:"stage bench" "info info"}
+/* minmax(0,…), never a bare fr: a grid item defaults to min-width:auto, so the
+   column refuses to shrink below the canvas's intrinsic width and the whole
    page overflowed to 911 px at a 360 px viewport. Affected every experiment. */
-@media(max-width:1000px){.lab{grid-template-columns:minmax(0,1fr)}}
+.lab-stage{grid-area:stage;min-width:0}
+.lab-info{grid-area:info;min-width:0}
+/* The apparatus beside ONE panel with three tabs — controls, observation table,
+   graph — that scrolls inside itself, instead of three panels stacked under the
+   apparatus. Everything the student operates is on the first screen; the aim,
+   theory and procedure sit below it, full width. Only a phone stacks. */
+/* The panel is exactly as tall as the apparatus beside it and scrolls inside
+   itself: it takes only a minimum height into the row (its contents are
+   positioned out of flow), so a long table can never make the page longer. */
+.bench{grid-area:bench;min-width:0;align-self:stretch;position:relative;min-height:30rem;padding:0}
+.bench-inner{position:absolute;inset:0;display:flex;flex-direction:column;padding:12px;min-height:0}
+.bench-body{flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;margin:0 -6px;padding:0 6px 2px;scrollbar-gutter:stable}
+@media(min-width:641px) and (max-width:1000px){.lab{grid-template-columns:minmax(0,1.12fr) minmax(270px,1fr)}}
+@media(max-width:640px){
+  .lab{grid-template-columns:minmax(0,1fr);grid-template-areas:"stage" "info" "bench";gap:12px}
+  .bench.glass{min-height:0;background:none;border:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+  .bench-inner{position:static;padding:0}
+  .bench-body{overflow:visible;margin:0;padding:0}
+  .labbar #backBtn{order:1}
+  .labbar #printBtn{order:2;margin-left:auto}
+  .labbar .lab-heading{order:3;flex-basis:100%}
+  .labbar .states{order:4}
+}
 .stage{padding:14px;position:relative}
 
 /* ── the experimental area ──────────────────────────────────────────
@@ -403,6 +442,32 @@ canvas{display:block;width:100%;touch-action:none}
 .panel-body{display:grid;grid-template-rows:1fr;transition:grid-template-rows .38s var(--ease),opacity .3s var(--ease),margin-top .38s var(--ease);opacity:1}
 .panel-body>div{overflow:hidden;min-height:0}
 .panel-collapsible.is-collapsed .panel-body{grid-template-rows:0fr;opacity:0}
+
+/* ── bench tabs ─────────────────────────────────────────
+   Controls / Table / Graph. On a phone the three panels stack and keep their
+   collapsible headers; from 641 px up they become the three tabs of one panel,
+   so the headers are redundant and the panels lose their own glass. */
+.bench-tabs{display:flex;gap:4px;padding:4px;margin:0 0 12px;border-radius:13px;background:var(--surface-2);border:1px solid var(--stroke-2);flex:none}
+.bench-tabs button{flex:1 1 0;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:8px 10px;
+  border:0;border-radius:10px;background:transparent;color:var(--muted);font:inherit;font-size:14px;font-weight:650;cursor:pointer;
+  transition:background .2s var(--ease),color .2s var(--ease),box-shadow .2s var(--ease)}
+.bench-tabs button:hover{color:var(--txt)}
+.bench-tabs button[aria-selected=true]{background:var(--accent);color:var(--on-accent);box-shadow:var(--shadow-xs)}
+.bench-tabs button[hidden]{display:none}
+.bench-count{min-width:21px;padding:1px 6px;border-radius:99px;font-size:11.5px;font-weight:700;line-height:1.5;text-align:center;
+  font-variant-numeric:tabular-nums;background:color-mix(in srgb,currentColor 16%,transparent)}
+/* A reading was recorded while another tab was showing: the count says so. */
+.bench-tabs button.has-news:not([aria-selected=true]) .bench-count{background:var(--warn);color:var(--on-accent);animation:bench-ping 1.5s var(--ease) 2}
+@keyframes bench-ping{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--warn) 55%,transparent)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
+@media(min-width:641px){
+  .bench .panel{padding:0;border:0;border-radius:0;background:none;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+  .bench .panel+.panel{margin-top:0}
+  .bench .panel-collapsible .panel-head{display:none}
+  .bench .panel-collapsible.is-collapsed .panel-body{grid-template-rows:1fr;opacity:1}
+  .bench .panel-collapsible:not(.is-active){display:none}
+  .bench .panel-collapsible.is-active{animation:tab-in .28s var(--ease-out)}
+}
+@media(max-width:640px){.bench-tabs{display:none}}
 
 .ctl-group{margin:2px 0 10px;font-size:11px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--muted)}
 .ctl-group+.ctl{margin-top:0}
@@ -573,7 +638,13 @@ footer a{color:var(--muted)}
   .topbar,.toolbar,.filters,.tabs,footer,.btn{display:none!important}
   .glass{background:#fff;border:1px solid #bbb;box-shadow:none;backdrop-filter:none}
   .tabbody,.ro span,.card p,.g-tick,.g-label{color:#333;fill:#333}
-  .lab{grid-template-columns:1fr}
+  .lab{grid-template-columns:1fr;grid-template-areas:"stage" "bench" "info"}
+  .bench{min-height:0}
+  .bench-inner{position:static;padding:0}
+  .bench-tabs{display:none!important}
+  .bench-body{overflow:visible;margin:0;padding:0}
+  .bench .panel-collapsible:not([hidden]){display:block!important}
+  .bench .panel-collapsible .panel-head{display:flex!important}
   .panel-body{grid-template-rows:1fr!important;opacity:1!important}
 }
 

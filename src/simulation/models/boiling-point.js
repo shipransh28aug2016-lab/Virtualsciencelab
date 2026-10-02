@@ -90,6 +90,13 @@ export const CHIPS = {
   without: { label: 'No boiling chips', superheatC: 2.4 },
 };
 
+/** The room the bath starts in, and how fast the burner takes it to the
+ *  neighbourhood of the boiling point before the careful heating begins, °C/min. */
+export const ROOM_C = 25;
+export const PREHEAT_C_PER_MIN = 20;
+/** The bath is run up quickly to this far below the expected boiling point. */
+export const APPROACH_C = 15;
+
 /** Standard atmospheric pressure, mm Hg. */
 export const STANDARD_PRESSURE = 760;
 /** Rate at which the boiling point falls with pressure, °C per mm Hg. */
@@ -180,15 +187,16 @@ export function validate(inputs) {
   return { ok: errors.length === 0, errors, warnings };
 }
 
-export function init(inputs = defaults) {
-  /* The bath is brought rapidly to within about fifteen degrees of the expected
-     boiling point before the careful heating begins. */
-  const start = Math.max(20, boilingPointC(inputs) - 15);
+export function init() {
+  /* A cold bath and an unlit burner. Nothing happens until Start lights it:
+     the bath is then brought rapidly to within about fifteen degrees of the
+     expected boiling point (a visible climb from room temperature, not a
+     reading that is already there) and the careful heating begins. */
   return {
     t: 0,
-    running: true,
-    tempC: start,
-    phase: 'warming',      // warming → bubbling → cooling → read
+    running: false,
+    tempC: ROOM_C,
+    phase: 'idle',         // idle → preheat → warming → bubbling → cooling → read
     bubbleRate: 0,
     onsetAt: null,
     ceaseAt: null,
@@ -199,20 +207,32 @@ export function init(inputs = defaults) {
 export function step(state, inputs, dt) {
   const s = { ...state };
   if (s.finishedAt) return s;
+  /* The burner is off until Start: the bath neither heats nor cools, and no
+     time passes on the clock. */
+  if (!s.running) return s;
   const minutes = (dt * (inputs.timeLapse ?? 1)) / 60;
   s.t += dt * (inputs.timeLapse ?? 1);
+  if (s.phase === 'idle') s.phase = 'preheat';
+
+  const bp = boilingPointC(inputs);
+  /* The first stage, fast: up to just short of where the careful stage starts. */
+  const approach = Math.max(ROOM_C, bp - APPROACH_C);
 
   if (!bathAdequate(inputs)) {
     const bath = BATHS[inputs.bath] || BATHS.oil;
-    s.tempC = Math.min(s.tempC + 3 * minutes, bath.maxC);
+    s.tempC = Math.min(s.tempC + (s.phase === 'preheat' ? PREHEAT_C_PER_MIN : 3) * minutes, bath.maxC);
+    if (s.phase === 'preheat' && s.tempC >= approach) s.phase = 'warming';
     s.bubbleRate = 0;
     return s;
   }
 
   const onset = onsetC(inputs);
-  const bp = boilingPointC(inputs);
 
-  if (s.phase === 'warming') {
+  if (s.phase === 'preheat') {
+    s.tempC = Math.min(approach, s.tempC + PREHEAT_C_PER_MIN * minutes);
+    s.bubbleRate = 0;
+    if (s.tempC >= approach) s.phase = 'warming';
+  } else if (s.phase === 'warming') {
     s.tempC += 3.2 * minutes;
     // A slow trickle from the expanding trapped air, well before boiling.
     s.bubbleRate = Math.max(0, Math.min(0.25, (s.tempC - (bp - 20)) / 80));
@@ -263,6 +283,7 @@ export function measure(state, inputs, seed = 1, trial = 1) {
   }
   if (!state || state.phase !== 'read') {
     const said = {
+      preheat: 'The bath is still coming up to temperature. Heat it until a rapid stream of bubbles comes from the capillary.',
       warming: 'The liquid is still warming. Heat it until a rapid stream of bubbles comes from the capillary.',
       bubbling: 'Bubbles are still streaming from the capillary. Stop heating and let the bath cool — the reading is taken as the bubbling STOPS.',
       cooling: 'The bath is cooling. Watch the capillary: the boiling point is the temperature at the moment the last bubble is drawn back in.',
@@ -350,6 +371,6 @@ export function derive(rows, inputs = defaults) {
 
 export default {
   meta, defaults, LIQUIDS, PURITY, BATHS, CHIPS, STANDARD_PRESSURE, PRESSURE_COEFF,
-  init, step, measure, derive, validate,
+  init, step, measure, derive, validate, ROOM_C, PREHEAT_C_PER_MIN, APPROACH_C,
   elevationC, pressureShiftC, boilingPointC, onsetC, bathAdequate,
 };

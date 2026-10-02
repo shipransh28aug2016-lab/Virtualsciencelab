@@ -226,6 +226,8 @@ const app = {
   last: 0,
   running: false,
   tab: 'procedure',
+  benchTab: 'controls',     // which of Controls / Table / Graph the bench panel is showing
+  seenRows: 0,
   answers: {},
   vivaAttempts: [],
 };
@@ -338,6 +340,7 @@ function bindChrome() {
   window.addEventListener('offline', updateNet);
   updateNet();
   initCollapsiblePanels();
+  initBenchTabs();
 }
 
 /**
@@ -636,9 +639,8 @@ async function openLab(exp) {
   app.machine.to(STATES.READY);
 
   show('#viewLab');
-  $('#labTitle').textContent = exp.title;
   const cm = exp.curriculumMapping;
-  $('#labSub').textContent = `Class ${exp.class} · ${cm.chapter} · Section ${cm.section}, Experiment ${cm.serial} · CBSE ${cm.curriculumYear}`;
+  setLabHeading(exp, cm);
   const token = exp.subject === 'Chemistry'
     ? (exp.class === 'XI' ? '--che-xi' : '--che-xii')
     : (exp.class === 'XI' ? '--xi' : '--xii');
@@ -659,10 +661,95 @@ async function openLab(exp) {
   buildControls();
   renderLiveConfig();
   buildTabs();
+  app.seenRows = app.rows.length;           // rows loaded from a previous visit are not news
+  selectBenchTab('controls');
   renderTable();
   renderStateTrack();
   startLoop();
   DB.saveProgress(exp.id, { opened: true, title: exp.title, class: exp.class });
+}
+
+/**
+ * The lab header: an eyebrow (where in the syllabus), the title, and the unit
+ * as a quiet subtitle. The title's last two words are held together so it can
+ * never end on a line of one word, even in a browser without
+ * `text-wrap: balance`; built from text nodes so the title stays plain text.
+ */
+function setLabHeading(exp, cm) {
+  const h = $('#labTitle');
+  const words = String(exp.title).trim().split(/\s+/);
+  h.textContent = '';
+  if (words.length > 3) {
+    h.append(`${words.slice(0, -2).join(' ')} `);
+    const tail = document.createElement('span');
+    tail.className = 'nowrap';
+    tail.textContent = words.slice(-2).join(' ');
+    h.append(tail);
+  } else {
+    h.textContent = words.join(' ');
+  }
+  $('#labEyebrow').textContent = `Class ${exp.class} · Section ${cm.section} · Experiment ${cm.serial}`;
+  $('#labSub').textContent = `${cm.chapter} · CBSE ${cm.curriculumYear}`;
+}
+
+/* ── the bench panel: Controls / Table / Graph as the three tabs of one panel ──
+   Tablet and desktop show one at a time; a phone stacks them (CSS only — the
+   tab bar is hidden there, and every panel is visible). */
+const BENCH_PANELS = { controls: '#panelControls', table: '#panelTable', graph: '#graphPanel' };
+
+function initBenchTabs() {
+  const list = $('#benchTabs');
+  if (!list || list.dataset.wired) return;
+  list.dataset.wired = '1';
+  for (const [name, sel] of Object.entries(BENCH_PANELS)) {
+    const tab = list.querySelector(`[data-tab="${name}"]`);
+    const panel = $(sel);
+    panel.setAttribute('role', 'tabpanel');
+    panel.setAttribute('aria-labelledby', tab.id);
+    tab.onclick = () => selectBenchTab(name);
+  }
+  list.onkeydown = (e) => {
+    const shown = Object.keys(BENCH_PANELS).filter((n) => !$(BENCH_PANELS[n]).hidden);
+    const i = shown.indexOf(app.benchTab);
+    const to = {
+      ArrowRight: shown[(i + 1) % shown.length], ArrowLeft: shown[(i - 1 + shown.length) % shown.length],
+      Home: shown[0], End: shown[shown.length - 1],
+    }[e.key];
+    if (!to) return;
+    e.preventDefault();
+    selectBenchTab(to, { focus: true });
+  };
+  selectBenchTab('controls');
+}
+
+function selectBenchTab(name, { focus = false } = {}) {
+  if (!BENCH_PANELS[name] || $(BENCH_PANELS[name])?.hidden) name = 'controls';
+  app.benchTab = name;
+  for (const n of Object.keys(BENCH_PANELS)) {
+    const tab = $(`#benchTabs [data-tab="${n}"]`);
+    const panel = $(BENCH_PANELS[n]);
+    if (!tab || !panel) continue;
+    const on = n === name;
+    tab.setAttribute('aria-selected', String(on));
+    tab.tabIndex = on ? 0 : -1;
+    panel.classList.toggle('is-active', on);
+    if (on) tab.classList.remove('has-news');
+    if (on && focus) tab.focus();
+  }
+}
+
+/** Keep the tab bar telling the truth: the reading count, the graph tab only
+ *  where the experiment has a graph, and a nudge when a reading lands on a
+ *  tab that is not showing. Called whenever the table is redrawn. */
+function syncBenchTabs() {
+  const count = $('#tableCount');
+  if (count) count.textContent = String(app.rows.length);
+  const graphPanel = $('#graphPanel');
+  const graphTab = $('#tabGraph');
+  if (graphTab && graphPanel) graphTab.hidden = graphPanel.hidden;
+  if (app.benchTab === 'graph' && graphPanel?.hidden) selectBenchTab('controls');
+  if (app.rows.length > (app.seenRows ?? 0) && app.benchTab !== 'table') $('#tabTable')?.classList.add('has-news');
+  app.seenRows = app.rows.length;
 }
 
 /**
@@ -1148,6 +1235,9 @@ function extraRowMeta() {
 }
 
 function calculate() {
+  /* The result — or the reason there is none — is written into the table
+     panel; show it, or the button looks like it did nothing. */
+  selectBenchTab('table');
   if (app.rows.length < 2) {
     /* A toast is gone in three seconds and the panel keeps its opening
        placeholder, so pressing Calculate too early looked like the button had
@@ -2068,6 +2158,7 @@ function renderTable() {
   }
   renderGraphPanel();
   renderStillNeeded();
+  syncBenchTabs();
   syncToolbar();
   $('#csvBtn').onclick = exportCSV;
   $('#clearBtn').onclick = () => {

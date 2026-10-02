@@ -71,7 +71,8 @@
     <section id="viewLab" hidden>
       <div class="labbar glass">
         <button class="btn ghost" id="backBtn">← Experiments</button>
-        <div style="min-width:190px;flex:1">
+        <div class="lab-heading">
+          <div class="lab-eyebrow" id="labEyebrow"></div>
           <h2 id="labTitle">—</h2>
           <div class="sub" id="labSub">—</div>
         </div>
@@ -79,8 +80,9 @@
         <button class="btn sm" id="printBtn">Print record</button>
       </div>
 
-      <div class="lab">
-        <div>
+      <div class="lab" id="labGrid">
+        <!-- The apparatus: beside the bench panel on tablet and desktop. -->
+        <div class="lab-stage">
           <div class="stage glass">
             <div class="canvas-wrap"><canvas id="cv" width="900" height="560" role="img" aria-label="Experiment apparatus"></canvas><div class="speed-flag" id="speedFlag" hidden aria-live="polite"></div></div>
             <div class="toolbar" id="toolbar"></div>
@@ -90,47 +92,61 @@
             <div class="live-config" id="liveConfig" aria-live="polite"></div>
             <div class="feedback" id="feedback" role="alert" aria-live="polite"></div>
           </div>
+        </div>
 
+        <!-- Controls, observation table and graph share one panel: a tab each, scrolling inside it,
+             stacked (and collapsible) only on phones. -->
+        <aside class="bench glass" id="bench" aria-label="Controls, observation table and graph">
+         <div class="bench-inner">
+          <div class="bench-tabs" id="benchTabs" role="tablist" aria-label="Bench panels">
+            <button type="button" role="tab" id="tabControls" data-tab="controls" aria-selected="true" aria-controls="panelControls">Controls</button>
+            <button type="button" role="tab" id="tabTable" data-tab="table" aria-selected="false" aria-controls="panelTable" tabindex="-1">Table <span class="bench-count" id="tableCount" aria-label="readings recorded">0</span></button>
+            <button type="button" role="tab" id="tabGraph" data-tab="graph" aria-selected="false" aria-controls="graphPanel" tabindex="-1">Graph</button>
+          </div>
+          <div class="bench-body" id="benchBody">
+            <div class="panel glass panel-collapsible" id="panelControls">
+              <button class="panel-head" type="button" aria-expanded="true" aria-controls="controlsBody">
+                <h4>Apparatus controls</h4><span class="rule"></span>
+                <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="panel-body" id="controlsBody"><div><div id="controls"></div></div></div>
+            </div>
+
+            <div class="panel glass panel-collapsible" id="panelTable">
+              <button class="panel-head" type="button" aria-expanded="true" aria-controls="tableBody">
+                <h4>Observation table</h4><span class="rule"></span>
+                <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="panel-body" id="tableBody"><div>
+                <div class="tblwrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+                <div class="still-needed" id="stillNeeded" hidden role="status" aria-live="polite"></div>
+                <div class="toolbar" style="margin-top:9px">
+                  <button class="btn sm" id="csvBtn">Export CSV</button>
+                  <button class="btn sm ghost" id="clearBtn">Clear table</button>
+                </div>
+                <div class="result-box" id="resultBox">Take readings, then calculate the result.</div>
+              </div></div>
+            </div>
+
+            <div class="panel glass panel-collapsible" id="graphPanel">
+              <button class="panel-head" type="button" aria-expanded="true" aria-controls="graphBody">
+                <h4>Graph</h4><span class="rule"></span>
+                <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="panel-body" id="graphBody"><div>
+                <div id="graph"></div>
+                <div class="hint" id="graphHint"></div>
+              </div></div>
+            </div>
+          </div>
+         </div>
+        </aside>
+
+        <!-- Aim, theory, procedure, viva…: reading material, full width beneath the workspace. -->
+        <div class="lab-info">
           <div class="panel glass">
             <div class="tabs" id="tabs" role="tablist"></div>
             <div class="tabbody" id="tabbody" role="tabpanel" tabindex="0"></div>
-          </div>
-        </div>
-
-        <div>
-          <div class="panel glass panel-collapsible" id="panelControls">
-            <button class="panel-head" type="button" aria-expanded="true" aria-controls="controlsBody">
-              <h4>Apparatus controls</h4><span class="rule"></span>
-              <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-            </button>
-            <div class="panel-body" id="controlsBody"><div><div id="controls"></div></div></div>
-          </div>
-
-          <div class="panel glass panel-collapsible" id="panelTable">
-            <button class="panel-head" type="button" aria-expanded="true" aria-controls="tableBody">
-              <h4>Observation table</h4><span class="rule"></span>
-              <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-            </button>
-            <div class="panel-body" id="tableBody"><div>
-              <div class="tblwrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
-              <div class="still-needed" id="stillNeeded" hidden role="status" aria-live="polite"></div>
-              <div class="toolbar" style="margin-top:9px">
-                <button class="btn sm" id="csvBtn">Export CSV</button>
-                <button class="btn sm ghost" id="clearBtn">Clear table</button>
-              </div>
-              <div class="result-box" id="resultBox">Take readings, then calculate the result.</div>
-            </div></div>
-          </div>
-
-          <div class="panel glass panel-collapsible" id="graphPanel">
-            <button class="panel-head" type="button" aria-expanded="true" aria-controls="graphBody">
-              <h4>Graph</h4><span class="rule"></span>
-              <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-            </button>
-            <div class="panel-body" id="graphBody"><div>
-              <div id="graph"></div>
-              <div class="hint" id="graphHint"></div>
-            </div></div>
           </div>
         </div>
       </div>

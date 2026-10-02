@@ -4,7 +4,7 @@
 import {
   label, drawBeaker, drawConicalFlask, drawBurette, drawTestTube, drawThermometer, drawRetortStand, drawBurner, drawSwatch, drawStopClock, theme, heatingAssembly, drawClamp, drawTripod, drawGauze, heatAt, noteBounds, drawDigitalReadout, brushedMetal, chrome, plastic, contactShadow, incandescence,
 } from './apparatus.js';
-import { clock, rgba, shade, mixColor, clamp, lerp, noise1 } from './realism.js';
+import { clock, dt, rgba, shade, mixColor, clamp, lerp, noise1 } from './realism.js';
 
 /* The bench top every chemistry scene stands on. Fixed in scene space —
    the frame is fitted to the apparatus afterwards, so a scene never has to
@@ -62,65 +62,243 @@ export function meltingPoint(ctx, w, h, state, inputs) {
     melted >= 1 ? `Melted — ${T0.toFixed(1)} °C` : melted > 0 ? `Melting… ${T0.toFixed(1)} °C` : `Bath ${T0.toFixed(1)} °C`,
     { anchor: 'right', bold: true, color: melted > 0 ? '#c02626' : undefined });
 }
+/* ── XI-CHE-B02 · the boiling point, animated ─────────────────────────────────
+ *
+ * Everything the student SEES here follows the model's `state`; the renderer
+ * decides nothing about the chemistry. What a pure function of the state cannot
+ * hold is what the eye sees LAGGING behind it — the mercury catching up with
+ * the bath, the burner's glow fading in and out, bubbles in flight — and that
+ * lives in this one object, reset whenever the run's clock goes back to zero.
+ *
+ *   state.phase   idle → preheat → warming → bubbling → cooling → read
+ *
+ *   idle      burner out, bath at room temperature, mercury at the bottom
+ *   Start     the burner lights and its element glows; the bath takes on a warm
+ *             colour and convection cells begin to turn; the mercury climbs
+ *   bubbling  a continuous stream of bubbles leaves the inverted capillary
+ *   cooling   the burner is taken away; the glow fades; the stream thins
+ *   read      bubbling stops and the liquid is drawn back up the capillary
+ */
+const BP = { Td: null, power: 0, grow: 0, bubbles: [], pops: [], spawned: 0, lastT: 0 };
+const BP_HEAT_PHASES = new Set(['preheat', 'warming', 'bubbling']);
+const bpHash = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+
+/** The warm, turning liquid, painted INSIDE the bath's clip. `k` is the burner's power 0–1, `hf` how hot the bath is. */
+function bathHeat(ctx, box, k, hf, t, dark) {
+  const { x0, x1, level, bot } = box;
+  const w = x1 - x0; const h = bot - level;
+  if (h < 12 || k < 0.015) return;
+  ctx.save();
+  // The base of the bath, hottest and least dense, glows and thickens as it warms.
+  const g = ctx.createLinearGradient(0, bot, 0, level);
+  g.addColorStop(0, rgba('#ff8a2a', 0.46 * k));
+  g.addColorStop(0.5, rgba('#ff9d3a', 0.16 * k * (0.5 + hf)));
+  g.addColorStop(1, rgba('#ff9d3a', 0));
+  ctx.fillStyle = g;
+  ctx.fillRect(x0, level, w, h);
+
+  /* Two convection cells. Liquid heated over the burner rises through the
+     middle, spreads outward under the surface and sinks along the cooler walls,
+     so the left cell turns anticlockwise and the right clockwise. A dash that
+     travels along each loop reads as the current itself. */
+  const ink = dark ? '255,214,160' : '150,70,10';
+  const speed = 16 + 52 * k;
+  ctx.lineWidth = 1.4;
+  ctx.lineCap = 'round';
+  for (const [sx, dir] of [[0.27, 1], [0.73, -1]]) {
+    for (let ring = 0; ring < 2; ring += 1) {
+      const sc = 1 - ring * 0.4;
+      ctx.setLineDash([5, 9]);
+      ctx.lineDashOffset = dir * t * speed * (1 + ring * 0.45);
+      ctx.strokeStyle = `rgba(${ink},${(0.5 * k * (1 - ring * 0.35)).toFixed(3)})`;
+      ctx.beginPath();
+      ctx.ellipse(x0 + w * sx, level + h * 0.52, w * 0.2 * sc, h * 0.34 * sc, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+  ctx.setLineDash([]);
+
+  // Heat shimmer: faint wavy lines lifting off the bottom, quicker as the bath gets hotter.
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 4; i += 1) {
+    const ph = (t * (0.16 + 0.34 * k) + i * 0.25) % 1;
+    const y = bot - 6 - ph * (h - 12);
+    ctx.strokeStyle = `rgba(${ink},${(0.22 * k * Math.sin(ph * Math.PI)).toFixed(3)})`;
+    ctx.beginPath();
+    for (let x = x0 + 3; x <= x1 - 3; x += 4) {
+      const yy = y + Math.sin(x * 0.13 + t * (2.4 + 3 * k) + i * 1.7) * (1.2 + 2.2 * k);
+      if (x === x0 + 3) ctx.moveTo(x, yy); else ctx.lineTo(x, yy);
+    }
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
 export function boilingPoint(ctx, w, h, state, inputs) {
   const th = theme();
   const cx = 380;
   /*
-   * The model's actual state fields are `tempC` and `bubbleRate` (init()
-   * never sets `temperature`, `bathTemp` or `boilingPoint` at all) -- so
-   * this always fell through to the hardcoded fallbacks of 30 degC and
-   * 78 degC, frozen regardless of which liquid was chosen, how long the
-   * bath had been heating, or what phase (warming/bubbling/cooling/read)
-   * the run was actually in. The thermometer and bubble stream never
-   * moved. bubbleRate is the model's own 0-1 bubbling intensity for
-   * exactly this purpose -- no need to re-derive it from a boiling point
-   * this renderer has no correct way to know independently.
+   * The model's state fields are `tempC`, `phase` and `bubbleRate` (init() never
+   * sets `temperature`, `bathTemp` or `boilingPoint`): reading any other name
+   * once froze the thermometer and the bubble stream at their fall-back values
+   * whatever the liquid, the bath or the phase. `bubbleRate` is the model's own
+   * 0–1 bubbling intensity.
    */
-  const T0 = state?.tempC ?? 30;
+  const T0 = state?.tempC ?? 25;
   const near = state?.bubbleRate ?? 0;
+  const phase = state?.phase ?? 'idle';
+  const fdt = dt();
+  /* Someone who has asked their system for less motion keeps the observation —
+     the bubbles, the climbing mercury — and loses the decoration: the turning
+     convection cells and the shimmer stand still. */
+  const calm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const t = calm ? 0 : clock();
+
+  /* A new run (the clock went back to zero): the mercury starts from wherever
+     the model starts, and nothing is left in flight. */
+  const now = state?.t ?? 0;
+  if (BP.Td === null || now < BP.lastT - 1e-6) { BP.Td = T0; BP.power = 0; BP.grow = 0; BP.bubbles = []; BP.pops = []; }
+  BP.lastT = now;
+
+  /* The thermometer is not the bath: glass and mercury take a moment to catch up,
+     so the column rises smoothly and never leaps. Capped, so that at a fast clock
+     it trails by a few degrees rather than minutes. */
+  BP.Td += (T0 - BP.Td) * (1 - Math.exp(-fdt / 0.45));
+  BP.Td = clamp(BP.Td, T0 - 6, T0 + 6);
+  const Td = BP.Td;
+  const burnerOn = !!state?.running && BP_HEAT_PHASES.has(phase);
+  BP.power += ((burnerOn ? 1 : 0) - BP.power) * (1 - Math.exp(-fdt / 0.35));
+  const k = BP.power;
+  const hf = clamp((Td - 25) / 120, 0, 1) ** 0.8;
+
+  const oil = inputs?.bath !== 'water';
+  const bathColour = oil ? mixColor('#efdc9b', '#d98a2c', hf) : mixColor('#c7dff2', '#e6d6b8', hf * 0.6);
   const A = heatingAssembly(ctx, cx, BENCH_Y, {
     vesselWidth: 152, vesselHeight: 130, fill: 0.68,
-    liquid: '#e8c877', lit: state?.phase === 'warming' || state?.phase === 'bubbling', vesselLabel: 'Heating bath', flameHeight: 44,
+    liquid: bathColour, lit: burnerOn, vesselLabel: false, flameHeight: 44,
+    /* heat: 0 — the generic "burner under a vessel" bubbling and steam are off:
+       a paraffin bath at 80 °C does not bubble, and the only bubbles on this bench
+       should be the ones from the capillary, which are the observation. The bath
+       paints its own warmth and convection instead. */
+    vesselOpts: { heat: 0, paint: (c, box) => bathHeat(c, box, k, hf, t, th.isDark) },
   });
+
+  // The burner's element: the gauze under the bath glows, pulsing a little, while the burner is on.
+  if (k > 0.02) {
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    const flick = 0.85 + 0.15 * noise1(t * 5);
+    const hg = ctx.createRadialGradient(cx, A.gaugeY, 4, cx, A.gaugeY, 92);
+    hg.addColorStop(0, rgba('#ff9a3c', 0.5 * k * flick));
+    hg.addColorStop(0.45, rgba('#ff7a1c', 0.2 * k * flick));
+    hg.addColorStop(1, rgba('#ff7a1c', 0));
+    ctx.fillStyle = hg;
+    ctx.beginPath(); ctx.ellipse(cx, A.gaugeY + 2, 94, 30, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = rgba('#ffb36b', 0.55 * k * flick);
+    ctx.lineWidth = 2.2;
+    ctx.beginPath(); ctx.moveTo(cx - 62, A.gaugeY + 1); ctx.lineTo(cx + 62, A.gaugeY + 1); ctx.stroke();
+    ctx.restore();
+  }
+
   const rodX = cx - 130;
   drawClamp(ctx, rodX, A.topY + 20, cx - 40, { label: 'Clamp' });
 
   // Siwoloboff tube, standing in the bath with its inverted capillary.
   const tubeTop = A.topY - 54;
-  drawTestTube(ctx, cx + 14, tubeTop, 150, 30, 0.42, th.liquid,
-    { label: 'Siwoloboff tube (liquid under test)', inRack: true });
+  const tubeX = cx + 14;
+  drawTestTube(ctx, tubeX, tubeTop, 150, 30, 0.42, th.liquid, { label: false, inRack: true, heat: 0 });
   const tubeBot = tubeTop + 150;
+  const mouthY = tubeBot - 12;
+  const surfaceY = tubeBot - 62;
 
-  // The observation: a rapid, continuous stream of bubbles from the
-  // inverted capillary means the vapour pressure has reached atmospheric —
-  // the boiling point is read as the stream just stops on cooling.
+  /* The capillary: sealed at the top, open at the foot. Air trapped in it is
+     what bubbles out; on cooling, liquid is drawn back in to replace it. */
   ctx.save();
+  ctx.lineCap = 'round';
   ctx.strokeStyle = 'rgba(205,220,240,0.95)';
-  ctx.lineWidth = 3.4;
-  ctx.beginPath(); ctx.moveTo(cx + 14, tubeBot - 54); ctx.lineTo(cx + 14, tubeBot - 12); ctx.stroke();
-  if (near > 0.02) {
-    const t = clock();
-    const n = Math.round(3 + near * 9);
-    for (let i = 0; i < n; i++) {
-      const ph = ((t * (0.5 + near * 2.4) + i / n) % 1);
-      const by = tubeBot - 12 - ph * (tubeBot - 12 - (tubeTop + 88));
-      const r = 1.4 + near * 2.2;
-      ctx.strokeStyle = 'rgba(255,255,255,0.75)';
-      ctx.fillStyle = 'rgba(255,255,255,0.2)';
-      ctx.lineWidth = 0.9;
-      ctx.beginPath(); ctx.arc(cx + 14 + Math.sin(ph * 7 + i) * 2.5, by, r, 0, Math.PI * 2);
-      ctx.fill(); ctx.stroke();
-    }
+  ctx.lineWidth = 4.2;
+  ctx.beginPath(); ctx.moveTo(tubeX, tubeBot - 54); ctx.lineTo(tubeX, mouthY); ctx.stroke();
+  ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(tubeX, tubeBot - 52); ctx.lineTo(tubeX, mouthY); ctx.stroke();
+  if (phase === 'read') {
+    const suck = clamp(((state?.t ?? 0) - (state?.finishedAt ?? 0)) / 90 + 0.12, 0, 1);
+    const colH = 4 + suck * 20;
+    ctx.fillStyle = rgba(th.liquid, 0.62);
+    ctx.fillRect(tubeX - 1.5, mouthY - colH, 3, colH);
+    ctx.strokeStyle = rgba('#ffffff', 0.7);
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(tubeX, mouthY - colH, 1.6, 0, Math.PI, true); ctx.stroke();
   }
   ctx.restore();
-  label(ctx, cx + 14, tubeBot - 4, 'Inverted capillary', { anchor: 'below', leader: true });
 
-  drawThermometer(ctx, cx - 24, A.topY - 100, 214, clamp((T0 - 20) / 200, 0, 1));
-  const phaseText = state?.phase === 'read'
-    ? `Bubbling ceased here — ${T0.toFixed(1)} °C`
-    : near >= 0.98 ? `Rapid stream — ${T0.toFixed(1)} °C` : `${T0.toFixed(1)} °C`;
-  label(ctx, cx + 128, A.topY + 40, phaseText,
-    { anchor: 'right', bold: true, color: state?.phase === 'read' || near >= 0.98 ? '#c02626' : undefined });
+  /* The observation: a slow trickle of expanding air well below the boiling point,
+     then a rapid continuous stream once the vapour pressure reaches atmospheric.
+     A bubble swells at the mouth, lets go, rises through the liquid growing as
+     the pressure above it falls, and pops at the surface. */
+  const rate = near > 0.02 ? 1.5 + near * 13 : 0;             // bubbles a second
+  const rNext = 1.8 + near * 2.2;
+  BP.grow += rate * fdt;
+  while (BP.grow >= 1) {
+    BP.grow -= 1;
+    const id = BP.spawned += 1;
+    BP.bubbles.push({ r: rNext * (0.85 + 0.35 * bpHash(id)), y: mouthY - 3, vy: 30 + 72 * near + 14 * bpHash(id + 9), ph: bpHash(id + 3) * 6.28 });
+  }
+  ctx.save();
+  const drawBubble = (x, y, r) => {
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+    ctx.lineWidth = 0.9;
+    ctx.beginPath(); ctx.ellipse(x, y, r, r * (1 + 0.1 * near), 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.78)';
+    ctx.beginPath(); ctx.arc(x - r * 0.32, y - r * 0.34, Math.max(0.5, r * 0.28), 0, Math.PI * 2); ctx.fill();
+  };
+  if (rate > 0) drawBubble(tubeX, mouthY - 1 - rNext * BP.grow ** 0.5 * 0.6, rNext * BP.grow ** 0.6);   // the one forming
+  for (let i = BP.bubbles.length - 1; i >= 0; i -= 1) {
+    const b = BP.bubbles[i];
+    b.y -= b.vy * fdt;
+    b.vy *= 1 + 0.35 * fdt;
+    b.r *= 1 + 0.16 * fdt;
+    if (b.y <= surfaceY) { BP.pops.push({ x: tubeX + Math.sin(b.ph + (mouthY - b.y) * 0.09) * (1.6 + near * 1.6), y: surfaceY, age: 0, r: b.r }); BP.bubbles.splice(i, 1); continue; }
+    drawBubble(tubeX + Math.sin(b.ph + (mouthY - b.y) * 0.09) * (1.6 + near * 1.6), b.y, b.r);
+  }
+  for (let i = BP.pops.length - 1; i >= 0; i -= 1) {
+    const p = BP.pops[i];
+    p.age += fdt;
+    if (p.age > 0.22) { BP.pops.splice(i, 1); continue; }
+    ctx.strokeStyle = `rgba(255,255,255,${(0.7 * (1 - p.age / 0.22)).toFixed(3)})`;
+    ctx.lineWidth = 0.9;
+    ctx.beginPath(); ctx.ellipse(p.x, p.y, p.r + 6 * (p.age / 0.22), (p.r + 6 * (p.age / 0.22)) * 0.3, 0, 0, Math.PI * 2); ctx.stroke();
+  }
+  ctx.restore();
+
+  drawThermometer(ctx, cx - 24, A.topY - 100, 214, clamp((Td - 20) / 200, 0, 1));
+
+  /* Callouts, to the right of the bath where there is room: a label stacked on
+     the apparatus it names is a label nobody can read. */
+  const bx = A.x1 + 12;
+  const callout = (fromX, fromY, atY, text) => {
+    ctx.save();
+    ctx.strokeStyle = rgba(th.accent, 0.5);
+    ctx.fillStyle = rgba(th.accent, 0.8);
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(fromX, fromY); ctx.lineTo(bx, atY); ctx.stroke();
+    ctx.beginPath(); ctx.arc(fromX, fromY, 2, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    label(ctx, bx, atY, text, { anchor: 'right', size: 11.5 });
+  };
+  callout(tubeX + 15, tubeTop + 26, tubeTop + 22, 'Siwoloboff tube');
+  callout(tubeX, mouthY - 6, mouthY - 10, 'Inverted capillary');
+  callout(A.x1 - 3, A.bot - 22, A.bot - 20, oil ? 'Liquid paraffin bath' : 'Water bath');
+
+  const reading = Td.toFixed(1);
+  const phaseText = phase === 'idle' ? `${reading} °C — burner off`
+    : phase === 'read' ? `Bubbling ceased — ${reading} °C`
+      : phase === 'cooling' ? `Cooling — ${reading} °C`
+        : near >= 0.98 ? `Rapid stream — ${reading} °C`
+          : `${reading} °C — heating`;
+  label(ctx, bx, A.topY + 40, phaseText,
+    { anchor: 'right', bold: true, color: phase === 'read' || near >= 0.98 ? '#c02626' : undefined });
 }
 export function crystallisation(ctx, w, h, state, inputs) {
   const cx = 380;

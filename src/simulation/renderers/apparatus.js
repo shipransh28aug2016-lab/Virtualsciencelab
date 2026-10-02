@@ -417,6 +417,11 @@ function contents(ctx, box, fillFrac, liquidColor, opts, key) {
     ctx.restore();
   }
 
+  /* A scene may paint into the liquid itself — a warm layer, a convection
+     cell — inside the same clip as the liquid, so it is seen THROUGH the glass
+     and cannot spill over the wall. Called with the liquid's box. */
+  if (opts.paint) opts.paint(ctx, { x0, x1, top, bot, level, heat });
+
   // Bubbles from boiling or from gas evolved by a reaction.
   const bubbleRate = (opts.bubbling || 0) + boil * 26 + (heat > 0.25 ? (heat - 0.25) * 14 : 0);
   if (bubbleRate > 0 || v.bubbles.bubbles.length) {
@@ -1817,10 +1822,10 @@ export function heatingAssembly(ctx, cx, benchY, opts = {}) {
   let geom;
   if (kind === 'flask') {
     geom = drawConicalFlask(ctx, cx, topY, vesselWidth * 0.34, vesselWidth, vesselHeight, fill, liquid,
-      { label: vesselLabel || 'Round-bottom flask' });
+      { label: vesselLabel === false ? false : (vesselLabel || 'Round-bottom flask'), ...opts.vesselOpts });
   } else {
     geom = drawBeaker(ctx, cx, topY, vesselWidth, vesselHeight, fill, liquid,
-      { label: vesselLabel || 'Beaker' });
+      { label: vesselLabel === false ? false : (vesselLabel || 'Beaker'), ...opts.vesselOpts });
   }
   return { ...geom, cx, topY, gaugeY, burnerBaseY, bot: gaugeY - 3, heat: heatAt(cx - vesselWidth / 2, cx + vesselWidth / 2, gaugeY - 3) };
 }
