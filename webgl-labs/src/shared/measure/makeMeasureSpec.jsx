@@ -181,7 +181,7 @@ export function makeMeasureSpec(cfg, useStore, Scene, extra = {}) {
     ],
 
     table: {
-      columns: [['trial', '#'], ['specimen', 'Specimen'], ['dim', 'Dimension'], ['major', kind === 'vernier' ? 'M.S.R. / mm' : 'P.S.R. / mm'], ['minor', kind === 'vernier' ? 'V.S.R. / div' : 'H.S.R. / div'], ['lc', 'L.C. / mm'], ['observed', 'Observed / mm'], ['zero', 'Zero error / mm'], ['corrected', 'Corrected / mm'], ['note', 'Notes']],
+      columns: cfg.tableColumns ?? [['trial', '#'], ['specimen', 'Specimen'], ['dim', 'Dimension'], ['major', kind === 'vernier' ? 'M.S.R. / mm' : 'P.S.R. / mm'], ['minor', kind === 'vernier' ? 'V.S.R. / div' : 'H.S.R. / div'], ['lc', 'L.C. / mm'], ['observed', 'Observed / mm'], ['zero', 'Zero error / mm'], ['corrected', 'Corrected / mm'], ['note', 'Notes']],
       csv: `${cfg.code}-${kind}.csv`,
       empty: 'Close the jaws and take the zero error first. Then measure the specimen in several places and directions, entering what you read from the scales, and record each.',
     },

@@ -56,7 +56,7 @@ export function createMeasure(cfg) {
   const kind = cfg.kind;
   const observedOf = (inst, major, minor, negative, lc) => (negative ? -((inst.n - minor) % inst.n) * lc : major + minor * lc);
   const INITIAL = () => ({
-    instrument: cfg.defaultInstrument, specimen: 'none', dim: 'diameter', opening: 0, place: 0, angle: 0, eye: 'centre', ratchet: true, side: -1,
+    instrument: cfg.defaultInstrument, specimen: 'none', lastSpecimen: Object.keys(cfg.specimens)[0], dim: 'diameter', opening: 0, place: 0, angle: 0, eye: 'centre', ratchet: true, side: -1,
     lens: 0, lcEntry: '', pitchEntry: '', nEntry: '', entry: { major: 0, minor: 0, negative: false }, zero: { e: null, taken: false, row: null },
     log: [], analysis: { groups: {}, summary: [], notes: {}, n: 0, series: [] }, message: null, acts: 0, revealed: false,
   });
@@ -76,7 +76,7 @@ export function createMeasure(cfg) {
       lcWrong: readings.filter((r) => r.lcWrong).length, noZero: readings.filter((r) => !r.zeroTaken).length,
     };
     const series = Object.values(groups).map((g) => ({ name: `${g.specimen} ${g.dim}`, points: g.rows.map((r, i) => [i + 1, Number(r.corrected.toFixed(3))]), connect: true }));
-    return { groups, summary: cfg.result ? cfg.result(groups) : [], notes, n: readings.length, series };
+    return { groups, summary: cfg.result ? cfg.result(groups, log) : [], notes, n: readings.length, series };
   };
   INITIAL.analyse = analyse;
 
@@ -90,10 +90,10 @@ export function createMeasure(cfg) {
     });
     const base = {
       ...INITIAL(),
-      ...(cfg.extend ? cfg.extend(set, get).state : {}),
+      ...(cfg.extend ? cfg.extend(set, get, { analyse }).state : {}),
 
       setInstrument: (id) => act({ instrument: id, zero: { e: null, taken: false, row: null }, lcEntry: '', pitchEntry: '', nEntry: '', side: -1 }),
-      setSpecimen: (id) => act({ specimen: id, dim: id === 'none' ? get().dim : Object.keys(cfg.specimens[id].dims)[0], opening: id === 'none' ? 0 : get().opening, side: id === 'none' ? -1 : get().side, entry: { major: 0, minor: 0, negative: false } }),
+      setSpecimen: (id) => { act({ specimen: id, lastSpecimen: id === 'none' ? get().lastSpecimen : id, dim: id === 'none' ? get().dim : Object.keys(cfg.specimens[id].dims)[0], opening: id === 'none' ? 0 : get().opening, side: id === 'none' ? -1 : get().side, entry: { major: 0, minor: 0, negative: false } }); cfg.onSpecimen?.(id, set, get); },
       setDim: (id) => act({ dim: id }),
       setOpening: (v) => move(Number(v)),
       /** Move by a number of least counts (negative to close). */
@@ -149,8 +149,8 @@ export function createMeasure(cfg) {
       peek: () => viewOf(cfg, get()),
       clearLog: () => set({ log: [], analysis: analyse([]) }),
       reveal: () => set((s) => (s.analysis.n >= 3 ? { revealed: true, acts: s.acts + 1 } : { acts: s.acts + 1, message: { at: s.acts + 1, key: 'reveal-early', tone: 'warn', title: 'Take at least three readings first', detail: 'The actual dimensions are shown once there is something to compare.' } })),
-      reset: () => set((s) => ({ ...INITIAL(), ...(cfg.extend ? cfg.extend(set, get).state : {}), log: s.log, analysis: s.analysis })),
-      ...(cfg.extend ? cfg.extend(set, get).actions : {}),
+      reset: () => set((s) => ({ ...INITIAL(), ...(cfg.extend ? cfg.extend(set, get, { analyse }).state : {}), log: s.log, analysis: s.analysis })),
+      ...(cfg.extend ? cfg.extend(set, get, { analyse }).actions : {}),
     };
     return base;
   });
