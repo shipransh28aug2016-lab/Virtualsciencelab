@@ -92,3 +92,22 @@ export async function seeScrew(kit, inst) {
   const observed = negative ? -((inst.n - c.k) % inst.n) * inst.lc : major + c.k * inst.lc;
   return { psr: major, csr: c.k, negative, observed };
 }
+
+/**
+ * A ruler laid against two impressions: where each falls on the ruler, in mm, from the picture (the dot's position against the
+ * marks), as a person reads it — to the nearest half millimetre.
+ */
+export async function seeRuler(kit) {
+  await kit.frames(2);
+  const s = await kit.page.evaluate(() => {
+    const svg = document.querySelector('[data-probe="ruler"]');
+    if (!svg) return null;
+    const n = (e, a) => Number(e.getAttribute(a));
+    return { px: Number(svg.dataset.px), ticks: [...svg.querySelectorAll('line[data-mm]')].map((l) => ({ mm: n(l, 'data-mm'), x: n(l, 'x1') })), dots: [...svg.querySelectorAll('circle[data-dot]')].map((c) => ({ d: c.dataset.dot, x: n(c, 'cx') })) };
+  });
+  if (!s) return null;
+  const x0 = s.ticks.find((t) => t.mm === 0).x;
+  const at = (x) => (x - x0) / s.px;
+  const [a, b] = s.dots;
+  return { a: Math.round(at(a.x) * 2) / 2, b: Math.round(at(b.x) * 2) / 2, exactA: at(a.x), exactB: at(b.x) };
+}
