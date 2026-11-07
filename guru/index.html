@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' blob:; connect-src 'self' https: blob:; worker-src 'self' blob:; frame-src blob: 'self'; child-src blob: 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f7f5f0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<title>Guru</title>
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/theme-init.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><img src="assets/icon.svg" alt="" width="28" height="28"><span>Guru</span></div>
+    <div class="spacer"></div>
+    <button id="btn-lang" class="icon-btn txt" type="button" data-i18n-attr="aria-label:ui.language,title:ui.language">EN</button>
+    <span id="status" class="status" role="status" data-i18n-attr="title:ui.status"><i class="dot" id="status-dot"></i><span id="status-text" class="status-text"></span></span>
+    <button id="btn-new" class="icon-btn" type="button" data-icon="plus" data-i18n-attr="aria-label:ui.newChat,title:ui.newChat"></button>
+    <button id="btn-settings" class="icon-btn" type="button" data-icon="sliders" data-i18n-attr="aria-label:ui.settings,title:ui.settings"></button>
+  </header>
+
+  <main id="stream" class="stream" role="log" aria-live="polite" aria-relevant="additions" tabindex="-1">
+    <div id="messages" class="messages">
+      <section id="empty" class="empty">
+        <img src="assets/icon.svg" alt="" width="56" height="56">
+        <h1 data-i18n="ui.greeting">Namaste. What shall we work on?</h1>
+        <p data-i18n="ui.tagline">Speak or type, in Hindi or English.</p>
+        <div id="suggestions" class="suggestions"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="composer-wrap">
+    <div id="attachments" class="attachments" hidden></div>
+    <form id="composer" class="composer" autocomplete="off">
+      <button id="btn-attach" class="icon-btn" type="button" data-icon="clip" data-i18n-attr="aria-label:ui.attach,title:ui.attach"></button>
+      <textarea id="input" rows="1" enterkeyhint="send" data-i18n-attr="placeholder:ui.placeholder,aria-label:ui.placeholder"></textarea>
+      <button id="btn-mic" class="icon-btn" type="button" data-icon="mic" aria-pressed="false" data-i18n-attr="aria-label:ui.mic,title:ui.mic"></button>
+      <button id="btn-send" class="icon-btn primary" type="submit" data-icon="send" data-i18n-attr="aria-label:ui.send,title:ui.send"></button>
+    </form>
+    <input id="file-input" type="file" multiple hidden>
+  </footer>
+</div>
+
+<dialog id="dlg-settings" class="drawer" aria-labelledby="settings-title"></dialog>
+<dialog id="dlg-palette" class="palette" aria-label="Command palette"></dialog>
+<dialog id="dlg-onboard" class="modal" aria-labelledby="onboard-title"></dialog>
+<dialog id="dlg-pick" class="modal" aria-labelledby="pick-title"></dialog>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script type="module" src="src/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "guru",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Guru: bilingual Hindi/English voice+text AI work-bot for CBSE teachers (PWA + Android).",
+  "type": "module",
+  "license": "UNLICENSED",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "start": "node tools/serve.mjs",
+    "test": "node tests/run-all.mjs",
+    "lint": "node tools/lint.mjs",
+    "build:sw": "node tools/build-sw-manifest.mjs",
+    "icons": "node tools/make-icons.mjs",
+    "android:sync": "node tools/android-sync.mjs"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/cli": "^6.1.2",
+    "@capacitor/core": "^6.1.2"
+  },
+  "optionalDependencies": {
+    "@capacitor-community/speech-recognition": "^6.0.1"
+  }
+}

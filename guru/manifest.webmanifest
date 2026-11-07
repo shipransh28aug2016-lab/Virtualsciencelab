@@ -1,0 +1,58 @@
+{
+  "name": "Guru",
+  "short_name": "Guru",
+  "description": "Guru: bilingual (Hindi/English) voice and text AI work-bot for CBSE teachers. गुरु: CBSE शिक्षकों के लिए हिंदी-अंग्रेज़ी वॉइस/टेक्स्ट AI सहायक।",
+  "lang": "hi",
+  "dir": "ltr",
+  "id": "./",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#101418",
+  "theme_color": "#1f6feb",
+  "categories": ["education", "productivity"],
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "assets/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ],
+  "share_target": {
+    "action": "./share-target",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "files",
+          "accept": ["application/pdf", "text/plain", "text/markdown", "text/csv", "text/html", "application/json",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            "image/png", "image/jpeg", ".md", ".csv", ".docx", ".xlsx", ".pptx", ".pdf", ".txt", ".json"]
+        }
+      ]
+    }
+  },
+  "shortcuts": [
+    {
+      "name": "Voice / बोलकर पूछें",
+      "short_name": "Voice",
+      "description": "Start listening right away / तुरंत सुनना शुरू करें",
+      "url": "./?action=voice&source=shortcut",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "New question paper / नया प्रश्न-पत्र",
+      "short_name": "Question paper",
+      "description": "Create a CBSE question paper / CBSE प्रश्न-पत्र बनाएँ",
+      "url": "./?action=question-paper&source=shortcut",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}

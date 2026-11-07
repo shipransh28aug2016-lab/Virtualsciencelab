@@ -1,0 +1,18 @@
+{
+  "appId": "in.guru.app",
+  "appName": "Guru",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https",
+    "cleartextTraffic": false
+  },
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#101418",
+    "webContentsDebuggingEnabled": false
+  },
+  "plugins": {
+    "SplashScreen": { "launchShowDuration": 0 }
+  }
+}

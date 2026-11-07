@@ -1,0 +1,47 @@
+name: guru-pages
+on:
+  push:
+    branches: [main]
+    paths: ['guru/**', 'data/curriculum/**', '.github/workflows/guru-pages.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: guru-pages
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Lint and regenerate service-worker precache
+        working-directory: guru
+        run: |
+          node tools/build-sw-manifest.mjs
+          node tools/lint.mjs
+      - name: Assemble site (site/guru + site/data/curriculum, relative URLs keep it base-path safe)
+        run: |
+          mkdir -p site/guru site/data
+          rsync -a --exclude node_modules --exclude android --exclude tools --exclude tests --exclude docs --exclude www \
+            --exclude package.json --exclude package-lock.json --exclude capacitor.config.json guru/ site/guru/
+          if [ -d data/curriculum ]; then cp -r data/curriculum site/data/curriculum; fi
+          printf '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=guru/"><title>Guru</title><a href="guru/">Open Guru</a>\n' > site/index.html
+          touch site/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
