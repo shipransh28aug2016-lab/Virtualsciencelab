@@ -99,7 +99,7 @@ export function fmtResult(v, k, lang) {
  * Validate a raw model plan into [{id,agent,task,deps}], dropping unknown deps and breaking cycles.
  * @param {any} raw @param {{has:Function,list:Function}} agents @param {number} max
  */
-export function normalizePlan(raw, agents, max = 8) {
+export function normalizePlan(raw, agents, max = 8, tools = null) {
   const arr = Array.isArray(raw) ? raw : Array.isArray(raw?.tasks) ? raw.tasks : Array.isArray(raw?.plan) ? raw.plan : [];
   const fallbackAgent = agents.has('guru') ? 'guru' : agents.list()[0]?.id;
   const tasks = [];
@@ -111,10 +111,14 @@ export function normalizePlan(raw, agents, max = 8) {
     let id = String(t.id ?? `t${i + 1}`);
     if (ids.has(id)) id = `${id}_${tasks.length}`;
     ids.add(id);
-    tasks.push({
+    const task = {
       id, agent: agents.has(t.agent) ? t.agent : fallbackAgent, task: text,
       deps: Array.isArray(t.deps) ? t.deps.map(String) : [],
-    });
+    };
+    if (typeof t.tool === 'string' && t.tool && (!tools || tools.has(t.tool))) {
+      task.tool = t.tool; task.args = t.args && typeof t.args === 'object' ? t.args : {};
+    }
+    tasks.push(task);
   });
   const idx = new Map(tasks.map((t, i) => [t.id, i]));
   for (const t of tasks) t.deps = [...new Set(t.deps)].filter((d) => d !== t.id && idx.has(d));

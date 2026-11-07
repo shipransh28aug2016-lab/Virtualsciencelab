@@ -10,7 +10,7 @@ const MAX_TASKS = 8;
 const PASS_SCORE = 8;
 const MAX_REFINE = 2;
 
-const PLAN_FORMAT = `Return ONLY JSON: {"tasks":[{"id":"t1","agent":"<agent id>","task":"<self-contained instruction>","deps":[]}]}.
+const PLAN_FORMAT = `Decompose the goal (planner). Return ONLY JSON: {"tasks":[{"id":"t1","agent":"<agent id>","task":"<self-contained instruction>","deps":[]}]}.
 Rules: at most ${MAX_TASKS} tasks; tasks with no dependency between them MUST have disjoint deps so they run in parallel; deps list ids of tasks whose output is needed; use a single task for simple requests; every task must be understandable alone.`;
 
 function createRc(k, goal, opts = {}) {
@@ -136,10 +136,10 @@ async function makePlan(rc, goal) {
     .map((a) => ({ id: a.id, description: a.description, tools: a.tools }));
   const resp = await rc.chat({
     system: `${buildSystem(planner || { id: 'planner', system: '' }, rc, 0)}\n\n${PLAN_FORMAT}`,
-    messages: [{ role: 'user', content: JSON.stringify({ goal, language: rc.lang, memory: rc.memoryText || undefined, agents }) }],
+    messages: [{ role: 'user', content: `Goal: ${String(goal).replace(/\n/g, ' ')}\nLanguage: ${rc.lang}\nMemory: ${rc.memoryText ? rc.memoryText.replace(/\n/g, ' | ') : 'none'}\nAgents: ${JSON.stringify(agents)}` }],
     json: true, tier: 'smart',
   });
-  const tasks = normalizePlan(extractJSON(resp.text), k.agents, MAX_TASKS);
+  const tasks = normalizePlan(extractJSON(resp.text), k.agents, MAX_TASKS, k.tools);
   if (tasks.length) { rc.record.planSource = rc.record.planSource || 'llm'; return tasks; }
   rc.record.planSource = 'fallback';
   return [{ id: 't1', agent: 'guru', task: goal, deps: [] }];
@@ -253,7 +253,7 @@ function parseCritique(text, validIds) {
   const issues = (Array.isArray(j.issues) ? j.issues : []).map((i) => (typeof i === 'string' ? { problem: i } : i))
     .filter((i) => i && (i.problem || i.fix))
     .map((i) => ({ task: validIds.includes(String(i.task)) ? String(i.task) : null, problem: String(i.problem || ''), fix: i.fix ? String(i.fix) : undefined }));
-  return { score: clamp(score, 0, 10), issues, summary: String(j.summary || ''), source: 'llm' };
+  return { score: clamp(score, 0, 10), issues, summary: String(j.summary || j.feedback || j.verdict || ''), source: 'llm' };
 }
 
 const RUBRIC = ['correctness (facts and any arithmetic)', 'CBSE pattern fidelity (marks, sections, scheme)', 'language match with the user', 'completeness against the goal'];
@@ -265,8 +265,8 @@ async function critique(rc) {
   const tasks = record.tasks.map((t) => ({ id: t.id, agent: t.agent, task: t.task, status: t.status, error: t.error, output: trunc(t.output, 4000) }));
   try {
     const resp = await rc.chat({
-      system: `${buildSystem(critic || { id: 'critic', system: '' }, rc, 0)}\n\nReturn ONLY JSON: {"score":0-10,"issues":[{"task":"<task id>","problem":"...","fix":"..."}],"summary":"..."}. Score 8+ means ship it.`,
-      messages: [{ role: 'user', content: JSON.stringify({ goal: record.goal, language: rc.lang, rubric: RUBRIC, tasks }) }],
+      system: `${buildSystem(critic || { id: 'critic', system: '' }, rc, 0)}\n\nReturn ONLY JSON: {"score":0-10,"issues":[{"task":"<task id>","problem":"...","fix":"..."}],"summary":"..."}. Score 0-10; 8+ means ship it.`,
+      messages: [{ role: 'user', content: `Goal: ${record.goal.replace(/\n/g, ' ')}\nLanguage: ${rc.lang}\nRubric: ${RUBRIC.join('; ')}\nAnswer: ${tasks.map((t) => `[${t.id}] ${String(t.output || t.error || '').replace(/\n/g, ' ')}`).join(' || ')}\nTasks: ${JSON.stringify(tasks)}` }],
       json: true, tier: 'smart',
     });
     const c = parseCritique(resp.text, record.tasks.map((t) => t.id));
@@ -285,8 +285,8 @@ async function critiqueText(rc, goal, text) {
     return { score: ok ? PASS_SCORE : 4, issues: ok ? [] : [{ task: null, problem: 'Answer is empty or too short' }], summary: 'rule-based', source: 'rules' };
   }
   const resp = await rc.chat({
-    system: `${buildSystem(rc.k.agents.get('critic') || { id: 'critic', system: '' }, rc, 0)}\n\nReturn ONLY JSON: {"score":0-10,"issues":[{"problem":"...","fix":"..."}],"summary":"..."}.`,
-    messages: [{ role: 'user', content: JSON.stringify({ goal, language: rc.lang, rubric: RUBRIC, answer: trunc(text, 8000) }) }],
+    system: `${buildSystem(rc.k.agents.get('critic') || { id: 'critic', system: '' }, rc, 0)}\n\nScore 0-10. Return ONLY JSON: {"score":0-10,"issues":[{"problem":"...","fix":"..."}],"summary":"..."}.`,
+    messages: [{ role: 'user', content: `Goal: ${String(goal).replace(/\n/g, ' ')}\nRubric: ${RUBRIC.join('; ')}\nAnswer: ${trunc(text, 8000).replace(/\n/g, ' ')}` }],
     json: true, tier: 'smart',
   });
   return parseCritique(resp.text, []) || { score: PASS_SCORE, issues: [], summary: 'unparseable', source: 'fallback' };
