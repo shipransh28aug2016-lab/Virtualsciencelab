@@ -113,3 +113,6 @@ export const stemKey = (t) => String(t || '').toLowerCase().replace(/[\s​]+/g,
 
 export const DEV = /[ऀ-ॿ]/;
 export const hasDevanagari = (s) => DEV.test(String(s || ''));
+
+/** Exact normalised key (digits kept) for duplicate-stem detection. */
+export const exactKey = (t) => String(t || '').toLowerCase().replace(/[\s\u200b]+/g, ' ').trim();

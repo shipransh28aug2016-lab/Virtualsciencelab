@@ -35,9 +35,11 @@ function wrongTexts(core, rng) {
 /** Options + index for an MCQ built from a core. */
 export function mcqOptions(core, rng) {
   const correct = valueText(core);
-  const wrongs = core.ansText
-    ? (core.wrongText || []).filter((w) => w.en !== correct.en).slice(0, 3)
+  let wrongs = core.ansText
+    ? (core.wrongText || []).filter((w) => w.en !== correct.en)
     : wrongTexts(core, rng);
+  const seenW = new Set();
+  wrongs = wrongs.filter((w) => (seenW.has(w.en) ? false : (seenW.add(w.en), true))).slice(0, 3);
   const all = rng.shuffle([{ o: correct, ok: true }, ...wrongs.map((o) => ({ o, ok: false }))]);
   return { options: all.map((x) => x.o), answerIndex: all.findIndex((x) => x.ok) };
 }

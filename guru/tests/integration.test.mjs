@@ -93,7 +93,7 @@ test('3. xlsx marks sheet round-trip incl. formulas + edit', { skip, timeout: 60
   assert.equal(sh.name, 'Marks');
   const flat = JSON.stringify(sh);
   assert.match(flat, /आरव/); assert.match(flat, /70/);
-  const e = await files.edit(bytes, 'xlsx', [{ op: 'setCell', sheet: 'Marks', cell: 'B3', value: 99 }]);
+  const e = await files.edit(bytes, 'xlsx', [{ op: 'set', sheet: 'Marks', cell: 'B3', value: 99 }]);
   const again = await files.read(new Uint8Array(await e.blob.arrayBuffer()), 'm.xlsx');
   assert.match(JSON.stringify(again.sheets[0]), /99/);
 });
@@ -159,7 +159,7 @@ test('6. Drive write via mocked fetch; trash requires confirmation', { skip, tim
   });
   try {
     let out;
-    try { out = await k.tools.call('drive_write', { path: 'marks.csv', content: 'a,b\n1,2', mime: 'text/csv' }, ctxFor()); } catch (e) { out = { error: String(e.message) }; }
+    try { out = await k.tools.call('drive_write', { name: 'marks.csv', content: 'a,b\n1,2', mime: 'text/csv' }, ctxFor()); } catch (e) { out = { error: String(e.message) }; }
     const sentAuth = m.calls.some((c) => /Bearer test-token/.test(JSON.stringify(c.init.headers || {})));
     assert.ok(m.calls.length > 0, 'drive_write must call Drive API (got ' + JSON.stringify(out).slice(0, 200) + ')');
     assert.ok(sentAuth, 'Authorization: Bearer header sent');
