@@ -61,6 +61,7 @@ export function coreToQuestion(core, o) {
   const ans = valueText(core);
   if (o.type === 'mcq' || o.mode === 'mcq') {
     const { options, answerIndex } = mcqOptions(core, rng);
+    if (options.length < 4) return null;
     q.type = 'mcq'; q.options = options; q.answerIndex = answerIndex;
     q.answer = { en: `(${letter(answerIndex)}) ${options[answerIndex].en}`, hi: `(${letter(answerIndex)}) ${options[answerIndex].hi}`, value: core.value, unit: core.unit || '' };
     q.markingScheme = [{ point: bi(`Correct option (${letter(answerIndex)}): ${options[answerIndex].en}`, `सही विकल्प (${letter(answerIndex)}): ${options[answerIndex].hi}`), marks: o.marks }];
@@ -80,9 +81,10 @@ export function coreToQuestion(core, o) {
 export function caseToQuestion(core, o) {
   const subs = core.subs.map((s, i) => {
     const sq = coreToQuestion(s, { ...o, id: o.id + '#' + (i + 1), type: s.mode === 'mcq' ? 'mcq' : 'sa', marks: s.marks, seed: o.seed + i + 1, mode: s.mode });
-    sq.no = i + 1;
+    if (sq) sq.no = i + 1;
     return sq;
   });
+  if (subs.some((s) => !s)) return null;
   const scheme = [];
   subs.forEach((s) => s.markingScheme.forEach((m) => scheme.push({ point: bi(`(${s.no}) ${m.point.en}`, `(${s.no}) ${m.point.hi}`), marks: m.marks })));
   return {

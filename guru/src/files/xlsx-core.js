@@ -93,11 +93,12 @@ export function normCell(raw, sb, sheetStyle) {
   if (o.t === 'number' && typeof v === 'string') v = Number(v);
   if (typeof v === 'number' && !Number.isFinite(v)) v = null;
   const s = sb.xf(Object.keys(style).length ? style : null);
-  if (f != null) return { kind: 'f', f: String(f), v, s };
-  if (v == null || v === '') return { kind: 'blank', s };
-  if (typeof v === 'boolean') return { kind: 'b', v, s };
-  if (typeof v === 'number') return { kind: 'n', v, s };
-  return { kind: 's', v: String(v), s };
+  const raw0 = Object.keys(style).length ? style : null;
+  if (f != null) return { kind: 'f', f: String(f), v, s, raw: raw0 };
+  if (v == null || v === '') return { kind: 'blank', s, raw: raw0 };
+  if (typeof v === 'boolean') return { kind: 'b', v, s, raw: raw0 };
+  if (typeof v === 'number') return { kind: 'n', v, s, raw: raw0 };
+  return { kind: 's', v: String(v), s, raw: raw0 };
 }
 
 /** Render a <c> element. strRef(str) -> shared string index (write) or null for inline. */
@@ -189,8 +190,8 @@ export function prepareSheet(sp, sb) {
       rows[r - 1] = rows[r - 1] || []; const cur = rows[r - 1][c - 1];
       const base = cur ? { ...cur } : { kind: 'blank', s: 0 };
       // merge style: re-normalise with the extra style on top of the existing xf is not trivially reversible, so layer on raw
-      const merged = { ...(cur && cur.rawStyle ? cur.rawStyle : {}), ...st };
-      base.s = sb.xf(merged); base.rawStyle = merged; rows[r - 1][c - 1] = base;
+      const merged = { ...(cur && cur.raw ? cur.raw : {}), ...st };
+      base.s = sb.xf(merged); base.raw = merged; rows[r - 1][c - 1] = base;
     }
   }
   return { sp, sb, rows, hdr };

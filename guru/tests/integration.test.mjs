@@ -149,7 +149,7 @@ test('6. Drive write via mocked fetch; trash requires confirmation', { skip, tim
   const drive = conns.get('gdrive');
   assert.ok(drive, 'gdrive connector');
   // inject a token the way a connected GIS client would; connectors should accept config token for tests
-  k.config.set('gdrive.token', 'test-token'); k.config.set('google.token', 'test-token'); k.config.set('gdrive.accessToken', 'test-token');
+  drive.setToken('test-token');
   const m = mockFetch((url, init) => {
     if (/upload\/drive\/v3\/files/.test(url) || /\/drive\/v3\/files/.test(url)) {
       if (init.method === 'DELETE') return new Response(null, { status: 204 });

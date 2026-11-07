@@ -59,7 +59,7 @@ export const PHYSICS_XII = [
     const par = a * b / (a + b), Rt = par + c, I = V / Rt;
     return { en: `Resistors of ${a} Ω and ${b} Ω in parallel are connected in series with a ${c} Ω resistor across a ${V} V battery of negligible internal resistance. Find the total current drawn from the battery.`,
       hi: `${a} Ω तथा ${b} Ω के प्रतिरोधक समांतर क्रम में हैं और यह संयोजन ${c} Ω के प्रतिरोधक के साथ श्रेणी में ${V} V की (नगण्य आंतरिक प्रतिरोध वाली) बैटरी से जुड़ा है। बैटरी से ली गई कुल धारा ज्ञात कीजिए।`,
-      steps: [['Parallel part: R′ = ab/(a+b)', 'समांतर भाग: R′ = ab/(a+b)'], [`R′ = ${fmt(par)} Ω`, `R′ = ${fmt(par)} Ω`], [`Total R = R′ + ${c} = ${fmt(Rt)} Ω`, `कुल R = R′ + ${c} = ${fmt(Rt)} Ω`], [`I = V/R = ${fmt(I)} A`, `I = V/R = ${fmt(I)} A`]],
+      steps: [[`Parallel part: R′ = (${a}×${b})/(${a}+${b})`, `समांतर भाग: R′ = (${a}×${b})/(${a}+${b})`], [`R′ = ${fmt(par)} Ω`, `R′ = ${fmt(par)} Ω`], [`Total R = R′ + ${c} = ${fmt(Rt)} Ω`, `कुल R = R′ + ${c} = ${fmt(Rt)} Ω`], [`I = V/R = ${fmt(I)} A`, `I = V/R = ${fmt(I)} A`]],
       value: I, unit: 'A', wrong: [V / (a + b + c), V / (par), V / (a + b) ] };
   }),
   p('cyclotron', 'XII', 'ch4', 'apply', 'medium', (r) => {
