@@ -147,7 +147,7 @@ export function extractReadable(html) {
         if (f.drop) dropDepth--;
         if (f.main) mainDepth--;
       }
-      if (BLOCK.has(tag)) emit(/^h[1-6]$/.test(tag) ? '\n\n' : '\n');
+      if (BLOCK.has(tag) && tag !== 'li') emit(/^h[1-6]$/.test(tag) ? '\n\n' : '\n');
     }
   }
   const clean = (parts) => decodeEntities(parts.join(''))
