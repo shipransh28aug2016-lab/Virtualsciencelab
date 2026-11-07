@@ -215,14 +215,14 @@ async function executeDag(rc, ids) {
 }
 
 function ruleCritique(rc) {
-  const { k, record } = rc;
+  const { record } = rc;
   const issues = [];
   let score = 10;
   for (const t of record.tasks) {
     if (t.status !== 'done') { issues.push({ task: t.id, problem: `Task ${t.status}: ${t.error || 'no output'}` }); score -= 4; continue; }
     if (!String(t.output || '').trim()) { issues.push({ task: t.id, problem: 'Empty output' }); score -= 2; }
   }
-  return { score: clamp(score, 0, 10), issues, summary: issues.length ? 'rule-based: problems found' : 'rule-based: ok', source: 'rules', k: !!k };
+  return { score: clamp(score, 0, 10), issues, summary: issues.length ? 'rule-based: problems found' : 'rule-based: ok', source: 'rules' };
 }
 
 async function ruleCritiqueAsync(rc) {
@@ -242,7 +242,6 @@ async function ruleCritiqueAsync(rc) {
       } catch (e) { if (e instanceof KernelStop) throw e; }
     }
   }
-  delete c.k;
   return c;
 }
 

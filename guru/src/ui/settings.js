@@ -34,9 +34,9 @@ export function openSettings({ onChange }) {
   baseIn.addEventListener('change', () => { cfg.set('llm.openai.baseUrl', baseIn.value.trim()); toast(tr('settings.saved')); });
 
   // --- connectors
-  const gIn = textInput('text', cfg.get('gdrive.clientId', ''), '123-abc.apps.googleusercontent.com');
+  const gIn = textInput('text', cfg.get('google.clientId', ''), '123-abc.apps.googleusercontent.com');
   gIn.addEventListener('change', () => {
-    cfg.set('gdrive.clientId', gIn.value.trim());
+    cfg.set('google.clientId', gIn.value.trim());
     try { const c = svc('connectors'); const g = c && c.get('gdrive'); if (g && g.setClientId) g.setClientId(gIn.value.trim()); } catch { /* ignore */ }
     toast(tr('settings.saved'));
   });

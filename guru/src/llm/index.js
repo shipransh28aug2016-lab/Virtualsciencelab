@@ -69,7 +69,7 @@ export function createLLM(o = {}) {
         key, baseUrl: baseUrl(id), model: opts.model || modelFor(id, tier), tier, system: conv.system, messages: conv.messages, tools,
         stream: opts.stream ?? !!opts.onToken, onToken, signal: opts.signal, json: !!opts.json,
         maxTokens: opts.maxTokens, temperature: opts.temperature,
-        http: { retries: cfg.get('llm.retries', 2), timeoutMs: cfg.get('llm.timeoutMs', 60000), baseDelayMs: cfg.get('llm.backoffMs', 500) },
+        http: { retries: cfg.get('llm.retries', undefined), timeoutMs: cfg.get('llm.timeoutMs', undefined), baseDelayMs: cfg.get('llm.backoffMs', undefined) },
       };
       try {
         const r = await PROVIDERS[id].chat(req, http);

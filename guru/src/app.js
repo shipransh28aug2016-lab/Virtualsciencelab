@@ -1,6 +1,6 @@
 // Guru UI bootstrap. Boots the kernel (if present) and wires the UI to its bus and services.
 // Every service is optional: missing pieces degrade to a working, honest UI.
-import { h, icon, hydrateIcons, toast } from './ui/dom.js';
+import { h, hydrateIcons, toast } from './ui/dom.js';
 import { ctx, svc, tr, cfg, uiLang, setUiLang, applyI18n, applyTheme } from './ui/ctx.js';
 import { addUser, beginTurn, clearChat } from './ui/chat.js';
 import { initComposer } from './ui/composer.js';
@@ -92,7 +92,7 @@ function askUser(p) {
   const input = h('input', { type: 'text', 'aria-label': p.question || tr('ui.askReply') });
   const done = (val) => {
     box.remove();
-    try { if (typeof p.resolve === 'function') p.resolve(val); ctx.k.bus.emit('ask:answer', { id: p.id, answer: val }); } catch { /* ignore */ }
+    try { if (typeof p.reply === 'function') p.reply(val); else if (typeof p.resolve === 'function') p.resolve(val); ctx.k.bus.emit('ask:answer', { id: p.id, answer: val }); } catch { /* ignore */ }
   };
   const box = h('div', { class: 'ask' }, h('b', { text: p.question || p.text || '' }), input,
     h('button', { class: 'btn primary', type: 'button', onclick: () => done(input.value) }, tr('ui.askReply')));
@@ -217,7 +217,8 @@ async function main() {
     wireBus(k);
     try { k.bus.on('llm:status', refreshStatus); k.bus.on('i18n:change', refreshAll); } catch { /* ignore */ }
     const il = svc('i18n');
-    if (il && !cfg.get('ui.onboarded', false) === false) { try { il.setLang(cfg.get('ui.lang', il.lang())); } catch { /* ignore */ } }
+    const saved = cfg.get('ui.lang', null);
+    if (il && saved) { try { il.setLang(saved); } catch { /* ignore */ } }
   }
   addEventListener('online', refreshStatus);
   addEventListener('offline', refreshStatus);
