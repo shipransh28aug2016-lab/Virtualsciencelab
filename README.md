@@ -224,3 +224,6 @@ broken.
   fake-intelligent.
 - **Simulations are models.** Assumptions and valid ranges are printed in the Theory tab of
   every experiment.
+
+## Guru (AI work-bot)
+`guru/` — recursive, bilingual (hi/en), voice+text, self-learning assistant: CBSE papers/notes, docx/xlsx/pptx/pdf, Drive/GitHub connectors, PWA + Android. See `guru/README.md`.

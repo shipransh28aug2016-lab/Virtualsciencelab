@@ -75,6 +75,7 @@ export function derivedMcq(item, others, rng, variant = 0) {
     options = all.map((x) => x.o); answerIndex = all.findIndex((x) => x.ok);
     text = bi(`Which one of the following statements is a correct point in answer to: "${item.text.en}"`, `प्रश्न "${item.text.hi}" के उत्तर में निम्नलिखित में से कौन-सा कथन सही बिंदु है?`);
   }
+  if (new Set(options.map((o) => o.en)).size < 4) return null;
   return {
     type: 'mcq', marks: 1, text, options, answerIndex, chapter: item.ch, bloom: 'remember', difficulty: 'easy',
     answer: bi(`(${LET[answerIndex]}) ${options[answerIndex].en}`, `(${LET[answerIndex]}) ${options[answerIndex].hi}`),

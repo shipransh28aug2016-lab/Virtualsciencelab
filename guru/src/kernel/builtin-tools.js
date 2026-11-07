@@ -11,16 +11,20 @@ function mkBlob(content, filename) {
 async function runJsNode(code, input, timeoutMs) {
   const vm = await import('node:vm');
   const logs = [];
-  const sandbox = vm.createContext({
-    input, console: { log: (...a) => logs.push(a.map(String).join(' ')), error: (...a) => logs.push(a.map(String).join(' ')) },
-  }, { codeGeneration: { strings: false, wasm: false } });
-  const script = new vm.Script(`(async () => {\n${code}\n})()`);
+  // Host objects never enter the context: only a string-only bridge, captured in a context-native closure.
+  const ctx = vm.createContext(Object.create(null), { codeGeneration: { strings: false, wasm: false } });
+  ctx.__log = (s) => { logs.push(String(s)); };
+  ctx.__input = JSON.stringify(input ?? null);
+  new vm.Script(`(() => { const l = globalThis.__log; delete globalThis.__log;
+    globalThis.console = Object.freeze({ log: (...a) => l(a.map(String).join(' ')), error: (...a) => l(a.map(String).join(' ')) });
+    globalThis.input = JSON.parse(globalThis.__input); delete globalThis.__input; })()`).runInContext(ctx);
+  const script = new vm.Script(`(async () => {\n${code}\n})().then((r) => JSON.stringify(r === undefined ? null : r))`);
   let timer;
-  const result = await Promise.race([
-    Promise.resolve(script.runInContext(sandbox, { timeout: timeoutMs })),
+  const raw = await Promise.race([
+    Promise.resolve(script.runInContext(ctx, { timeout: timeoutMs })),
     new Promise((_, rej) => { timer = setTimeout(() => rej(new Error('run_js timeout')), timeoutMs); }),
   ]).finally(() => clearTimeout(timer));
-  return { result, logs };
+  return { result: raw == null ? null : JSON.parse(raw), logs };
 }
 
 function runJsWorker(code, input, timeoutMs) {

@@ -28,7 +28,7 @@ export function createIntents(bus) {
       list.push({ examples: [], ...it, patterns });
       bus?.emit('intent:registered', { id: it.id });
     },
-    list() { return list.map(({ id, tool, examples }) => ({ id, tool, examples })); },
+    list() { return list.map(({ id, tool, examples, patterns }) => ({ id, tool, examples, patterns })); },
     /** Best single match for the whole text, or null. */
     match(text, lang) { return test(String(text || ''), lang); },
     /** Multi-step: split on "then"/"फिर"; if every segment matches returns all, else the single best. */

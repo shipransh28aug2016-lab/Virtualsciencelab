@@ -11,7 +11,7 @@ export const SCOPES = {
   sheets: 'https://www.googleapis.com/auth/spreadsheets',
   slides: 'https://www.googleapis.com/auth/presentations',
 };
-export const DEFAULT_SCOPES = Object.values(SCOPES);
+export const DEFAULT_SCOPES = [SCOPES.file]; // least privilege; widen via config 'google.scopes'
 export const GIS_URL = 'https://accounts.google.com/gsi/client';
 export const FOLDER = 'application/vnd.google-apps.folder';
 export const NATIVE = {

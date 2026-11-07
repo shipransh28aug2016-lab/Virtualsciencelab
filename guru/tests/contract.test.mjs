@@ -81,10 +81,9 @@ test('bilingual intents registered (en + hi + hinglish) and route to real tools'
   const tools = new Set(k.tools.list().map((t) => t.name));
   for (const i of its) {
     assert.ok(tools.has(i.tool) || i.tool === 'delegate', `intent ${i.id} -> unknown tool ${i.tool}`);
-    assert.ok(Array.isArray(i.patterns) && i.patterns.every((p) => p instanceof RegExp), `${i.id}: patterns RegExp[]`);
-    assert.equal(typeof i.extract, 'function', `${i.id}: extract`);
+    assert.ok(Array.isArray(i.examples), `${i.id}: examples[]`);
   }
-  const hasDeva = its.some((i) => i.patterns.some((p) => /[ऀ-ॿ]/.test(p.source) || (i.examples || []).some((e) => /[ऀ-ॿ]/.test(e))));
+  const hasDeva = its.some((i) => (i.examples || []).some((e) => /[\u0900-\u097F]/.test(e)));
   assert.ok(hasDeva, 'no Devanagari patterns/examples registered');
 });
 

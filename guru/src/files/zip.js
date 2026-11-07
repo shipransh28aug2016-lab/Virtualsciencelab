@@ -19,19 +19,27 @@ async function nodeZlib() {
   }
   return null;
 }
-async function viaStream(kind, fmt, u8) {
+async function viaStream(kind, fmt, u8, maxOut) {
   const stream = new Blob([u8]).stream().pipeThrough(new (kind === 'c' ? CompressionStream : DecompressionStream)(fmt));
-  return new Uint8Array(await new Response(stream).arrayBuffer());
+  if (!maxOut) return new Uint8Array(await new Response(stream).arrayBuffer());
+  const rd = stream.getReader(); const parts = []; let n = 0;
+  for (;;) {
+    const { done, value } = await rd.read(); if (done) break;
+    n += value.length; if (n > maxOut) { try { await rd.cancel(); } catch { /* ignore */ } throw new Error('ZIP entry exceeds declared size'); }
+    parts.push(value);
+  }
+  const out = new Uint8Array(n); let o = 0; for (const c of parts) { out.set(c, o); o += c.length; }
+  return out;
 }
-async function run(kind, fmt, u8) {
-  if (!forceNode && typeof CompressionStream !== 'undefined' && typeof DecompressionStream !== 'undefined') return viaStream(kind, fmt, u8);
+async function run(kind, fmt, u8, maxOut) {
+  if (!forceNode && typeof CompressionStream !== 'undefined' && typeof DecompressionStream !== 'undefined') return viaStream(kind, fmt, u8, maxOut);
   const z = await nodeZlib();
   if (!z) throw new Error('No DEFLATE implementation available');
   const fn = { c: { 'deflate-raw': 'deflateRawSync', deflate: 'deflateSync' }, d: { 'deflate-raw': 'inflateRawSync', deflate: 'inflateSync' } }[kind][fmt];
-  return new Uint8Array(z[fn](u8));
+  return new Uint8Array(maxOut ? z[fn](u8, { maxOutputLength: maxOut }) : z[fn](u8));
 }
 /** Raw DEFLATE. */ export const deflateRaw = (u8) => run('c', 'deflate-raw', u8);
-/** Raw INFLATE. */ export const inflateRaw = (u8) => run('d', 'deflate-raw', u8);
+/** Raw INFLATE. */ export const inflateRaw = (u8, maxOut) => run('d', 'deflate-raw', u8, maxOut);
 /** zlib-wrapped deflate (PDF FlateDecode). */ export const deflateZlib = (u8) => run('c', 'deflate', u8);
 /** zlib-wrapped inflate. */ export const inflateZlib = (u8) => run('d', 'deflate', u8);
 
@@ -105,7 +113,7 @@ export async function read(input, opts = {}) {
     const start = e.lho + 30 + dv.getUint16(e.lho + 26, true) + dv.getUint16(e.lho + 28, true);
     const body = u8.subarray(start, start + e.csize);
     let out;
-    if (e.method === 0) out = body; else if (e.method === 8) out = await inflateRaw(body); else throw new Error('Unsupported compression method ' + e.method);
+    if (e.method === 0) out = body; else if (e.method === 8) out = await inflateRaw(body, e.size + 1); else throw new Error('Unsupported compression method ' + e.method);
     if (out.length !== e.size) throw new Error('Size mismatch for ' + name);
     if (crc32(out) !== e.crc) throw new Error('CRC mismatch for ' + name);
     return out;

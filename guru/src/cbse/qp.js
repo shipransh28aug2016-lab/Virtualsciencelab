@@ -238,3 +238,12 @@ export function renderPaper(paper, lang = 'en', layout = 'stacked') {
   return { ...paper, lang, layout, header: { ...paper.header, titleText: P(paper.header.title), subjectText: P(paper.header.subject), timeText: P(paper.header.time), noticeText: P(paper.header.notice) },
     sections: paper.sections.map((s) => ({ ...s, nameText: P(s.name), instructionsText: s.instructions ? P(s.instructions) : '', questions: s.questions.map((q) => flattenQuestion(q, lang, layout)) })) };
 }
+
+/** Build a single question for practice sets. `state` = {used:Set, genUse:Map}. */
+export function makeQuestion({ subject, cls, chapter, type, marks, rng, state, target }) {
+  const syl = getSyllabus(subject, cls);
+  const ctx = { subject, cls, chapters: syl.chapters, genUse: state.genUse };
+  const q = buildForSlot(ctx, { type, marks }, chapter, target || {}, rng, state.used);
+  if (q) { q.marks = marks; state.used.add(exactKey(q.text.en)); noteGen(ctx, q); finalise(q, ctx, 0); }
+  return q;
+}

@@ -324,13 +324,36 @@ async function reviewLoop(rc) {
   }
 }
 
+function humanize(out) {
+  const raw = String(out ?? '').trim();
+  if (!raw.startsWith('{')) return raw;
+  let o; try { o = JSON.parse(raw); } catch { return raw; }
+  const HEAVY = new Set(['paper', 'docSpec', 'spec', 'blocks', 'sections', 'questions', 'rows', 'sheets', 'slides', 'header', 'stats', 'totals', 'validation', 'warnings']);
+  const lines = [];
+  const walk = (obj, pre) => {
+    for (const [k2, v] of Object.entries(obj)) {
+      if (HEAVY.has(k2) || v == null) continue;
+      if (k2 === 'output' && v && typeof v === 'object') {
+        const f = v.artifact?.filename;
+        if (f) lines.push(`- **file**: ${f}`);
+        continue;
+      }
+      if (typeof v === 'object') { if (Array.isArray(v) && v.every((x) => typeof x !== 'object')) lines.push(`- **${pre}${k2}**: ${v.slice(0, 8).join(', ')}`); continue; }
+      const txt = typeof v === 'object' ? JSON.stringify(v) : String(v);
+      lines.push(`- **${pre}${k2}**: ${txt.length > 160 ? txt.slice(0, 160) + '…' : txt}`);
+    }
+  };
+  walk(o, '');
+  return lines.join('\n') || raw;
+}
+
 function offlineAnswer(rc, note) {
   const { record, k, lang } = rc;
   const done = record.tasks.filter((t) => t.status === 'done' && String(t.output || '').trim());
   const lines = [];
   if (note) lines.push(note);
-  if (done.length === 1 && record.tasks.length === 1) lines.push(done[0].output);
-  else for (const t of done) lines.push(`### ${t.task}\n${t.output}`);
+  if (done.length === 1 && record.tasks.length === 1) lines.push(humanize(done[0].output));
+  else for (const t of done) lines.push(`### ${t.task}\n${humanize(t.output)}`);
   const failed = record.tasks.filter((t) => t.status === 'failed');
   if (failed.length) lines.push(`${msg(k, 'failed', lang)}\n${failed.map((t) => `- ${t.task}: ${t.error}`).join('\n')}`);
   if (record.artifacts.length && !done.some((t) => /\.[a-z0-9]{2,5}\b/i.test(t.output))) {
